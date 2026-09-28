@@ -1,13 +1,9 @@
-/**
- * content/manifest.json を生成する。
- * ブラウザは glob できないので、どの JSON が存在するかをここで列挙しておく。
- * `pnpm dev` / `pnpm build` の前に自動実行される（predev / prebuild）。
- */
-import { readdirSync, statSync, writeFileSync } from 'node:fs';
+﻿import { readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { contentKinds, type ContentKind } from '../src/core/content/schemas';
 
-const ROOT = new URL('../content/', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('../content/', import.meta.url));
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -29,7 +25,7 @@ for (const [kind, def] of Object.entries(contentKinds) as [ContentKind, { glob: 
       )
     : all.filter((f) => f === g);
 }
-// 問題ファイル：content/questions/**/*.json（_samples も含める。ゲーム側は _samples を除外できる）
+
 const questions = all.filter((f) => f.startsWith('questions/'));
 
 const manifest = { generatedAt: new Date().toISOString(), files, questions };
