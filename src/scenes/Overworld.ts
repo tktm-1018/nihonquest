@@ -3749,7 +3749,7 @@ export class OverworldScene extends Phaser.Scene {
         },
         onIslandBoss: (islandId: string) => {
           close();
-          this.challengeIslandBoss(islandId);
+          void this.challengeIslandBoss(islandId);
         },
         onClose: close,
       }),
@@ -3806,11 +3806,24 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   /** にほんちずから地方ボスへ挑戦する。条件は純粋ロジック側でもう一度検査する。 */
-  private challengeIslandBoss(islandId: string): void {
+  private async challengeIslandBoss(islandId: string): Promise<void> {
     const content = this.content();
     const gs = this.gs();
     const island = content?.world.islands.find((entry) => entry.id === islandId);
     if (!content || !gs || !island || !canChallengeIslandBoss(gs, island)) return;
+    const boss = content.monsters.get(island.bossId);
+    this.busy = true;
+    this.standStill();
+    await this.talk([
+      { speaker: t('field.prologueFairy'), text: t('field.islandBossPreludeSigns') },
+      { text: t('field.islandBossPreludeLight', { name: island.name }) },
+      {
+        speaker: boss?.name ?? t('field.bossSpeaker'),
+        text: boss?.fieldLine ?? t('field.islandBossPreludeBoss'),
+      },
+      { speaker: t('field.prologueFairy'), text: t('field.islandBossPreludeFairy') },
+    ]);
+    this.busy = false;
     this.pendingIslandBoss = island.id;
     this.startBattle({ enemyId: island.bossId, level: this.heroLevel() + 3, zone: 'boss', isBoss: true });
   }
@@ -3825,7 +3838,13 @@ export class OverworldScene extends Phaser.Scene {
     this.busy = true;
     this.setGame(cleared.state);
     playSfx('victory');
-    await this.talk([{ text: t('field.islandBossVictory', { name: island.name }) }]);
+    await this.talk([
+      { text: t('field.islandBossVictory', { name: island.name }) },
+      { speaker: t('field.prologueFairy'), text: t('field.islandBossKnowledgeReturns') },
+      { speaker: gs.player.name, text: t('field.islandBossHeroMemory') },
+      { speaker: t('field.prologueFairy'), text: t('field.islandBossFairyHint') },
+      { text: t('field.islandBossRouteOpens') },
+    ]);
     const access = nextIslandAccess(content.world, cleared.state, island.id);
     if (access.kind === 'barrier')
       await this.talk([{ text: t('field.nextIslandBarrier', { name: access.island.name }) }]);
