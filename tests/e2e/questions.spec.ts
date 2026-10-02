@@ -48,3 +48,13 @@ test('旧版の地図問題：正しい地点をクリックして採点でき�
   await map.click({ position: { x: box!.width * 0.45, y: box!.height * 0.7 } });
   await expect(page.locator('.pg-result')).toContainText('"score": 1', { timeout: 10_000 });
 });
+
+test('sort-order：カードを正しい順にタップして採点できる', async ({ page }) => {
+  await page.goto('/playground.html?q=sample.sort-order.history.0001');
+  const question = page.locator('.nq-q-sort-order');
+  await expect(question).toBeVisible({ timeout: 30_000 });
+  for (const id of ['jomon', 'kofun', 'nara'])
+    await question.locator(`.nq-sort-cards [data-card-id="${id}"]`).click();
+  await question.getByRole('button', { name: 'これで こたえる' }).click();
+  await expect(page.locator('.pg-result')).toContainText('"score": 1', { timeout: 10_000 });
+});

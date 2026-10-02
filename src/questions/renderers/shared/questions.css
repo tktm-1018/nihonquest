@@ -327,6 +327,64 @@
   background: #6cc070;
 }
 
+/* sort-order：カードを選んだ順に上の枠へ並べる */
+.nq-sort-slots,
+.nq-sort-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+.nq-sort-vertical {
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+.nq-sort-slots {
+  min-height: 96px;
+}
+.nq-sort-cards {
+  flex: 1;
+  align-content: center;
+}
+.nq-sort-card,
+.nq-sort-empty {
+  position: relative;
+  min-height: 84px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.nq-sort-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.nq-sort-empty {
+  box-sizing: border-box;
+  border: 4px dashed #a3aabb;
+  color: #a3aabb;
+}
+.nq-sort-picked {
+  background: #6aa9ff;
+  border-color: #fff;
+}
+.nq-sort-number {
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  font-size: 12px;
+}
+.nq-sort-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.nq-sort-submit {
+  min-width: 240px;
+  background: #6cc070;
+}
+
 /* experiment：予想 → 操作 → 結果 */
 .nq-exp-panel {
   flex: 1;

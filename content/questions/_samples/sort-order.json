@@ -1,0 +1,58 @@
+[
+  {
+    "$schema": "../../../schemas/questions/sort-order.schema.json",
+    "id": "sample.sort-order.history.0001",
+    "type": "sort-order",
+    "subject": "shakai",
+    "grade": 6,
+    "unit": "shakai.g6.history",
+    "payload": {
+      "prompt": "古[ふる]い じゅんに ならべよう",
+      "direction": "horizontal",
+      "cards": [
+        { "id": "jomon", "text": "縄文[じょうもん]時代[じだい]" },
+        { "id": "kofun", "text": "古墳[こふん]時代[じだい]" },
+        { "id": "nara", "text": "奈良[なら]時代[じだい]" }
+      ],
+      "answer": ["jomon", "kofun", "nara"]
+    },
+    "explanation": "縄文[じょうもん]、古墳[こふん]、奈良[なら]の じゅん。"
+  },
+  {
+    "id": "sample.sort-order.plant.0001",
+    "type": "sort-order",
+    "subject": "rika",
+    "grade": 3,
+    "unit": "rika.g3.plants",
+    "payload": {
+      "prompt": "ホウセンカが そだつ じゅんに ならべよう",
+      "direction": "horizontal",
+      "cards": [
+        { "id": "seed", "text": "たね" },
+        { "id": "sprout", "text": "めが でる" },
+        { "id": "flower", "text": "花[はな]が さく" },
+        { "id": "fruit", "text": "実[み]が できる" }
+      ],
+      "answer": ["seed", "sprout", "flower", "fruit"]
+    },
+    "explanation": "たねから めが でて、花[はな]が さき、実[み]が できる。"
+  },
+  {
+    "id": "sample.sort-order.sentence.0001",
+    "type": "sort-order",
+    "subject": "kokugo",
+    "grade": 2,
+    "unit": "kokugo.g2.sentence",
+    "payload": {
+      "prompt": "文[ぶん]に なるように ならべよう",
+      "direction": "vertical",
+      "cards": [
+        { "id": "who", "text": "わたしは" },
+        { "id": "where", "text": "こうえんで" },
+        { "id": "what", "text": "あそびました" }
+      ],
+      "answer": ["who", "where", "what"]
+    },
+    "explanation": "だれが、どこで、どうした、の じゅん。"
+  }
+]
