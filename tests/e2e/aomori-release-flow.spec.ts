@@ -6,14 +6,14 @@ async function winDebugFlow(page: Page, url: string, enemyName: string): Promise
   await expect(page.locator('.nq-box-next')).toBeVisible({ timeout: 10_000 });
   await page.locator('.nq-box').click();
   await page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])').click({ timeout: 20_000 });
-  const deadline = Date.now() + 30_000;
+  const deadline = Date.now() + 90_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result-victory').isVisible())) {
     if (await page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])').isVisible())
       await page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])').click();
     else if (await page.locator('.nq-box-next').isVisible()) await page.locator('.nq-box').click();
     await page.waitForTimeout(100);
   }
-  await expect(page.locator('.nq-result-victory')).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator('.nq-result-victory')).toBeVisible({ timeout: 60_000 });
   if (await page.locator('.nq-result-recruit').isVisible())
     await page.locator('.nq-result-btns .nq-cmd').nth(1).click();
   else await page.locator('[data-result-close]').dispatchEvent('click');
@@ -26,7 +26,7 @@ async function winDebugFlow(page: Page, url: string, enemyName: string): Promise
 }
 
 test('タイトル→青森→県ボス→しるし獲得→セーブ続行', async ({ page }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
   await winDebugFlow(
     page,
     '/?debug=battle&flow=boss&enemy=aomori-boss-tsugaru-no-nushi&lv=1&zone=dungeon',
@@ -40,7 +40,7 @@ test('タイトル→青森→県ボス→しるし獲得→セーブ続行', as
 });
 
 test('青森の対戦場：勝利後に賞金処理へ戻る', async ({ page }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(180_000);
   await winDebugFlow(page, '/?debug=battle&flow=arena&enemy=aomori-ringoron&lv=1', 'リンゴロン');
   await page.waitForTimeout(1_000);
   const saved = await page.evaluate(

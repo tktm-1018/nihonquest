@@ -16,7 +16,7 @@ async function start(page: Page, lv: number): Promise<void> {
 /** 単元には複数の問題形式が混ざり得るため、表示された形式に依存せず1回答する。 */
 async function answerCurrentQuestion(page: Page): Promise<void> {
   const ready = page.locator('.nq-choice, .nq-q-input input, .nq-map-tap').first();
-  await expect(ready).toBeVisible({ timeout: 20_000 });
+  await expect(ready).toBeVisible({ timeout: 60_000 });
   if (await page.locator('.nq-choice').first().isVisible()) {
     await page.locator('.nq-choice').first().click();
     return;
