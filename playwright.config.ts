@@ -18,7 +18,10 @@ export default defineConfig({
     ...(preinstalled ? { launchOptions: { executablePath: preinstalled } } : {}),
   },
   webServer: {
-    command: `pnpm build && pnpm preview --port ${port}`,
+    // Build is completed by test:e2e before Playwright starts. Keeping the
+    // managed process to preview only prevents a stale preview from making the
+    // build phase look "ready", and lets Playwright terminate one exact child.
+    command: `pnpm preview --port ${port}`,
     port,
     reuseExistingServer: false,
     // Full content validation, typechecking, and the production bundle can take

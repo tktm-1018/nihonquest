@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "policy": { "unknownLicenseAllowed": false, "approvalRequiresProof": true },
+  "bundledAssets": [],
+  "runtimeAudio": [
+    {
+      "kind": "english-voice",
+      "implementation": "Web Speech API en-US",
+      "bundledFile": false,
+      "status": "runtime-dependent",
+      "note": "音声ファイルは再配布しない。ブラウザとOSに依存。"
+    }
+  ],
+  "directories": [
+    { "path": "assets/audio/bgm", "kind": "bgm", "status": "empty-no-release-asset" },
+    { "path": "assets/audio/se", "kind": "se", "status": "empty-no-release-asset" },
+    { "path": "assets/audio/words", "kind": "english-voice", "status": "empty-no-release-asset" }
+  ]
+}

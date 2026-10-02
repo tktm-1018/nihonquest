@@ -20,13 +20,15 @@
     "pretest": "pnpm gen:manifest",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
+    "test:e2e": "pnpm build && playwright test",
     "gen:schemas": "tsx scripts/gen-schemas.ts",
     "gen:manifest": "tsx scripts/gen-manifest.ts",
     "validate:content": "tsx scripts/validate-content.ts",
     "check:architecture": "tsx scripts/check-architecture.ts",
     "audit:curriculum": "tsx scripts/audit-curriculum.ts",
     "audit:assets": "tsx scripts/audit-assets.ts",
+    "gen:release-quality": "tsx scripts/gen-release-quality.ts",
+    "validate:release-quality": "tsx scripts/validate-release-quality.ts",
     "import:legacy-questions": "tsx scripts/import-legacy-questions.ts",
     "import:legacy-roadmap": "tsx scripts/import-legacy-roadmap.ts",
     "localize:legacy-images": "tsx scripts/localize-legacy-images.ts",
@@ -36,7 +38,7 @@
     "scaffold:all-areas": "tsx scripts/scaffold-area.ts --all",
     "scaffold:maps": "tsx scripts/scaffold-maps.ts",
     "gen:terrain": "tsx scripts/gen-terrain.ts",
-    "check": "pnpm lint && pnpm check:architecture && pnpm test && pnpm validate:content && pnpm build"
+    "check": "pnpm lint && pnpm check:architecture && pnpm test && pnpm validate:content && pnpm validate:release-quality && pnpm build"
   },
   "dependencies": {
     "localforage": "^1.10.0",
