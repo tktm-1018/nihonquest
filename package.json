@@ -25,9 +25,12 @@
     "gen:manifest": "tsx scripts/gen-manifest.ts",
     "validate:content": "tsx scripts/validate-content.ts",
     "validate:curriculum-graph": "tsx scripts/validate-curriculum-graph.ts",
+    "validate:media-rights": "tsx scripts/validate-media-rights.ts",
     "check:architecture": "tsx scripts/check-architecture.ts",
     "audit:curriculum": "tsx scripts/audit-curriculum.ts",
     "audit:assets": "tsx scripts/audit-assets.ts",
+    "preexport:tohoku-assets": "pnpm gen:manifest",
+    "export:tohoku-assets": "tsx scripts/export-tohoku-assets.ts",
     "audit:academic-review": "tsx scripts/audit-academic-review.ts",
     "import:legacy-questions": "tsx scripts/import-legacy-questions.ts",
     "import:legacy-roadmap": "tsx scripts/import-legacy-roadmap.ts",
@@ -38,7 +41,7 @@
     "scaffold:all-areas": "tsx scripts/scaffold-area.ts --all",
     "scaffold:maps": "tsx scripts/scaffold-maps.ts",
     "gen:terrain": "tsx scripts/gen-terrain.ts",
-    "check": "pnpm lint && pnpm check:architecture && pnpm audit:curriculum --strict && pnpm test && pnpm validate:content && pnpm validate:curriculum-graph && pnpm build"
+    "check": "pnpm lint && pnpm check:architecture && pnpm audit:curriculum --strict && pnpm test && pnpm validate:content && pnpm validate:curriculum-graph && pnpm validate:media-rights && pnpm build"
   },
   "dependencies": {
     "localforage": "^1.10.0",
