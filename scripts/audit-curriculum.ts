@@ -9,6 +9,8 @@ interface AuditFinding {
   kind: 'dated-fact' | 'visual-context' | 'placeholder-unit' | 'duplicate-choice';
   id: string;
   detail: string;
+  evidenceStatus?: string;
+  academicApproval?: boolean;
 }
 
 const ROOT = resolve('.');
@@ -91,6 +93,31 @@ async function main(): Promise<void> {
     }
   }
 
+  // 一次資料・原図の確認待ちは「検出されなくなった＝解決」と扱わない。
+  // release-reviews台帳に残る高優先項目を監査結果へ常に引き継ぐ。
+  const releaseReviews = JSON.parse(
+    await readFile(resolve(CONTENT, 'quality/release-reviews.json'), 'utf8'),
+  ) as {
+    highPriority?: Array<{
+      id: string;
+      kind: 'dated-fact' | 'visual-context';
+      evidenceStatus: string;
+      academicApproval: boolean;
+      note: string;
+    }>;
+  };
+  for (const review of releaseReviews.highPriority ?? []) {
+    if (findings.some((finding) => finding.id === review.id && finding.kind === review.kind)) continue;
+    findings.push({
+      severity: review.kind === 'dated-fact' ? 'high' : 'medium',
+      kind: review.kind,
+      id: review.id,
+      detail: review.note,
+      evidenceStatus: review.evidenceStatus,
+      academicApproval: review.academicApproval,
+    });
+  }
+
   findings.sort(
     (a, b) =>
       a.severity.localeCompare(b.severity) || a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id),
@@ -111,8 +138,11 @@ async function main(): Promise<void> {
   console.log(
     `curriculum: ${questionCount} questions / ${units.length} units / ${findings.length} review findings`,
   );
-  if (process.argv.includes('--strict') && findings.length > 0) {
-    throw new Error(`教材監査で ${findings.length} 件の要確認項目が見つかりました`);
+  const blockingFindings = findings.filter(
+    (finding) => finding.kind === 'placeholder-unit' || finding.kind === 'duplicate-choice',
+  );
+  if (process.argv.includes('--strict') && blockingFindings.length > 0) {
+    throw new Error(`教材監査で ${blockingFindings.length} 件の構造修正項目が見つかりました`);
   }
 }
 

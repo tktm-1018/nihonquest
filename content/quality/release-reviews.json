@@ -1,591 +1,1785 @@
 {
-  "version": 1,
+  "version": 2,
   "generatedFrom": "content/manifest.json",
+  "generatedAt": "2026-10-03",
   "policy": {
     "unverifiedIsApproved": false,
     "approvalRequiresNamedReviewer": true,
-    "visualContextRequiresSourceVisual": true
+    "visualContextRequiresSourceVisual": true,
+    "aiMayNotActAsAcademicReviewer": true
+  },
+  "sources": [
+    {
+      "id": "mext-elementary-curriculum-2017",
+      "title": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "authority": "文部科学省",
+      "version": "平成29・30・31年改訂",
+      "url": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "location": "小学校学習指導要領および各教科解説"
+    },
+    {
+      "id": "cabinet-reiwa-selection",
+      "title": "新元号「令和」について",
+      "authority": "内閣官房",
+      "version": "2019年4月1日公表",
+      "url": "https://www.kantei.go.jp/jp/headline/singengou/singengou_sentei.html",
+      "location": "新元号の施行日（2019年5月1日）"
+    },
+    {
+      "id": "un-wpp-2024",
+      "title": "World Population Prospects 2024",
+      "authority": "United Nations, DESA Population Division",
+      "version": "2024 Revision",
+      "url": "https://population.un.org/wpp/",
+      "location": "2024年推計・国別総人口順位"
+    },
+    {
+      "id": "mofa-northern-territories-qa",
+      "title": "北方領土問題 Q&A",
+      "authority": "外務省",
+      "version": "参照時公開版",
+      "url": "https://www.mofa.go.jp/mofaj/area/hoppo/hoppo_qa.html",
+      "location": "北方四島の名称・現況"
+    },
+    {
+      "id": "un-2030-agenda",
+      "title": "Transforming our world: the 2030 Agenda for Sustainable Development",
+      "authority": "United Nations",
+      "version": "A/RES/70/1 (2015)",
+      "url": "https://sdgs.un.org/2030agenda",
+      "location": "Preambleおよび17 Sustainable Development Goals"
+    },
+    {
+      "id": "bunka-copyright-point",
+      "title": "著作権について知っておきたい大切なこと",
+      "authority": "文化庁",
+      "version": "参照時公開版",
+      "url": "https://www.bunka.go.jp/seisaku/chosakuken/taisetsu/point/index.html",
+      "location": "インターネットで著作物を利用する場合"
+    },
+    {
+      "id": "maff-kodomo-norinsuisan-2025",
+      "title": "こども農林水産白書／統計資料",
+      "authority": "農林水産省",
+      "version": "2025年版（令和5年産統計掲載）",
+      "url": "https://www.maff.go.jp/j/tokei/kodomo/pdf/jiten_2025.pdf",
+      "location": "りんごの主な産地・収穫量"
+    },
+    {
+      "id": "meti-sme-whitepaper-2019-iot",
+      "title": "2019年版 中小企業白書 第3部 第1章 第1節 2 デジタル化",
+      "authority": "中小企業庁",
+      "version": "2019年版",
+      "url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/2019/2019/html/b3_1_1_2.html",
+      "location": "脚注23「Internet of Things：モノのインターネット」"
+    },
+    {
+      "id": "customs-trade-statistics-2017",
+      "title": "財務省貿易統計 2017年版",
+      "authority": "財務省関税局",
+      "version": "2017年確定値",
+      "url": "https://www.customs.go.jp/toukei/info/tsdl.htm",
+      "location": "主要商品別輸出入額（元図版との対応は未照合）"
+    },
+    {
+      "id": "meti-sme-whitepaper-2019-digital",
+      "title": "2019年版 中小企業白書 第3部 第1章 第1節 2 デジタル化",
+      "authority": "中小企業庁",
+      "version": "2019年版（総務省 平成29年通信利用動向調査を引用）",
+      "url": "https://www.chusho.meti.go.jp/pamflet/hakusyo/2019/2019/html/b3_1_1_2.html",
+      "location": "2010～2017年のスマートフォン普及・SNS利用の説明"
+    },
+    {
+      "id": "moe-history-50",
+      "title": "環境省五十年史",
+      "authority": "環境省",
+      "version": "令和3年12月（補遺版 令和5年7月）",
+      "url": "https://www.env.go.jp/publication/history/50th/index.html",
+      "location": "公害対策基本法、環境庁設置、環境基本法、環境省発足の年表"
+    }
+  ],
+  "summary": {
+    "productionQuestionFiles": 44,
+    "highPriority": 30,
+    "datedFact": 12,
+    "visualContext": 18,
+    "approvedFiles": 0,
+    "pendingFiles": 44
   },
   "highPriority": [
     {
       "id": "legacy.shakai.g3.cur-1403-04.a01c7b064a91",
       "kind": "dated-fact",
+      "sourceKey": "era",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "施行日と元号名は一次資料と整合。人間の学術承認待ち。",
+      "questionFile": "questions/legacy/shakai/g3.json",
+      "prompt": "2019年5月1日に始まった日本の元号（年号）は何ですか。",
+      "sourceId": "cabinet-reiwa-selection",
+      "sourceTitle": "新元号「令和」について",
+      "sourceAuthority": "内閣官房",
+      "sourceVersion": "2019年4月1日公表",
       "sourceUrl": "https://www.kantei.go.jp/jp/headline/singengou/singengou_sentei.html",
-      "checkedAt": "2026-10-03",
-      "note": "一次資料と記述は整合。改元日を固定したが、学術責任者の承認待ち。"
+      "sourceLocation": "新元号の施行日（2019年5月1日）",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-1.0ae70760ab50",
       "kind": "dated-fact",
+      "sourceKey": "population",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "国連2024年推計の1位インド・2位中国と整合。版固定済み。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "国連「世界人口推計2024年版」の2024年推計で、人口が多い国の1位と2位の組み合わせを選ぼう。",
+      "sourceId": "un-wpp-2024",
+      "sourceTitle": "World Population Prospects 2024",
+      "sourceAuthority": "United Nations, DESA Population Division",
+      "sourceVersion": "2024 Revision",
       "sourceUrl": "https://population.un.org/wpp/",
-      "checkedAt": "2026-10-03",
-      "note": "国連2024年推計の順位と整合。版固定済み、学術責任者の承認待ち。"
+      "sourceLocation": "2024年推計・国別総人口順位",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "sourceKey": "northern",
+      "evidenceStatus": "primary-source-partial",
+      "note": "本文は外務省資料と整合するが、設問で使う地図原票は未照合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "ロシア連邦との領土をめぐる問題が発生している 以下の地図の地域を、何というでしょう。",
+      "sourceId": "mofa-northern-territories-qa",
+      "sourceTitle": "北方領土問題 Q&A",
+      "sourceAuthority": "外務省",
+      "sourceVersion": "参照時公開版",
       "sourceUrl": "https://www.mofa.go.jp/mofaj/area/hoppo/hoppo_qa.html",
-      "checkedAt": "2026-10-03",
-      "note": "外務省の政府見解と本文は整合。地図原票が未照合。"
+      "sourceLocation": "北方四島の名称・現況",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "sourceKey": "northern",
+      "evidenceStatus": "primary-source-partial",
+      "note": "本文は外務省資料と整合するが、赤丸位置を含む地図原票は未照合。",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "次の地図の赤い丸で囲まれた地域は、日本の領土であるが、ある国に支配されている。この地域を支配している国をえらぼう。",
+      "sourceId": "mofa-northern-territories-qa",
+      "sourceTitle": "北方領土問題 Q&A",
+      "sourceAuthority": "外務省",
+      "sourceVersion": "参照時公開版",
       "sourceUrl": "https://www.mofa.go.jp/mofaj/area/hoppo/hoppo_qa.html",
-      "checkedAt": "2026-10-03",
-      "note": "外務省一次資料と本文は整合。地図原票が未照合。"
+      "sourceLocation": "北方四島の名称・現況",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g6.soc-6-11.909ef5541685",
       "kind": "dated-fact",
+      "sourceKey": "sdgs",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "2015年採択・17目標は国連決議と整合。",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "2015年に採たくされた、SDGsとよばれる以下の17のことがらは何を表しているのか、正しいものをえらぼう。",
+      "sourceId": "un-2030-agenda",
+      "sourceTitle": "Transforming our world: the 2030 Agenda for Sustainable Development",
+      "sourceAuthority": "United Nations",
+      "sourceVersion": "A/RES/70/1 (2015)",
       "sourceUrl": "https://sdgs.un.org/2030agenda",
-      "checkedAt": "2026-10-03",
-      "note": "2015年採択・17目標は国連一次資料と整合。"
+      "sourceLocation": "Preambleおよび17 Sustainable Development Goals",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-8.e688d0da836d",
       "kind": "dated-fact",
+      "sourceKey": "sdgs",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "名称、2030年までの17目標という説明は国連決議と整合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "国連が定めた「持続可能な開発目標」として、環境問題や貧困、平和など17の目標を定めた世界共通の取り組みを何といいますか。",
+      "sourceId": "un-2030-agenda",
+      "sourceTitle": "Transforming our world: the 2030 Agenda for Sustainable Development",
+      "sourceAuthority": "United Nations",
+      "sourceVersion": "A/RES/70/1 (2015)",
       "sourceUrl": "https://sdgs.un.org/2030agenda",
-      "checkedAt": "2026-10-03",
-      "note": "名称・17目標・対象領域は国連一次資料と整合。"
+      "sourceLocation": "Preambleおよび17 Sustainable Development Goals",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-4.661afeb79b7f",
       "kind": "dated-fact",
+      "sourceKey": "apple",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "令和5年産統計の主要産地（青森・長野）と整合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "りんごのさいばいが さかんな都道府県の組み合わせとして、正しいものをえらぼう。",
+      "sourceId": "maff-kodomo-norinsuisan-2025",
+      "sourceTitle": "こども農林水産白書／統計資料",
+      "sourceAuthority": "農林水産省",
+      "sourceVersion": "2025年版（令和5年産統計掲載）",
       "sourceUrl": "https://www.maff.go.jp/j/tokei/kodomo/pdf/jiten_2025.pdf",
-      "checkedAt": "2026-10-03",
-      "note": "令和5年産の上位産地は青森・長野で設問正答と整合。"
+      "sourceLocation": "りんごの主な産地・収穫量",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-7.2cb80e8887d4",
       "kind": "dated-fact",
+      "sourceKey": "copyright",
       "evidenceStatus": "primary-source-matched",
-      "academicApproval": false,
+      "note": "インターネットへの無断掲載と著作権の説明は文化庁資料と整合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "インターネット上に他人の写真や文章、音楽などを許可なく無断でコピーして掲載したときに侵害してしまう権利は何ですか。",
+      "sourceId": "bunka-copyright-point",
+      "sourceTitle": "著作権について知っておきたい大切なこと",
+      "sourceAuthority": "文化庁",
+      "sourceVersion": "参照時公開版",
       "sourceUrl": "https://www.bunka.go.jp/seisaku/chosakuken/taisetsu/point/index.html",
-      "checkedAt": "2026-10-03",
-      "note": "無断アップロードの説明は文化庁資料と整合。"
+      "sourceLocation": "インターネットで著作物を利用する場合",
+      "accessedAt": "2026-10-03",
+      "academicApproval": false,
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-7.e793396648b7",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-missing",
+      "sourceKey": "iot",
+      "evidenceStatus": "primary-source-matched",
+      "note": "IoTの略称と「モノのインターネット」の説明は中小企業庁白書と整合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "様々なものがインターネットにつながり、情報をやりとりするようになることを、アルファベットで何というでしょう。",
+      "sourceId": "meti-sme-whitepaper-2019-iot",
+      "sourceTitle": "2019年版 中小企業白書 第3部 第1章 第1節 2 デジタル化",
+      "sourceAuthority": "中小企業庁",
+      "sourceVersion": "2019年版",
+      "sourceUrl": "https://www.chusho.meti.go.jp/pamflet/hakusyo/2019/2019/html/b3_1_1_2.html",
+      "sourceLocation": "脚注23「Internet of Things：モノのインターネット」",
+      "accessedAt": "2026-10-03",
       "academicApproval": false,
-      "sourceUrl": "",
-      "checkedAt": "2026-10-03",
-      "note": "IoTの語義を支える一次資料の版・参照日が教材に未記録。"
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-missing",
+      "sourceKey": "trade2017",
+      "evidenceStatus": "primary-source-partial",
+      "note": "財務省貿易統計の該当表は特定したが、教材画像がその原表を正確に転記したものか未照合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "下の図は、2017年の日本の輸出・輸入製品のわり合を表したグラフである。これを参考にしながら、以下の文のかっこに当てはまる言葉をえらぼう。",
+      "sourceId": "customs-trade-statistics-2017",
+      "sourceTitle": "財務省貿易統計 2017年版",
+      "sourceAuthority": "財務省関税局",
+      "sourceVersion": "2017年確定値",
+      "sourceUrl": "https://www.customs.go.jp/toukei/info/tsdl.htm",
+      "sourceLocation": "主要商品別輸出入額（元図版との対応は未照合）",
+      "accessedAt": "2026-10-03",
       "academicApproval": false,
-      "sourceUrl": "",
-      "checkedAt": "2026-10-03",
-      "note": "2017年の輸出入グラフ原票と画像の対応を未確認。"
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-7.b0f4467ddc1c",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-missing",
+      "sourceKey": "digital2019",
+      "evidenceStatus": "primary-source-partial",
+      "note": "スマートフォン・SNS普及の方向性は政府白書と整合するが、「情報量が急速に増えた」の定量原表は未特定。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "2010年代に入ると、わたし達が生活の中でふれる情報の量は、急速に増えた。その理由として、正しくないものを 次の中からえらぼう。",
+      "sourceId": "meti-sme-whitepaper-2019-digital",
+      "sourceTitle": "2019年版 中小企業白書 第3部 第1章 第1節 2 デジタル化",
+      "sourceAuthority": "中小企業庁",
+      "sourceVersion": "2019年版（総務省 平成29年通信利用動向調査を引用）",
+      "sourceUrl": "https://www.chusho.meti.go.jp/pamflet/hakusyo/2019/2019/html/b3_1_1_2.html",
+      "sourceLocation": "2010～2017年のスマートフォン普及・SNS利用の説明",
+      "accessedAt": "2026-10-03",
       "academicApproval": false,
-      "sourceUrl": "",
-      "checkedAt": "2026-10-03",
-      "note": "2010年代の情報量増加を支える統計表の特定が未完了。"
+      "reviewer": null
     },
     {
       "id": "legacy.shakai.g5.soc-5-8.4642deacf8fd",
       "kind": "dated-fact",
-      "evidenceStatus": "primary-source-missing",
+      "sourceKey": "environment",
+      "evidenceStatus": "primary-source-matched",
+      "note": "1967・1971・1993・2001年の制度・組織変遷は環境省五十年史と整合。",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "公害に対する国の取り組みについて、かっこに当てはまる言葉をえらぼう。",
+      "sourceId": "moe-history-50",
+      "sourceTitle": "環境省五十年史",
+      "sourceAuthority": "環境省",
+      "sourceVersion": "令和3年12月（補遺版 令和5年7月）",
+      "sourceUrl": "https://www.env.go.jp/publication/history/50th/index.html",
+      "sourceLocation": "公害対策基本法、環境庁設置、環境基本法、環境省発足の年表",
+      "accessedAt": "2026-10-03",
       "academicApproval": false,
-      "sourceUrl": "",
-      "checkedAt": "2026-10-03",
-      "note": "公害対策の法令・年次を一次資料へ結び付ける作業が未完了。"
+      "reviewer": null
     },
     {
       "id": "legacy.kokugo.g3.jpn-3-22.1d96f31c3027",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/kokugo/g3.json",
+      "prompt": "（　）に入る正しい読みがなを選ぼう。\n\n◆日本（列島）の地図を見る。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.kokugo.g3.jpn-3-9.52c149818807",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/kokugo/g3.json",
+      "prompt": "（　）に入る正しい漢字の組み合わせを選ぼう。\n\n◆地図（きごう）を覚える。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.sansu.g6.math-6-7.35928a01856e",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/sansu/g6.json",
+      "prompt": "次の図形の面積を求めよう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g3.cur-1403-04.215488f29d8a",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g3.json",
+      "prompt": "写真を見て、市の人口の変化として考えられるものはどれですか。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/9d50fa19b9b7cb92.png",
+      "assetExists": true,
+      "assetSha256": "3e88d712475fca90b0b34780d8cb472d620be4b6dba81126ca834bea3ae878a1",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g3.cur-1403-04.aea73505c390",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g3.json",
+      "prompt": "写真を見て、年表にまとめるときの考え方として正しいものはどれですか。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/426eb76ff2173ffe.png",
+      "assetExists": true,
+      "assetSha256": "f6c5ce965ada8cdcbf32378bb54f82b1216511f0128a3a7cfb43dd8f36f79548",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "ロシア連邦との領土をめぐる問題が発生している 以下の地図の地域を、何というでしょう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/d611150b0d9336d5.png",
+      "assetExists": true,
+      "assetSha256": "f58a2008e7ca927a11b746da7fe91f339bf21584e69f920dd80dac36f3ee1b43",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "下の図は、2017年の日本の輸出・輸入製品のわり合を表したグラフである。これを参考にしながら、以下の文のかっこに当てはまる言葉をえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/e7a798c6c963e8cd.png",
+      "assetExists": true,
+      "assetSha256": "7e937637789c6e0aa1df899cfc0fec75be19fcfe632e11136a550897e08d9f1a",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g5.soc-5-6.b059945f3dcc",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g5.json",
+      "prompt": "下の図は、1960年と2009年の貨物・旅客輸送について、日本国内の交通手段別のわり合を表している。これを参考にしながら、次の文のかっこに当てはまる言葉をえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/20b4bec078363455.png",
+      "assetExists": true,
+      "assetSha256": "20c9e0d474fd31069446ba9367040ce2b169afccff61758a8c38b7fc18ba5a5e",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g6.soc-6-4.0afc196c9f52",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "東大寺の正倉院におさめられている宝物には次のような特ちょうがある。このことからわかる、奈良時代の文化についての説明として、正しいものをえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/c07ef0a66b5b3099.png",
+      "assetExists": true,
+      "assetSha256": "efe87c29354c520e573abc5806531a34dc16a21f3e8eb56ede0cacb843c492f9",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g6.soc-6-6.7193778e8e8e",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "織田信長が、次の地図の場所に築いた城をえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/27e36bf40c5c6db1.png",
+      "assetExists": true,
+      "assetSha256": "e7d88e944a5f0e4ad6f0b45ee20da0dba6f3c2f8491f00e4b97ea880a11f0fa2",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g6.soc-6-7.4908eef92d6b",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "江戸時代の人口構成（推定すいてい）を表す上の図も参考にしながら、江戸時代のさまざまな身分についての説明として、正しいものをえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/a3eae6b2afc8e171.png",
+      "assetExists": true,
+      "assetSha256": "985833d52de6c5d854dcae1b0d4bafe94693e4e1c9bfb3284802b90068a089e1",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g6.json",
+      "prompt": "次の地図の赤い丸で囲まれた地域は、日本の領土であるが、ある国に支配されている。この地域を支配している国をえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/42b1390dbdd7d59e.png",
+      "assetExists": true,
+      "assetSha256": "f58a2008e7ca927a11b746da7fe91f339bf21584e69f920dd80dac36f3ee1b43",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.sansu.g6.math-6-9.337d7e0826ac",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/sansu/g6.json",
+      "prompt": "比例のグラフの特徴として、正しいものをえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.sansu.g6.math-6-9.cea54380c2ee",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/sansu/g6.json",
+      "prompt": "反比例のグラフの特徴として、正しいものをえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g3.cur-1403-04.317c29b9a8d8",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g3.json",
+      "prompt": "グラフにおいて、子どもの割合が減り、高齢者（お年寄り）の割合が増えていく社会の変化のことを何といいますか。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g4.cur-1404-01.23873eb36d36",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g4.json",
+      "prompt": "地域の気候の特色を調べるときに、月ごとの「気温」と「降水量」をグラフにしたものを何といいますか。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.shakai.g4.cur-1404-05.e2c978bf2b0a",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/shakai/g4.json",
+      "prompt": "写真を見て、地場産業の製品を日本中や世界へ発信して売り伸ばす取り組みはどれですか。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": "questions/legacy/d79becb54c201fb8.png",
+      "assetExists": true,
+      "assetSha256": "9ba10e9a798824f5abc342cecaf78af15df623f6edc65a793a11de4458dfe2af",
+      "provenanceStatus": "local-copy-found-origin-unverified",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     },
     {
       "id": "legacy.sansu.g4.math-4-2.ca71f3ca3730",
       "kind": "visual-context",
+      "questionFile": "questions/legacy/sansu/g4.json",
+      "prompt": "折れ線グラフについて、正しいものをえらぼう。",
       "evidenceStatus": "blocked-missing-source-visual",
       "academicApproval": false,
+      "reviewer": null,
+      "sourceId": "mext-elementary-curriculum-2017",
+      "sourceTitle": "平成29・30・31年改訂 学習指導要領（本文、解説）",
+      "sourceAuthority": "文部科学省",
+      "sourceVersion": "平成29・30・31年改訂",
       "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
-      "checkedAt": "2026-10-03",
-      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+      "sourceLocation": "小学校学習指導要領および各教科解説",
+      "accessedAt": "2026-10-03",
+      "assetPath": null,
+      "assetExists": false,
+      "assetSha256": null,
+      "provenanceStatus": "missing-or-not-linked",
+      "note": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。"
     }
   ],
   "questionFiles": [
     {
       "path": "questions/eigo/g1/alphabet.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 26,
+      "types": [
+        "choice"
+      ],
+      "sha256": "931d2ec01349bcf48099e04f601386c14bafc1b58fb4d73555f7beab4a41c08e",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g1/fruits.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 9,
+      "types": [
+        "picture-word"
+      ],
+      "sha256": "75809e103eebee4d01bf29c90f4657186ef1fe5b27f7df155eebd34e271f7ff9",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g2/alphabet-order.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 24,
+      "types": [
+        "choice"
+      ],
+      "sha256": "2ecff795b4f09b7479046a2f498222cf27acaea7c1d486fdbd0647f07bca968f",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g2/animals.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 8,
+      "types": [
+        "picture-word"
+      ],
+      "sha256": "5edc57f679729833361286d2828d349f7d2d2f3e7fd27c9b475db7f00eb976f5",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g3/alphabet-small.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 26,
+      "types": [
+        "choice"
+      ],
+      "sha256": "6754be0f1439a52901c462a57ead8cc36bbd9dd0909cf08c74d34263f16c0723",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g3/sea-pictures.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 6,
+      "types": [
+        "picture-word"
+      ],
+      "sha256": "2fa0b45293006428fffaa1e0cafc6536793cf51af11f5581c313ab505e493f75",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/eigo/g3/sea.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "eigo"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 3,
+      "types": [
+        "choice"
+      ],
+      "sha256": "3c0d23f5ce1a6da06dc871f3b298f5ede4a743df6a72610bab28442bface98df",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/kokugo/g1/bun-no-kimari.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 10,
+      "types": [
+        "choice"
+      ],
+      "sha256": "5601a3053c31baea6bd417aaf7e31116753d2b96ac5b1aee363f11e1d4307ccd",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/kokugo/g1/hiragana.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 19,
+      "types": [
+        "choice"
+      ],
+      "sha256": "8d70c555e0e04956db0023b9037d0adc9d3caaed829010359ea604bb70f7f1b9",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/kokugo/g1/joshi.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 10,
+      "types": [
+        "choice"
+      ],
+      "sha256": "e1c11884afa988869eac3c2227a7f91f398c00e8764ec96147a69df61280ab17",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/kokugo/g1/kanji.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 11,
+      "types": [
+        "choice"
+      ],
+      "sha256": "8b4d83cc20ab09fe826cc0721855b8512c982395f0571930d946986bbd8c5c2b",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/kokugo/g1/kotoba-asobi.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 5,
+      "types": [
+        "choice"
+      ],
+      "sha256": "a66618ad16e01847e5017fba36fc7aa2283f5dab093b016a80e16ac2809ab269",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g1.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 159,
+      "types": [
+        "choice"
+      ],
+      "sha256": "c710e14dafbe4e76c2ace1417cae3692598918c2b54846bb19ad73805224102a",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g2.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 102,
+      "types": [
+        "choice"
+      ],
+      "sha256": "aa59388ad66a8c968df643d87d1a6a680a3610ffdaeb58a5bc98fbb54f690676",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g3.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 336,
+      "types": [
+        "choice"
+      ],
+      "sha256": "95df40076ca5bdb5bf2e2a3b9c967bada7ad157e109536736fc64aaba5a5058f",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 2,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g4.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 205,
+      "types": [
+        "choice"
+      ],
+      "sha256": "20ce6b985cf3cbd4f8e9222c4800f7a2b98360d179467b9716c35a5321d1a210",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g5.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        5
+      ],
+      "questionCount": 88,
+      "types": [
+        "choice"
+      ],
+      "sha256": "ae56770db1da122f26b7442ec38e280f37f0b01268a799f1e58e5cbf899916a5",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/kokugo/g6.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "kokugo"
+      ],
+      "grades": [
+        6
+      ],
+      "questionCount": 90,
+      "types": [
+        "choice"
+      ],
+      "sha256": "436f4807dc19624b840d1bf8a6abc6526541e48afe2819e7a954ea21d9714090",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/rika/g3.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 120,
+      "types": [
+        "choice"
+      ],
+      "sha256": "fed32c15ea84d9d0d8dd2bb8c2431bc327299c4ae213f87b033eb334a92d4b9a",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/rika/g4.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 168,
+      "types": [
+        "choice"
+      ],
+      "sha256": "d5535ba2b295c2f993a81b35176ccd37c9bd45d57abe35546697e54d6b32dc6d",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/rika/g5.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        5
+      ],
+      "questionCount": 209,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "428011f6723a4f40adf3368ec73554ce1a4c63d6fbb1d97b37fcebf426a0ba22",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/rika/g6.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        6
+      ],
+      "questionCount": 190,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "ae100da571cca7f2ad9c16aeab6ccef6b8df8836d3ea6edcb4cb40b931bc7857",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g1.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 123,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "1cc81bc649b2857c078c0f3f2e403c442db321bcd88b0efdcfdbed85aa7f98b2",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g2.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 308,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "1cbf1f2a95647619e50b377bdbe42eb90e4fcb5c9ca7702ebf95f7da31acf257",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g3.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 334,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "5aa01b6cafac7da9f8a880687fc890c44cd8482c6269526513f24399afdc0f34",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g4.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 365,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "2686a9e1426c2d8acfbbe43203540d4b3e5a3c58781a4656a86816faf6643754",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 1,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g5.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        5
+      ],
+      "questionCount": 333,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "6bbabca5b91733414b608229d1619a3b4abb5d5521f9a883e88d1c4b3b5ee6b1",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/sansu/g6.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        6
+      ],
+      "questionCount": 193,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "6afde96aa80f2653b3a5d484aa94038974e2cfb5cc244c5ad324e90d03aec94f",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 3,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/seikatsu/g1.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "seikatsu"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 48,
+      "types": [
+        "choice"
+      ],
+      "sha256": "bded78b6ca2cce4ee620650b79e3d1c6759c707049070b35ab4f4d74e5111191",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/seikatsu/g2.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "seikatsu"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 60,
+      "types": [
+        "choice"
+      ],
+      "sha256": "836a0b8725851f1d932df6fe358d2c3c1076068b928edf0b785ef7ed26d30209",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/shakai/g3.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 145,
+      "types": [
+        "choice",
+        "map-tap"
+      ],
+      "sha256": "845653d2124a4f20afd8816bada35513718f29593e44acbf333af675161893e9",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 4,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/shakai/g4.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 75,
+      "types": [
+        "choice"
+      ],
+      "sha256": "50cf44ab62275ec08cce1764dd384b67f04377d1217d0f7e9ba47c8cc70db107",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 2,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/shakai/g5.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        5
+      ],
+      "questionCount": 116,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "4fbbb81949fd96b79ae7ebee0dddd1330fc7f087268a0921f1626625c4afb363",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 12,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/legacy/shakai/g6.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        6
+      ],
+      "questionCount": 146,
+      "types": [
+        "choice",
+        "text-input"
+      ],
+      "sha256": "b26bf6b61f1a85fc63ec5ac284a440f9d10402b09956613de10d7aaec2a82830",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 6,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/rika/g4/mizu-experiment.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 1,
+      "types": [
+        "experiment"
+      ],
+      "sha256": "d803cdec84f39c5064e3fee34f53800c11f1e9d28fa1888b0f435690c652f139",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/rika/g4/mizu-no-sugata.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "rika"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 3,
+      "types": [
+        "choice"
+      ],
+      "sha256": "93ba21d033215629b147d133cb63150fcbe74d76bc89c01fd12fe5e04a22b781",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g1/kazu-no-bunkai.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 4,
+      "types": [
+        "choice"
+      ],
+      "sha256": "cb1c37e752f8d1cf8060b40789351a4b74ec088fc119f1310ea7756e187ac382",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g1/ringo-number-build.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 3,
+      "types": [
+        "number-build"
+      ],
+      "sha256": "d228c03711c81016e2b58b7e87e80403161896b95d7b187e767637be63fbb956",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g1/tashizan.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        1
+      ],
+      "questionCount": 5,
+      "types": [
+        "choice"
+      ],
+      "sha256": "b8860fd300c1c31eaae3cabb46c640e961ac0921859611350e6e6441bdc55ed7",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g2/jikan-legacy.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 6,
+      "types": [
+        "choice"
+      ],
+      "sha256": "ffb5be87e81d8bb4cf417c6238aaf68a114cda5621e6e96147cc1d4378bd895a",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g2/kasa-legacy.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        2
+      ],
+      "questionCount": 6,
+      "types": [
+        "choice"
+      ],
+      "sha256": "1ab699dc06d84459b8f4603350820ea7c1053b4ff72f9a61c4fcecaf9f504456",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/sansu/g3/warizan-legacy.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "sansu"
+      ],
+      "grades": [
+        3
+      ],
+      "questionCount": 6,
+      "types": [
+        "choice"
+      ],
+      "sha256": "3270493b8fca3890abb9792378f4016eb8ecc11a1c72837c25bc76c5c6732131",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/shakai/g4/todofuken.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 3,
+      "types": [
+        "choice"
+      ],
+      "sha256": "a85985489812f639b03c768bf12d43822811b2f05133ce8952517c3ec5d7f7ec",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     },
     {
       "path": "questions/shakai/g4/tohoku.json",
-      "status": "pending-human-academic-review",
+      "subjects": [
+        "shakai"
+      ],
+      "grades": [
+        4
+      ],
+      "questionCount": 20,
+      "types": [
+        "choice"
+      ],
+      "sha256": "7dcc05ad64c68c0bb8d8b37a81b622908f0254d75da677736df91c0f1a86f37d",
+      "structuralValidation": "passed-question-base-schema",
+      "academicReviewStatus": "pending-human-academic-review",
       "reviewer": null,
       "reviewedAt": null,
-      "note": "構造検証済み。学術承認は未実施。"
+      "sourceIds": [
+        "mext-elementary-curriculum-2017"
+      ],
+      "requiredFixCount": 0,
+      "note": "構造検証済み。内容の学術承認は未実施。"
     }
-  ]
+  ],
+  "tohoku": {
+    "questionCount": 28,
+    "byPrefecture": {
+      "akita": 4,
+      "aomori": 8,
+      "fukushima": 4,
+      "iwate": 4,
+      "miyagi": 4,
+      "yamagata": 4
+    },
+    "bySubject": {
+      "rika": 1,
+      "sansu": 4,
+      "shakai": 23
+    },
+    "byGrade": {
+      "g1": 4,
+      "g4": 24
+    },
+    "byType": {
+      "choice": 24,
+      "experiment": 1,
+      "number-build": 3
+    },
+    "regionalBossQuery": {
+      "sharedTag": "boss-review:tohoku",
+      "questionIdsByPrefecture": {
+        "aomori": [
+          "shakai.g4.todofuken.0001",
+          "shakai.g4.todofuken.0002"
+        ],
+        "iwate": [
+          "shakai.g4.todofuken.0111",
+          "shakai.g4.todofuken.0112"
+        ],
+        "miyagi": [
+          "shakai.g4.todofuken.0113",
+          "shakai.g4.todofuken.0114"
+        ],
+        "akita": [
+          "shakai.g4.todofuken.0115",
+          "shakai.g4.todofuken.0116"
+        ],
+        "yamagata": [
+          "shakai.g4.todofuken.0117",
+          "shakai.g4.todofuken.0118"
+        ],
+        "fukushima": [
+          "shakai.g4.todofuken.0119",
+          "shakai.g4.todofuken.0120"
+        ]
+      },
+      "selectionPolicy": "6県から最低1問ずつ選ぶ。単一県への偏りを禁止。"
+    }
+  }
 }

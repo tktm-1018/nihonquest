@@ -1,11 +1,252 @@
 {
-  "questionCount": 4117,
+  "questionCount": 4127,
   "unitCount": 293,
   "summary": {
-    "dated-fact": 0,
-    "visual-context": 0,
+    "dated-fact": 12,
+    "visual-context": 18,
     "placeholder-unit": 0,
     "duplicate-choice": 0
   },
-  "findings": []
+  "findings": [
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g3.cur-1403-04.a01c7b064a91",
+      "detail": "施行日と元号名は一次資料と整合。人間の学術承認待ち。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
+      "detail": "本文は外務省資料と整合するが、設問で使う地図原票は未照合。",
+      "evidenceStatus": "primary-source-partial",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-1.0ae70760ab50",
+      "detail": "国連2024年推計の1位インド・2位中国と整合。版固定済み。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-4.661afeb79b7f",
+      "detail": "令和5年産統計の主要産地（青森・長野）と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
+      "detail": "財務省貿易統計の該当表は特定したが、教材画像がその原表を正確に転記したものか未照合。",
+      "evidenceStatus": "primary-source-partial",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-7.2cb80e8887d4",
+      "detail": "インターネットへの無断掲載と著作権の説明は文化庁資料と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-7.b0f4467ddc1c",
+      "detail": "スマートフォン・SNS普及の方向性は政府白書と整合するが、「情報量が急速に増えた」の定量原表は未特定。",
+      "evidenceStatus": "primary-source-partial",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-7.e793396648b7",
+      "detail": "IoTの略称と「モノのインターネット」の説明は中小企業庁白書と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-8.4642deacf8fd",
+      "detail": "1967・1971・1993・2001年の制度・組織変遷は環境省五十年史と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g5.soc-5-8.e688d0da836d",
+      "detail": "名称、2030年までの17目標という説明は国連決議と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
+      "detail": "本文は外務省資料と整合するが、赤丸位置を含む地図原票は未照合。",
+      "evidenceStatus": "primary-source-partial",
+      "academicApproval": false
+    },
+    {
+      "severity": "high",
+      "kind": "dated-fact",
+      "id": "legacy.shakai.g6.soc-6-11.909ef5541685",
+      "detail": "2015年採択・17目標は国連決議と整合。",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.kokugo.g3.jpn-3-22.1d96f31c3027",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.kokugo.g3.jpn-3-9.52c149818807",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.sansu.g4.math-4-2.ca71f3ca3730",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.sansu.g6.math-6-7.35928a01856e",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.sansu.g6.math-6-9.337d7e0826ac",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.sansu.g6.math-6-9.cea54380c2ee",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g3.cur-1403-04.215488f29d8a",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g3.cur-1403-04.317c29b9a8d8",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g3.cur-1403-04.aea73505c390",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g4.cur-1404-01.23873eb36d36",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g4.cur-1404-05.e2c978bf2b0a",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g5.soc-5-6.b059945f3dcc",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g6.soc-6-4.0afc196c9f52",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g6.soc-6-6.7193778e8e8e",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    },
+    {
+      "severity": "medium",
+      "kind": "visual-context",
+      "id": "legacy.shakai.g6.soc-6-7.4908eef92d6b",
+      "detail": "ローカル画像の有無だけでは原票との同一性を証明できない。出典・版・図表番号を人間が照合するまでブロック。",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false
+    }
+  ]
 }
