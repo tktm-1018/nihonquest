@@ -27,6 +27,7 @@
     "check:architecture": "tsx scripts/check-architecture.ts",
     "audit:curriculum": "tsx scripts/audit-curriculum.ts",
     "audit:assets": "tsx scripts/audit-assets.ts",
+    "export:aomori-assets": "tsx scripts/export-aomori-assets.ts",
     "gen:release-quality": "tsx scripts/gen-release-quality.ts",
     "validate:release-quality": "tsx scripts/validate-release-quality.ts",
     "import:legacy-questions": "tsx scripts/import-legacy-questions.ts",

@@ -1,7 +1,17 @@
 {
   "version": 1,
   "policy": { "unknownLicenseAllowed": false, "approvalRequiresProof": true },
-  "bundledAssets": [],
+  "bundledAssets": [
+    {
+      "path": "assets/{motifs/aomori,sprites/characters/npc-aomori-*,portraits/npc-aomori-shop.png}",
+      "kind": "project-generated-pixel-art",
+      "title": "青森MVP 静的素材19件",
+      "author": "nihonquest contributors",
+      "sourceUrl": "scripts/export-aomori-assets.ts",
+      "license": "project-owned; generated deterministically from repository source art",
+      "proofCheckedAt": "2026-10-03"
+    }
+  ],
   "runtimeAudio": [
     {
       "kind": "english-voice",

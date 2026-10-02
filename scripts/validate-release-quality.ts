@@ -23,6 +23,7 @@ if (rights.bundledAssets.some((x) => !x.license || !x.sourceUrl))
   throw new Error('media rights record incomplete');
 if (backlog.total !== backlog.assets.length) throw new Error('asset backlog total mismatch');
 const aomoriP0 = backlog.assets.filter((x) => x.area === 'aomori' && x.priority === 1).length;
+if (aomoriP0 !== 0) throw new Error(`Aomori P0 assets missing: ${aomoriP0}`);
 console.log(
   `quality: dated=${dated.length}, visual=${visual.length}, files=44, assets=${backlog.total}, aomoriP0=${aomoriP0}`,
 );

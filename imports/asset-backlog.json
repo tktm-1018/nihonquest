@@ -1,17 +1,16 @@
 {
-  "total": 601,
+  "total": 582,
   "byReleaseScope": {
-    "aomori-mvp": 19,
+    "aomori-mvp": 0,
     "tohoku": 67,
     "national": 515
   },
   "byKind": {
-    "motif": 498,
-    "character": 102,
-    "portrait": 1
+    "motif": 486,
+    "character": 96,
+    "portrait": 0
   },
   "byArea": {
-    "aomori": 19,
     "iwate": 14,
     "miyagi": 13,
     "akita": 13,
@@ -61,273 +60,217 @@
   },
   "nextBatch": [
     {
-      "key": "char.npc-aomori-arena",
-      "path": "assets/sprites/characters/npc-aomori-arena.png",
+      "key": "char.npc-iwate-shop",
+      "path": "assets/sprites/characters/npc-iwate-shop.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "iwate",
+      "priority": 2
     },
     {
-      "key": "char.npc-aomori-board",
-      "path": "assets/sprites/characters/npc-aomori-board.png",
+      "key": "char.npc-iwate-smith",
+      "path": "assets/sprites/characters/npc-iwate-smith.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "iwate",
+      "priority": 2
     },
     {
-      "key": "char.npc-aomori-dex",
-      "path": "assets/sprites/characters/npc-aomori-dex.png",
+      "key": "motif.iwate.chusonji",
+      "path": "assets/motifs/iwate/chusonji.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.geibikei",
+      "path": "assets/motifs/iwate/geibikei.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.hachimantai",
+      "path": "assets/motifs/iwate/hachimantai.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.iwate-san",
+      "path": "assets/motifs/iwate/iwate-san.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.jodogahama",
+      "path": "assets/motifs/iwate/jodogahama.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.kitayamazaki",
+      "path": "assets/motifs/iwate/kitayamazaki.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.morioka-reimen",
+      "path": "assets/motifs/iwate/morioka-reimen.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.nanbu-tekki",
+      "path": "assets/motifs/iwate/nanbu-tekki.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.ryusendo",
+      "path": "assets/motifs/iwate/ryusendo.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.sanriku-wakame",
+      "path": "assets/motifs/iwate/sanriku-wakame.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.tono",
+      "path": "assets/motifs/iwate/tono.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "motif.iwate.wanko",
+      "path": "assets/motifs/iwate/wanko.png",
+      "kind": "motif",
+      "area": "iwate",
+      "priority": 2
+    },
+    {
+      "key": "char.npc-miyagi-shop",
+      "path": "assets/sprites/characters/npc-miyagi-shop.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "miyagi",
+      "priority": 2
     },
     {
-      "key": "char.npc-aomori-inn",
-      "path": "assets/sprites/characters/npc-aomori-inn.png",
+      "key": "char.npc-miyagi-talk",
+      "path": "assets/sprites/characters/npc-miyagi-talk.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "miyagi",
+      "priority": 2
     },
     {
-      "key": "char.npc-aomori-shop",
-      "path": "assets/sprites/characters/npc-aomori-shop.png",
+      "key": "motif.miyagi.gyutan",
+      "path": "assets/motifs/miyagi/gyutan.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.izunuma",
+      "path": "assets/motifs/miyagi/izunuma.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.kesennuma",
+      "path": "assets/motifs/miyagi/kesennuma.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.matsushima",
+      "path": "assets/motifs/miyagi/matsushima.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.miyagi-kaki",
+      "path": "assets/motifs/miyagi/miyagi-kaki.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.naruko-kokeshi",
+      "path": "assets/motifs/miyagi/naruko-kokeshi.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.naruko-kyo",
+      "path": "assets/motifs/miyagi/naruko-kyo.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.sasakama",
+      "path": "assets/motifs/miyagi/sasakama.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.sendai-jo",
+      "path": "assets/motifs/miyagi/sendai-jo.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.sendai-tanabata",
+      "path": "assets/motifs/miyagi/sendai-tanabata.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "motif.miyagi.zunda",
+      "path": "assets/motifs/miyagi/zunda.png",
+      "kind": "motif",
+      "area": "miyagi",
+      "priority": 2
+    },
+    {
+      "key": "char.npc-akita-shop",
+      "path": "assets/sprites/characters/npc-akita-shop.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "akita",
+      "priority": 2
     },
     {
-      "key": "char.npc-aomori-smith",
-      "path": "assets/sprites/characters/npc-aomori-smith.png",
+      "key": "char.npc-akita-smith",
+      "path": "assets/sprites/characters/npc-akita-smith.png",
       "kind": "character",
-      "area": "aomori",
-      "priority": 1
+      "area": "akita",
+      "priority": 2
     },
     {
-      "key": "motif.aomori.hirosaki-jo",
-      "path": "assets/motifs/aomori/hirosaki-jo.png",
+      "key": "motif.akita.akita-inu",
+      "path": "assets/motifs/akita/akita-inu.png",
       "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.nebuta",
-      "path": "assets/motifs/aomori/nebuta.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.oirase",
-      "path": "assets/motifs/aomori/oirase.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.oma-maguro",
-      "path": "assets/motifs/aomori/oma-maguro.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.osorezan",
-      "path": "assets/motifs/aomori/osorezan.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.ringo",
-      "path": "assets/motifs/aomori/ringo.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.sannai-maruyama",
-      "path": "assets/motifs/aomori/sannai-maruyama.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.senbeijiru",
-      "path": "assets/motifs/aomori/senbeijiru.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.shirakami",
-      "path": "assets/motifs/aomori/shirakami.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.towada-ko",
-      "path": "assets/motifs/aomori/towada-ko.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.tsugaru-kaikyo",
-      "path": "assets/motifs/aomori/tsugaru-kaikyo.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.tsugaru-nuri",
-      "path": "assets/motifs/aomori/tsugaru-nuri.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "face.npc-aomori-shop",
-      "path": "assets/portraits/npc-aomori-shop.png",
-      "kind": "portrait",
-      "area": "aomori",
-      "priority": 1
+      "area": "akita",
+      "priority": 2
     }
   ],
   "assets": [
-    {
-      "key": "char.npc-aomori-arena",
-      "path": "assets/sprites/characters/npc-aomori-arena.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "char.npc-aomori-board",
-      "path": "assets/sprites/characters/npc-aomori-board.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "char.npc-aomori-dex",
-      "path": "assets/sprites/characters/npc-aomori-dex.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "char.npc-aomori-inn",
-      "path": "assets/sprites/characters/npc-aomori-inn.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "char.npc-aomori-shop",
-      "path": "assets/sprites/characters/npc-aomori-shop.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "char.npc-aomori-smith",
-      "path": "assets/sprites/characters/npc-aomori-smith.png",
-      "kind": "character",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.hirosaki-jo",
-      "path": "assets/motifs/aomori/hirosaki-jo.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.nebuta",
-      "path": "assets/motifs/aomori/nebuta.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.oirase",
-      "path": "assets/motifs/aomori/oirase.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.oma-maguro",
-      "path": "assets/motifs/aomori/oma-maguro.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.osorezan",
-      "path": "assets/motifs/aomori/osorezan.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.ringo",
-      "path": "assets/motifs/aomori/ringo.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.sannai-maruyama",
-      "path": "assets/motifs/aomori/sannai-maruyama.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.senbeijiru",
-      "path": "assets/motifs/aomori/senbeijiru.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.shirakami",
-      "path": "assets/motifs/aomori/shirakami.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.towada-ko",
-      "path": "assets/motifs/aomori/towada-ko.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.tsugaru-kaikyo",
-      "path": "assets/motifs/aomori/tsugaru-kaikyo.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "motif.aomori.tsugaru-nuri",
-      "path": "assets/motifs/aomori/tsugaru-nuri.png",
-      "kind": "motif",
-      "area": "aomori",
-      "priority": 1
-    },
-    {
-      "key": "face.npc-aomori-shop",
-      "path": "assets/portraits/npc-aomori-shop.png",
-      "kind": "portrait",
-      "area": "aomori",
-      "priority": 1
-    },
     {
       "key": "char.npc-iwate-shop",
       "path": "assets/sprites/characters/npc-iwate-shop.png",

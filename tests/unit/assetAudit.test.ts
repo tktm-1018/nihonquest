@@ -26,11 +26,10 @@ describe('素材バックログ監査', () => {
 
   it('実コンテンツから再現可能なバックログを作る', async () => {
     const report = await auditAssets();
-    expect(report.total).toBe(601);
-    expect(report.byReleaseScope).toEqual({ 'aomori-mvp': 19, tohoku: 67, national: 515 });
-    expect(report.byKind).toEqual({ motif: 498, character: 102, portrait: 1 });
-    expect(report.byArea.aomori).toBe(19);
-    expect(report.nextBatch).toHaveLength(19);
-    expect(report.nextBatch.every((item) => item.area === 'aomori' && item.priority === 1)).toBe(true);
+    expect(report.total).toBe(582);
+    expect(report.byReleaseScope).toEqual({ 'aomori-mvp': 0, tohoku: 67, national: 515 });
+    expect(report.byKind).toEqual({ motif: 486, character: 96, portrait: 0 });
+    expect(report.byArea.aomori).toBeUndefined();
+    expect(report.nextBatch.every((item) => item.priority === 2)).toBe(true);
   });
 });
