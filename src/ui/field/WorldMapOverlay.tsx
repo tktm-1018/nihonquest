@@ -47,6 +47,7 @@ export interface MapRegionInfo {
   height: number;
   rows: string[];
   areas: MapAreaInfo[];
+  islandBoss: { state: 'locked' | 'ready' | 'done' | 'stub'; missing: number };
 }
 
 export interface WorldMapOverlayProps {
@@ -54,6 +55,7 @@ export interface WorldMapOverlayProps {
   /** いまいる県。at は県の陸地の中でのだいたいの位置（左上 0 〜 右下 1）。無ければ県庁所在地に立つ */
   here: { areaId: string; at?: [number, number] } | null;
   onGo: (areaId: string) => void;
+  onIslandBoss: (islandId: string) => void;
   onClose: () => void;
 }
 
@@ -163,7 +165,7 @@ export function heroCell(r: RegionGrid, k: number, at?: [number, number]): [numb
 /** 地図の上のしるし（主人公・王冠）は、マスのまん中に足もとが来るように置く */
 const pinAt = ([x, y]: [number, number]) => ({ left: x * CELL + CELL / 2, top: y * CELL + CELL / 2 });
 
-export function WorldMapOverlay({ regions, here, onGo, onClose }: WorldMapOverlayProps) {
+export function WorldMapOverlay({ regions, here, onGo, onIslandBoss, onClose }: WorldMapOverlayProps) {
   const home = Math.max(
     0,
     regions.findIndex((r) => r.areas.some((a) => a.id === here?.areaId)),
@@ -353,6 +355,24 @@ export function WorldMapOverlay({ regions, here, onGo, onClose }: WorldMapOverla
             <p class="nq-wmap-info">{t('field.mapMissing')}</p>
           )}
           <div class="nq-wmap-foot">
+            {region?.islandBoss.state === 'ready' && (
+              <button
+                type="button"
+                class="nq-opt nq-wmap-go nq-wmap-island-boss"
+                onClick={() => onIslandBoss(region.id)}
+              >
+                <PixelIcon name="boss" scale={3} />
+                {t('field.islandBossChallenge')}
+              </button>
+            )}
+            {region?.islandBoss.state === 'locked' && (
+              <span class="nq-wmap-locked">
+                {t('field.islandBossLocked', { n: region.islandBoss.missing })}
+              </span>
+            )}
+            {region?.islandBoss.state === 'done' && (
+              <span class="nq-wmap-ok">{t('field.islandBossDone')}</span>
+            )}
             <button type="button" class="nq-opt nq-wmap-go" disabled={!area?.visited} onClick={go}>
               <PixelIcon name="warp" scale={3} />
               {t('field.mapGo')}

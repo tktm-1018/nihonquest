@@ -79,6 +79,13 @@ import {
   nextStop,
   type NextStop,
 } from '../core/progression/route';
+import {
+  canChallengeIslandBoss,
+  clearIsland,
+  isIslandCleared,
+  missingIslandAreaSigns,
+  nextIslandAccess,
+} from '../core/progression/island';
 import { createRng, freshSeed, type Rng } from '../core/rng';
 import type { GameState } from '../core/state/schema';
 import { askById, MasteryStore, type QuestionBank } from '../questions/engine';
@@ -381,6 +388,8 @@ export class OverworldScene extends Phaser.Scene {
   /** 右上の 表示に 出している 地面（かわったら かきなおす） */
   /** たいせんじょうの しょうぶ中（かったら しょうきん）。値は 船長の名前 */
   private pendingArena: string | null = null;
+  /** にほんちずから挑戦した地方ボス。値は island id。 */
+  private pendingIslandBoss: string | null = null;
   private stampIds: string[] = [];
   private baseMap: BaseMap | null = null;
 
@@ -1853,6 +1862,26 @@ export class OverworldScene extends Phaser.Scene {
   private async enterWarp(): Promise<void> {
     const w = this.warp;
     if (!w || this.busy) return;
+    const content = this.content();
+    const gs = this.gs();
+    const from = content?.world.islands.find((island) => island.areas.includes(this.areaId()));
+    const to = content?.world.islands.find((island) => island.areas.includes(w.to.id));
+    if (content && gs && from && to && from.id !== to.id) {
+      this.busy = true;
+      this.standStill();
+      if (!isIslandCleared(gs, from.id)) {
+        playSfx('miss');
+        await this.talk([{ text: t('field.islandBossFirst') }]);
+        this.busy = false;
+        return;
+      }
+      if (to.status === 'stub') {
+        playSfx('miss');
+        await this.talk([{ text: t('field.nextIslandBarrier', { name: to.name }) }]);
+        this.busy = false;
+        return;
+      }
+    }
     this.busy = true;
     this.standStill();
     playSfx('warp');
@@ -2541,6 +2570,12 @@ export class OverworldScene extends Phaser.Scene {
     this.pendingArena = null;
     if (arena) {
       void this.arenaAfter(arena, p.outcome === 'victory');
+      return;
+    }
+    const islandBoss = this.pendingIslandBoss;
+    this.pendingIslandBoss = null;
+    if (islandBoss) {
+      if (p.outcome === 'victory') void this.islandBossDefeated(islandBoss);
       return;
     }
     if (p.outcome === 'defeat') {
@@ -3712,6 +3747,10 @@ export class OverworldScene extends Phaser.Scene {
           close();
           this.switchMap(this.content()?.areas.get(areaId)?.mapKeys?.field ?? `${areaId}-field`, 'spawn');
         },
+        onIslandBoss: (islandId: string) => {
+          close();
+          this.challengeIslandBoss(islandId);
+        },
         onClose: close,
       }),
       root,
@@ -3738,6 +3777,13 @@ export class OverworldScene extends Phaser.Scene {
       width: r.width,
       height: r.height,
       rows: r.rows,
+      islandBoss: (() => {
+        const island = islands.get(r.id)!;
+        if (island.status === 'stub') return { state: 'stub' as const, missing: island.areas.length };
+        if (gs && isIslandCleared(gs, island.id)) return { state: 'done' as const, missing: 0 };
+        const missing = gs ? missingIslandAreaSigns(gs, island).length : island.areas.length;
+        return { state: missing === 0 ? ('ready' as const) : ('locked' as const), missing };
+      })(),
       areas: r.areas.map((a): MapAreaInfo => {
         const area = content.areas.get(a.id);
         // 見つけていない名所は、名前を出さない（null）。特産品（イベントの無い たべもの・こうげいひん）は宝箱
@@ -3757,6 +3803,33 @@ export class OverworldScene extends Phaser.Scene {
         };
       }),
     }));
+  }
+
+  /** にほんちずから地方ボスへ挑戦する。条件は純粋ロジック側でもう一度検査する。 */
+  private challengeIslandBoss(islandId: string): void {
+    const content = this.content();
+    const gs = this.gs();
+    const island = content?.world.islands.find((entry) => entry.id === islandId);
+    if (!content || !gs || !island || !canChallengeIslandBoss(gs, island)) return;
+    this.pendingIslandBoss = island.id;
+    this.startBattle({ enemyId: island.bossId, level: this.heroLevel() + 3, zone: 'boss', isBoss: true });
+  }
+
+  private async islandBossDefeated(islandId: string): Promise<void> {
+    const content = this.content();
+    const gs = this.gs();
+    const island = content?.world.islands.find((entry) => entry.id === islandId);
+    if (!content || !gs || !island) return;
+    const cleared = clearIsland(gs, island);
+    if (cleared.result !== 'cleared') return;
+    this.busy = true;
+    this.setGame(cleared.state);
+    playSfx('victory');
+    await this.talk([{ text: t('field.islandBossVictory', { name: island.name }) }]);
+    const access = nextIslandAccess(content.world, cleared.state, island.id);
+    if (access.kind === 'barrier')
+      await this.talk([{ text: t('field.nextIslandBarrier', { name: access.island.name }) }]);
+    this.busy = false;
   }
 
   /** にほんちずの「いま いる ところ」。フィールドなら、県の陸地の中でのだいたいの位置（左上 0 〜 右下 1）も */
