@@ -1,0 +1,591 @@
+{
+  "version": 1,
+  "generatedFrom": "content/manifest.json",
+  "policy": {
+    "unverifiedIsApproved": false,
+    "approvalRequiresNamedReviewer": true,
+    "visualContextRequiresSourceVisual": true
+  },
+  "highPriority": [
+    {
+      "id": "legacy.shakai.g3.cur-1403-04.a01c7b064a91",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://www.kantei.go.jp/jp/headline/singengou/singengou_sentei.html",
+      "checkedAt": "2026-10-03",
+      "note": "一次資料と記述は整合。改元日を固定したが、学術責任者の承認待ち。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-1.0ae70760ab50",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://population.un.org/wpp/",
+      "checkedAt": "2026-10-03",
+      "note": "国連2024年推計の順位と整合。版固定済み、学術責任者の承認待ち。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mofa.go.jp/mofaj/area/hoppo/hoppo_qa.html",
+      "checkedAt": "2026-10-03",
+      "note": "外務省の政府見解と本文は整合。地図原票が未照合。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mofa.go.jp/mofaj/area/hoppo/hoppo_qa.html",
+      "checkedAt": "2026-10-03",
+      "note": "外務省一次資料と本文は整合。地図原票が未照合。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-11.909ef5541685",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://sdgs.un.org/2030agenda",
+      "checkedAt": "2026-10-03",
+      "note": "2015年採択・17目標は国連一次資料と整合。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-8.e688d0da836d",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://sdgs.un.org/2030agenda",
+      "checkedAt": "2026-10-03",
+      "note": "名称・17目標・対象領域は国連一次資料と整合。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-4.661afeb79b7f",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://www.maff.go.jp/j/tokei/kodomo/pdf/jiten_2025.pdf",
+      "checkedAt": "2026-10-03",
+      "note": "令和5年産の上位産地は青森・長野で設問正答と整合。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-7.2cb80e8887d4",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-matched",
+      "academicApproval": false,
+      "sourceUrl": "https://www.bunka.go.jp/seisaku/chosakuken/taisetsu/point/index.html",
+      "checkedAt": "2026-10-03",
+      "note": "無断アップロードの説明は文化庁資料と整合。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-7.e793396648b7",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-missing",
+      "academicApproval": false,
+      "sourceUrl": "",
+      "checkedAt": "2026-10-03",
+      "note": "IoTの語義を支える一次資料の版・参照日が教材に未記録。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-missing",
+      "academicApproval": false,
+      "sourceUrl": "",
+      "checkedAt": "2026-10-03",
+      "note": "2017年の輸出入グラフ原票と画像の対応を未確認。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-7.b0f4467ddc1c",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-missing",
+      "academicApproval": false,
+      "sourceUrl": "",
+      "checkedAt": "2026-10-03",
+      "note": "2010年代の情報量増加を支える統計表の特定が未完了。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-8.4642deacf8fd",
+      "kind": "dated-fact",
+      "evidenceStatus": "primary-source-missing",
+      "academicApproval": false,
+      "sourceUrl": "",
+      "checkedAt": "2026-10-03",
+      "note": "公害対策の法令・年次を一次資料へ結び付ける作業が未完了。"
+    },
+    {
+      "id": "legacy.kokugo.g3.jpn-3-22.1d96f31c3027",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.kokugo.g3.jpn-3-9.52c149818807",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.sansu.g6.math-6-7.35928a01856e",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g3.cur-1403-04.215488f29d8a",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g3.cur-1403-04.aea73505c390",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-1.02a8f9fd7f49",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-6.a8c96b1c1aa6",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g5.soc-5-6.b059945f3dcc",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-4.0afc196c9f52",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-6.7193778e8e8e",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-7.4908eef92d6b",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g6.soc-6-10.a1cdaaf35c0b",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.sansu.g6.math-6-9.337d7e0826ac",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.sansu.g6.math-6-9.cea54380c2ee",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g3.cur-1403-04.317c29b9a8d8",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g4.cur-1404-01.23873eb36d36",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.shakai.g4.cur-1404-05.e2c978bf2b0a",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    },
+    {
+      "id": "legacy.sansu.g4.math-4-2.ca71f3ca3730",
+      "kind": "visual-context",
+      "evidenceStatus": "blocked-missing-source-visual",
+      "academicApproval": false,
+      "sourceUrl": "https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm",
+      "checkedAt": "2026-10-03",
+      "note": "本文だけでは図・写真・グラフとの対応を確認できない。画像原票の照合後に再審査する。"
+    }
+  ],
+  "questionFiles": [
+    {
+      "path": "questions/eigo/g1/alphabet.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g1/fruits.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g2/alphabet-order.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g2/animals.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g3/alphabet-small.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g3/sea-pictures.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/eigo/g3/sea.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/kokugo/g1/bun-no-kimari.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/kokugo/g1/hiragana.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/kokugo/g1/joshi.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/kokugo/g1/kanji.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/kokugo/g1/kotoba-asobi.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g1.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g2.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g3.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g4.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g5.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/kokugo/g6.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/rika/g3.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/rika/g4.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/rika/g5.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/rika/g6.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g1.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g2.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g3.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g4.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g5.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/sansu/g6.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/seikatsu/g1.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/seikatsu/g2.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/shakai/g3.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/shakai/g4.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/shakai/g5.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/legacy/shakai/g6.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/rika/g4/mizu-experiment.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/rika/g4/mizu-no-sugata.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g1/kazu-no-bunkai.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g1/ringo-number-build.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g1/tashizan.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g2/jikan-legacy.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g2/kasa-legacy.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/sansu/g3/warizan-legacy.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/shakai/g4/todofuken.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    },
+    {
+      "path": "questions/shakai/g4/tohoku.json",
+      "status": "pending-human-academic-review",
+      "reviewer": null,
+      "reviewedAt": null,
+      "note": "構造検証済み。学術承認は未実施。"
+    }
+  ]
+}

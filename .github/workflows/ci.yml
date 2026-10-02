@@ -9,15 +9,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: 10 }
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      - run: pnpm check:architecture
       - run: pnpm test
       - run: pnpm gen:manifest && pnpm gen:schemas
       - run: pnpm validate:content
+      - run: pnpm validate:release-quality
       - run: pnpm build
+      - name: Install browser for end-to-end tests
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Verify the built game in Chromium
+        run: pnpm test:e2e
       - name: Schemas are up to date (run `pnpm gen:schemas` and commit)
         run: git diff --exit-code -- schemas/
   deploy-pages:
@@ -34,7 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: 10 }
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile

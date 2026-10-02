@@ -114,6 +114,9 @@ export function QuestionList({
     FACETS.every((k) => k === skip || !f[k] || valueOf(e, k) === f[k]) &&
     (!needle || (search.get(e.key) ?? '').includes(needle));
   const shown = pool.filter((e) => match(e));
+  // 4,000行超のDOM生成はPlaygroundの初回操作を長時間ブロックする。
+  // 件数と検索対象は全件のまま、画面へ出す行だけを制限する。
+  const rendered = shown.slice(0, 500);
   const bad = pool.filter((e) => e.problem).length;
 
   const facet = (
@@ -207,7 +210,7 @@ export function QuestionList({
           </tr>
         </thead>
         <tbody>
-          {shown.map((e) => (
+          {rendered.map((e) => (
             <Row
               key={e.key}
               e={e}
@@ -220,6 +223,9 @@ export function QuestionList({
           ))}
         </tbody>
       </table>
+      {shown.length > rendered.length && (
+        <p class="pg-empty">先頭 {rendered.length} 件を表示中。しぼりこむと残りも確認できます。</p>
+      )}
       {shown.length === 0 && <p class="pg-empty">あてはまる 問題が ありません</p>}
     </section>
   );

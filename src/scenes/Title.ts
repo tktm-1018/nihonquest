@@ -8,11 +8,15 @@
 import Phaser from 'phaser';
 import { h, render } from 'preact';
 import { createRng } from '../core/rng';
+import { SLOTS, summaries, type SlotId, type SlotSummary } from '../core/state/save';
 import type { GameState } from '../core/state/schema';
 import { PIXEL_FONT, PIXEL_FONT_NAME } from '../ui/fonts';
 import { t } from '../ui/i18n';
 import { STAGE_W } from '../ui/overlay';
 import { TitleMenu } from '../ui/title/TitleMenu';
+import { NewGameSetup } from '../ui/title/NewGameSetup';
+import { SaveSlotSelect } from '../ui/title/SaveSlotSelect';
+import type { NewGameOptions } from '../core/state/newGame';
 import { HERO_H, HERO_W, heroKey, heroLook, walkFrame, walkSheet } from './art/characters';
 import { NQ } from './art/palette';
 import { addImage, addSheet } from './art/sheet';
@@ -36,6 +40,11 @@ const LOGO_Y = 124;
 export class TitleScene extends Phaser.Scene {
   private menuRoot: HTMLDivElement | null = null;
   private starting = false;
+  private saveChecked = false;
+  private showingMainMenu = false;
+  private hasSave = false;
+  private slots: SlotSummary[] = SLOTS.map((slot) => ({ slot, exists: false }));
+  private selectedSlot: SlotId = 1;
 
   constructor() {
     super('Title');
@@ -43,6 +52,12 @@ export class TitleScene extends Phaser.Scene {
 
   create(): void {
     this.starting = false;
+    // E2E・確認用の直接戦闘では、表示しないタイトル背景やメニューを生成しない。
+    // Boot完了後すぐゲームプレイSceneの読み込みへ進める。
+    if (new URLSearchParams(location.search).get('debug') === 'battle') {
+      this.time.delayedCall(0, () => this.game.events.emit('title:start'));
+      return;
+    }
     addImage(this.textures, 'title.bg', titleBackdrop());
     this.add.image(0, 0, 'title.bg').setOrigin(0).setScale(S).setDepth(0);
     this.addStars();
@@ -52,12 +67,9 @@ export class TitleScene extends Phaser.Scene {
     this.addPetals();
     this.addLogo();
     this.mountMenu();
+    void this.checkSave();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.unmountMenu());
     this.cameras.main.fadeIn(700, 0, 0, 0);
-
-    // ?debug=battle のときはタイトルを飛ばす（main.ts 参照）
-    if (new URLSearchParams(location.search).get('debug') === 'battle')
-      this.time.delayedCall(50, () => this.game.events.emit('title:start'));
 
     if (import.meta.env.DEV) {
       const content = this.registry.get('content') as { areas: Map<string, unknown> } | undefined;
@@ -247,23 +259,76 @@ export class TitleScene extends Phaser.Scene {
   private mountMenu(): void {
     const layer = document.getElementById('ui-layer');
     if (!layer) return;
-    this.menuRoot = document.createElement('div');
-    this.menuRoot.className = 'nq-root-title';
-    layer.appendChild(this.menuRoot);
+    if (!this.menuRoot) {
+      this.menuRoot = document.createElement('div');
+      this.menuRoot.className = 'nq-root-title';
+      layer.appendChild(this.menuRoot);
+    }
+    this.showingMainMenu = true;
     render(
       h(TitleMenu, {
         items: [
           { label: t('ui.newGame') },
-          { label: t('ui.continue'), disabled: true },
+          { label: t('ui.continue'), disabled: !this.hasSave },
           { label: t('ui.questionList') },
         ],
         hint: t('ui.titleHint'),
-        disabledNote: t('ui.noSave'),
+        disabledNote: t(this.saveChecked ? 'ui.noSave' : 'ui.saveChecking'),
         credit: t('ui.credits'),
         onSelect: (index: number) => {
-          if (index === 0) this.start();
+          if (index === 0) this.mountSlotPicker('new');
+          if (index === 1 && this.hasSave) this.mountSlotPicker('continue');
           if (index === 2) window.location.assign(`${import.meta.env.BASE_URL}playground.html`);
         },
+      }),
+      this.menuRoot,
+    );
+  }
+
+  private async checkSave(): Promise<void> {
+    try {
+      this.slots = await summaries();
+      this.hasSave = this.slots.some((slot) => slot.exists);
+    } catch (error) {
+      console.error('[title] セーブデータを確認できません', error);
+      this.hasSave = false;
+    }
+    this.saveChecked = true;
+    // セーブ確認中にスロット選択へ進んだ場合、その画面をメニューで上書きしない。
+    if (this.scene.isActive() && !this.starting && this.showingMainMenu) this.mountMenu();
+  }
+
+  private continueGame(slot: SlotId): void {
+    if (this.starting) return;
+    this.starting = true;
+    this.game.events.emit('title:continue', slot);
+  }
+
+  private mountSlotPicker(mode: 'new' | 'continue'): void {
+    if (!this.menuRoot) return;
+    this.showingMainMenu = false;
+    render(
+      h(SaveSlotSelect, {
+        mode,
+        slots: this.slots,
+        onCancel: () => this.mountMenu(),
+        onPick: (slot: SlotId) => {
+          this.selectedSlot = slot;
+          if (mode === 'new') this.mountSetup();
+          else this.continueGame(slot);
+        },
+      }),
+      this.menuRoot,
+    );
+  }
+
+  private mountSetup(): void {
+    if (!this.menuRoot) return;
+    this.showingMainMenu = false;
+    render(
+      h(NewGameSetup, {
+        onCancel: () => this.mountMenu(),
+        onStart: (options: NewGameOptions) => this.start(options),
       }),
       this.menuRoot,
     );
@@ -277,7 +342,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   /** はじめから：白く光って暗転してから、フィールドへ */
-  private start(): void {
+  private start(options?: NewGameOptions): void {
     if (this.starting) return;
     this.starting = true;
     const cam = this.cameras.main;
@@ -289,7 +354,7 @@ export class TitleScene extends Phaser.Scene {
     const go = () => {
       if (started) return;
       started = true;
-      this.game.events.emit('title:start');
+      this.game.events.emit('title:start', options, this.selectedSlot);
     };
     this.time.delayedCall(1050, go);
     window.setTimeout(go, 1400);

@@ -82,9 +82,9 @@ function App() {
   // いちらんの 文字も ステージの 問題も この設定で 描くので、子を 描く前（ここ）で きめる
   if (kanji) setKanjiLevel({ grade, table: kanji.table, names: kanji.names });
 
-  const loadAll = async () => {
+  const loadAll = async (manifest?: ContentManifest) => {
     try {
-      const m = (await read('manifest.json')) as ContentManifest;
+      const m = manifest ?? ((await read('manifest.json')) as ContentManifest);
       setFiles(m.questions);
       setEntries(
         toEntries(await Promise.all(m.questions.map(async (f) => ({ file: f, raw: await read(f) })))),
@@ -95,7 +95,25 @@ function App() {
   };
 
   useEffect(() => {
-    void loadAll();
+    void (async () => {
+      try {
+        const manifest = (await read('manifest.json')) as ContentManifest;
+        setFiles(manifest.questions);
+        const id = new URLSearchParams(location.search).get('q');
+        const target = id ? manifest.questionIndex?.[id] : undefined;
+        if (!target) return void loadAll(manifest);
+
+        // 共有URLでは4,000問すべてより先に、対象を含む1ファイルだけを読む。
+        const targetFile = manifest.questions[target[0]];
+        if (!targetFile) return void loadAll(manifest);
+        const raw = await read(targetFile);
+        setEntries(toEntries([{ file: targetFile, raw }]));
+        // 一覧は対象問題を描画した後に読み込む。キャッシュ層は持たない。
+        window.setTimeout(() => void loadAll(manifest), 500);
+      } catch (e) {
+        setError(String(e));
+      }
+    })();
     read('units.json')
       .then((u) => setUnits(new Map((u as { id: string; name: string }[]).map((x) => [x.id, x.name]))))
       .catch((e) => setError(String(e)));
