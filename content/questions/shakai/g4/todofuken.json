@@ -6,7 +6,7 @@
     "subject": "shakai",
     "grade": 4,
     "unit": "shakai.g4.todofuken",
-    "tags": ["prefecture:aomori"],
+    "tags": ["prefecture:aomori", "region:tohoku", "boss-review:tohoku"],
     "payload": {
       "prompt": "青森県[あおもりけん]で とくに たくさん 作[つく]られている くだものは？",
       "choices": [
@@ -26,7 +26,7 @@
     "subject": "shakai",
     "grade": 4,
     "unit": "shakai.g4.todofuken",
-    "tags": ["prefecture:aomori"],
+    "tags": ["prefecture:aomori", "region:tohoku", "boss-review:tohoku"],
     "payload": {
       "prompt": "本州[ほんしゅう]と 北海道[ほっかいどう]の 間[あいだ]に ある 海[うみ]は？",
       "choices": [

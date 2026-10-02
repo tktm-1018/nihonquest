@@ -48,3 +48,15 @@ test('旧版の地図問題：正しい地点をクリックして採点でき�
   await map.click({ position: { x: box!.width * 0.45, y: box!.height * 0.7 } });
   await expect(page.locator('.pg-result')).toContainText('"score": 1', { timeout: 10_000 });
 });
+
+test('東北追加問題：県別問題をPlaygroundで正答できる', async ({ page }) => {
+  for (const [id, answer] of [
+    ['shakai.g4.todofuken.0111', '盛岡市'],
+    ['shakai.g4.todofuken.0119', '福島市'],
+  ] as const) {
+    await page.goto(`/playground.html?q=${id}`);
+    await expect(page.locator('.nq-q-choice')).toBeVisible({ timeout: 20_000 });
+    await page.locator('.nq-choice', { hasText: answer }).click();
+    await expect(page.locator('.pg-result')).toContainText('"score": 1', { timeout: 10_000 });
+  }
+});

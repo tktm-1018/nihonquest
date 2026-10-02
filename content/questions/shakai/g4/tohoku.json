@@ -189,5 +189,195 @@
       "shuffle": true
     },
     "explanation": "猪苗代湖[いなわしろこ]は 水[みず]が きれいで、「天鏡湖[てんきょうこ]」とも よばれる。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0111",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:iwate", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "岩手県[いわてけん]の 県庁所在地[けんちょうしょざいち]は？",
+      "choices": [
+        { "id": "a", "text": "盛岡市[もりおかし]" },
+        { "id": "b", "text": "仙台市[せんだいし]" },
+        { "id": "c", "text": "秋田市[あきたし]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "岩手県庁[いわてけんちょう]は 盛岡市[もりおかし]に ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0112",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:iwate", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "岩手県[いわてけん]の 東側[ひがしがわ]に ひろがる 海[うみ]は？",
+      "choices": [
+        { "id": "a", "text": "太平洋[たいへいよう]" },
+        { "id": "b", "text": "日本海[にほんかい]" },
+        { "id": "c", "text": "瀬戸内海[せとないかい]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "岩手県[いわてけん]は 東側[ひがしがわ]で 太平洋[たいへいよう]に 面[めん]している。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0113",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:miyagi", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "宮城県[みやぎけん]の 中央部[ちゅうおうぶ]に ひろがる 平野[へいや]は？",
+      "choices": [
+        { "id": "a", "text": "仙台平野[せんだいへいや]" },
+        { "id": "b", "text": "庄内平野[しょうないへいや]" },
+        { "id": "c", "text": "関東平野[かんとうへいや]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "宮城県[みやぎけん]の 中央部[ちゅうおうぶ]には、米[こめ]づくりも さかんな 仙台平野[せんだいへいや]が ひろがる。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0114",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:miyagi", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "宮城県[みやぎけん]の 東側[ひがしがわ]に ひろがる 海[うみ]は？",
+      "choices": [
+        { "id": "a", "text": "太平洋[たいへいよう]" },
+        { "id": "b", "text": "日本海[にほんかい]" },
+        { "id": "c", "text": "東[ひがし]シナ海[かい]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "宮城県[みやぎけん]は 太平洋[たいへいよう]に 面[めん]し、沿岸[えんがん]には 松島[まつしま]も ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0115",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:akita", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "秋田県[あきたけん]の 県庁所在地[けんちょうしょざいち]は？",
+      "choices": [
+        { "id": "a", "text": "秋田市[あきたし]" },
+        { "id": "b", "text": "横手市[よこてし]" },
+        { "id": "c", "text": "仙北市[せんぼくし]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "秋田県庁[あきたけんちょう]は 秋田市[あきたし]に ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0116",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:akita", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "田沢湖[たざわこ]が ある 秋田県[あきたけん]の 市[し]は？",
+      "choices": [
+        { "id": "a", "text": "仙北市[せんぼくし]" },
+        { "id": "b", "text": "青森市[あおもりし]" },
+        { "id": "c", "text": "福島市[ふくしまし]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "田沢湖[たざわこ]は 秋田県仙北市[あきたけんせんぼくし]に ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0117",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:yamagata", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "山形県[やまがたけん]は どちらの 海[うみ]に 面[めん]している？",
+      "choices": [
+        { "id": "a", "text": "日本海[にほんかい]" },
+        { "id": "b", "text": "太平洋[たいへいよう]" },
+        { "id": "c", "text": "瀬戸内海[せとないかい]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "山形県[やまがたけん]は 東北地方[とうほくちほう]の 日本海側[にほんかいがわ]に ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0118",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:yamagata", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "最上川[もがみがわ]が 最後[さいご]に そそぐ 海[うみ]は？",
+      "choices": [
+        { "id": "a", "text": "日本海[にほんかい]" },
+        { "id": "b", "text": "太平洋[たいへいよう]" },
+        { "id": "c", "text": "オホーツク海[かい]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "最上川[もがみがわ]は 山形県[やまがたけん]を 流[なが]れ、酒田市[さかたし]で 日本海[にほんかい]に そそぐ。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0119",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:fukushima", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "福島県[ふくしまけん]の 県庁所在地[けんちょうしょざいち]は？",
+      "choices": [
+        { "id": "a", "text": "福島市[ふくしまし]" },
+        { "id": "b", "text": "会津若松市[あいづわかまつし]" },
+        { "id": "c", "text": "郡山市[こおりやまし]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "福島県庁[ふくしまけんちょう]は 福島市[ふくしまし]に ある。"
+  },
+  {
+    "id": "shakai.g4.todofuken.0120",
+    "type": "choice",
+    "subject": "shakai",
+    "grade": 4,
+    "unit": "shakai.g4.todofuken",
+    "tags": ["prefecture:fukushima", "region:tohoku", "boss-review:tohoku"],
+    "payload": {
+      "prompt": "猪苗代湖[いなわしろこ]の 北[きた]に そびえる 山[やま]は？",
+      "choices": [
+        { "id": "a", "text": "磐梯山[ばんだいさん]" },
+        { "id": "b", "text": "岩木山[いわきさん]" },
+        { "id": "c", "text": "富士山[ふじさん]" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "猪苗代湖[いなわしろこ]の 北[きた]には 磐梯山[ばんだいさん]が そびえている。"
   }
 ]
