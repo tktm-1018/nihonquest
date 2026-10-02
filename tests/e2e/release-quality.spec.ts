@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
+test.use({ hasTouch: true });
+
 async function newGame(page: Page): Promise<void> {
   await page.goto('/');
   await page.getByRole('menuitem', { name: /はじめから/ }).click();

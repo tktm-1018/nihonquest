@@ -41,6 +41,7 @@ export class TitleScene extends Phaser.Scene {
   private menuRoot: HTMLDivElement | null = null;
   private starting = false;
   private saveChecked = false;
+  private showingMainMenu = false;
   private hasSave = false;
   private slots: SlotSummary[] = SLOTS.map((slot) => ({ slot, exists: false }));
   private selectedSlot: SlotId = 1;
@@ -51,6 +52,12 @@ export class TitleScene extends Phaser.Scene {
 
   create(): void {
     this.starting = false;
+    // E2E・確認用の直接戦闘では、表示しないタイトル背景やメニューを生成しない。
+    // Boot完了後すぐゲームプレイSceneの読み込みへ進める。
+    if (new URLSearchParams(location.search).get('debug') === 'battle') {
+      this.time.delayedCall(0, () => this.game.events.emit('title:start'));
+      return;
+    }
     addImage(this.textures, 'title.bg', titleBackdrop());
     this.add.image(0, 0, 'title.bg').setOrigin(0).setScale(S).setDepth(0);
     this.addStars();
@@ -63,10 +70,6 @@ export class TitleScene extends Phaser.Scene {
     void this.checkSave();
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.unmountMenu());
     this.cameras.main.fadeIn(700, 0, 0, 0);
-
-    // ?debug=battle のときはタイトルを飛ばす（main.ts 参照）
-    if (new URLSearchParams(location.search).get('debug') === 'battle')
-      this.time.delayedCall(50, () => this.game.events.emit('title:start'));
 
     if (import.meta.env.DEV) {
       const content = this.registry.get('content') as { areas: Map<string, unknown> } | undefined;
@@ -261,6 +264,7 @@ export class TitleScene extends Phaser.Scene {
       this.menuRoot.className = 'nq-root-title';
       layer.appendChild(this.menuRoot);
     }
+    this.showingMainMenu = true;
     render(
       h(TitleMenu, {
         items: [
@@ -290,7 +294,8 @@ export class TitleScene extends Phaser.Scene {
       this.hasSave = false;
     }
     this.saveChecked = true;
-    if (this.scene.isActive() && !this.starting) this.mountMenu();
+    // セーブ確認中にスロット選択へ進んだ場合、その画面をメニューで上書きしない。
+    if (this.scene.isActive() && !this.starting && this.showingMainMenu) this.mountMenu();
   }
 
   private continueGame(slot: SlotId): void {
@@ -301,6 +306,7 @@ export class TitleScene extends Phaser.Scene {
 
   private mountSlotPicker(mode: 'new' | 'continue'): void {
     if (!this.menuRoot) return;
+    this.showingMainMenu = false;
     render(
       h(SaveSlotSelect, {
         mode,
@@ -318,6 +324,7 @@ export class TitleScene extends Phaser.Scene {
 
   private mountSetup(): void {
     if (!this.menuRoot) return;
+    this.showingMainMenu = false;
     render(
       h(NewGameSetup, {
         onCancel: () => this.mountMenu(),

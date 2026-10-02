@@ -57,14 +57,8 @@ export class BootScene extends Phaser.Scene {
       this.game.events.emit('boot:progress', 1);
       this.game.events.emit('boot:done', { areas: content.areas.size, questions: bank.size });
       this.scene.start('Title');
-      // 500体超の図鑑画像はタイトル表示を待たせず、別チャンクを読み込んで背後で準備する。
-      // メニューを先に開いた場合も monsterMenuArtUrl 側が同じキャッシュへ必要分を生成する。
-      const warm = () =>
-        void import('./art/menuArt')
-          .then(({ warmMenuArt }) => warmMenuArt(content))
-          .catch((error) => console.warn('[boot] メニュー画像の先読みを完了できませんでした', error));
-      if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 2_000 });
-      else setTimeout(warm, 0);
+      // 図鑑画像は必要なタブを開いたときに生成する。起動直後の一括生成は
+      // タイトル操作、最初のメニュー、デバッグ戦闘のメインスレッドを数秒ふさぐ。
     } catch (e) {
       this.game.events.emit('boot:error', e);
     }

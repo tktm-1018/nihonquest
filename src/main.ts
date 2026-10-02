@@ -31,6 +31,10 @@ const debugBattle =
         level: Math.max(1, Number(params.get('lv')) || 1),
         zone: params.get('zone') === 'dungeon' ? ('dungeon' as const) : undefined,
         ground: GROUNDS.find((g) => g === params.get('ground')),
+        flow:
+          params.get('flow') === 'boss' || params.get('flow') === 'arena'
+            ? (params.get('flow') as 'boss' | 'arena')
+            : undefined,
       }
     : null;
 
@@ -81,11 +85,21 @@ game.events.on('title:start', async (options?: NewGameOptions, slot: SlotId = 1)
     await ensureGameplayScenes(game);
     activeSlot = slot;
     const next = createNewGame(options ?? { ...DEV_NEW_GAME, grade });
+    // リリースE2Eは勝利後の県ボス／対戦場処理を検証するため、デバッグ時だけ短時間で決着させる。
+    if (debugBattle?.flow) {
+      next.player.baseStats = { hp: 1_000, mp: 100, atk: 500, def: 100, spd: 100, wis: 100 };
+      next.player.hp = next.player.baseStats.hp;
+      next.player.mp = next.player.baseStats.mp;
+    }
     setSfxVolume(next.settings.seVolume);
     game.registry.set('game', next);
     void save(activeSlot, next).catch((error) => console.error('[save] はじめのセーブに失敗しました', error));
     game.scene.stop('Title');
-    game.scene.start('Overworld', { mapKey: 'aomori-field', spawnName: 'spawn', debugBattle });
+    game.scene.start('Overworld', {
+      mapKey: debugBattle?.flow === 'boss' ? 'aomori-dungeon' : 'aomori-field',
+      spawnName: 'spawn',
+      debugBattle,
+    });
   } catch (error) {
     game.events.emit('boot:error', error);
   }

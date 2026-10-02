@@ -179,6 +179,7 @@ interface DebugBattle {
   zone?: 'field' | 'dungeon';
   /** バトルの 背景を 見る ための 地面 */
   ground?: Ground;
+  flow?: 'boss' | 'arena';
 }
 
 interface OverworldSceneData {
@@ -367,18 +368,14 @@ export class OverworldScene extends Phaser.Scene {
   private regionGates = new Map<number, RegionGate>();
   private regionBosses = new Map<number, RegionBoss>();
   private pendingRegionBoss: RegionBoss | null = null;
-  /** ダンジョンの おくに いる 県ボス（中ボスと同じ「？」マーク） */
-  /** 止まっているか（左上の 窓を 出す）。歩きだすと かくし、HUD_IDLE_MS 止まると 出す */
   private hudIdle = true;
   private hudIdleTimer: Phaser.Time.TimerEvent | null = null;
-  /** 裏ステージの ラスボス（歴史上の 人物） */
   private lastBoss: MidBoss | null = null;
   private pendingLastBoss = false;
   /** かぎの かかった 入口（マス → 何で ひらくか。'areaSign' は その県の 県ボスを 倒すと） */
   private lockedGates = new Map<number, string>();
   private areaBoss: MidBoss | null = null;
   private pendingAreaBoss = false;
-  /** 右上の 表示に 出している 地面（かわったら かきなおす） */
   /** たいせんじょうの しょうぶ中（かったら しょうきん）。値は 船長の名前 */
   private pendingArena: string | null = null;
   private stampIds: string[] = [];
@@ -470,6 +467,8 @@ export class OverworldScene extends Phaser.Scene {
     const debug = this.pendingDebugBattle;
     if (debug) {
       this.pendingDebugBattle = null;
+      if (debug.flow === 'boss') this.pendingAreaBoss = true;
+      if (debug.flow === 'arena') this.pendingArena = 'たいせんじょう';
       const zone = debug.zone ?? zoneForMap(this.mapKey) ?? 'field';
       this.time.delayedCall(300, () =>
         this.startBattle({
@@ -477,6 +476,7 @@ export class OverworldScene extends Phaser.Scene {
           level: debug.level,
           zone,
           ...(debug.ground ? { ground: debug.ground } : {}),
+          ...(debug.flow === 'boss' ? { isBoss: true } : {}),
         }),
       );
     }
