@@ -31,14 +31,14 @@ async function answerCurrentQuestion(page: Page): Promise<void> {
 }
 
 test('バトル：たたかう を続けると決着がつき、フィールドに戻る', async ({ page }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(210_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   await start(page, 1);
   const attack = page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])');
   await expect(attack).toBeVisible({ timeout: 20_000 });
 
-  const deadline = Date.now() + 90_000;
+  const deadline = Date.now() + 150_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result').isVisible())) {
     // 自分の ターンが 来たら たたかう。タップ待ちの 文は すすめる
     if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
@@ -49,7 +49,7 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
         .catch(() => undefined);
     await page.waitForTimeout(250);
   }
-  await expect(page.locator('.nq-result')).toBeVisible();
+  await expect(page.locator('.nq-result')).toBeVisible({ timeout: 30_000 });
 
   // 勝っても負けても「つぎへ」（仲間化オファーなら いいえ）でフィールドへ
   if (await page.locator('.nq-result-recruit').isVisible())

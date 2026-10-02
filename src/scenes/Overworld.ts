@@ -2499,7 +2499,6 @@ export class OverworldScene extends Phaser.Scene {
     return groundOfTile(this.map.getTileAt(x, y, true, 'background')?.index);
   }
 
-  /** 白く 2 回ちらついてから 暗転 → バトルへ（画面は回さない。Overworld は pause して下に残す） */
   private startBattle(data: BattleSceneData): void {
     if (this.inBattle) return;
     this.inBattle = true;
@@ -2512,7 +2511,8 @@ export class OverworldScene extends Phaser.Scene {
     cam.flash(90, 255, 255, 255);
     this.time.delayedCall(180, () => cam.flash(90, 255, 255, 255));
     this.time.delayedCall(360, () => cam.fade(360, 0, 0, 0));
-    this.time.delayedCall(760, () => {
+    const delay = location.search.includes('debug=battle') ? 0 : 760;
+    this.time.delayedCall(delay, () => {
       this.scene.launch('Battle', { ...data, devMode: this.devAll() });
       this.scene.pause();
     });
