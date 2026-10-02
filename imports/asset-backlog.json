@@ -1,5 +1,10 @@
 {
   "total": 601,
+  "byReleaseScope": {
+    "aomori-mvp": 19,
+    "tohoku": 67,
+    "national": 515
+  },
   "byKind": {
     "motif": 498,
     "character": 102,
@@ -797,140 +802,140 @@
       "path": "assets/sprites/characters/npc-hokkaido-shop.png",
       "kind": "character",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "char.npc-hokkaido-smith",
       "path": "assets/sprites/characters/npc-hokkaido-smith.png",
       "kind": "character",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.asahidake",
       "path": "assets/motifs/hokkaido/asahidake.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.furano-lavender",
       "path": "assets/motifs/hokkaido/furano-lavender.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.goryokaku",
       "path": "assets/motifs/hokkaido/goryokaku.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.hidaka-konbu",
       "path": "assets/motifs/hokkaido/hidaka-konbu.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.kibori-guma",
       "path": "assets/motifs/hokkaido/kibori-guma.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.kitami-tamanegi",
       "path": "assets/motifs/hokkaido/kitami-tamanegi.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.konsen-gyunyu",
       "path": "assets/motifs/hokkaido/konsen-gyunyu.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.kushiro-shitsugen",
       "path": "assets/motifs/hokkaido/kushiro-shitsugen.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.mashuko",
       "path": "assets/motifs/hokkaido/mashuko.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.ryuhyo",
       "path": "assets/motifs/hokkaido/ryuhyo.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.sarufutsu-hotate",
       "path": "assets/motifs/hokkaido/sarufutsu-hotate.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.shiretoko",
       "path": "assets/motifs/hokkaido/shiretoko.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.soya-misaki",
       "path": "assets/motifs/hokkaido/soya-misaki.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.tokachi-jagaimo",
       "path": "assets/motifs/hokkaido/tokachi-jagaimo.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.toyako",
       "path": "assets/motifs/hokkaido/toyako.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.upopoy",
       "path": "assets/motifs/hokkaido/upopoy.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.yubari-melon",
       "path": "assets/motifs/hokkaido/yubari-melon.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "motif.hokkaido.yuki-matsuri",
       "path": "assets/motifs/hokkaido/yuki-matsuri.png",
       "kind": "motif",
       "area": "hokkaido",
-      "priority": 2
+      "priority": 3
     },
     {
       "key": "char.npc-ibaraki-shop",
