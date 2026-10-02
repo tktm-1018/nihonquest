@@ -22,3 +22,19 @@ test('Playground：?q=<問題 id> で ひらくと その問題が出る', async
   await expect(page.locator('.nq-q-choice')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.pg-table tr.pg-sel')).toContainText('eigo.g1.alphabet.0002');
 });
+
+test('Playground：?q= は全問題一覧を待たず、対象ファイルを先に表示する', async ({ page }) => {
+  let release!: () => void;
+  const holdOtherFiles = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/content/questions/**/*.json', async (route) => {
+    if (!route.request().url().includes('/eigo/g1/alphabet.json')) await holdOtherFiles;
+    await route.continue();
+  });
+  try {
+    await page.goto('/playground.html?q=eigo.g1.alphabet.0002');
+    // 旧実装は他の47ファイルを待つため、この状態では表示できない。
+    await expect(page.locator('.nq-q-choice')).toBeVisible({ timeout: 15_000 });
+  } finally {
+    release();
+  }
+});

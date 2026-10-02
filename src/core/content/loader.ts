@@ -24,6 +24,7 @@ export interface ContentManifest {
   generatedAt: string;
   files: Record<ContentKind, string[]>;
   questions: string[];
+  questionIndex?: Record<string, [fileIndex: number, questionIndex: number]>;
 }
 
 export type FileReader = (relPath: string) => Promise<unknown>;

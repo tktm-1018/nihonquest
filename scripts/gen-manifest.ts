@@ -7,6 +7,7 @@ import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { contentKinds, type ContentKind } from '../src/core/content/schemas';
+import { buildQuestionIndex } from './question-index';
 
 const ROOT = fileURLToPath(new URL('../content/', import.meta.url));
 
@@ -32,8 +33,11 @@ for (const [kind, def] of Object.entries(contentKinds) as [ContentKind, { glob: 
 }
 // 問題ファイル：content/questions/**/*.json（_samples も含める。ゲーム側は _samples を除外できる）
 const questions = all.filter((f) => f.startsWith('questions/'));
+const questionIndex = buildQuestionIndex(questions, (file) =>
+  JSON.parse(readFileSync(join(ROOT, file), 'utf8')),
+);
 
-const manifest = { generatedAt: new Date().toISOString(), files, questions };
+const manifest = { generatedAt: new Date().toISOString(), files, questions, questionIndex };
 writeFileSync(join(ROOT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 const bundle = Object.fromEntries(
   ['manifest.json', ...all].map((file) => [file, JSON.parse(readFileSync(join(ROOT, file), 'utf8'))]),
