@@ -386,11 +386,20 @@
   gap: 4px;
 }
 .nq-party-foot .nq-picon {
-  width: 16px;
-  height: 16px;
+  display: none;
 }
-.nq-party-foot {
+.nq-wmap-foot.nq-party-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  width: 100%;
   gap: 6px;
+}
+.nq-party-foot .nq-opt {
+  min-width: 0;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 24px;
+  white-space: nowrap;
 }
 /* ひかえの仲間（出撃チームに入っていない）は うすく */
 .nq-party-reserve {
