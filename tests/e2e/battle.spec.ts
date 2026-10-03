@@ -62,7 +62,16 @@ test('バトル：必殺技を えらぶと 問題が出て、答えると 教�
   await page.locator('.nq-cmd[data-cmd="skill"]').click();
   await page.locator('[data-skill="sk-tashizan-giri"]').click();
   await expect(page.locator('.nq-bq')).toBeVisible({ timeout: 10_000 });
-  await page.locator('.nq-choice').first().click();
+  const choice = page.locator('.nq-choice').first();
+  const numberBuildSubmit = page.locator('.nq-nb-submit');
+  const textInputSubmit = page.locator('.nq-input-submit');
+  await expect(choice.or(numberBuildSubmit).or(textInputSubmit)).toBeVisible({ timeout: 10_000 });
+  if (await choice.isVisible()) await choice.click();
+  else if (await numberBuildSubmit.isVisible()) await numberBuildSubmit.click();
+  else {
+    await page.locator('.nq-q-input input').fill('1');
+    await textInputSubmit.click();
+  }
   // 採点後に問題フレームが閉じ、ダメージ数字と ゲージの「+n」が出る
   await expect(page.locator('.nq-bq')).toHaveCount(0, { timeout: 10_000 });
   await expect(page.locator('.nq-pop').first()).toBeVisible({ timeout: 10_000 });
