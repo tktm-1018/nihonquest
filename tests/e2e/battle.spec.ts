@@ -23,13 +23,13 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
 
   const deadline = Date.now() + 90_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result').isVisible())) {
-    // 自分の ターンが 来たら たたかう。タップ待ちの 文は すすめる
-    if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
-    else if (await page.locator('.nq-box').isVisible())
+    // 前面の文章を先に進め、操作できる自分のターンだけ「たたかう」
+    if (await page.locator('.nq-box-next').isVisible())
       await page
         .locator('.nq-box')
         .click({ timeout: 1_000 })
         .catch(() => undefined);
+    else if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
     await page.waitForTimeout(250);
   }
   await expect(page.locator('.nq-result')).toBeVisible();
