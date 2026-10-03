@@ -69,7 +69,7 @@ test('バトル：必殺技を えらぶと 問題が出て、答えると 教�
   if (await choice.isVisible()) await choice.click();
   else if (await numberBuildSubmit.isVisible()) await numberBuildSubmit.click();
   else {
-    await page.locator('.nq-q-input input').fill('1');
+    for (const input of await page.locator('.nq-q-input input').all()) await input.fill('1');
     await textInputSubmit.click();
   }
   // 採点後に問題フレームが閉じ、ダメージ数字と ゲージの「+n」が出る
