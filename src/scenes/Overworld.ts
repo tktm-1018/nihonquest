@@ -79,7 +79,6 @@ import {
   nextStop,
   type NextStop,
 } from '../core/progression/route';
-import { canChallengeIslandBoss, completeIsland } from '../core/progression/island';
 import { createRng, freshSeed, type Rng } from '../core/rng';
 import type { GameState } from '../core/state/schema';
 import { askById, MasteryStore, type QuestionBank } from '../questions/engine';
@@ -98,12 +97,7 @@ import { bagCells } from '../ui/field/bagLayout';
 import { TownOverlay, type TownOverlayProps, type TownRow } from '../ui/field/TownOverlay';
 import { MenuOverlay, type MenuEntry, type MenuTab, type RoadmapNode } from '../ui/field/MenuOverlay';
 import { ParentOverlay } from '../ui/field/ParentOverlay';
-import {
-  WorldMapOverlay,
-  type MapAreaInfo,
-  type MapRegionInfo,
-  type WorldMapData,
-} from '../ui/field/WorldMapOverlay';
+import { type MapRegionInfo, type WorldMapData } from '../ui/field/WorldMapOverlay';
 import { t } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
 import { QuestionFrame } from '../ui/QuestionFrame';
@@ -136,6 +130,14 @@ import { buildEntranceIcons } from './overworld/entranceIcons';
 import { GEOGRAPHIC_AREA_ORDER } from './overworld/geography';
 import { buildRoadmapNodes } from './overworld/roadmap';
 import { buildStructureArt, structureKey, type StructureKind } from './overworld/structureArt';
+import {
+  buildWorldMapRegions,
+  mountWorldMap,
+  placeDisplayName,
+  runIslandBossChallenge,
+  runIslandBossClear,
+  worldMapHere,
+} from './overworld/worldMapFlow';
 import { askFirst, buildAskEnv, relaxedQueries } from './shared/askEnv';
 
 const TILE = 16;
@@ -3699,35 +3701,16 @@ export class OverworldScene extends Phaser.Scene {
     );
   }
 
-  /** いまいる場所の名前（RubyText）と種類。HUD の窓と、移動したときの場所の名前で使う */
   private placeName(): { title: string; sub: string } {
     const kind = this.kind();
-    const area = this.currentArea();
-    const enclave = kind === 'enclave' ? ENCLAVES.find((e) => e.enclaveId === this.mapKey) : undefined;
-    const title =
-      enclave?.name ??
-      (kind === 'town' ? area?.town?.name : kind === 'secret' ? area?.secret?.name : undefined) ??
-      area?.name ??
-      this.mapKey;
-    const region = kind === 'field' ? this.regionDef(this.currentRegion) : undefined;
-    // 左上の 窓は せまいので、エリアの 名前は かなで（ふりがなを 字の 上に のせると 行が こわれる）
-    if (region) return { title, sub: kana(region.name) };
-    const sub = t(
-      {
-        field: 'field.kindField',
-        town: 'field.kindTown',
-        dungeon: 'field.kindDungeon',
-        enclave: 'field.kindEnclave',
-        secret: 'field.kindSecret',
-      }[kind],
+    return placeDisplayName(
+      kind,
+      this.mapKey,
+      this.currentArea(),
+      kind === 'field' ? this.regionDef(this.currentRegion) : undefined,
     );
-    return { title, sub };
   }
 
-  /**
-   * 別の場所（町・ダンジョン・島・となりの県 など）に移動したとき、画面のまん中に場所の名前を出す。
-   * 同じマップの中の船や、負けて同じマップの宿へもどったときは出さない
-   */
   private showPlaceTitle(): void {
     if (this.registry.get('lastPlaceTitle') === this.mapKey) return;
     this.registry.set('lastPlaceTitle', this.mapKey);
@@ -3735,7 +3718,6 @@ export class OverworldScene extends Phaser.Scene {
     void this.show('title', (done) => h(AreaTitle, { name: title, sub, onDone: done }));
   }
 
-  /** にほんちず：地方ごとの地図で、県の進みぐあい（名所・中ボス）を見て、行ったことのある県のフィールドへ行ける */
   private openWorldMap(): void {
     if (this.busy || this.inBattle) return;
     this.busy = true;
@@ -3746,150 +3728,54 @@ export class OverworldScene extends Phaser.Scene {
       this.inputLockUntil = this.time.now + 250;
       this.waitRelease = true;
     };
-    render(
-      h(WorldMapOverlay, {
-        regions: this.worldMapRegions(),
-        here: this.whereAmI(),
-        onGo: (areaId: string) => {
-          close();
-          this.switchMap(this.content()?.areas.get(areaId)?.mapKeys?.field ?? `${areaId}-field`, 'spawn');
-        },
-        onChallengeIslandBoss: (islandId: string) => {
-          close();
-          void this.challengeIslandBoss(islandId);
-        },
-        onClose: close,
-      }),
-      root,
-    );
-  }
-
-  /** にほんちずの城から地方ボスへ挑戦する。県のしるし不足・クリア済みなら開始しない。 */
-  private async challengeIslandBoss(islandId: string): Promise<void> {
-    const content = this.content();
-    const gs = this.gs();
-    const island = content?.world.islands.find((candidate) => candidate.id === islandId);
-    const boss = island ? content?.monsters.get(island.bossId) : undefined;
-    if (!content || !gs || !island || !boss || !canChallengeIslandBoss(content.world, islandId, gs.progress))
-      return;
-
-    this.busy = true;
-    this.standStill();
-    const choice = await this.choose(
-      [
-        { speaker: t('field.prologueFairy'), text: t('field.islandBossAsk') },
-        { speaker: t('field.prologueFairy'), text: t('field.islandBossIntroFairy') },
-        { speaker: boss.name, text: t('field.islandBossRoar') },
-      ],
-      [t('ui.yes'), t('ui.no')],
-    );
-    if (choice !== 0) {
-      this.busy = false;
-      return;
-    }
-    this.pendingIslandBoss = islandId;
-    this.busy = false;
-    this.startBattle({ enemyId: boss.id, level: Math.max(1, this.heroLevel()), zone: 'field', isBoss: true });
-  }
-
-  /** 地方ボス勝利時だけ島クリアを記録する。バッグ寸法は islandsCleared に連動して広がる。 */
-  private async islandBossDefeated(islandId: string): Promise<void> {
-    const content = this.content();
-    const gs = this.gs();
-    if (!content || !gs) return;
-    const next = completeIsland(gs, content.world, islandId);
-    if (next === gs) return;
-    this.busy = true;
-    this.setGame(next);
-    await this.wait(650);
-    playSfx('victory');
-    const island = content.world.islands.find((candidate) => candidate.id === islandId);
-    const bossName = content.monsters.get(island?.bossId ?? '')?.name;
-    await this.talk([
-      { speaker: bossName, text: t('field.islandBossSecret') },
-      { speaker: t('field.prologueFairy'), text: t('field.islandFairyDeflect') },
-      { text: t('field.islandBossCleared') },
-      { text: t('field.islandBagGrew') },
-      { speaker: t('field.prologueFairy'), text: t('field.islandFairyNext') },
-      { text: t('field.islandChapterEnd') },
-    ]);
-    this.busy = false;
-  }
-
-  /** にほんちずの地方と県。地図は public/worldmap.json、名前は content、進みぐあいはセーブから */
-  private worldMapRegions(): MapRegionInfo[] {
-    const data = this.cache.json.get(WORLD_MAP_KEY) as WorldMapData | undefined;
-    const content = this.content();
-    if (!data || !content) return [];
-    const gs = this.gs();
-    const been = this.visitedAreas();
-    const islands = new Map(content.world.islands.map((i) => [i.id, i]));
-    const boss = (area: Area | undefined): MapAreaInfo['boss'] => {
-      if (!area?.midBoss) return 'none';
-      return gs?.progress.eventsDone.includes(midBossFlag(area.id)) ? 'done' : 'yet';
-    };
-    const regions = data.regions.filter((r) => islands.has(r.id));
-    regions.sort((a, b) => islands.get(a.id)!.order - islands.get(b.id)!.order);
-    return regions.map((r) => {
-      const island = islands.get(r.id)!;
-      const foundSigns = island.areas.filter((id) => gs?.progress.areaSigns.includes(id)).length;
-      const cleared = gs?.progress.islandsCleared.includes(island.id) ?? false;
-      const ready = !!gs && canChallengeIslandBoss(content.world, island.id, gs.progress);
-      return {
-        id: r.id,
-        name: island.name,
-        width: r.width,
-        height: r.height,
-        rows: r.rows,
-        status: island.status,
-        islandBoss: {
-          name: content.monsters.get(island.bossId)?.name ?? island.bossId,
-          state: cleared ? 'done' : ready ? 'ready' : 'locked',
-          foundSigns,
-          requiredSigns: island.areas.length,
-        },
-        areas: r.areas.map((a): MapAreaInfo => {
-          const area = content.areas.get(a.id);
-          // 見つけていない名所は、名前を出さない（null）。特産品（イベントの無い たべもの・こうげいひん）は宝箱
-          const stamps = a.stamps.flatMap((id) => {
-            const motif = area?.motifs.find((m) => m.id === id);
-            if (!motif) return [];
-            const box = SPECIALTY_KINDS.has(motif.kind) && !area?.events.some((e) => e.motifId === id);
-            return [{ name: gs?.dex.motifs.includes(motifStamp(a.id, id)) ? kana(motif.name) : null, box }];
-          });
-          return {
-            id: a.id,
-            name: area?.name ?? a.id,
-            capital: a.capital,
-            stamps,
-            boss: boss(area),
-            visited: island.status === 'playable' && been.has(a.id),
-          };
-        }),
-      };
+    mountWorldMap(root, {
+      regions: this.worldMapRegions(),
+      here: this.whereAmI(),
+      onGo: (areaId: string) => {
+        close();
+        this.switchMap(this.content()?.areas.get(areaId)?.mapKeys?.field ?? `${areaId}-field`, 'spawn');
+      },
+      onChallengeIslandBoss: (islandId: string) => {
+        close();
+        void this.challengeIslandBoss(islandId);
+      },
+      onClose: close,
     });
   }
 
-  /** にほんちずの「いま いる ところ」。フィールドなら、県の陸地の中でのだいたいの位置（左上 0 〜 右下 1）も */
+  private async challengeIslandBoss(islandId: string): Promise<void> {
+    await runIslandBossChallenge(this.content(), this.gs(), islandId, this.heroLevel(), {
+      choose: (lines, choices) => this.choose(lines, choices),
+      standStill: () => this.standStill(),
+      setBusy: (busy) => (this.busy = busy),
+      setPending: (id) => (this.pendingIslandBoss = id),
+      startBattle: (enemyId, level) => this.startBattle({ enemyId, level, zone: 'field', isBoss: true }),
+    });
+  }
+
+  private async islandBossDefeated(islandId: string): Promise<void> {
+    await runIslandBossClear(this.content(), this.gs(), islandId, {
+      setBusy: (busy) => (this.busy = busy),
+      setGame: (game) => this.setGame(game),
+      wait: (milliseconds) => this.wait(milliseconds),
+      talk: (lines) => this.talk(lines),
+    });
+  }
+
+  private worldMapRegions(): MapRegionInfo[] {
+    return buildWorldMapRegions(
+      this.cache.json.get(WORLD_MAP_KEY) as WorldMapData | undefined,
+      this.content(),
+      this.gs(),
+      this.visitedAreas(),
+    );
+  }
+
   private whereAmI(): { areaId: string; at?: [number, number] } | null {
     const areaId = this.areaId();
     if (!this.content()?.areas.has(areaId)) return null;
-    const col = this.colLayer;
-    if (this.kind() !== 'field' || !col) return { areaId };
-    let x0 = Infinity;
-    let y0 = Infinity;
-    let x1 = -Infinity;
-    let y1 = -Infinity;
-    col.forEachTile((tile) => {
-      if (tile.index === BLOCK_TILE) return;
-      x0 = Math.min(x0, tile.x);
-      y0 = Math.min(y0, tile.y);
-      x1 = Math.max(x1, tile.x);
-      y1 = Math.max(y1, tile.y);
-    });
-    if (x1 < x0) return { areaId };
-    const [px, py] = this.playerTile();
-    return { areaId, at: [(px - x0 + 0.5) / (x1 - x0 + 1), (py - y0 + 0.5) / (y1 - y0 + 1)] };
+    const tiles = this.kind() === 'field' ? this.colLayer?.getTilesWithin() : undefined;
+    return worldMapHere(areaId, tiles, this.playerTile(), BLOCK_TILE);
   }
 
   private switchMap(target: string, spawn = 'spawn', tile?: [number, number], exactSpawn = false): void {
