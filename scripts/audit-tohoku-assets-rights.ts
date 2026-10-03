@@ -1,7 +1,7 @@
 /** 東北公開ビルドへ入る素材の存在・権利状態・音声フォールバックを決定的に監査する。 */
 import { createHash } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { extname, relative, resolve } from 'node:path';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { extname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { auditAssets } from './audit-assets';
 
