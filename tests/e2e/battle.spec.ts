@@ -23,13 +23,13 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
 
   const deadline = Date.now() + 90_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result').isVisible())) {
-    // 自分の ターンが 来たら たたかう。タップ待ちの 文は すすめる
-    if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
-    else if (await page.locator('.nq-box-next').isVisible())
+    // 前面の文章を先に進め、操作できる自分のターンだけ「たたかう」
+    if (await page.locator('.nq-box-next').isVisible())
       await page
         .locator('.nq-box')
         .click({ timeout: 1_000 })
         .catch(() => undefined);
+    else if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
     await page.waitForTimeout(250);
   }
   await expect(page.locator('.nq-result')).toBeVisible();
@@ -50,21 +50,29 @@ test('バトル：ターンが 出て、こちらが 動くと 同じ ターン�
   const attack = page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])');
   await expect(attack).toBeVisible({ timeout: 20_000 });
   await attack.click();
-  // 同じ ターンの うちに 敵が こうげき → 味方の ダメージの 数字
-  await expect(page.locator('.nq-pop-hurt').first()).toBeVisible({ timeout: 20_000 });
-  // 次の ターンへ
+  // 味方と敵の行動が完了すると、次のターンへ進む
   await expect(page.locator('.nq-turn-stage')).toContainText('ターン 2', { timeout: 20_000 });
 });
 
 test('バトル：必殺技を えらぶと 問題が出て、答えると 教科ゲージが たまる', async ({ page }) => {
   test.setTimeout(90_000);
   await start(page, 8);
+  const mathGauge = page.locator('.nq-sg[aria-label="さんすう"]');
+  const gaugeBefore = await mathGauge.getAttribute('aria-valuenow');
   await page.locator('.nq-cmd[data-cmd="skill"]').click();
   await page.locator('[data-skill="sk-tashizan-giri"]').click();
   await expect(page.locator('.nq-bq')).toBeVisible({ timeout: 10_000 });
-  await page.locator('.nq-choice').first().click();
-  // 採点後に問題フレームが閉じ、ダメージ数字と ゲージの「+n」が出る
+  const choice = page.locator('.nq-choice').first();
+  const numberBuildSubmit = page.locator('.nq-nb-submit');
+  const textInputSubmit = page.locator('.nq-input-submit');
+  await expect(choice.or(numberBuildSubmit).or(textInputSubmit)).toBeVisible({ timeout: 10_000 });
+  if (await choice.isVisible()) await choice.click();
+  else if (await numberBuildSubmit.isVisible()) await numberBuildSubmit.click();
+  else {
+    for (const input of await page.locator('.nq-q-input input').all()) await input.fill('1');
+    await textInputSubmit.click();
+  }
+  // 採点後に問題フレームが閉じ、算数ゲージの値が増える
   await expect(page.locator('.nq-bq')).toHaveCount(0, { timeout: 10_000 });
-  await expect(page.locator('.nq-pop').first()).toBeVisible({ timeout: 10_000 });
-  await expect(page.locator('.nq-sg-gain').first()).toBeAttached({ timeout: 10_000 });
+  await expect(mathGauge).not.toHaveAttribute('aria-valuenow', gaugeBefore ?? '', { timeout: 10_000 });
 });

@@ -97,12 +97,7 @@ import { bagCells } from '../ui/field/bagLayout';
 import { TownOverlay, type TownOverlayProps, type TownRow } from '../ui/field/TownOverlay';
 import { MenuOverlay, type MenuEntry, type MenuTab, type RoadmapNode } from '../ui/field/MenuOverlay';
 import { ParentOverlay } from '../ui/field/ParentOverlay';
-import {
-  WorldMapOverlay,
-  type MapAreaInfo,
-  type MapRegionInfo,
-  type WorldMapData,
-} from '../ui/field/WorldMapOverlay';
+import { type MapRegionInfo, type WorldMapData } from '../ui/field/WorldMapOverlay';
 import { t } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
 import { QuestionFrame } from '../ui/QuestionFrame';
@@ -135,6 +130,14 @@ import { buildEntranceIcons } from './overworld/entranceIcons';
 import { GEOGRAPHIC_AREA_ORDER } from './overworld/geography';
 import { buildRoadmapNodes } from './overworld/roadmap';
 import { buildStructureArt, structureKey, type StructureKind } from './overworld/structureArt';
+import {
+  buildWorldMapRegions,
+  mountWorldMap,
+  placeDisplayName,
+  runIslandBossChallenge,
+  runIslandBossClear,
+  worldMapHere,
+} from './overworld/worldMapFlow';
 import { askFirst, buildAskEnv, relaxedQueries } from './shared/askEnv';
 
 const TILE = 16;
@@ -154,6 +157,8 @@ const WATER_TILE = 3;
 const TRIGGER_RADIUS = 1;
 /** にほんちずの地図データ（scripts/scaffold-maps.ts が public/worldmap.json に作る）の cache キー */
 const WORLD_MAP_KEY = 'worldmap';
+/** 新しく始めたデータだけで青森の導入を一度表示する。既存セーブへ突然割り込ませない。 */
+const PROLOGUE_COUNTER = 'story.prologue';
 /** 特産品（イベントの無い たべもの・こうげいひん）は ★ 看板ではなく宝箱（scripts/scaffold-maps.ts） */
 /** みため タブの 部位（GameState.player.appearance の キー と 文言の キー） */
 type HeroLookIndex = GameState['player']['appearance'];
@@ -367,6 +372,7 @@ export class OverworldScene extends Phaser.Scene {
   private regionGates = new Map<number, RegionGate>();
   private regionBosses = new Map<number, RegionBoss>();
   private pendingRegionBoss: RegionBoss | null = null;
+  private pendingIslandBoss: string | null = null;
   /** ダンジョンの おくに いる 県ボス（中ボスと同じ「？」マーク） */
   /** 止まっているか（左上の 窓を 出す）。歩きだすと かくし、HUD_IDLE_MS 止まると 出す */
   private hudIdle = true;
@@ -466,6 +472,7 @@ export class OverworldScene extends Phaser.Scene {
     this.baseMap = this.readBaseMap();
     this.renderHud();
     if (!this.pendingDebugBattle) this.showPlaceTitle();
+    if (!this.pendingDebugBattle) this.time.delayedCall(2850, () => void this.showPrologue());
 
     const debug = this.pendingDebugBattle;
     if (debug) {
@@ -506,6 +513,7 @@ export class OverworldScene extends Phaser.Scene {
     this.regionGates = new Map();
     this.regionBosses = new Map();
     this.pendingRegionBoss = null;
+    this.pendingIslandBoss = null;
     this.areaBoss = null;
     this.pendingAreaBoss = false;
     this.lastBoss = null;
@@ -2532,7 +2540,9 @@ export class OverworldScene extends Phaser.Scene {
     const wasAreaBoss = this.pendingAreaBoss;
     const wasLastBoss = this.pendingLastBoss;
     const wasRegionBoss = this.pendingRegionBoss;
+    const wasIslandBoss = this.pendingIslandBoss;
     this.pendingRegionBoss = null;
+    this.pendingIslandBoss = null;
     this.pendingMidBoss = false;
     this.pendingAreaBoss = false;
     this.pendingLastBoss = false;
@@ -2554,6 +2564,7 @@ export class OverworldScene extends Phaser.Scene {
     if (wasAreaBoss && p.outcome === 'victory') void this.areaBossDefeated();
     if (wasLastBoss && p.outcome === 'victory') void this.lastBossDefeated();
     if (wasRegionBoss && p.outcome === 'victory') void this.regionBossDefeated(wasRegionBoss);
+    if (wasIslandBoss && p.outcome === 'victory') void this.islandBossDefeated(wasIslandBoss);
   }
 
   // ───────────────────────── 画面（DOM） ─────────────────────────
@@ -2585,6 +2596,39 @@ export class OverworldScene extends Phaser.Scene {
 
   private talk(lines: DialogueLine[]): Promise<void> {
     return this.choose(lines).then(() => undefined);
+  }
+
+  /** 新しい旅の最初だけ、世界の異変・妖精・旅の目的を短く伝える。 */
+  private async showPrologue(): Promise<void> {
+    const gs = this.gs();
+    if (
+      this.busy ||
+      this.inBattle ||
+      this.mapKey !== 'aomori-field' ||
+      gs?.progress.counters[PROLOGUE_COUNTER] !== 0
+    )
+      return;
+
+    this.busy = true;
+    this.standStill();
+    this.setGame({
+      ...gs,
+      updatedAt: Date.now(),
+      progress: {
+        ...gs.progress,
+        counters: { ...gs.progress.counters, [PROLOGUE_COUNTER]: 1 },
+      },
+    });
+    await this.talk([
+      { speaker: t('field.prologueNarrator'), text: t('field.prologueWake') },
+      { speaker: gs.player.name, text: t('field.prologueLost') },
+      { speaker: t('field.prologueFairy'), text: t('field.prologueFairyArrives') },
+      { speaker: t('field.prologueFairy'), text: t('field.prologueKnowledge') },
+      { speaker: t('field.prologueFairy'), text: t('field.prologueNoema') },
+      { speaker: t('field.prologueFairy'), text: t('field.prologueQuest') },
+      { text: t('field.prologueStart') },
+    ]);
+    this.busy = false;
   }
 
   /** 会話を出す。choices があれば最後の行で選ばせて、その番号を返す（選択肢なしは -1） */
@@ -3657,35 +3701,16 @@ export class OverworldScene extends Phaser.Scene {
     );
   }
 
-  /** いまいる場所の名前（RubyText）と種類。HUD の窓と、移動したときの場所の名前で使う */
   private placeName(): { title: string; sub: string } {
     const kind = this.kind();
-    const area = this.currentArea();
-    const enclave = kind === 'enclave' ? ENCLAVES.find((e) => e.enclaveId === this.mapKey) : undefined;
-    const title =
-      enclave?.name ??
-      (kind === 'town' ? area?.town?.name : kind === 'secret' ? area?.secret?.name : undefined) ??
-      area?.name ??
-      this.mapKey;
-    const region = kind === 'field' ? this.regionDef(this.currentRegion) : undefined;
-    // 左上の 窓は せまいので、エリアの 名前は かなで（ふりがなを 字の 上に のせると 行が こわれる）
-    if (region) return { title, sub: kana(region.name) };
-    const sub = t(
-      {
-        field: 'field.kindField',
-        town: 'field.kindTown',
-        dungeon: 'field.kindDungeon',
-        enclave: 'field.kindEnclave',
-        secret: 'field.kindSecret',
-      }[kind],
+    return placeDisplayName(
+      kind,
+      this.mapKey,
+      this.currentArea(),
+      kind === 'field' ? this.regionDef(this.currentRegion) : undefined,
     );
-    return { title, sub };
   }
 
-  /**
-   * 別の場所（町・ダンジョン・島・となりの県 など）に移動したとき、画面のまん中に場所の名前を出す。
-   * 同じマップの中の船や、負けて同じマップの宿へもどったときは出さない
-   */
   private showPlaceTitle(): void {
     if (this.registry.get('lastPlaceTitle') === this.mapKey) return;
     this.registry.set('lastPlaceTitle', this.mapKey);
@@ -3693,7 +3718,6 @@ export class OverworldScene extends Phaser.Scene {
     void this.show('title', (done) => h(AreaTitle, { name: title, sub, onDone: done }));
   }
 
-  /** にほんちず：地方ごとの地図で、県の進みぐあい（名所・中ボス）を見て、行ったことのある県のフィールドへ行ける */
   private openWorldMap(): void {
     if (this.busy || this.inBattle) return;
     this.busy = true;
@@ -3704,81 +3728,54 @@ export class OverworldScene extends Phaser.Scene {
       this.inputLockUntil = this.time.now + 250;
       this.waitRelease = true;
     };
-    render(
-      h(WorldMapOverlay, {
-        regions: this.worldMapRegions(),
-        here: this.whereAmI(),
-        onGo: (areaId: string) => {
-          close();
-          this.switchMap(this.content()?.areas.get(areaId)?.mapKeys?.field ?? `${areaId}-field`, 'spawn');
-        },
-        onClose: close,
-      }),
-      root,
+    mountWorldMap(root, {
+      regions: this.worldMapRegions(),
+      here: this.whereAmI(),
+      onGo: (areaId: string) => {
+        close();
+        this.switchMap(this.content()?.areas.get(areaId)?.mapKeys?.field ?? `${areaId}-field`, 'spawn');
+      },
+      onChallengeIslandBoss: (islandId: string) => {
+        close();
+        void this.challengeIslandBoss(islandId);
+      },
+      onClose: close,
+    });
+  }
+
+  private async challengeIslandBoss(islandId: string): Promise<void> {
+    await runIslandBossChallenge(this.content(), this.gs(), islandId, this.heroLevel(), {
+      choose: (lines, choices) => this.choose(lines, choices),
+      standStill: () => this.standStill(),
+      setBusy: (busy) => (this.busy = busy),
+      setPending: (id) => (this.pendingIslandBoss = id),
+      startBattle: (enemyId, level) => this.startBattle({ enemyId, level, zone: 'field', isBoss: true }),
+    });
+  }
+
+  private async islandBossDefeated(islandId: string): Promise<void> {
+    await runIslandBossClear(this.content(), this.gs(), islandId, {
+      setBusy: (busy) => (this.busy = busy),
+      setGame: (game) => this.setGame(game),
+      wait: (milliseconds) => this.wait(milliseconds),
+      talk: (lines) => this.talk(lines),
+    });
+  }
+
+  private worldMapRegions(): MapRegionInfo[] {
+    return buildWorldMapRegions(
+      this.cache.json.get(WORLD_MAP_KEY) as WorldMapData | undefined,
+      this.content(),
+      this.gs(),
+      this.visitedAreas(),
     );
   }
 
-  /** にほんちずの地方と県。地図は public/worldmap.json、名前は content、進みぐあいはセーブから */
-  private worldMapRegions(): MapRegionInfo[] {
-    const data = this.cache.json.get(WORLD_MAP_KEY) as WorldMapData | undefined;
-    const content = this.content();
-    if (!data || !content) return [];
-    const gs = this.gs();
-    const been = this.visitedAreas();
-    const islands = new Map(content.world.islands.map((i) => [i.id, i]));
-    const boss = (area: Area | undefined): MapAreaInfo['boss'] => {
-      if (!area?.midBoss) return 'none';
-      return gs?.progress.eventsDone.includes(midBossFlag(area.id)) ? 'done' : 'yet';
-    };
-    const regions = data.regions.filter((r) => islands.has(r.id));
-    regions.sort((a, b) => islands.get(a.id)!.order - islands.get(b.id)!.order);
-    return regions.map((r) => ({
-      id: r.id,
-      name: islands.get(r.id)!.name,
-      width: r.width,
-      height: r.height,
-      rows: r.rows,
-      areas: r.areas.map((a): MapAreaInfo => {
-        const area = content.areas.get(a.id);
-        // 見つけていない名所は、名前を出さない（null）。特産品（イベントの無い たべもの・こうげいひん）は宝箱
-        const stamps = a.stamps.flatMap((id) => {
-          const motif = area?.motifs.find((m) => m.id === id);
-          if (!motif) return [];
-          const box = SPECIALTY_KINDS.has(motif.kind) && !area?.events.some((e) => e.motifId === id);
-          return [{ name: gs?.dex.motifs.includes(motifStamp(a.id, id)) ? kana(motif.name) : null, box }];
-        });
-        return {
-          id: a.id,
-          name: area?.name ?? a.id,
-          capital: a.capital,
-          stamps,
-          boss: boss(area),
-          visited: been.has(a.id),
-        };
-      }),
-    }));
-  }
-
-  /** にほんちずの「いま いる ところ」。フィールドなら、県の陸地の中でのだいたいの位置（左上 0 〜 右下 1）も */
   private whereAmI(): { areaId: string; at?: [number, number] } | null {
     const areaId = this.areaId();
     if (!this.content()?.areas.has(areaId)) return null;
-    const col = this.colLayer;
-    if (this.kind() !== 'field' || !col) return { areaId };
-    let x0 = Infinity;
-    let y0 = Infinity;
-    let x1 = -Infinity;
-    let y1 = -Infinity;
-    col.forEachTile((tile) => {
-      if (tile.index === BLOCK_TILE) return;
-      x0 = Math.min(x0, tile.x);
-      y0 = Math.min(y0, tile.y);
-      x1 = Math.max(x1, tile.x);
-      y1 = Math.max(y1, tile.y);
-    });
-    if (x1 < x0) return { areaId };
-    const [px, py] = this.playerTile();
-    return { areaId, at: [(px - x0 + 0.5) / (x1 - x0 + 1), (py - y0 + 0.5) / (y1 - y0 + 1)] };
+    const tiles = this.kind() === 'field' ? this.colLayer?.getTilesWithin() : undefined;
+    return worldMapHere(areaId, tiles, this.playerTile(), BLOCK_TILE);
   }
 
   private switchMap(target: string, spawn = 'spawn', tile?: [number, number], exactSpawn = false): void {
