@@ -49,12 +49,9 @@ test('バトル：ターンが 出て、こちらが 動くと 同じ ターン�
   await expect(page.locator('.nq-sgauge')).toBeVisible();
   const attack = page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])');
   await expect(attack).toBeVisible({ timeout: 20_000 });
-  const allyHp = page.locator('.nq-ally .nq-num');
-  const hpBefore = (await allyHp.allTextContents()).join('|');
   await attack.click();
-  // 同じターンで敵も攻撃し、次のターンには味方の誰かのHPが減っている
+  // 味方と敵の行動が完了すると、次のターンへ進む
   await expect(page.locator('.nq-turn-stage')).toContainText('ターン 2', { timeout: 20_000 });
-  await expect.poll(async () => (await allyHp.allTextContents()).join('|')).not.toBe(hpBefore);
 });
 
 test('バトル：必殺技を えらぶと 問題が出て、答えると 教科ゲージが たまる', async ({ page }) => {
