@@ -34,7 +34,7 @@
 .nq-fhud-away * {
   pointer-events: none !important;
 }
-/* 場所の名前・種類・スタンプ。地図（144px）の幅で折り返して、窓を地図の幅に そろえる（右に黒い すきまを作らない） */
+/* 場所の名前・種類・スタンプ。ミニ地図と同じ幅にそろえる。 */
 .nq-fhud-row {
   display: flex;
   flex-wrap: wrap;
@@ -185,7 +185,10 @@
   white-space: nowrap;
 }
 .nq-fhud-sub {
+  display: block;
+  width: 100%;
   font-size: 12px;
+  line-height: 24px;
   color: var(--nq-cloud);
 }
 .nq-fhud-stamp {

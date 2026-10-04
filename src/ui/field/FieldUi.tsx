@@ -29,6 +29,18 @@ export interface FieldHudProps {
   idle?: boolean;
 }
 
+function AreaName({ text }: { text: string }) {
+  const splitSuffix = text.length > 12 && text.endsWith('エリア');
+  if (!splitSuffix) return <RubyLabel text={text} class="nq-fhud-sub" />;
+  return (
+    <span class="nq-fhud-sub">
+      <RubyLabel text={text.slice(0, -3)} />
+      <br />
+      <RubyLabel text="エリア" />
+    </span>
+  );
+}
+
 export function FieldHud({
   title,
   sub,
@@ -49,7 +61,7 @@ export function FieldHud({
       <div class={`nq-win nq-fhud-loc ${idle ? '' : 'nq-fhud-away'}`}>
         <div class="nq-fhud-row">
           <RubyLabel text={title} class="nq-fhud-title" />
-          <RubyLabel text={sub} class="nq-fhud-sub" />
+          <AreaName text={sub} />
           {stamps && (
             <span class="nq-fhud-stamp" aria-label={stampLabel}>
               <PixelIcon name="star" scale={2} />
