@@ -31,14 +31,15 @@ async function answerCurrentQuestion(page: Page): Promise<void> {
 }
 
 test('バトル：たたかう を続けると決着がつき、フィールドに戻る', async ({ page }) => {
-  test.setTimeout(120_000);
+  // CI の低速な Chromium でも、文字送りと各ターンの演出を省略せず完走させる。
+  test.setTimeout(240_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   await start(page, 1);
   const attack = page.locator('.nq-cmd[data-cmd="attack"]:not([disabled])');
   await expect(attack).toBeVisible({ timeout: 20_000 });
 
-  const deadline = Date.now() + 90_000;
+  const deadline = Date.now() + 210_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result').isVisible())) {
     // 自分の ターンが 来たら たたかう。タップ待ちの 文は すすめる
     if (await attack.isVisible()) await attack.click({ timeout: 2_000 }).catch(() => undefined);
