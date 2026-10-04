@@ -35,6 +35,13 @@ export interface MenuOverlayProps {
 
 type MenuPick = (index: number, ensureVisible?: boolean) => void;
 
+export function initialMenuIndex(entries: readonly MenuEntry[], focusKey?: string): number {
+  const focused = entries.findIndex((entry) => entry.key === focusKey);
+  if (focused >= 0) return focused;
+  const firstKnown = entries.findIndex((entry) => entry.known);
+  return Math.max(0, firstKnown);
+}
+
 /** 大きな図鑑で、選択前後の行以外を再描画しない。 */
 interface MenuListRowProps {
   entry: MenuEntry;
@@ -87,11 +94,7 @@ export function MenuOverlay({
   onParent,
   onClose,
 }: MenuOverlayProps) {
-  const find = () =>
-    Math.max(
-      0,
-      entries.findIndex((e) => e.key === focusKey),
-    );
+  const find = () => initialMenuIndex(entries, focusKey);
   const [sel, setSel] = useState(find);
   // タブが かわったら いちばん上（か focusKey）から
   const lastTab = useRef(tab);
@@ -102,6 +105,9 @@ export function MenuOverlay({
   }
   const e = entries[Math.min(sel, entries.length - 1)];
   const listRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    requestAnimationFrame(() => listRef.current?.children[sel]?.scrollIntoView({ block: 'nearest' }));
+  }, [tab, focusKey]);
 
   const pick = useCallback<MenuPick>(
     (k, ensureVisible = false) => {
@@ -325,9 +331,7 @@ function RoadmapView({ nodes }: { nodes: RoadmapNode[] }) {
                 </span>
                 <RubyLabel
                   class="nq-roadmap-summary-current"
-                  text={
-                    next ? t('field.roadmapNext', { name: next.name }) : t('field.roadmapCompleted')
-                  }
+                  text={next ? t('field.roadmapNext', { name: next.name }) : t('field.roadmapCompleted')}
                 />
               </button>
             );
