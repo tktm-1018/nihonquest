@@ -482,6 +482,25 @@
 .nq-menu-body > .nq-wmap-right {
   padding-left: 4px;
 }
+.nq-menu-body-empty > .nq-wmap-left {
+  width: 100%;
+}
+.nq-menu-body-empty > .nq-wmap-right {
+  display: none;
+}
+.nq-menu-empty {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 16px;
+  height: 100%;
+  color: var(--nq-cloud);
+  text-align: center;
+}
+.nq-menu-empty .nq-picon {
+  opacity: 0.65;
+  filter: drop-shadow(4px 4px 0 var(--nq-ink));
+}
 .nq-menu-body .nq-party-list {
   padding-right: 4px;
 }

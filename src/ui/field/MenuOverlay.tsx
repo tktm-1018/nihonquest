@@ -211,7 +211,7 @@ export function MenuOverlay({
         {tab === 'roadmap' ? (
           <RoadmapView nodes={roadmap} />
         ) : (
-          <div class="nq-menu-body">
+          <div class={`nq-menu-body ${entries.length ? '' : 'nq-menu-body-empty'}`}>
             <div class="nq-wmap-left">
               {summary && <RubyLabel text={summary} class="nq-menu-summary" as="p" />}
               {entries.length ? (
@@ -221,7 +221,10 @@ export function MenuOverlay({
                   ))}
                 </ul>
               ) : (
-                <RubyLabel text={empty} class="nq-town-empty" as="p" />
+                <div class="nq-menu-empty">
+                  <PixelIcon name={tab === 'bag' ? 'cmd-item' : 'star-off'} scale={8} />
+                  <RubyLabel text={empty} class="nq-town-empty" as="p" />
+                </div>
               )}
             </div>
 
