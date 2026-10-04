@@ -5,6 +5,7 @@
   "island": "tohoku",
   "capital": "秋田市[あきたし]",
   "status": "playable",
+  "recommendedLevel": 7,
   "mapKeys": {
     "field": "akita-field",
     "town": "akita-town",

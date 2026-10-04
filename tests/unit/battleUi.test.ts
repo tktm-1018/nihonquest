@@ -108,6 +108,13 @@ describe('エンカウント', () => {
   it('出現レベルは 1 未満にならない', () => {
     for (let i = 0; i < 50; i++) expect(encounterLevel(1, createRng(`lv${i}`))).toBeGreaterThanOrEqual(1);
   });
+
+  it('県の基準レベルがあれば、低レベル・高レベルでも地域の範囲に収める', () => {
+    for (let i = 0; i < 20; i++) {
+      expect(encounterLevel(1, createRng(`low${i}`), 7)).toBeGreaterThanOrEqual(6);
+      expect(encounterLevel(50, createRng(`high${i}`), 7)).toBeLessThanOrEqual(9);
+    }
+  });
 });
 
 const summary = (over: Partial<BattleSummary> = {}): BattleSummary => ({

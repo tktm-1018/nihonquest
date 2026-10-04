@@ -5,6 +5,7 @@
   "island": "tohoku",
   "capital": "盛岡市[もりおかし]",
   "status": "playable",
+  "recommendedLevel": 3,
   "mapKeys": {
     "field": "iwate-field",
     "town": "iwate-town",

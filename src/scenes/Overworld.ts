@@ -2507,7 +2507,7 @@ export class OverworldScene extends Phaser.Scene {
     if (enemyId)
       this.startBattle({
         enemyId,
-        level: encounterLevel(this.heroLevel(), this.rng),
+        level: encounterLevel(this.heroLevel(), this.rng, area.recommendedLevel),
         zone: mapZone,
         ...(ground ? { ground } : {}),
       });

@@ -5,6 +5,7 @@
   "island": "tohoku",
   "capital": "山形市[やまがたし]",
   "status": "playable",
+  "recommendedLevel": 9,
   "mapKeys": {
     "field": "yamagata-field",
     "town": "yamagata-town",

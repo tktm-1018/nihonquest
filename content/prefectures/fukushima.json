@@ -5,6 +5,7 @@
   "island": "tohoku",
   "capital": "福島市[ふくしまし]",
   "status": "playable",
+  "recommendedLevel": 11,
   "mapKeys": {
     "field": "fukushima-field",
     "town": "fukushima-town",

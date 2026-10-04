@@ -172,6 +172,12 @@ export const areaSchema = z.object({
   island: idSchema,
   capital: rubyTextSchema.optional(),
   status: z.enum(['playable', 'stub']).default('stub'),
+  recommendedLevel: z
+    .number()
+    .int()
+    .positive()
+    .optional()
+    .describe('この県の通常エンカウントの基準レベル。未指定なら主人公レベル±1'),
   mapKeys: z.object({ field: z.string(), town: z.string(), dungeon: z.string() }).optional(),
   motifs: z.array(motifSchema),
   encounters: z.array(encounterTableSchema).default([]),

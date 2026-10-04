@@ -128,9 +128,11 @@ export function pickFromTable(table: EncounterTable, rng: Rng): string | null {
 }
 
 /**
- * 出現レベル。encounters にレベル帯が無いので当面は主人公レベル±1（最低 1）。
- * レベル帯を content に持たせるかは Step 10 のバランス調整で決める。
+ * 出現レベル。県に基準レベルがあれば「基準-1〜基準+2」に収め、地域ごとの手応えを保つ。
+ * 未設定の県は互換性のため主人公レベル±1（最低1）。
  */
-export function encounterLevel(heroLevel: number, rng: Rng): number {
-  return Math.max(1, heroLevel + rng.int(-1, 1));
+export function encounterLevel(heroLevel: number, rng: Rng, recommendedLevel?: number): number {
+  const candidate = Math.max(1, heroLevel + rng.int(-1, 1));
+  if (recommendedLevel === undefined) return candidate;
+  return Math.min(recommendedLevel + 2, Math.max(Math.max(1, recommendedLevel - 1), candidate));
 }
