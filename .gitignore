@@ -6,6 +6,8 @@ playwright-report
 test-results
 .cache
 content/manifest.json
+content/content-bundle.json
+content/questions-bundle.json
 raw/**
 !raw/.gitkeep
 .DS_Store

@@ -29,8 +29,9 @@ export function decodeQuestionFromHash(encoded: string): unknown | null {
     const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
     const jsonStr = new TextDecoder().decode(bytes);
     return JSON.parse(jsonStr);
-  } catch (e) {
-    console.error('Failed to decode question:', e);
+  } catch {
+    // URL hashes are untrusted input. Invalid or truncated shared data is an
+    // expected case, so let the editor ignore it without emitting a false error.
     return null;
   }
 }
@@ -74,9 +75,13 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     const textArea = document.createElement('textarea');
     textArea.value = text;
     document.body.appendChild(textArea);
-    textArea.select();
-    const success = document.execCommand('copy');
-    document.body.removeChild(textArea);
-    return success;
+    try {
+      textArea.select();
+      return document.execCommand('copy');
+    } catch {
+      return false;
+    } finally {
+      textArea.remove();
+    }
   }
 }

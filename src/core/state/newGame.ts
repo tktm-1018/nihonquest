@@ -32,6 +32,11 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       owned: [{ uid: 'starter', monsterId: o.starterMonsterId, level: 1, xp: 0 }],
       activeUid: 'starter',
       team: ['starter'],
+      reserve: [],
+      bagPlacements: {
+        hero: { x: 0, y: 0, rotated: false },
+        'mon:starter': { x: 1, y: 0, rotated: false },
+      },
     },
     inventory: {},
     progress: {
@@ -46,7 +51,7 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       chestsOpened: [],
       unlockedRecipes: ['rc-nebuta-no-kabuto', 'rc-hiba-no-koshiate'],
       missions: {},
-      counters: {},
+      counters: { 'story.prologue': 0 },
     },
     dex: { monsters: [], items: [], motifs: [] },
     learning: {
@@ -58,6 +63,8 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       recent: [],
       mistakes: [],
       playSecondsByDate: {},
+      attempts: [],
+      conceptStates: {},
     },
     arena: { badges: 0, ghostParty: null },
     settings: { bgmVolume: 0.6, seVolume: 0.8, timeLimitScale: 1 },

@@ -2,7 +2,14 @@
  * ゲーム本体が呼ぶ唯一の入口: ask(query) → QuestionResult
  * 選択（pick）→ レンダラー mount → 結果を MasteryStore と履歴に記録して返す。
  */
-import type { AssetResolver, Grade, QuestionQuery, QuestionResult, RendererContext } from '../contracts';
+import type {
+  AssetResolver,
+  Grade,
+  QuestionBase,
+  QuestionQuery,
+  QuestionResult,
+  RendererContext,
+} from '../contracts';
 import { requireRenderer } from '../renderers/registry';
 import type { QuestionBank } from './bank';
 import type { MasteryStore } from './mastery';
@@ -24,6 +31,8 @@ export interface AskEnv {
   recent: string[];
   /** まちがいノート（score < 1 の問題 id） */
   mistakes: string[];
+  /** 学習分析へ結果を渡す任意フック。問題エンジンは保存形式を知らない。 */
+  onResult?: (question: QuestionBase, result: QuestionResult, presentedAt: number) => void;
 }
 
 export interface AskResult extends QuestionResult {
@@ -50,6 +59,18 @@ export async function ask(env: AskEnv, query: QuestionQuery, signal?: AbortSigna
   );
   if (!q) throw new NoQuestionError(query);
 
+  return runQuestion(env, q, signal);
+}
+
+/** まちがいノートなど、IDが決まっている問題をもう一度出す。 */
+export async function askById(env: AskEnv, id: string, signal?: AbortSignal): Promise<AskResult> {
+  const question = env.bank.get(id);
+  if (!question) throw new Error(`問題が見つかりません: ${id}`);
+  return runQuestion(env, question, signal);
+}
+
+async function runQuestion(env: AskEnv, q: QuestionBase, signal?: AbortSignal): Promise<AskResult> {
+  const presentedAt = Date.now();
   const renderer = requireRenderer(q.type);
   const timeLimitSec = q.timeLimitSec ?? env.timeLimitSecByGrade[String(q.grade)] ?? 20;
 
@@ -81,6 +102,7 @@ export async function ask(env: AskEnv, query: QuestionQuery, signal?: AbortSigna
   env.recent.push(q.id);
   while (env.recent.length > env.recentWindow) env.recent.shift();
   if (result.score < 1 && !env.mistakes.includes(q.id)) env.mistakes.push(q.id);
+  env.onResult?.(q, result, presentedAt);
 
   return { ...result, unit: q.unit, subject: q.subject };
 }

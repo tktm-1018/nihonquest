@@ -77,6 +77,23 @@ describe('QuestionBank', () => {
     expect(report.skipped).toHaveLength(1);
   });
 
+  it('1ファイルの取得失敗は記録して、取得できた問題で続行する', async () => {
+    const { bank, report } = await QuestionBank.load(['ok.json', 'offline.json'], async (file) => {
+      if (file === 'offline.json') throw new Error('HTTP 503');
+      return [q('ok.0001')];
+    });
+    expect(bank.size).toBe(1);
+    expect(report.skipped).toEqual([{ file: 'offline.json', index: -1, reason: '読み込み失敗: HTTP 503' }]);
+  });
+
+  it('全ファイルを取得できない場合は空の問題バンクで開始しない', async () => {
+    await expect(
+      QuestionBank.load(['offline.json'], async () => {
+        throw new Error('offline');
+      }),
+    ).rejects.toThrow('問題を1問も読み込めませんでした');
+  });
+
   it('id 重複は例外', () => {
     const b = bankOf([q('dup.0001')]);
     expect(() => b.add(q('dup.0001'))).toThrow(/重複/);
@@ -216,13 +233,38 @@ describe('choice レンダラーの schema', () => {
       false,
     );
   });
-  it('選択肢5つは拒否', () => {
-    const choices = Array.from({ length: 5 }, (_, i) => ({ id: String(i), text: String(i) }));
+  it('選択肢6つまで許可し、7つは拒否', () => {
+    const choices = Array.from({ length: 7 }, (_, i) => ({ id: String(i), text: String(i) }));
+    expect(schema.safeParse({ prompt: 'p', choices: choices.slice(0, 6), answer: '0' }).success).toBe(true);
     expect(schema.safeParse({ prompt: 'p', choices, answer: '0' }).success).toBe(false);
   });
   it('text も image も無い選択肢は拒否', () => {
     expect(
       schema.safeParse({ prompt: 'p', choices: [{ id: 'a' }, { id: 'b', text: '2' }], answer: 'a' }).success,
+    ).toBe(false);
+  });
+  it('存在しない正解IDは拒否', () => {
+    expect(
+      schema.safeParse({
+        prompt: 'p',
+        choices: [
+          { id: 'a', text: '1' },
+          { id: 'b', text: '2' },
+        ],
+        answer: 'missing',
+      }).success,
+    ).toBe(false);
+  });
+  it('重複した選択肢IDは拒否', () => {
+    expect(
+      schema.safeParse({
+        prompt: 'p',
+        choices: [
+          { id: 'a', text: '1' },
+          { id: 'a', text: '2' },
+        ],
+        answer: 'a',
+      }).success,
     ).toBe(false);
   });
 });

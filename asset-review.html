@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>東北素材レビュー</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        color: #fff;
+        background: #0a0b1a;
+        font-family: sans-serif;
+      }
+      h1,
+      h2 {
+        margin: 0 0 16px;
+      }
+      section {
+        margin-bottom: 32px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+      }
+      figure {
+        margin: 0;
+        padding: 10px;
+        border: 2px solid #4a5063;
+        background: #1a1428;
+      }
+      img {
+        display: block;
+        width: 128px;
+        height: 128px;
+        margin: auto;
+        object-fit: contain;
+        image-rendering: pixelated;
+        background: #d2d7e2;
+      }
+      figcaption {
+        margin-top: 8px;
+        overflow-wrap: anywhere;
+        font-size: 12px;
+      }
+      .npc img {
+        width: 96px;
+        height: 192px;
+        object-position: left top;
+        object-fit: cover;
+      }
+      .error {
+        border-color: #ff5964;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>東北素材レビュー</h1>
+    <main id="app"></main>
+    <script type="module">
+      const allAreas = ['aomori', 'iwate', 'miyagi', 'akita', 'yamagata', 'fukushima'];
+      const selected = new URLSearchParams(location.search).get('area');
+      const areas = selected && allAreas.includes(selected) ? [selected] : allAreas;
+      const app = document.querySelector('#app');
+      for (const area of areas) {
+        const data = await fetch(`/content/prefectures/${area}.json`).then((r) => r.json());
+        const section = document.createElement('section');
+        section.dataset.area = area;
+        section.innerHTML = `<h2>${data.name} — ${data.motifs.length} motifs / ${data.town?.npcs?.length ?? 0} NPCs</h2><div class="grid"></div>`;
+        const grid = section.querySelector('.grid');
+        const entries = [
+          ...data.motifs.map((motif) => ({
+            type: 'motif',
+            label: motif.name,
+            path: `/assets/motifs/${area}/${motif.imageKey.replace(/^motif\.[^.]+\./, '')}.png`,
+          })),
+          ...(data.town?.npcs ?? []).map((npc) => ({
+            type: 'npc',
+            label: npc.name,
+            path: `/assets/sprites/characters/${npc.spriteKey.replace(/^char\./, '')}.png`,
+          })),
+          ...(data.town?.npcs ?? [])
+            .filter((npc) => npc.face)
+            .map((npc) => ({
+              type: 'portrait',
+              label: `${npc.name} portrait`,
+              path: `/assets/portraits/${npc.face.replace(/^face\./, '')}.png`,
+            })),
+        ];
+        for (const entry of entries) {
+          const figure = document.createElement('figure');
+          figure.className = entry.type;
+          const image = document.createElement('img');
+          image.src = entry.path;
+          image.alt = entry.label;
+          image.addEventListener('error', () => figure.classList.add('error'));
+          const caption = document.createElement('figcaption');
+          caption.textContent = `${entry.label} — ${entry.path}`;
+          figure.append(image, caption);
+          grid.append(figure);
+        }
+        app.append(section);
+      }
+    </script>
+  </body>
+</html>
