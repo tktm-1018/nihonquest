@@ -119,6 +119,7 @@ import {
   heroKey,
   heroLook,
   NPC_LOOKS,
+  npcLook,
   walkFrame,
   walkSheet,
   type Dir,
@@ -1052,8 +1053,10 @@ export class OverworldScene extends Phaser.Scene {
       npcs.find((n) => n.id === obj.name) ??
       (role === 'talk' ? undefined : npcs.find((n) => n.role === role));
     const r = info?.role ?? role;
-    const tex = `char.npc.${NPC_LOOKS[r] ? r : 'talk'}`;
-    addSheet(this.textures, tex, walkSheet(NPC_LOOKS[r] ?? NPC_LOOKS.talk!), CHAR_W, CHAR_H);
+    // コンテンツ側の spriteKey を使う。地域固有PNGがあればそれを優先し、
+    // 未制作なら同じキーの地域別フォールバックを生成する。
+    const tex = info?.spriteKey ?? `char.npc.${NPC_LOOKS[r] ? r : 'talk'}`;
+    addSheet(this.textures, tex, walkSheet(npcLook(info?.spriteKey, r)), CHAR_W, CHAR_H);
     const x = tx * TILE + 8;
     const y = ty * TILE + 8;
     this.add

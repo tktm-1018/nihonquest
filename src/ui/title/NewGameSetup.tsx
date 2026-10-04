@@ -16,9 +16,13 @@ type LookPart = keyof Appearance;
 export function NewGameSetup({
   onCancel,
   onStart,
+  heroPreview,
+  starterArt,
 }: {
   onCancel: () => void;
   onStart: (options: NewGameOptions) => void;
+  heroPreview: (appearance: Appearance) => string;
+  starterArt: Readonly<Record<(typeof STARTERS)[number]['id'], string>>;
 }) {
   const [name, setName] = useState('ハル');
   const [grade, setGrade] = useState<Grade>(1);
@@ -75,13 +79,9 @@ export function NewGameSetup({
 
       <section class="nq-new-game-look">
         <h3>{t('newGame.look')}</h3>
-        <div
-          class={`nq-avatar nq-avatar-hair-${appearance.hair} nq-avatar-skin-${appearance.skin} nq-avatar-cloth-${appearance.cloth}`}
-          aria-label={t('newGame.lookPreview')}
-        >
-          <span class="nq-avatar-hair" />
-          <span class="nq-avatar-face" />
-          <span class="nq-avatar-cloth" />
+        <div class="nq-avatar" aria-label={t('newGame.lookPreview')}>
+          <span class="nq-avatar-glow" aria-hidden="true" />
+          <img src={heroPreview(appearance)} alt="" />
         </div>
         <div class="nq-look-controls">
           {(['hair', 'skin', 'cloth'] as const).map((part) => (
@@ -117,9 +117,16 @@ export function NewGameSetup({
               aria-pressed={starter === monster.id}
               onClick={() => setStarter(monster.id)}
             >
-              <span class="nq-starter-mark">{monster.mark}</span>
-              <strong>{monster.name}</strong>
-              <small>{t(`elements.${monster.element}`)}</small>
+              <span class="nq-starter-art-wrap" aria-hidden="true">
+                <img class="nq-starter-art" src={starterArt[monster.id]} alt="" />
+              </span>
+              <span class="nq-starter-copy">
+                <strong>{monster.name}</strong>
+                <small>
+                  <span class="nq-starter-mark">{monster.mark}</span>
+                  {t(`elements.${monster.element}`)}
+                </small>
+              </span>
             </button>
           ))}
         </div>

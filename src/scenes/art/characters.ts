@@ -287,6 +287,58 @@ export const NPC_LOOKS: Readonly<Record<string, Look>> = {
   },
 };
 
+/**
+ * 地域NPCの本番画像がまだ無い間も、役割だけの色違い人形に見えないようにする。
+ * spriteKey を入口にしているので、同じキーのPNGが追加された時は addSheet 側で
+ * 自動的に本番画像が優先される。
+ */
+const REGIONAL_NPC_LOOKS: Readonly<Record<string, Look>> = {
+  'char.npc-aomori-shop': {
+    hair: NQ.silver,
+    skin: NQ.skinLight,
+    cap: NQ.red,
+    top: NQ.leaf,
+    scarf: NQ.paper,
+    pack: null,
+    pants: NQ.bark,
+    shoes: NQ.bark,
+  },
+  'char.npc-aomori-smith': {
+    hair: NQ.hairBrown,
+    skin: NQ.skinMid,
+    cap: NQ.brown,
+    top: NQ.bark,
+    scarf: NQ.leaf,
+    pack: null,
+    pants: NQ.slate,
+    shoes: NQ.ink,
+  },
+  'char.npc-aomori-inn': {
+    hair: NQ.hairBlack,
+    skin: NQ.skinLight,
+    cap: NQ.azure,
+    top: NQ.paper,
+    scarf: NQ.azure,
+    pack: null,
+    pants: NQ.denim,
+    shoes: NQ.bark,
+  },
+  'char.npc-aomori-board': {
+    hair: NQ.hairBlack,
+    skin: NQ.skinMid,
+    cap: NQ.gold,
+    top: NQ.red,
+    scarf: NQ.azure,
+    pack: null,
+    pants: NQ.navy,
+    shoes: NQ.bark,
+  },
+};
+
+export function npcLook(spriteKey: string | undefined, role: string): Look {
+  return REGIONAL_NPC_LOOKS[spriteKey ?? ''] ?? NPC_LOOKS[role] ?? NPC_LOOKS.talk!;
+}
+
 // ───────────────────────── 組み立て ─────────────────────────
 
 function colorsOf(l: Look): Record<string, string> {

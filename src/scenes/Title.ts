@@ -18,6 +18,7 @@ import { NewGameSetup } from '../ui/title/NewGameSetup';
 import { SaveSlotSelect } from '../ui/title/SaveSlotSelect';
 import type { NewGameOptions } from '../core/state/newGame';
 import { HERO_H, HERO_W, heroKey, heroLook, walkFrame, walkSheet } from './art/characters';
+import { designedMonsterArt } from './art/monsters';
 import { NQ } from './art/palette';
 import { addImage, addSheet } from './art/sheet';
 import {
@@ -333,6 +334,16 @@ export class TitleScene extends Phaser.Scene {
       h(NewGameSetup, {
         onCancel: () => this.mountMenu(),
         onStart: (options: NewGameOptions) => this.start(options),
+        heroPreview: (appearance) => {
+          const key = heroKey(appearance);
+          addSheet(this.textures, key, walkSheet(heroLook(appearance), true), HERO_W, HERO_H);
+          return this.textures.getBase64(key, walkFrame('down', 1)) as string;
+        },
+        starterArt: {
+          'aomori-nebutan': designedMonsterArt('aomori-nebutan')?.toDataURL('image/png') ?? '',
+          'aomori-magurodo': designedMonsterArt('aomori-magurodo')?.toDataURL('image/png') ?? '',
+          'aomori-ringoron': designedMonsterArt('aomori-ringoron')?.toDataURL('image/png') ?? '',
+        },
       }),
       this.menuRoot,
     );
