@@ -11,7 +11,13 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { createNewGame } from '../../src/core/state/newGame';
-import { encounterLevel, partyFromGameState, pickEncounter, zoneForMap } from '../../src/core/battle/setup';
+import {
+  HERO_GROWTH,
+  encounterLevel,
+  partyFromGameState,
+  pickEncounter,
+  zoneForMap,
+} from '../../src/core/battle/setup';
 import {
   applyBattleResult,
   xpToNextLevel,
@@ -48,6 +54,23 @@ describe('GameState → Party', () => {
     const gs = newGame();
     gs.player.hp = 0;
     expect(partyFromGameState(gs, c).hero.hp).toBe(1);
+  });
+
+  it('XPでレベルが上がると表示だけでなく実効ステータスも成長する', async () => {
+    const c = await content();
+    const gs = newGame();
+    gs.player.xp = c.xp.hero[3]!;
+    delete gs.party.bagPlacements['mon:starter'];
+    const hero = partyFromGameState(gs, c).hero;
+    expect(hero.level).toBe(4);
+    expect(hero.stats).toMatchObject({
+      hp: gs.player.baseStats.hp + HERO_GROWTH.hp * 3,
+      mp: gs.player.baseStats.mp + HERO_GROWTH.mp * 3,
+      atk: gs.player.baseStats.atk + HERO_GROWTH.atk * 3,
+      def: gs.player.baseStats.def + HERO_GROWTH.def * 3,
+      spd: gs.player.baseStats.spd + HERO_GROWTH.spd * 3,
+      wis: gs.player.baseStats.wis + HERO_GROWTH.wis * 3,
+    });
   });
 
   it('content に無いモンスターは連れていかない', async () => {

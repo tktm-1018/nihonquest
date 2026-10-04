@@ -13,10 +13,11 @@ import { makeHero, makeMonster, makeParty } from './factory';
 import type { Party } from './types';
 
 /**
- * GameState.player.baseStats は「そのレベルでの素のステータス」として扱う。
- * レベルアップでの伸び（growth）は progression（Step 7）が baseStats に書き戻すので、ここでは 0。
+ * 主人公の1レベルごとの成長値。
+ * セーブにはLv1基礎値を保持し、XPから求めたレベルに応じて決定計算する。
+ * これにより調整後も既存セーブを個別移行せず、同じレベルなら同じ能力になる。
  */
-const NO_GROWTH = { hp: 0, mp: 0, atk: 0, def: 0, spd: 0, wis: 0 };
+export const HERO_GROWTH = { hp: 5, mp: 1, atk: 1.2, def: 1, spd: 0.6, wis: 0.8 } as const;
 
 export function partyFromGameState(
   gs: GameState,
@@ -26,10 +27,10 @@ export function partyFromGameState(
   const hero = makeHero(
     {
       name: p.name,
-      // 見せる レベル（けいけんち から）。のびは 0 なので ステータスは かわらない
+      // XPから求める表示レベルと、実際の戦闘能力を一致させる。
       level: heroLevel(gs, c.xp.hero),
       baseStats: p.baseStats,
-      growth: NO_GROWTH,
+      growth: HERO_GROWTH,
       skills: p.skills,
       equipment: p.equipment,
       bonusWis: p.bonusWis,
