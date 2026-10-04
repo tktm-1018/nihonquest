@@ -591,6 +591,10 @@
     {
       "itemId": "common-dou-no-ken",
       "price": 200
+    },
+    {
+      "itemId": "aomori-nebuta-no-uchiwa",
+      "price": 350
     }
   ],
   "missions": [
@@ -619,6 +623,10 @@
         "items": [
           {
             "itemId": "aomori-nebuta-no-akari",
+            "n": 1
+          },
+          {
+            "itemId": "aomori-hiba-no-tsue",
             "n": 1
           }
         ]

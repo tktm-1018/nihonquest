@@ -33,6 +33,7 @@ export interface EquipResult {
   grantedSkills: string[];
   elementBoost: Partial<Record<Element, number>>;
   setComplete: string | null;
+  weaponElement: Element | null;
 }
 
 export function applyEquipment(
@@ -44,11 +45,13 @@ export function applyEquipment(
   const stats: Stats = { ...base };
   const grantedSkills: string[] = [];
   const elementBoost: Partial<Record<Element, number>> = {};
+  let weaponElement: Element | null = null;
   const equipped = Object.values(equipment).filter((x): x is string => !!x);
 
   for (const id of equipped) {
     const it = items.get(id);
     if (!it) continue;
+    if (it.kind === 'weapon' && it.element) weaponElement = it.element;
     for (const [k, v] of Object.entries(it.stats ?? {})) stats[k as keyof Stats] += v as number;
     if (it.grantsSkill) grantedSkills.push(it.grantsSkill);
   }
@@ -62,7 +65,7 @@ export function applyEquipment(
         elementBoost[b.element] = (elementBoost[b.element] ?? 1) * b.multiplier;
     }
   }
-  return { stats, grantedSkills, elementBoost, setComplete };
+  return { stats, grantedSkills, elementBoost, setComplete, weaponElement };
 }
 
 export function makeHero(spec: HeroSpec, items: Map<string, Item>, sets: Map<string, EquipSet>): Combatant {
@@ -75,7 +78,7 @@ export function makeHero(spec: HeroSpec, items: Map<string, Item>, sets: Map<str
     name: spec.name,
     isHero: true,
     level: spec.level,
-    element: 'none',
+    element: eq.weaponElement ?? 'none',
     weaknessRevealed: false,
     stats: eq.stats,
     hp: eq.stats.hp,

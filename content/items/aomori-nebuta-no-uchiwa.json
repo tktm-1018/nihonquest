@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "aomori-nebuta-no-uchiwa",
+  "name": "ねぶたの うちわ",
+  "kind": "weapon",
+  "stats": { "atk": 5, "spd": 2 },
+  "element": "hino",
+  "price": 350,
+  "iconKey": "item.aomori-nebuta-no-uchiwa",
+  "areaOrigin": "aomori",
+  "blurb": "ねぶた祭[まつ]りの 熱気[ねっき]を 風[かぜ]に かえる うちわ。すばやく せめる 武器[ぶき]。"
+}

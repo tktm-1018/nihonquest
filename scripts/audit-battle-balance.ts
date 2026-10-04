@@ -12,6 +12,11 @@ type Monster = {
   xp: number;
   gold: number;
 };
+type Area = {
+  shop?: { itemId: string }[];
+  missions?: { reward?: { items?: { itemId: string }[] } }[];
+};
+type Recipe = { result: { itemId: string } };
 
 const ROOT = resolve(import.meta.dirname, '..');
 
@@ -33,6 +38,9 @@ const round = (value: number) => Math.round(value * 10) / 10;
 export function auditBattleBalance() {
   const items = readJsonDirectory<Item>('content/items');
   const monsters = readJsonDirectory<Monster>('content/monsters');
+  const areas = readJsonDirectory<Area>('content/prefectures');
+  const recipes = JSON.parse(readFileSync(resolve(ROOT, 'content/recipes.json'), 'utf8')) as Recipe[];
+  const setupSource = readFileSync(resolve(ROOT, 'src/core/battle/setup.ts'), 'utf8');
   const equipmentKinds = ['weapon', 'head', 'chest', 'legs', 'feet'] as const;
   const equipment = Object.fromEntries(
     equipmentKinds.map((kind) => [kind, items.filter((item) => item.kind === kind)]),
@@ -62,7 +70,9 @@ export function auditBattleBalance() {
     ...(Math.min(...equipmentKinds.map((kind) => equipment[kind].length)) < 8
       ? ['装備スロットごとの品数が不均衡で、ビルド選択が成立していない']
       : []),
-    '主人公はXPから表示レベルだけ上がり、baseStatsのレベル成長が未実装',
+    ...(!setupSource.includes('growth: HERO_GROWTH')
+      ? ['主人公はXPから表示レベルだけ上がり、baseStatsのレベル成長が未実装']
+      : []),
     '通常敵レベルが主人公レベル±1で、地域進行・県ボス推奨レベルと未接続',
     '戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない',
   ];
@@ -84,8 +94,25 @@ export function auditBattleBalance() {
         },
       ]),
     ),
+    weaponAcquisition: Object.fromEntries(
+      equipment.weapon.map((weapon) => [
+        weapon.id,
+        {
+          shop: areas.some((area) => area.shop?.some((entry) => entry.itemId === weapon.id)),
+          mission: areas.some((area) =>
+            area.missions?.some((mission) =>
+              mission.reward?.items?.some((entry) => entry.itemId === weapon.id),
+            ),
+          ),
+          recipe: recipes.some((recipe) => recipe.result.itemId === weapon.id),
+        },
+      ]),
+    ),
     monsters: tierSummary,
     findings,
+    resolved: setupSource.includes('growth: HERO_GROWTH')
+      ? ['主人公のXPレベルを実効ステータスと敵出現レベルへ反映']
+      : [],
   };
 }
 

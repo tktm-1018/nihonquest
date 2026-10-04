@@ -669,6 +669,23 @@ describe('装備とセットボーナス', () => {
     expect(armed.stats.def).toBeGreaterThan(bare.stats.def);
   });
 
+  it('属性武器を装備すると通常攻撃の属性が変わる', async () => {
+    const c = await content();
+    const hero = makeHero(
+      {
+        name: 'ハル',
+        level: 1,
+        baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
+        growth: { hp: 0, mp: 0, atk: 0, def: 0, spd: 0, wis: 0 },
+        skills: [],
+        equipment: { weapon: 'aomori-maguro-zutsuki' },
+      },
+      c.items,
+      c.sets,
+    );
+    expect(hero.element).toBe('mizu');
+  });
+
   it('5点そろうとセットボーナス（属性倍率）がつく', async () => {
     const c = await content();
     const set = c.sets.get('set-aomori')!;
