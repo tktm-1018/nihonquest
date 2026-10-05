@@ -49,6 +49,18 @@ const migrations: Record<number, Migration> = {
       },
     };
   },
+  3: (s) => {
+    const player = (s.player ?? {}) as Record<string, unknown>;
+    const skills = Array.isArray(player.skills) ? (player.skills as string[]) : [];
+    return {
+      ...s,
+      schemaVersion: 4,
+      player: {
+        ...player,
+        skills: [...new Set([...skills, 'sk-katakana-shibari'])],
+      },
+    };
+  },
 };
 
 export interface MigrateResult {

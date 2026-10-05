@@ -55,6 +55,16 @@ describe('registry', () => {
 });
 
 describe('QuestionBank', () => {
+  it('小学1年のひらがなとカタカナは別の単元ファイルになっている', async () => {
+    const hiragana = (await read('questions/kokugo/g1/hiragana.json')) as QuestionBase[];
+    const katakana = (await read('questions/kokugo/g1/katakana.json')) as QuestionBase[];
+    expect(hiragana.length).toBeGreaterThan(0);
+    expect(katakana.length).toBeGreaterThan(0);
+    expect(new Set(hiragana.map((question) => question.unit))).toEqual(new Set(['kokugo.g1.hiragana']));
+    expect(new Set(katakana.map((question) => question.unit))).toEqual(new Set(['kokugo.g1.katakana']));
+    expect(katakana.every((question) => question.id.startsWith('kokugo.g1.katakana.'))).toBe(true);
+  });
+
   it('実際の content/questions を読み込める', async () => {
     const manifest = (await read('manifest.json')) as { questions: string[] };
     const { bank, report } = await QuestionBank.load(manifest.questions, read);

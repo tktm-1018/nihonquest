@@ -72,6 +72,12 @@
     "grade": 1
   },
   {
+    "id": "kokugo.g1.katakana",
+    "name": "カタカナ",
+    "subject": "kokugo",
+    "grade": 1
+  },
+  {
     "id": "kokugo.g1.kanji",
     "name": "1年[ねん]の漢字[かんじ]",
     "subject": "kokugo",

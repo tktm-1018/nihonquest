@@ -49,8 +49,9 @@ export async function collectTohokuAcademicPopulation(root: string): Promise<Toh
       if (matched.length === 0) continue;
       questions.push({ file, id: question.id, prefectureTags: matched.sort() });
       if (!files.has(file)) {
-        const bytes = await readFile(absolutePath);
-        files.set(file, createHash('sha256').update(bytes).digest('hex'));
+        // Git の正本（LF）と Windows の作業ツリー（CRLF）で同じ教材を同じ値として扱う。
+        const normalized = (await readFile(absolutePath, 'utf8')).replaceAll('\r\n', '\n');
+        files.set(file, createHash('sha256').update(normalized, 'utf8').digest('hex'));
       }
     }
   }

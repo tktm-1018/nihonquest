@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { gradeSchema, idSchema, statsSchema } from '../content/schemas';
 import { attemptEventSchema, conceptStateSchema } from '../learning/state';
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const equipmentSchema = z
   .object({ weapon: idSchema, head: idSchema, chest: idSchema, legs: idSchema, feet: idSchema })

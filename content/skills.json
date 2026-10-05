@@ -159,6 +159,22 @@
     "flavor": "ちいさな 火[ひ]の粉[こ]を とばす。しんかすると「ほのおのまい」に なる"
   },
   {
+    "id": "sk-katakana-shibari",
+    "name": "カタカナしばり",
+    "subject": "kokugo",
+    "gradeRange": [1, 1],
+    "unitHint": ["kokugo.g1.katakana"],
+    "questionTags": ["skill:katakana-shibari"],
+    "power": 135,
+    "element": "hikari",
+    "mp": 0,
+    "gauge": 3,
+    "costGauge": 100,
+    "selfLockTurns": 3,
+    "effect": "damage",
+    "flavor": "つよい ことばの 光[ひかり]。3ターン、カタカナの問題[もんだい]と この技[わざ]だけになる"
+  },
+  {
     "id": "sk-hono-no-mai",
     "name": "ほのおのまい",
     "subject": "kokugo",

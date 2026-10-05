@@ -36,7 +36,7 @@ describe('小1・小2 地方別MVP', () => {
       currentArea: 'niigata',
       currentMap: 'niigata-field',
     });
-    expect(game.player.skills).toEqual(['sk-kazoe-giri']);
+    expect(game.player.skills).toEqual(['sk-kazoe-giri', 'sk-katakana-shibari']);
     expect(game.learning.grade).toBe(2);
   });
 

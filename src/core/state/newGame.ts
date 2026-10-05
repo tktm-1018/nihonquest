@@ -29,7 +29,7 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       gold: 100,
       baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
       bonusWis: 0,
-      skills: [region.initialSkill],
+      skills: [region.initialSkill, 'sk-katakana-shibari'],
       equipment: {},
       hp: 40,
       mp: 10,
