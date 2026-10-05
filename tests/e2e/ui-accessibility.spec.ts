@@ -8,6 +8,16 @@ async function startGame(page: Page) {
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 40_000 });
 }
 
+async function clickThroughDialogue(page: Page): Promise<void> {
+  for (let step = 0; step < 80; step += 1) {
+    const dialogue = page.locator('.nq-dlg');
+    if (!(await dialogue.isVisible())) return;
+    await dialogue.click({ position: { x: 420, y: 410 } });
+    await page.waitForTimeout(60);
+  }
+  throw new Error('会話を最後まで進められませんでした');
+}
+
 for (const width of [640, 960]) {
   test(`主要UIは ${width}x540 に収まり、キーボードの現在位置が一致する`, async ({ page }) => {
     test.setTimeout(90_000);
@@ -61,6 +71,23 @@ test('メニューと保護者画面はモーダルとしてフォーカスを�
   await page.keyboard.press('Escape');
   await expect(parent).toHaveCount(0);
   await expect(menu).toBeVisible();
+});
+
+test('歩いている間も左上のミニマップを表示し続ける', async ({ page }) => {
+  test.setTimeout(90_000);
+  await startGame(page);
+  await clickThroughDialogue(page);
+
+  const locationHud = page.locator('.nq-fhud-loc');
+  const miniMap = page.locator('.nq-mini');
+  await expect(locationHud).toBeVisible();
+  await expect(miniMap).toBeVisible();
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(120);
+  await expect(locationHud).toHaveCSS('opacity', '1');
+  await expect(miniMap).toBeVisible();
+  await page.screenshot({ path: '/tmp/nihonquest-minimap-walking.png' });
+  await page.keyboard.up('ArrowRight');
 });
 
 test('バトル画面は狭い表示でもステージ内に収まる', async ({ page }) => {
