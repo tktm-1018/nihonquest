@@ -10,6 +10,7 @@ import { NQ } from '../../scenes/art/palette';
 import { t } from '../i18n';
 import { PixelIcon } from '../PixelIcon';
 import { RubyLabel } from '../RubyLabel';
+import { stripRuby } from '../ruby';
 import { playSfx } from '../sfx';
 import './field.css';
 
@@ -334,13 +335,15 @@ export function WorldMapOverlay({
                     class={`nq-wmap-castle nq-wmap-castle-${region.islandBoss.state}`}
                     style={pinAt(islandBossCell(region))}
                     disabled={region.islandBoss.state !== 'ready'}
-                    aria-label={t(
-                      region.islandBoss.state === 'done'
-                        ? 'field.mapIslandBossDoneLabel'
-                        : region.islandBoss.state === 'ready'
-                          ? 'field.mapIslandBossReadyLabel'
-                          : 'field.mapIslandBossLockedLabel',
-                      { name: region.islandBoss.name },
+                    aria-label={stripRuby(
+                      t(
+                        region.islandBoss.state === 'done'
+                          ? 'field.mapIslandBossDoneLabel'
+                          : region.islandBoss.state === 'ready'
+                            ? 'field.mapIslandBossReadyLabel'
+                            : 'field.mapIslandBossLockedLabel',
+                        { name: region.islandBoss.name },
+                      ),
                     )}
                     onClick={(event) => {
                       event.stopPropagation();
@@ -374,7 +377,7 @@ export function WorldMapOverlay({
             <div class="nq-wmap-info nq-wmap-barrier">
               <PixelIcon name="gate" scale={6} />
               <RubyLabel text={region.name} class="nq-wmap-aname" />
-              <p>{t('field.mapIslandBarrier')}</p>
+              <RubyLabel text={t('field.mapIslandBarrier')} as="p" />
             </div>
           ) : area ? (
             <div class="nq-wmap-info">
@@ -414,23 +417,23 @@ export function WorldMapOverlay({
               </ul>
               <div class={`nq-wmap-island-boss nq-wmap-island-boss-${region?.islandBoss.state}`}>
                 <PixelIcon name="dungeon" scale={3} />
-                <span>
-                  {t('field.mapIslandBoss')}: {region?.islandBoss.name}
-                </span>
+                <RubyLabel text={`${t('field.mapIslandBoss')}: ${region?.islandBoss.name ?? ''}`} />
                 <strong>
-                  {t(
-                    `field.mapIslandBoss${
-                      region?.islandBoss.state === 'done'
-                        ? 'Done'
-                        : region?.islandBoss.state === 'ready'
-                          ? 'Ready'
-                          : 'Locked'
-                    }`,
-                    {
-                      found: region?.islandBoss.foundSigns ?? 0,
-                      required: region?.islandBoss.requiredSigns ?? 0,
-                    },
-                  )}
+                  <RubyLabel
+                    text={t(
+                      `field.mapIslandBoss${
+                        region?.islandBoss.state === 'done'
+                          ? 'Done'
+                          : region?.islandBoss.state === 'ready'
+                            ? 'Ready'
+                            : 'Locked'
+                      }`,
+                      {
+                        found: region?.islandBoss.foundSigns ?? 0,
+                        required: region?.islandBoss.requiredSigns ?? 0,
+                      },
+                    )}
+                  />
                 </strong>
               </div>
             </div>
@@ -441,7 +444,7 @@ export function WorldMapOverlay({
             {region?.islandBoss.state === 'ready' ? (
               <button type="button" class="nq-opt nq-wmap-go" onClick={challengeIslandBoss}>
                 <PixelIcon name="dungeon" scale={3} />
-                {t('field.mapIslandBossChallenge')}
+                <RubyLabel text={t('field.mapIslandBossChallenge')} />
               </button>
             ) : (
               <button
