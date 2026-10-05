@@ -334,6 +334,13 @@ export const skillSchema = z.object({
     .describe(
       '打つのに使う 教科ゲージ（subject の ゲージ）の量。0 は 基本わざ（いつでも打てて、こたえると ゲージが たまる）。上限は settings.subjectGauge.max',
     ),
+  selfLockTurns: z
+    .number()
+    .int()
+    .min(2)
+    .max(5)
+    .optional()
+    .describe('使ったターンを含め、この技だけを使えるターン数。2回目以降はゲージを使わない'),
   targetType: z
     .enum(['singleEnemy', 'allEnemies', 'self', 'party'])
     .optional()

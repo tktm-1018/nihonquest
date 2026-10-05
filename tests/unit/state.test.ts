@@ -9,6 +9,7 @@ const fresh = () => createNewGame({ name: 'ハル', starterMonsterId: 'aomori-ri
 describe('GameState', () => {
   it('新規ゲームがスキーマを満たす', () => {
     expect(gameStateSchema.safeParse(fresh()).success).toBe(true);
+    expect(fresh().player.skills).toContain('sk-katakana-shibari');
   });
   it('個人情報を持たない（名前は6文字までのニックネームのみ）', () => {
     const s = fresh();
@@ -44,6 +45,15 @@ describe('GameState', () => {
     expect(migrated.migratedFrom).toBe(2);
     expect(migrated.state.learning.attempts).toEqual([]);
     expect(migrated.state.learning.conceptStates).toEqual({});
+    expect(migrated.state.player.skills).toContain('sk-katakana-shibari');
+  });
+  it('v3 の既存セーブへ主人公専用のカタカナしばりを追加する', () => {
+    const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
+    legacy.schemaVersion = 3;
+    legacy.player.skills = legacy.player.skills.filter((id) => id !== 'sk-katakana-shibari');
+    const migrated = migrate(legacy);
+    expect(migrated.state.schemaVersion).toBe(4);
+    expect(migrated.state.player.skills).toContain('sk-katakana-shibari');
   });
   it('新しすぎるセーブは拒否する', () => {
     expect(() => migrate({ ...fresh(), schemaVersion: SCHEMA_VERSION + 5 })).toThrow(/新しすぎる/);

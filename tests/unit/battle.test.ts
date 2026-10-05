@@ -233,6 +233,29 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
   });
 });
 
+describe('主人公専用技「カタカナしばり」', () => {
+  it('初回だけゲージを使い、3ターン同じ技に固定したあと解除される', async () => {
+    const { state } = await setup({ skills: ['sk-katakana-shibari'] });
+    let current = tough({
+      ...state,
+      player: { ...state.player, subjectGauges: { ...state.player.subjectGauges, kokugo: 100 } },
+    });
+
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.subjectGauges.kokugo).toBeGreaterThanOrEqual(0);
+    expect(current.player.skillLock).toEqual({ skillId: 'sk-katakana-shibari', turns: 2 });
+
+    const rejected = act(current, { kind: 'attack' }, D).state;
+    expect(rejected.turn).toBe(current.turn);
+    expect(rejected.player.skillLock?.turns).toBe(2);
+
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.skillLock?.turns).toBe(1);
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.skillLock).toBeNull();
+  });
+});
+
 describe('ターンの すすみかた（主人公 → オトモ → てき）', () => {
   it('はじめは ターン 1 で、主人公は すぐ 動ける', async () => {
     const { state } = await setup();

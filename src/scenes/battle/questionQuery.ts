@@ -11,7 +11,12 @@ export function battleQuestionQuery(
 ): QuestionQuery {
   if (!unique)
     return scopeQueryToGrade(
-      { subject: skill.subject, gradeRange: skill.gradeRange, tags: skill.questionTags },
+      {
+        subject: skill.subject,
+        gradeRange: skill.gradeRange,
+        tags: skill.questionTags,
+        preferUnits: skill.unitHint,
+      },
       grade,
     );
   const ranges: [Grade, Grade][] = [
@@ -23,5 +28,8 @@ export function battleQuestionQuery(
     ranges.find(
       (range) => filterCandidates(bank, { subject: skill.subject, gradeRange: range }).length > 0,
     ) ?? ranges[2]!;
-  return scopeQueryToGrade({ subject: skill.subject, gradeRange, tags: skill.questionTags }, grade);
+  return scopeQueryToGrade(
+    { subject: skill.subject, gradeRange, tags: skill.questionTags, preferUnits: skill.unitHint },
+    grade,
+  );
 }

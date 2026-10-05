@@ -84,6 +84,12 @@ export function narrate(e: BattleEvent, ctx: NarrateCtx, prev?: BattleEvent): st
     }
     case 'gaugeShort':
       return [t('battle.gaugeShort', { subject: ctx.subjectName(e.subject), n: e.need - e.have })];
+    case 'skillLock':
+      return [
+        e.remain > 0
+          ? t('battle.skillLockMessage', { skill: ctx.skillName(e.skillId), n: e.remain })
+          : t('battle.skillLockEndMessage'),
+      ];
     case 'itemUsed':
       return [t('battle.itemUsed', { name: ctx.nameOf(e.targetId), item: ctx.itemName(e.itemId) })];
     case 'swap':

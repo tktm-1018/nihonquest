@@ -88,7 +88,7 @@ import type { EncounterZone } from '../core/battle/setup';
 import type { Ground } from '../core/world/ground';
 import { buildAskEnv } from './shared/askEnv';
 import { buildAllyViews, buildEnemyView, buildGaugeViews } from './battle/hudViews';
-
+import { buildSkillOptions, lockedCommandOptions, skillLockBanner } from './battle/skillLockPresentation';
 export interface BattleSceneData {
   enemyId: string;
   level: number;
@@ -641,34 +641,24 @@ export class BattleScene extends Phaser.Scene {
     }));
   }
 
-  /** 必殺技の一覧（主人公・オトモの わざ・教科の 固有スキル）。教科ゲージが たりない 必殺技は 打てない */
+  /** 必殺技一覧。教科ゲージ不足や「しばり」中の選択可否も表示モデルへ反映する。 */
   private skillOptions(): SkillOption[] {
     const s = this.state;
-    return battleSkills(s, this.deps).map(({ skill: sk, actorId }) => {
-      const noQuestion = !this.hasQuestion(sk);
-      return {
-        key: `${actorId}:${sk.id}`,
-        id: sk.id,
-        actorId,
-        by: actorId === s.ally.hero.id ? undefined : this.nameOf(actorId),
-        name: sk.name,
-        subject: sk.subject,
-        gradeRange: this.queryFor(sk).gradeRange,
-        element: sk.element,
-        stars: sk.gauge,
-        cost: sk.costGauge,
-        have: s.player.subjectGauges[sk.subject],
-        effect: sk.effect,
-        flavor: sk.flavor,
-        disabled: noQuestion || !canAfford(s, sk),
-        reason: noQuestion ? t('battle.preparing') : undefined,
-      };
+    return buildSkillOptions(battleSkills(s, this.deps), s, {
+      nameOf: (id) => this.nameOf(id),
+      queryFor: (skill) => this.queryFor(skill),
+      hasQuestion: (skill) => this.hasQuestion(skill),
+      canAfford: (skill) => canAfford(s, skill),
+      lockedReason: t('battle.skillLockedOther'),
+      preparingReason: t('battle.preparing'),
     });
   }
 
   private commandOptions(): CommandOption[] {
     const s = this.state;
     const skills = battleSkills(s, this.deps);
+    const locked = lockedCommandOptions(!!s.player.skillLock);
+    if (locked) return locked;
     // ゲージを 使う 必殺技が 打てるように なったら、必殺技の コマンドを 光らせる
     const special = skills.some(
       ({ skill: sk }) => sk.costGauge > 0 && canAfford(s, sk) && this.hasQuestion(sk),
@@ -1244,6 +1234,17 @@ export class BattleScene extends Phaser.Scene {
       case 'gaugeUse':
         playSfx('buff');
         this.patchGauge(e.subject, e.value);
+        return;
+      case 'skillLock':
+        playSfx(e.remain > 0 ? 'buff' : 'select');
+        const lockBanner = skillLockBanner(e.remain);
+        await this.showBanner(
+          'skill',
+          t(lockBanner.titleKey),
+          lockBanner.detailKey ? t(lockBanner.detailKey, { n: e.remain }) : undefined,
+          'kokugo',
+          800,
+        );
         return;
       case 'itemUsed':
         playSfx('select');
