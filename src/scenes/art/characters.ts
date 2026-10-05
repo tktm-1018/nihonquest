@@ -335,8 +335,43 @@ const REGIONAL_NPC_LOOKS: Readonly<Record<string, Look>> = {
   },
 };
 
+/** 東北の本番NPCが揃うまで使う県別アクセント。代表的な工芸・祭りの配色に寄せる。 */
+const TOHOKU_NPC_ACCENTS: Readonly<Record<string, readonly [string, string]>> = {
+  aomori: [NQ.red, NQ.leaf], // りんご・ねぶた
+  iwate: [NQ.slate, NQ.silver], // 南部鉄器
+  miyagi: [NQ.navy, NQ.gold], // 伊達の紺と金
+  akita: [NQ.indigo, NQ.red], // 藍・なまはげ
+  yamagata: [NQ.berry, NQ.paper], // さくらんぼ・雪
+  fukushima: [NQ.red, NQ.bark], // 赤べこ
+};
+
+function regionalNpcLook(base: Look, role: string, primary: string, accent: string): Look {
+  switch (role) {
+    case 'shop':
+      return { ...base, cap: accent, top: primary, scarf: NQ.paper };
+    case 'smith':
+      return { ...base, cap: primary, top: NQ.bark, scarf: accent };
+    case 'inn':
+      return { ...base, cap: accent, top: NQ.paper, scarf: primary };
+    case 'board':
+      return { ...base, cap: accent, top: primary, scarf: accent };
+    case 'dex':
+      return { ...base, top: NQ.paper, scarf: primary };
+    case 'arena':
+      return { ...base, cap: primary, top: primary, scarf: accent };
+    default:
+      return { ...base, top: primary, scarf: accent };
+  }
+}
+
 export function npcLook(spriteKey: string | undefined, role: string): Look {
-  return REGIONAL_NPC_LOOKS[spriteKey ?? ''] ?? NPC_LOOKS[role] ?? NPC_LOOKS.talk!;
+  const key = spriteKey ?? '';
+  const exact = REGIONAL_NPC_LOOKS[key];
+  if (exact) return exact;
+  const base = NPC_LOOKS[role] ?? NPC_LOOKS.talk!;
+  const prefecture = /^char\.npc-([a-z]+)-/.exec(key)?.[1];
+  const colors = prefecture ? TOHOKU_NPC_ACCENTS[prefecture] : undefined;
+  return colors ? regionalNpcLook(base, role, colors[0], colors[1]) : base;
 }
 
 // ───────────────────────── 組み立て ─────────────────────────

@@ -31,6 +31,13 @@ describe('地域NPCの見た目', () => {
     expect(npcLook('char.npc-unknown-shop', 'shop')).toBe(NPC_LOOKS.shop);
     expect(npcLook(undefined, 'unknown')).toBe(NPC_LOOKS.talk);
   });
+
+  it('東北6県は県ごとのアクセント色を持つ', () => {
+    const keys = ['aomori', 'iwate', 'miyagi', 'akita', 'yamagata', 'fukushima'];
+    const looks = keys.map((area) => npcLook(`char.npc-${area}-board`, 'board'));
+    expect(new Set(looks.map((look) => `${look.top}:${look.scarf}`))).toHaveLength(6);
+    for (const look of looks) expect(look).not.toEqual(NPC_LOOKS.board);
+  });
 });
 
 describe('パレット NQ-48', () => {
