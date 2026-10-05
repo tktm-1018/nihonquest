@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-gokuraku-o",
+  "name": "ゴクラクオウ",
+  "area": "iwate",
+  "motifId": "jodogahama",
+  "element": "hikari",
+  "weakness": "yami",
+  "baseStats": {
+    "hp": 56,
+    "mp": 16,
+    "atk": 15,
+    "def": 12,
+    "spd": 12,
+    "wis": 10
+  },
+  "growth": {
+    "hp": 6.6,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": [
+    "sk-kanji-barrier",
+    "sk-hikari-no-ya",
+    "sk-hikari-no-hane"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 52,
+  "gold": 32,
+  "spriteKey": "mon.iwate-gokuraku-o",
+  "dexBlurb": "浄土ヶ浜[じょうどがはま]の 光[ひかり]を あつめた 王[おう]さま。むかし おぼうさんが「まるで 極楽浄土[ごくらくじょうど]の ようだ」と 言[い]ったことから、この 名前[なまえ]が ついたと いわれるよ。"
+}

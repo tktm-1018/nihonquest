@@ -108,6 +108,10 @@
         {
           "monsterId": "miyagi-tanyakki",
           "weight": 12
+        },
+        {
+          "monsterId": "miyagi-momippi",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -146,6 +150,10 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 45
+        },
+        {
+          "monsterId": "miyagi-momippi",
+          "weight": 25
         }
       ],
       "stepsPerCheck": 12,
@@ -161,6 +169,14 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 30
+        },
+        {
+          "monsterId": "miyagi-momippi",
+          "weight": 25
+        },
+        {
+          "monsterId": "miyagi-matsukojima",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -176,6 +192,18 @@
         {
           "monsterId": "miyagi-shiratorin",
           "weight": 25
+        },
+        {
+          "monsterId": "miyagi-samecchi",
+          "weight": 20
+        },
+        {
+          "monsterId": "miyagi-matsukojima",
+          "weight": 15
+        },
+        {
+          "monsterId": "miyagi-kakikko",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -191,6 +219,18 @@
         {
           "monsterId": "miyagi-sasakama-uo",
           "weight": 25
+        },
+        {
+          "monsterId": "miyagi-matsukojima",
+          "weight": 20
+        },
+        {
+          "monsterId": "miyagi-kakikko",
+          "weight": 20
+        },
+        {
+          "monsterId": "miyagi-samecchi",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -210,6 +250,14 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 20
+        },
+        {
+          "monsterId": "miyagi-momippi",
+          "weight": 15
+        },
+        {
+          "monsterId": "miyagi-samecchi",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 8,

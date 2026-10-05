@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "miyagi-fukahire-ou",
+  "name": "フカヒレオウ",
+  "area": "miyagi",
+  "motifId": "kesennuma",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 59,
+    "mp": 15,
+    "atk": 17,
+    "def": 11,
+    "spd": 12,
+    "wis": 8
+  },
+  "growth": {
+    "hp": 6.5,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": ["sk-mizu-teppo", "sk-uzushio", "sk-fubuki"],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 53,
+  "gold": 32,
+  "spriteKey": "mon.miyagi-fukahire-ou",
+  "dexBlurb": "ケセンザメが しんかした すがた。大漁旗[たいりょうばた]の マントを なびかせる 海[うみ]の 王[おう]さま。気仙沼[けせんぬま]の 港[みなと]は、とれたての カツオの 水[みず]あげが なん年[ねん]も つづけて 日本一[にほんいち]だよ。"
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-hachimantaitan",
+  "name": "ハチマンタイタン",
+  "area": "iwate",
+  "motifId": "hachimantai",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 58,
+    "mp": 15,
+    "atk": 16,
+    "def": 12,
+    "spd": 11,
+    "wis": 9
+  },
+  "growth": {
+    "hp": 6.6,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio",
+    "sk-fubuki"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 52,
+  "gold": 32,
+  "spriteKey": "mon.iwate-hachimantaitan",
+  "dexBlurb": "八幡平[はちまんたい]を まもる 雪[ゆき]の 大[おお]きな きょじん。むねの もようは「ドラゴンアイ」。春の おわりに 鏡沼[かがみぬま]の 雪が わの かたちに とけて、りゅうの 目[め]のように 見[み]えるんだ。"
+}

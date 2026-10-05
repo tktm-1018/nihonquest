@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-kaya-no-taba",
+  "name": "かやの たば",
+  "kind": "material",
+  "iconKey": "item.fukushima-kaya-no-taba",
+  "areaOrigin": "fukushima",
+  "blurb": "かやぶき屋根[やね]に つかう、ススキなどの 草[くさ]の たば。3つ あつめると カヤブキンが しんかする。"
+}

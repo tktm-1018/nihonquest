@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "akita-kunikko",
+  "name": "クニッコ",
+  "area": "akita",
+  "motifId": "tazawako",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 32,
+    "mp": 7,
+    "atk": 9,
+    "def": 5,
+    "spd": 10,
+    "wis": 4
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": [
+    "sk-shizuku"
+  ],
+  "drops": [
+    {
+      "itemId": "akita-ruri-no-shizuku",
+      "rate": 0.1
+    },
+    {
+      "itemId": "akita-tatsuko-no-uroko",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 15,
+  "gold": 10,
+  "spriteKey": "mon.akita-kunikko",
+  "evolution": {
+    "to": "akita-ruri-iro-masu",
+    "item": "akita-ruri-no-shizuku"
+  },
+  "dexBlurb": "田沢湖[たざわこ]に だけ すんでいた クニマスの 子[こ]ども。いちど 田沢湖から いなく なったけど、2010年[ねん]に 山梨県[やまなしけん]の 西湖[さいこ]で 生[い]きているのが 見[み]つかったよ。"
+}

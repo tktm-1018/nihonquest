@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "iwate-ao-no-dokutsu-no-kakera",
+  "name": "青[あお]の 洞窟[どうくつ]の かけら",
+  "kind": "material",
+  "iconKey": "item.iwate-ao-no-dokutsu-no-kakera",
+  "areaOrigin": "iwate",
+  "blurb": "小[ちい]さな 船[ふね]で 入[はい]る「青の 洞窟」で 見[み]つけた、青く すきとおった かけら。3こ あつめると ジョウドイワが しんかする。"
+}

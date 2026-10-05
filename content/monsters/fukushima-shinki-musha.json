@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "fukushima-shinki-musha",
+  "name": "シンキムシャ",
+  "area": "fukushima",
+  "motifId": "soma-nomaoi",
+  "element": "kaze",
+  "weakness": "tsuchi",
+  "baseStats": {
+    "hp": 68,
+    "mp": 17,
+    "atk": 18,
+    "def": 12,
+    "spd": 18,
+    "wis": 10
+  },
+  "growth": {
+    "hp": 7,
+    "mp": 1.7,
+    "atk": 2.1,
+    "def": 1.6,
+    "spd": 1.6,
+    "wis": 1.2
+  },
+  "skills": [
+    "sk-abc-shout",
+    "sk-habataki",
+    "sk-kaikyo-no-kaze"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 56,
+  "gold": 34,
+  "spriteKey": "mon.fukushima-shinki-musha",
+  "dexBlurb": "旗[はた]を せおって 馬[うま]に のる、野馬追[のまおい]の むしゃ。「神旗争奪戦[しんきそうだつせん]」では、空[そら]に うちあげられた 旗を、馬に のった 人[ひと]たちが うばいあうよ。"
+}

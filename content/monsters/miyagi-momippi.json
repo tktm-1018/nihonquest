@@ -1,0 +1,45 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "miyagi-momippi",
+  "name": "モミッピ",
+  "area": "miyagi",
+  "motifId": "naruko-kyo",
+  "element": "kaze",
+  "weakness": "tsuchi",
+  "baseStats": {
+    "hp": 30,
+    "mp": 8,
+    "atk": 8,
+    "def": 5,
+    "spd": 11,
+    "wis": 5
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": ["sk-abc-call"],
+  "drops": [
+    {
+      "itemId": "miyagi-naruko-kyo-no-momiji",
+      "rate": 0.1
+    },
+    {
+      "itemId": "miyagi-fujin-no-fukuro",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 15,
+  "gold": 10,
+  "spriteKey": "mon.miyagi-momippi",
+  "evolution": {
+    "to": "miyagi-tsumuji-momiji",
+    "item": "miyagi-naruko-kyo-no-momiji"
+  },
+  "dexBlurb": "鳴子峡[なるこきょう]の もみじの せい。鳴子峡は ふかさ 100メートルほどの たにで、秋[あき]には 赤[あか]や きいろの 葉[は]が たにを うめつくすよ。"
+}

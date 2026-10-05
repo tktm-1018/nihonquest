@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-samidare-no-shizuku",
+  "name": "五月雨[さみだれ]の しずく",
+  "kind": "material",
+  "iconKey": "item.yamagata-samidare-no-shizuku",
+  "areaOrigin": "yamagata",
+  "blurb": "つゆの ころに ふる 長[なが]い 雨[あめ]の しずく。3つ あつめると センドウブネが しんかする。"
+}

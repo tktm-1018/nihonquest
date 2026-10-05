@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "miyagi-matsubokkuri",
+  "name": "松島[まつしま]の まつぼっくり",
+  "kind": "material",
+  "iconKey": "item.miyagi-matsubokkuri",
+  "areaOrigin": "miyagi",
+  "blurb": "松島の 島[しま]に はえる マツの まつぼっくり。マツコジマが しんかする。"
+}

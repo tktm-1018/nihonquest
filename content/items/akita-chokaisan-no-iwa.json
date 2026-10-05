@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "akita-chokaisan-no-iwa",
+  "name": "鳥海山[ちょうかいさん]の いわ",
+  "kind": "material",
+  "iconKey": "item.akita-chokaisan-no-iwa",
+  "areaOrigin": "akita",
+  "blurb": "鳥海山の 火山[かざん]が つくった ごつごつの いわ。チョウカイッコが しんかする。"
+}

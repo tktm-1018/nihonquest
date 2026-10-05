@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-yukipocchi",
+  "name": "ユキポッチ",
+  "area": "iwate",
+  "motifId": "hachimantai",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 32,
+    "mp": 8,
+    "atk": 8,
+    "def": 6,
+    "spd": 8,
+    "wis": 6
+  },
+  "growth": {
+    "hp": 4.6,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.8
+  },
+  "skills": [
+    "sk-shizuku"
+  ],
+  "drops": [
+    {
+      "itemId": "iwate-hachimantai-no-yuki",
+      "rate": 0.1
+    },
+    {
+      "itemId": "iwate-dragon-eye-no-shizuku",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 18,
+  "gold": 12,
+  "spriteKey": "mon.iwate-yukipocchi",
+  "evolution": {
+    "to": "iwate-yuki-kairo",
+    "item": "iwate-hachimantai-no-yuki"
+  },
+  "dexBlurb": "八幡平[はちまんたい]の 雪[ゆき]から うまれた 小[ちい]さな 雪玉[ゆきだま]。八幡平の 山[やま]の 上[うえ]は、6月[がつ]ごろまで 雪が のこっているよ。"
+}

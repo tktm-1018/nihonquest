@@ -1,0 +1,43 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "akita-chokaikko",
+  "name": "チョウカイッコ",
+  "area": "akita",
+  "motifId": "chokaisan",
+  "element": "tsuchi",
+  "weakness": "kaze",
+  "baseStats": {
+    "hp": 36,
+    "mp": 6,
+    "atk": 8,
+    "def": 8,
+    "spd": 5,
+    "wis": 4
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": [
+    "sk-suna-kabe"
+  ],
+  "drops": [
+    {
+      "itemId": "akita-chokaisan-no-iwa",
+      "rate": 0.1
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 15,
+  "gold": 10,
+  "spriteKey": "mon.akita-chokaikko",
+  "evolution": {
+    "to": "akita-dewa-fuji-maru",
+    "item": "akita-chokaisan-no-iwa"
+  },
+  "dexBlurb": "鳥海山[ちょうかいさん]の 小[ちい]さな 山[やま]の せい。鳥海山は 秋田県[あきたけん]と 山形県[やまがたけん]の さかいに ある 火山[かざん]で、夏[なつ]に なっても 雪[ゆき]が のこって いるよ。"
+}

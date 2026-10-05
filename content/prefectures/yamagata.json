@@ -104,6 +104,18 @@
         {
           "monsterId": "yamagata-shogi-commander",
           "weight": 20
+        },
+        {
+          "monsterId": "yamagata-sasabunen",
+          "weight": 20
+        },
+        {
+          "monsterId": "yamagata-tawarappi",
+          "weight": 15
+        },
+        {
+          "monsterId": "yamagata-yonegyun",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -119,6 +131,18 @@
         {
           "monsterId": "yamagata-imoni-nabe",
           "weight": 35
+        },
+        {
+          "monsterId": "yamagata-tawarappi",
+          "weight": 25
+        },
+        {
+          "monsterId": "yamagata-sasabunen",
+          "weight": 15
+        },
+        {
+          "monsterId": "yamagata-yonegyun",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -134,6 +158,14 @@
         {
           "monsterId": "yamagata-shogi-commander",
           "weight": 45
+        },
+        {
+          "monsterId": "yamagata-horakko",
+          "weight": 20
+        },
+        {
+          "monsterId": "yamagata-yonegyun",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -153,6 +185,14 @@
         {
           "monsterId": "yamagata-yukemurin",
           "weight": 14
+        },
+        {
+          "monsterId": "yamagata-horakko",
+          "weight": 25
+        },
+        {
+          "monsterId": "yamagata-yonegyun",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -176,6 +216,14 @@
         {
           "monsterId": "yamagata-yukemurin",
           "weight": 13
+        },
+        {
+          "monsterId": "yamagata-horakko",
+          "weight": 12
+        },
+        {
+          "monsterId": "yamagata-sasabunen",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 8,

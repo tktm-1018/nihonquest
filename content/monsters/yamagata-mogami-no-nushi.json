@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "yamagata-mogami-no-nushi",
+  "name": "モガミノヌシ",
+  "area": "yamagata",
+  "motifId": "mogamigawa",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 66,
+    "mp": 17,
+    "atk": 19,
+    "def": 13,
+    "spd": 13,
+    "wis": 10
+  },
+  "growth": {
+    "hp": 6.5,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio",
+    "sk-fubuki"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 55,
+  "gold": 34,
+  "spriteKey": "mon.yamagata-mogami-no-nushi",
+  "dexBlurb": "センドウブネが しんかした すがた。最上川[もがみがわ]の ぬし。松尾芭蕉[まつおばしょう]は「五月雨[さみだれ]を あつめて 早[はや]し 最上川」と よんだ。日本[にほん]で とくに ながれが はやい 3つの 川[かわ]の ひとつだよ。"
+}

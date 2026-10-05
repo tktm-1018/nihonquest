@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "fukushima-tenkyo-swan",
+  "name": "テンキョウスワン",
+  "area": "fukushima",
+  "motifId": "inawashiroko",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 70,
+    "mp": 18,
+    "atk": 17,
+    "def": 13,
+    "spd": 15,
+    "wis": 11
+  },
+  "growth": {
+    "hp": 7,
+    "mp": 1.7,
+    "atk": 2.1,
+    "def": 1.6,
+    "spd": 1.6,
+    "wis": 1.2
+  },
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio",
+    "sk-fubuki"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 56,
+  "gold": 34,
+  "spriteKey": "mon.fukushima-tenkyo-swan",
+  "dexBlurb": "猪苗代湖[いなわしろこ]の ぬしの 白鳥[はくちょう]。猪苗代湖は 磐梯山[ばんだいさん]を かがみのように うつすので「天鏡湖[てんきょうこ]」とも よばれるよ。"
+}

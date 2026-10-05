@@ -1,0 +1,48 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "akita-kometsubun",
+  "name": "コメツブン",
+  "area": "akita",
+  "motifId": "ogata-okome",
+  "element": "hikari",
+  "weakness": "yami",
+  "baseStats": {
+    "hp": 32,
+    "mp": 8,
+    "atk": 7,
+    "def": 6,
+    "spd": 8,
+    "wis": 6
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": [
+    "sk-kana-barrier"
+  ],
+  "drops": [
+    {
+      "itemId": "akita-ogata-okome",
+      "rate": 0.1
+    },
+    {
+      "itemId": "akita-kogane-no-inaho",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "recruitItem": "akita-ogata-okome",
+  "xp": 15,
+  "gold": 10,
+  "spriteKey": "mon.akita-kometsubun",
+  "evolution": {
+    "to": "akita-inaho-kakashi",
+    "item": "akita-ogata-okome"
+  },
+  "dexBlurb": "大潟村[おおがたむら]の 田[た]んぼで とれた お米[こめ]の つぶの せい。大潟村は、八郎潟[はちろうがた]という 大[おお]きな 湖[みずうみ]の 水[みず]を ぬいて、りくちに して できた 村[むら]だよ。"
+}

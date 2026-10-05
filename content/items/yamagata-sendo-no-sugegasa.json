@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-sendo-no-sugegasa",
+  "name": "船頭[せんどう]の すげがさ",
+  "kind": "material",
+  "iconKey": "item.yamagata-sendo-no-sugegasa",
+  "areaOrigin": "yamagata",
+  "blurb": "「すげ」と いう 草[くさ]を あんで 作[つく]った ぼうし。日[ひ]よけや 雨[あめ]よけに なる。ササブネンが しんかする。"
+}

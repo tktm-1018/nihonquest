@@ -1,0 +1,41 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "miyagi-matsukojima",
+  "name": "マツコジマ",
+  "area": "miyagi",
+  "motifId": "matsushima",
+  "element": "tsuchi",
+  "weakness": "kaze",
+  "baseStats": {
+    "hp": 34,
+    "mp": 6,
+    "atk": 7,
+    "def": 9,
+    "spd": 4,
+    "wis": 5
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": ["sk-suna-kabe"],
+  "drops": [
+    {
+      "itemId": "miyagi-matsubokkuri",
+      "rate": 0.1
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 15,
+  "gold": 10,
+  "spriteKey": "mon.miyagi-matsukojima",
+  "evolution": {
+    "to": "miyagi-niojiman",
+    "item": "miyagi-matsubokkuri"
+  },
+  "dexBlurb": "松島[まつしま]に うかぶ 小[ちい]さな 島[しま]の 子[こ]ども。松島の 島は やわらかい 岩[いわ]で できていて、なみに けずられて いろいろな かたちに なったよ。"
+}

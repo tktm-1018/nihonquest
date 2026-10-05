@@ -1,0 +1,40 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-yuki-kairo",
+  "name": "ユキカイロウ",
+  "area": "iwate",
+  "motifId": "hachimantai",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 46,
+    "mp": 11,
+    "atk": 12,
+    "def": 9,
+    "spd": 10,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 5.6,
+    "mp": 1.2,
+    "atk": 1.7,
+    "def": 1.2,
+    "spd": 1.3,
+    "wis": 1.0
+  },
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 32,
+  "gold": 22,
+  "spriteKey": "mon.iwate-yuki-kairo",
+  "evolution": {
+    "to": "iwate-hachimantaitan",
+    "item": "iwate-dragon-eye-no-shizuku",
+    "count": 3
+  },
+  "dexBlurb": "ユキポッチが しんかした すがた。春[はる]の 八幡平[はちまんたい]に できる「雪[ゆき]の 回廊[かいろう]」の せい。道[みち]の りょうがわに、大人[おとな]の せより ずっと 高[たか]い 雪の かべが つづくよ。"
+}

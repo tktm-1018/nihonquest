@@ -108,6 +108,18 @@
         {
           "monsterId": "akita-hanabii",
           "weight": 12
+        },
+        {
+          "monsterId": "akita-kometsubun",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-inaniwan",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-kunikko",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -122,6 +134,10 @@
         },
         {
           "monsterId": "akita-akitainu",
+          "weight": 35
+        },
+        {
+          "monsterId": "akita-kometsubun",
           "weight": 35
         }
       ],
@@ -138,6 +154,10 @@
         {
           "monsterId": "akita-akitainu",
           "weight": 35
+        },
+        {
+          "monsterId": "akita-chokaikko",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -153,6 +173,29 @@
         {
           "monsterId": "akita-magewappan",
           "weight": 45
+        },
+        {
+          "monsterId": "akita-chokaikko",
+          "weight": 40
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "shore",
+      "table": [
+        {
+          "monsterId": "akita-kunikko",
+          "weight": 60
+        },
+        {
+          "monsterId": "akita-hanabii",
+          "weight": 20
+        },
+        {
+          "monsterId": "akita-kiritanpon",
+          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -176,6 +219,14 @@
         {
           "monsterId": "akita-hanabii",
           "weight": 12
+        },
+        {
+          "monsterId": "akita-chokaikko",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-inaniwan",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 8,

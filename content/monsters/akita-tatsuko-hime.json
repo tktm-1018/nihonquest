@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "akita-tatsuko-hime",
+  "name": "タツコヒメ",
+  "area": "akita",
+  "motifId": "tazawako",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 58,
+    "mp": 16,
+    "atk": 17,
+    "def": 11,
+    "spd": 13,
+    "wis": 9
+  },
+  "growth": {
+    "hp": 6.5,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio",
+    "sk-fubuki"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 52,
+  "gold": 32,
+  "spriteKey": "mon.akita-tatsuko-hime",
+  "dexBlurb": "田沢湖[たざわこ]に つたわる 辰子[たつこ]の おはなしの 竜[りゅう]。いつまでも うつくしく いたいと ねがって わき水[みず]を のみ、竜に なって 湖[みずうみ]の ぬしに なったと いわれるよ。湖の ほとりには 金[きん]いろの 辰子像[たつこぞう]が 立[た]っている。"
+}

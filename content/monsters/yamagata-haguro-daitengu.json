@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "yamagata-haguro-daitengu",
+  "name": "ハグロダイテング",
+  "area": "yamagata",
+  "motifId": "haguro-gojunoto",
+  "element": "hikari",
+  "weakness": "yami",
+  "baseStats": {
+    "hp": 62,
+    "mp": 20,
+    "atk": 17,
+    "def": 12,
+    "spd": 16,
+    "wis": 13
+  },
+  "growth": {
+    "hp": 6.5,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.3
+  },
+  "skills": [
+    "sk-kanji-barrier",
+    "sk-hikari-no-ya",
+    "sk-hikari-no-hane"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 55,
+  "gold": 34,
+  "spriteKey": "mon.yamagata-haguro-daitengu",
+  "dexBlurb": "ヤマブシンが しんかした すがた。すぎの 森[もり]の 五重塔[ごじゅうのとう]を まもる 大[だい]てんぐ。五重塔は 東北[とうほく]で いちばん 古[ふる]い とうと いわれ、こくほうに なっているよ。"
+}

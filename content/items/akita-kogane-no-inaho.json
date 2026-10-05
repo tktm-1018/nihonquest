@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "akita-kogane-no-inaho",
+  "name": "こがねの いなほ",
+  "kind": "material",
+  "iconKey": "item.akita-kogane-no-inaho",
+  "areaOrigin": "akita",
+  "blurb": "大潟村[おおがたむら]の 田[た]んぼで みのった 金[きん]いろの いなほ。3本[ぼん] あつめると イナホカカシが しんかする。"
+}

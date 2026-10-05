@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "miyagi-niojiman",
+  "name": "ニオウジマン",
+  "area": "miyagi",
+  "motifId": "matsushima",
+  "element": "tsuchi",
+  "weakness": "kaze",
+  "baseStats": {
+    "hp": 51,
+    "mp": 9,
+    "atk": 13,
+    "def": 13,
+    "spd": 6,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 5.5,
+    "mp": 1.2,
+    "atk": 1.7,
+    "def": 1.2,
+    "spd": 1.3,
+    "wis": 0.9
+  },
+  "skills": ["sk-tsuchi-kabe", "sk-iwa-otoshi"],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 34,
+  "gold": 23,
+  "spriteKey": "mon.miyagi-niojiman",
+  "dexBlurb": "マツコジマが しんかした すがた。松島[まつしま]には、お寺[てら]を まもる 仁王[におう]さまのように 見[み]える「仁王島[におうじま]」と いう 島[しま]が あるよ。"
+}

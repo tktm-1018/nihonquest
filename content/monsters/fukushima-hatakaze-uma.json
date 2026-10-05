@@ -1,0 +1,40 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "fukushima-hatakaze-uma",
+  "name": "ハタカゼウマ",
+  "area": "fukushima",
+  "motifId": "soma-nomaoi",
+  "element": "kaze",
+  "weakness": "tsuchi",
+  "baseStats": {
+    "hp": 52,
+    "mp": 12,
+    "atk": 14,
+    "def": 9,
+    "spd": 16,
+    "wis": 8
+  },
+  "growth": {
+    "hp": 6,
+    "mp": 1.4,
+    "atk": 1.7,
+    "def": 1.3,
+    "spd": 1.4,
+    "wis": 1
+  },
+  "skills": [
+    "sk-abc-shout",
+    "sk-habataki"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 34,
+  "gold": 22,
+  "spriteKey": "mon.fukushima-hatakaze-uma",
+  "evolution": {
+    "to": "fukushima-shinki-musha",
+    "item": "fukushima-shinki-no-hata",
+    "count": 3
+  },
+  "dexBlurb": "ノマッコが しんかした すがた。せなかに 旗[はた]を たてて 風[かぜ]のように 走[はし]る 馬[うま]。野馬追[のまおい]では、よろいかぶとの 人[ひと]を のせた 馬が 何百頭[なんびゃくとう]も あつまるよ。"
+}
