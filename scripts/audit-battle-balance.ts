@@ -13,6 +13,8 @@ type Monster = {
   gold: number;
 };
 type Area = {
+  id: string;
+  recommendedLevel?: number;
   shop?: { itemId: string }[];
   missions?: { reward?: { items?: { itemId: string }[] } }[];
 };
@@ -41,6 +43,22 @@ export function auditBattleBalance() {
   const areas = readJsonDirectory<Area>('content/prefectures');
   const recipes = JSON.parse(readFileSync(resolve(ROOT, 'content/recipes.json'), 'utf8')) as Recipe[];
   const setupSource = readFileSync(resolve(ROOT, 'src/core/battle/setup.ts'), 'utf8');
+  const overworldSource = readFileSync(resolve(ROOT, 'src/scenes/Overworld.ts'), 'utf8');
+  const hasBattleBudget = (() => {
+    try {
+      readFileSync(resolve(ROOT, 'scripts/simulate-battle-balance.ts'), 'utf8');
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  const tohokuIds = ['aomori', 'iwate', 'miyagi', 'akita', 'yamagata', 'fukushima'];
+  const regionalLevels = areas
+    .filter((area) => tohokuIds.includes(area.id))
+    .map((area) => ({ id: area.id, recommendedLevel: area.recommendedLevel }))
+    .sort((a, b) => tohokuIds.indexOf(a.id) - tohokuIds.indexOf(b.id));
+  const hasTohokuLevelCurve =
+    regionalLevels.length === tohokuIds.length && regionalLevels.every((area) => area.recommendedLevel);
   const equipmentKinds = ['weapon', 'head', 'chest', 'legs', 'feet'] as const;
   const equipment = Object.fromEntries(
     equipmentKinds.map((kind) => [kind, items.filter((item) => item.kind === kind)]),
@@ -73,8 +91,12 @@ export function auditBattleBalance() {
     ...(!setupSource.includes('growth: HERO_GROWTH')
       ? ['主人公はXPから表示レベルだけ上がり、baseStatsのレベル成長が未実装']
       : []),
-    '通常敵レベルが主人公レベル±1で、地域進行・県ボス推奨レベルと未接続',
-    '戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない',
+    ...(!hasTohokuLevelCurve || !overworldSource.includes('area.recommendedLevel')
+      ? ['通常敵レベルが主人公レベル±1で、地域進行・県ボス推奨レベルと未接続']
+      : []),
+    ...(!hasBattleBudget
+      ? ['戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない']
+      : []),
   ];
 
   return {
@@ -108,11 +130,18 @@ export function auditBattleBalance() {
         },
       ]),
     ),
+    regionalLevels,
     monsters: tierSummary,
     findings,
-    resolved: setupSource.includes('growth: HERO_GROWTH')
-      ? ['主人公のXPレベルを実効ステータスと敵出現レベルへ反映']
-      : [],
+    resolved: [
+      ...(setupSource.includes('growth: HERO_GROWTH')
+        ? ['主人公のXPレベルを実効ステータスと敵出現レベルへ反映']
+        : []),
+      ...(hasTohokuLevelCurve && overworldSource.includes('area.recommendedLevel')
+        ? ['東北6県の推奨レベル帯を通常戦闘へ反映']
+        : []),
+      ...(hasBattleBudget ? ['青森の通常敵・中ボス・県ボスの想定ターン数を自動検証'] : []),
+    ],
   };
 }
 

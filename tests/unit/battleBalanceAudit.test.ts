@@ -17,4 +17,22 @@ describe('戦闘バランス監査', () => {
     expect(audit.findings).not.toContain('主人公はXPから表示レベルだけ上がり、baseStatsのレベル成長が未実装');
     expect(audit.resolved).toContain('主人公のXPレベルを実効ステータスと敵出現レベルへ反映');
   });
+
+  it('東北レベル曲線と戦闘ターン予算を解決済みとして報告する', () => {
+    const audit = auditBattleBalance();
+    expect(audit.regionalLevels).toEqual([
+      { id: 'aomori', recommendedLevel: 1 },
+      { id: 'iwate', recommendedLevel: 3 },
+      { id: 'miyagi', recommendedLevel: 5 },
+      { id: 'akita', recommendedLevel: 7 },
+      { id: 'yamagata', recommendedLevel: 9 },
+      { id: 'fukushima', recommendedLevel: 11 },
+    ]);
+    expect(audit.findings).not.toContain(
+      '通常敵レベルが主人公レベル±1で、地域進行・県ボス推奨レベルと未接続',
+    );
+    expect(audit.findings).not.toContain(
+      '戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない',
+    );
+  });
 });
