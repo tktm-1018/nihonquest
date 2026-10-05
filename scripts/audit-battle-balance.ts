@@ -94,9 +94,7 @@ export function auditBattleBalance() {
     ...(!hasTohokuLevelCurve || !overworldSource.includes('area.recommendedLevel')
       ? ['通常敵レベルが主人公レベル±1で、地域進行・県ボス推奨レベルと未接続']
       : []),
-    ...(!hasBattleBudget
-      ? ['戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない']
-      : []),
+    ...(!hasBattleBudget ? ['戦闘時間、被ダメージ、回復消費、勝率の性能予算を自動検証していない'] : []),
   ];
 
   return {
