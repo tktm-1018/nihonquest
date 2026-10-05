@@ -113,7 +113,8 @@ export function equipmentMenu(
     return {
       key: `slot:${slot}`,
       name: item ? item.name : t('field.equipNone'),
-      icon: item ? itemIconUrl(item) : undefined,
+      icon: item ? itemIconUrl(item) : itemIconUrl({ id: `empty-slot-${slot}`, kind: slot }),
+      placeholder: !item,
       known: true,
       right: t(`slots.${slot}`),
       sub: t('field.equipSlot', { slot: t(`slots.${slot}`) }),

@@ -64,7 +64,7 @@ class MenuListRow extends Component<MenuListRowProps> {
       <li>
         <button
           type="button"
-          class={`nq-opt ${selected ? 'nq-focus' : ''} ${entry.known ? '' : 'nq-menu-unknown'}`}
+          class={`nq-opt ${selected ? 'nq-focus' : ''} ${entry.known ? '' : 'nq-menu-unknown'} ${entry.placeholder ? 'nq-menu-placeholder' : ''}`}
           onPointerEnter={() => onPick(index)}
           onClick={() => onPick(index)}
         >
@@ -233,7 +233,9 @@ export function MenuOverlay({
               {e && (
                 <div class="nq-wmap-info nq-party-info">
                   <div class="nq-party-head">
-                    <div class={`nq-party-art ${e.known ? '' : 'nq-menu-unknown-art'}`}>
+                    <div
+                      class={`nq-party-art ${e.known ? '' : 'nq-menu-unknown-art'} ${e.placeholder ? 'nq-menu-placeholder-art' : ''}`}
+                    >
                       {pic ? <img src={pic} alt="" /> : <PixelIcon name="star-off" scale={6} />}
                     </div>
                     <div class="nq-party-who">

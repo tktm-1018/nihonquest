@@ -20,6 +20,8 @@ export interface MenuEntry {
   name: string;
   icon?: string;
   art?: string;
+  /** 空スロットなど、実物ではなく場所を示す薄い絵 */
+  placeholder?: boolean;
   known: boolean;
   right?: string;
   detailIndex?: string;
