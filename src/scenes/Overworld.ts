@@ -41,7 +41,7 @@ import {
   toggleBagMonster,
 } from '../core/progression/bag';
 import { heroLevel } from '../core/progression/battleResult';
-import { EQUIP_SLOTS, isEquip, unequip, useItem } from '../core/progression/inventory';
+import { EQUIP_SLOTS, equipmentStatDelta, isEquip, unequip, useItem } from '../core/progression/inventory';
 import {
   acceptMission,
   canCraft,
@@ -2863,6 +2863,22 @@ export class OverworldScene extends Phaser.Scene {
       .join('　');
   }
 
+  /** 候補装備と現在の同じ部位との差（こうげき+1 すばやさ-2）。 */
+  private statDeltaText(it: Item, current?: Item): string {
+    const KEY: Record<string, string> = {
+      hp: 'field.statHp',
+      atk: 'field.statAtk',
+      def: 'field.statDef',
+      spd: 'field.statSpd',
+      wis: 'field.statWis',
+    };
+    const stats = Object.entries(equipmentStatDelta(it, current))
+      .filter(([key]) => key !== 'mp')
+      .map(([key, value]) => `${KEY[key] ? t(KEY[key]) : key.toUpperCase()}${value! > 0 ? '+' : ''}${value}`)
+      .join('　');
+    return stats ? t('field.equipCompare', { stats }) : '';
+  }
+
   private kindLabel(it: Item): string {
     if (it.kind === 'consumable') return t('field.itemKindTool');
     if (it.kind === 'material') return t('field.itemKindMaterial');
@@ -3250,9 +3266,16 @@ export class OverworldScene extends Phaser.Scene {
       inBag: key.startsWith('eq:'),
       count,
       sub: t('field.equipSlot', { slot: t(`slots.${it.kind}`) }),
-      lines: [this.statText(it), count === undefined ? '' : t('field.townHave', { n: count })].filter(
-        Boolean,
-      ),
+      lines: [
+        this.statText(it),
+        key.startsWith('inv:')
+          ? this.statDeltaText(
+              it,
+              c.items.get(gs.player.equipment[it.kind as keyof typeof gs.player.equipment] ?? ''),
+            )
+          : '',
+        count === undefined ? '' : t('field.townHave', { n: count }),
+      ].filter(Boolean),
       blurb: it.blurb,
     });
     const owned = new Map(gs.party.owned.map((o) => [o.uid, o]));
