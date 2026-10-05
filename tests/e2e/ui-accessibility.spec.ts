@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { finishHeroIntroduction } from './helpers/onboarding';
 
 async function startGame(page: Page) {
   await page.goto('/');
@@ -6,6 +7,7 @@ async function startGame(page: Page) {
   await page.getByRole('button', { name: /スロット 1/ }).click();
   await page.getByRole('button', { name: 'はじめる' }).click();
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 40_000 });
+  await finishHeroIntroduction(page);
 }
 
 for (const width of [640, 960]) {
@@ -15,6 +17,8 @@ for (const width of [640, 960]) {
     await page.goto('/');
 
     const first = page.getByRole('menuitem').first();
+    await expect(page.getByRole('menuitem')).toHaveCount(2);
+    await expect(page.getByRole('menuitem', { name: /もんだいいちらん/ })).toHaveCount(0);
     await expect(first).toBeFocused();
     await page.keyboard.press('ArrowDown');
     await expect(page.getByRole('menuitem').nth(1)).toBeFocused();
