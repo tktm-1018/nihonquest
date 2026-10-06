@@ -30,9 +30,7 @@
       "shuffle": true
     },
     "explanation": "ねこはカタカナで「ネコ」と書きます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0003",
@@ -64,9 +62,7 @@
       "shuffle": true
     },
     "explanation": "「ア」の1画目は左から右へ横に引き、そのまま左下へ折れます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0005",
@@ -98,9 +94,7 @@
       "shuffle": true
     },
     "explanation": "「しゃ」は小さい「ャ」を使って「シャ」と書きます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0009",
@@ -132,9 +126,7 @@
       "shuffle": true
     },
     "explanation": "鳴き声や物の音はカタカナで書くのがきほんです。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0011",
@@ -166,9 +158,7 @@
       "shuffle": true
     },
     "explanation": "「らいおん」は「ライオン」。「ン」と「ソ」をまちがえないようにします。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0012",
@@ -200,9 +190,7 @@
       "shuffle": true
     },
     "explanation": "カタカナののばす音は「ー」（ぼうせん）で書きます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0014",
@@ -234,9 +222,7 @@
       "shuffle": true
     },
     "explanation": "「シ」と「ツ」は点のむきと書く向きがちがいます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   },
   {
     "id": "kokugo.g1.katakana.0017",
@@ -268,8 +254,6 @@
       "shuffle": true
     },
     "explanation": "外国から来たことば（テレビ）はカタカナで書きます。",
-    "tags": [
-      "skill:katakana-shibari"
-    ]
+    "tags": ["skill:katakana-shibari"]
   }
 ]

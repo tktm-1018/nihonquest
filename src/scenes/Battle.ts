@@ -1235,7 +1235,7 @@ export class BattleScene extends Phaser.Scene {
         playSfx('buff');
         this.patchGauge(e.subject, e.value);
         return;
-      case 'skillLock':
+      case 'skillLock': {
         playSfx(e.remain > 0 ? 'buff' : 'select');
         const lockBanner = skillLockBanner(e.remain);
         await this.showBanner(
@@ -1246,6 +1246,7 @@ export class BattleScene extends Phaser.Scene {
           800,
         );
         return;
+      }
       case 'itemUsed':
         playSfx('select');
         return;
