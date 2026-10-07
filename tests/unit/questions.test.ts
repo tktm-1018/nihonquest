@@ -75,6 +75,22 @@ describe('QuestionBank', () => {
     }
   });
 
+  it('提供された2・4・5・6年生の国語問題を読み込める', async () => {
+    const expected = new Map([
+      [2, 24],
+      [4, 5],
+      [5, 255],
+      [6, 180],
+    ]);
+    for (const [grade, count] of expected) {
+      const questions = (await read(`questions/kokugo/g${grade}/yasuoka-source.json`)) as QuestionBase[];
+      expect(questions).toHaveLength(count);
+      expect(questions.every((question) => question.subject === 'kokugo' && question.grade === grade)).toBe(
+        true,
+      );
+    }
+  });
+
   it('実際の content/questions を読み込める', async () => {
     const manifest = (await read('manifest.json')) as { questions: string[] };
     const { bank, report } = await QuestionBank.load(manifest.questions, read);

@@ -2296,5 +2296,103 @@
     "grade": 4,
     "order": 1257,
     "legacyNode": "jpn_4_5"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-5",
+    "name": "5年生の漢字",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_5"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-kanji-1",
+    "name": "5年生の漢字（読み）前半",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_kanji_1"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-kanji-2",
+    "name": "5年生の漢字（読み）中盤",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_kanji_2"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-kanji-6",
+    "name": "5年生の漢字（読み）後半②",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_kanji_6"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-kanji-7",
+    "name": "5年生の漢字（読み）不足分補完",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_kanji_7"
+  },
+  {
+    "id": "kokugo.g5.legacy-jpn-5-6",
+    "name": "言葉の歴史と文化",
+    "subject": "kokugo",
+    "grade": 5,
+    "legacyNode": "jpn_5_6"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-1",
+    "name": "6年生の漢字（読み）1〜25",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_1"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-2",
+    "name": "6年生の漢字（読み）26〜50",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_2"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-3",
+    "name": "6年生の漢字（読み）51〜75",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_3"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-4",
+    "name": "6年生の漢字（読み）76〜100",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_4"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-6",
+    "name": "6年生の漢字（読み）後半①",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_6"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-7",
+    "name": "6年生の漢字（読み）後半②",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_7"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-8",
+    "name": "6年生の漢字（読み）後半③",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_8"
+  },
+  {
+    "id": "kokugo.g6.legacy-jpn-6-kanji-9",
+    "name": "6年生の漢字（読み）後半④",
+    "subject": "kokugo",
+    "grade": 6,
+    "legacyNode": "jpn_6_kanji_9"
   }
 ]
