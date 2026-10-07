@@ -102,6 +102,24 @@
     "grade": 1
   },
   {
+    "id": "kokugo.g1.dokkai",
+    "name": "みじかい文[ぶん]を読[よ]む",
+    "subject": "kokugo",
+    "grade": 1
+  },
+  {
+    "id": "kokugo.g1.hanasu-kiku",
+    "name": "話[はな]す・聞[き]く",
+    "subject": "kokugo",
+    "grade": 1
+  },
+  {
+    "id": "kokugo.g1.tsutaeru",
+    "name": "じゅんじょよく伝[つた]える",
+    "subject": "kokugo",
+    "grade": 1
+  },
+  {
     "id": "kokugo.g2.kanji",
     "name": "2年[ねん]の漢字[かんじ]",
     "subject": "kokugo",
