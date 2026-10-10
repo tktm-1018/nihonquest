@@ -2394,5 +2394,35 @@
     "subject": "kokugo",
     "grade": 6,
     "legacyNode": "jpn_6_kanji_9"
+  },
+  {
+    "id": "eigo.g4.alphabet-weather",
+    "name": "アルファベットと天気",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g4.days-time",
+    "name": "曜日と時こく",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g4.school-life",
+    "name": "学校と一日の生活",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g5.communication",
+    "name": "身近なことを伝えよう",
+    "subject": "eigo",
+    "grade": 5
+  },
+  {
+    "id": "eigo.g6.memories-dreams",
+    "name": "思い出と将来の夢",
+    "subject": "eigo",
+    "grade": 6
   }
 ]

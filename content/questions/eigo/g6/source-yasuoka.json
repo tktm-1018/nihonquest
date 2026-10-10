@@ -1,0 +1,194 @@
+[
+  {
+    "id": "eigo.g6.memories-dreams.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「私は海に行きました。」の（ ）に入る英語はどれ？ / I ( ) to the sea.",
+      "choices": [
+        {
+          "id": "a",
+          "text": "go"
+        },
+        {
+          "id": "b",
+          "text": "went"
+        },
+        {
+          "id": "c",
+          "text": "want"
+        },
+        {
+          "id": "d",
+          "text": "saw"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "過去の出来事なので go の過去形 went を使います。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "make や time の最後にある e はどう発音する？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "「エ」と発音する"
+        },
+        {
+          "id": "b",
+          "text": "「イ」と発音する"
+        },
+        {
+          "id": "c",
+          "text": "発音しない"
+        },
+        {
+          "id": "d",
+          "text": "「ア」と発音する"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "語末の e を発音せず、直前の母音がアルファベット読みになることがあります。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「私は獣医になりたいです。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I want to go to a vet."
+        },
+        {
+          "id": "b",
+          "text": "I want to be a vet."
+        },
+        {
+          "id": "c",
+          "text": "I want a vet."
+        },
+        {
+          "id": "d",
+          "text": "I saw a vet."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "I want to be a ... で「〜になりたい」です。vet は獣医です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「車いすテニス」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "sitting volleyball"
+        },
+        {
+          "id": "b",
+          "text": "wheelchair tennis"
+        },
+        {
+          "id": "c",
+          "text": "table tennis"
+        },
+        {
+          "id": "d",
+          "text": "wheelchair marathon"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "wheelchair tennis は「車いすテニス」です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「イタリアに行きたいです。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I went to Italy."
+        },
+        {
+          "id": "b",
+          "text": "I live in Italy."
+        },
+        {
+          "id": "c",
+          "text": "I want to be Italy."
+        },
+        {
+          "id": "d",
+          "text": "I want to go to Italy."
+        }
+      ],
+      "answer": "d",
+      "shuffle": true
+    },
+    "explanation": "I want to go to ... で「〜に行きたい」です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「彼女は〜です」と第三者を紹介するときの正しい組み合わせはどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "She am"
+        },
+        {
+          "id": "b",
+          "text": "She are"
+        },
+        {
+          "id": "c",
+          "text": "She is"
+        },
+        {
+          "id": "d",
+          "text": "She do"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "She のあとには is を使います。"
+  }
+]
