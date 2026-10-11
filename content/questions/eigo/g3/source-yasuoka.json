@@ -1,0 +1,578 @@
+[
+  {
+    "id": "eigo.g3.greetings.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「こんにちは。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Hello."
+        },
+        {
+          "id": "b",
+          "text": "Goodbye."
+        },
+        {
+          "id": "c",
+          "text": "Thank you."
+        },
+        {
+          "id": "d",
+          "text": "Good night."
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "Hello. は「こんにちは。」というあいさつです。"
+  },
+  {
+    "id": "eigo.g3.greetings.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「さようなら。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Hello."
+        },
+        {
+          "id": "b",
+          "text": "Goodbye."
+        },
+        {
+          "id": "c",
+          "text": "I'm hungry."
+        },
+        {
+          "id": "d",
+          "text": "How are you?"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "Goodbye. は「さようなら。」という別れのあいさつです。"
+  },
+  {
+    "id": "eigo.g3.greetings.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "How are you? の意味はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "あなたはだれですか。"
+        },
+        {
+          "id": "b",
+          "text": "これは何ですか。"
+        },
+        {
+          "id": "c",
+          "text": "調子はどうですか。"
+        },
+        {
+          "id": "d",
+          "text": "どこの出身ですか。"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "How are you? は相手の調子をたずねる表現です。"
+  },
+  {
+    "id": "eigo.g3.greetings.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしはおなかがすいています。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I'm happy."
+        },
+        {
+          "id": "b",
+          "text": "I'm hungry."
+        },
+        {
+          "id": "c",
+          "text": "I'm from Japan."
+        },
+        {
+          "id": "d",
+          "text": "I'm fine."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "hungry は「おなかがすいた」という意味です。"
+  },
+  {
+    "id": "eigo.g3.greetings.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしはアメリカ出身です。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I'm from America."
+        },
+        {
+          "id": "b",
+          "text": "I'm in America."
+        },
+        {
+          "id": "c",
+          "text": "I like America."
+        },
+        {
+          "id": "d",
+          "text": "I see America."
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "I'm from ... で「わたしは〜出身です。」と伝えます。"
+  },
+  {
+    "id": "eigo.g3.greetings.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.greetings",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「あなたはだれですか。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "How are you?"
+        },
+        {
+          "id": "b",
+          "text": "Who are you?"
+        },
+        {
+          "id": "c",
+          "text": "What's this?"
+        },
+        {
+          "id": "d",
+          "text": "Where are you?"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "Who are you? は「あなたはだれですか。」という意味です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 11 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "eleven"
+        },
+        {
+          "id": "b",
+          "text": "twelve"
+        },
+        {
+          "id": "c",
+          "text": "thirteen"
+        },
+        {
+          "id": "d",
+          "text": "twenty"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "11 は eleven です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 12 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "eleven"
+        },
+        {
+          "id": "b",
+          "text": "twelve"
+        },
+        {
+          "id": "c",
+          "text": "fourteen"
+        },
+        {
+          "id": "d",
+          "text": "twenty"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "12 は twelve です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 13 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "three"
+        },
+        {
+          "id": "b",
+          "text": "thirteen"
+        },
+        {
+          "id": "c",
+          "text": "thirty"
+        },
+        {
+          "id": "d",
+          "text": "fifteen"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "13 は thirteen です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 15 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "five"
+        },
+        {
+          "id": "b",
+          "text": "fourteen"
+        },
+        {
+          "id": "c",
+          "text": "fifteen"
+        },
+        {
+          "id": "d",
+          "text": "fifty"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "15 は fifteen です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 18 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "eight"
+        },
+        {
+          "id": "b",
+          "text": "eighty"
+        },
+        {
+          "id": "c",
+          "text": "eighteen"
+        },
+        {
+          "id": "d",
+          "text": "nineteen"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "18 は eighteen です。"
+  },
+  {
+    "id": "eigo.g3.numbers.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.numbers",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "数字の 20 は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "twelve"
+        },
+        {
+          "id": "b",
+          "text": "twenty"
+        },
+        {
+          "id": "c",
+          "text": "two"
+        },
+        {
+          "id": "d",
+          "text": "thirteen"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "20 は twenty です。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしは緑色が好きです。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I like green."
+        },
+        {
+          "id": "b",
+          "text": "I don't like green."
+        },
+        {
+          "id": "c",
+          "text": "I see green."
+        },
+        {
+          "id": "d",
+          "text": "I'm green."
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "I like ... で「わたしは〜が好きです。」と伝えます。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしは野球が好きではありません。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I like baseball."
+        },
+        {
+          "id": "b",
+          "text": "I play baseball."
+        },
+        {
+          "id": "c",
+          "text": "I don't like baseball."
+        },
+        {
+          "id": "d",
+          "text": "I have baseball."
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "I don't like ... で「わたしは〜が好きではありません。」と伝えます。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "What's this? の意味はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "これは何ですか。"
+        },
+        {
+          "id": "b",
+          "text": "あなたはだれですか。"
+        },
+        {
+          "id": "c",
+          "text": "何色ですか。"
+        },
+        {
+          "id": "d",
+          "text": "いくつありますか。"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "What's this? は「これは何ですか。」という意味です。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「これはバナナです。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It's an apple."
+        },
+        {
+          "id": "b",
+          "text": "It's a banana."
+        },
+        {
+          "id": "c",
+          "text": "It's a carrot."
+        },
+        {
+          "id": "d",
+          "text": "It's a tomato."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "It's a banana. で「これはバナナです。」と答えます。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「ぞう」は英語でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "panda"
+        },
+        {
+          "id": "b",
+          "text": "bear"
+        },
+        {
+          "id": "c",
+          "text": "elephant"
+        },
+        {
+          "id": "d",
+          "text": "tiger"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "elephant は「ぞう」です。"
+  },
+  {
+    "id": "eigo.g3.likes-things.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 3,
+    "unit": "eigo.g3.likes-things",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「ぼくはトラです。」を表す英語はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I'm a tiger."
+        },
+        {
+          "id": "b",
+          "text": "I'm a bear."
+        },
+        {
+          "id": "c",
+          "text": "I like a tiger."
+        },
+        {
+          "id": "d",
+          "text": "It's a tiger."
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "自分が何者か伝えるときは I'm a ... を使います。"
+  }
+]

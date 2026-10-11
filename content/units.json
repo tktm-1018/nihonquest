@@ -2424,5 +2424,23 @@
     "name": "思い出と将来の夢",
     "subject": "eigo",
     "grade": 6
+  },
+  {
+    "id": "eigo.g3.greetings",
+    "name": "あいさつ",
+    "subject": "eigo",
+    "grade": 3
+  },
+  {
+    "id": "eigo.g3.numbers",
+    "name": "11から20までの数",
+    "subject": "eigo",
+    "grade": 3
+  },
+  {
+    "id": "eigo.g3.likes-things",
+    "name": "好きなものと身近なもの",
+    "subject": "eigo",
+    "grade": 3
   }
 ]
