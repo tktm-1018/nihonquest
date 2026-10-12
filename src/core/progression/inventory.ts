@@ -4,7 +4,7 @@
  *  - そうびする：バッグの そうびを その部位に つける（前の そうびは バッグに もどる）
  *  - はずす：そうびを バッグに もどす
  */
-import { equipKinds, type Item } from '../content/schemas';
+import { equipKinds, type Item, type Stats } from '../content/schemas';
 import type { GameState } from '../state/schema';
 
 export type EquipSlot = (typeof equipKinds)[number];
@@ -12,6 +12,16 @@ export const EQUIP_SLOTS: readonly EquipSlot[] = equipKinds;
 
 export const isEquip = (it: Item): it is Item & { kind: EquipSlot } =>
   (EQUIP_SLOTS as readonly string[]).includes(it.kind);
+
+/** いまの同じ部位と比べた装備能力差。0の能力は表示対象から除く。 */
+export function equipmentStatDelta(candidate: Item, current?: Item): Partial<Stats> {
+  const keys: (keyof Stats)[] = ['hp', 'mp', 'atk', 'def', 'spd', 'wis'];
+  return Object.fromEntries(
+    keys
+      .map((key) => [key, (candidate.stats?.[key] ?? 0) - (current?.stats?.[key] ?? 0)] as const)
+      .filter(([, value]) => value !== 0),
+  );
+}
 
 /** つかえる どうぐか（かいふくの どうぐで、HP か MP が へっている） */
 export function canUse(gs: GameState, it: Item, max: { hp: number; mp: number }): boolean {

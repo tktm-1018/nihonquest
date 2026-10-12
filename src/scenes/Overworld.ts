@@ -41,7 +41,7 @@ import {
   toggleBagMonster,
 } from '../core/progression/bag';
 import { heroLevel } from '../core/progression/battleResult';
-import { EQUIP_SLOTS, isEquip, unequip, useItem } from '../core/progression/inventory';
+import { EQUIP_SLOTS, equipmentStatDelta, isEquip, unequip, useItem } from '../core/progression/inventory';
 import {
   acceptMission,
   canCraft,
@@ -144,7 +144,6 @@ const STEP_MS = 160;
 /** 3 倍（1 マス 48px。見える はんいを しぼって、ドラクエのように 1 つ 1 つを 大きく） */
 const ZOOM = 3;
 /** 止まってから 左上の 窓（場所の名前・★・小さな地図）が 出るまで */
-const HUD_IDLE_MS = 700;
 /** 人物の絵（16×24）の中で、マスの中心にあたる高さ（足もとがマスの下のふちに来る） */
 const FEET_ORIGIN_Y = 16 / CHAR_H;
 const DELTA: Record<Dir, [number, number]> = { down: [0, 1], left: [-1, 0], right: [1, 0], up: [0, -1] };
@@ -388,9 +387,6 @@ export class OverworldScene extends Phaser.Scene {
   private pendingRegionBoss: RegionBoss | null = null;
   private pendingIslandBoss: string | null = null;
   /** ダンジョンの おくに いる 県ボス（中ボスと同じ「？」マーク） */
-  /** 止まっているか（左上の 窓を 出す）。歩きだすと かくし、HUD_IDLE_MS 止まると 出す */
-  private hudIdle = true;
-  private hudIdleTimer: Phaser.Time.TimerEvent | null = null;
   /** 裏ステージの ラスボス（歴史上の 人物） */
   private lastBoss: MidBoss | null = null;
   private pendingLastBoss = false;
@@ -727,17 +723,6 @@ export class OverworldScene extends Phaser.Scene {
 
   private walkTo(nx: number, ny: number): void {
     this.moving = true;
-    // 歩いている あいだは 左上の 窓を かくす（止まると 出る。ドラクエの 窓のように）
-    this.hudIdleTimer?.remove();
-    if (this.hudIdle) {
-      this.hudIdle = false;
-      this.renderHud();
-    }
-    this.hudIdleTimer = this.time.delayedCall(HUD_IDLE_MS, () => {
-      if (this.moving) return;
-      this.hudIdle = true;
-      this.renderHud();
-    });
     this.player.anims.play(`${this.heroTex}:${this.facing}`, true);
     this.tweens.add({
       targets: this.player,
@@ -2646,7 +2631,7 @@ export class OverworldScene extends Phaser.Scene {
     if (enemyId)
       this.startBattle({
         enemyId,
-        level: encounterLevel(this.heroLevel(), this.rng),
+        level: encounterLevel(this.heroLevel(), this.rng, area.recommendedLevel),
         zone: mapZone,
         ...(ground ? { ground } : {}),
       });
@@ -2845,7 +2830,6 @@ export class OverworldScene extends Phaser.Scene {
         onParty: () => this.openBag(),
         menuLabel: t('field.menu'),
         onMenu: () => this.openMenu(),
-        idle: this.hudIdle,
         dev: this.devAvailable()
           ? {
               label: t(this.devAll() ? 'field.devOn' : 'field.devLabel'),
@@ -3021,6 +3005,22 @@ export class OverworldScene extends Phaser.Scene {
     return Object.entries(it.stats ?? {})
       .map(([k, v]) => `${KEY[k] ? t(KEY[k]) : k.toUpperCase()}+${v}`)
       .join('　');
+  }
+
+  /** 候補装備と現在の同じ部位との差（こうげき+1 すばやさ-2）。 */
+  private statDeltaText(it: Item, current?: Item): string {
+    const KEY: Record<string, string> = {
+      hp: 'field.statHp',
+      atk: 'field.statAtk',
+      def: 'field.statDef',
+      spd: 'field.statSpd',
+      wis: 'field.statWis',
+    };
+    const stats = Object.entries(equipmentStatDelta(it, current))
+      .filter(([key]) => key !== 'mp')
+      .map(([key, value]) => `${KEY[key] ? t(KEY[key]) : key.toUpperCase()}${value! > 0 ? '+' : ''}${value}`)
+      .join('　');
+    return stats ? t('field.equipCompare', { stats }) : '';
   }
 
   private kindLabel(it: Item): string {
@@ -3410,9 +3410,16 @@ export class OverworldScene extends Phaser.Scene {
       inBag: key.startsWith('eq:'),
       count,
       sub: t('field.equipSlot', { slot: t(`slots.${it.kind}`) }),
-      lines: [this.statText(it), count === undefined ? '' : t('field.townHave', { n: count })].filter(
-        Boolean,
-      ),
+      lines: [
+        this.statText(it),
+        key.startsWith('inv:')
+          ? this.statDeltaText(
+              it,
+              c.items.get(gs.player.equipment[it.kind as keyof typeof gs.player.equipment] ?? ''),
+            )
+          : '',
+        count === undefined ? '' : t('field.townHave', { n: count }),
+      ].filter(Boolean),
       blurb: it.blurb,
     });
     const owned = new Map(gs.party.owned.map((o) => [o.uid, o]));
@@ -4011,7 +4018,9 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   private heroLevel(): number {
-    return this.gs()?.player.level ?? 1;
+    const gs = this.gs();
+    const content = this.content();
+    return gs && content ? heroLevel(gs, content.xp.hero) : 1;
   }
 
   private kind(): MapKind {

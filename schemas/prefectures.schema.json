@@ -30,6 +30,11 @@
           ],
           "default": "stub"
         },
+        "recommendedLevel": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "この県の通常エンカウントの基準レベル。未指定なら主人公レベル±1"
+        },
         "mapKeys": {
           "type": "object",
           "properties": {

@@ -4,7 +4,7 @@
  * - 仲間化: パーティに追加
  * - 敗北: ゴールドを settings.defeatGoldLossRate だけ失い、HP/MP 全快（宿屋に戻る扱い）。装備・仲間は失わない
  * - 図鑑: 出会ったモンスターを登録
- * レベルアップ（ステータスの伸び）は Step 7 の progression で扱う。ここでは xp を足すだけ。
+ * レベルアップ能力はXPとLv1基礎値から戦闘開始時に決定計算する。ここではxpを足すだけ。
  */
 import type { Settings } from '../content/schemas';
 import type { GameState } from '../state/schema';
@@ -100,9 +100,8 @@ export function levelForXp(table: readonly number[], xp: number): number {
 }
 
 /**
- * 主人公の レベル（バッグの マス・「つぎの レベルまで」の 表示）。
- * レベルアップの ステータスの のびは まだ 無く player.level は 1 の ままなので、けいけんち から きまる レベルと 大きいほう。
- * 出てくる 敵の レベルは player.level の まま（主人公が 強く ならないうちに 敵だけ 強く ならないように）
+ * 主人公のレベル（戦闘能力・敵レベル・バッグ・次レベル表示の共通基準）。
+ * 古いセーブのplayer.levelも尊重しつつ、累積XPから求めたレベルと大きい方を使う。
  */
 export function heroLevel(gs: GameState, table: readonly number[]): number {
   return Math.max(gs.player.level, levelForXp(table, gs.player.xp));

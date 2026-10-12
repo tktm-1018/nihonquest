@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "aomori-hiba-no-tsue",
+  "name": "ヒバの つえ",
+  "kind": "weapon",
+  "stats": { "atk": 3, "wis": 3 },
+  "element": "mori",
+  "price": 500,
+  "iconKey": "item.aomori-hiba-no-tsue",
+  "areaOrigin": "aomori",
+  "blurb": "青森[あおもり]ヒバで できた つえ。勉強[べんきょう]の わざを つよくする 武器[ぶき]。"
+}

@@ -529,6 +529,7 @@
     "equipSlot": "{slot}の そうび",
     "equipEmptyHint": "どうぐの タブか バッグで『バッグに いれる』と そうびできるよ",
     "equipStats": "HP {hp}/{max}　こうげき {atk}　ぼうぎょ {def}　すばやさ {spd}　かしこさ {wis}",
+    "equipCompare": "いまより　{stats}",
     "equipSet": "セット：{name}",
     "partyEvolve": "しんか",
     "partyEvolveNeed": "{item}を {need}こ つかって {to}に しんか（もっている：{n}こ）",

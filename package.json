@@ -9,6 +9,8 @@
   },
   "packageManager": "pnpm@10.28.0",
   "scripts": {
+    "audit:battle-balance": "tsx scripts/audit-battle-balance.ts",
+    "simulate:battle-balance": "tsx scripts/simulate-battle-balance.ts",
     "predev": "pnpm gen:manifest",
     "dev": "vite",
     "nrd": "npm run dev",

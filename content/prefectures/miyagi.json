@@ -5,6 +5,7 @@
   "island": "tohoku",
   "capital": "仙台市[せんだいし]",
   "status": "playable",
+  "recommendedLevel": 5,
   "mapKeys": {
     "field": "miyagi-field",
     "town": "miyagi-town",

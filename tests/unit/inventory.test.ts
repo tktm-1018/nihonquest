@@ -1,12 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { partyFromGameState } from '../../src/core/battle/setup';
-import { canUse, equipItem, unequip, useItem } from '../../src/core/progression/inventory';
+import {
+  canUse,
+  equipmentStatDelta,
+  equipItem,
+  unequip,
+  useItem,
+} from '../../src/core/progression/inventory';
 import { createNewGame } from '../../src/core/state/newGame';
 
 const fresh = () => createNewGame({ name: 'テスト', grade: 3, starterMonsterId: 'aomori-nebutan' }, 1000);
 
 describe('バッグ・そうび', () => {
+  it('同じ部位の装備候補を現在装備との差で比較できる', async () => {
+    const c = await content();
+    const current = c.items.get('common-dou-no-ken')!;
+    const fast = c.items.get('aomori-nebuta-no-uchiwa')!;
+    expect(equipmentStatDelta(fast, current)).toEqual({ atk: 1, spd: 2 });
+  });
+
   it('りんごは HP が へっているときだけ つかえて、1 つ へる', async () => {
     const c = await content();
     const herb = c.items.get('aomori-ringo')!;
