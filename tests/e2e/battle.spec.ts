@@ -45,8 +45,18 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
   const deadline = Date.now() + 90_000;
   while (Date.now() < deadline && !(await page.locator('.nq-result').isVisible())) {
     // 自分の ターンが 来たら たたかう。タップ待ちの 文は すすめる
-    if (await attack.isVisible()) await attack.first().click({ force: true });
-    else if (await page.locator('.nq-box').isVisible()) await page.locator('.nq-box').click({ force: true });
+    // 文の箱は すぐ 消えて 作り直されるので、クリックが 1回 空振りしても 次の周で やり直す
+    const tap = { force: true, timeout: 2_000 };
+    if (await attack.isVisible())
+      await attack
+        .first()
+        .click(tap)
+        .catch(() => undefined);
+    else if (await page.locator('.nq-box').isVisible())
+      await page
+        .locator('.nq-box')
+        .click(tap)
+        .catch(() => undefined);
     await page.waitForTimeout(250);
   }
   await expect(page.locator('.nq-result')).toBeVisible();
