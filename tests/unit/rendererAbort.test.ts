@@ -6,6 +6,7 @@ import type { QuestionBase, QuestionRenderer, RendererContext } from '../../src/
 import { choiceRenderer } from '../../src/questions/renderers/choice';
 import { experimentRenderer } from '../../src/questions/renderers/experiment';
 import { numberBuildRenderer } from '../../src/questions/renderers/number-build';
+import { pairMatchRenderer } from '../../src/questions/renderers/pair-match';
 import { pictureWordRenderer } from '../../src/questions/renderers/picture-word';
 import { textInputRenderer } from '../../src/questions/renderers/text-input';
 import { setDictionary } from '../../src/ui/i18n';
@@ -45,6 +46,17 @@ const cases: { name: string; renderer: QuestionRenderer; payload: unknown }[] = 
       ],
       answer: 'apple',
       shuffle: false,
+    },
+  },
+  {
+    name: 'pair-match',
+    renderer: pairMatchRenderer,
+    payload: {
+      prompt: 'あわせよう',
+      pairs: [
+        { a: { text: 'A' }, b: { text: 'a' } },
+        { a: { text: 'B' }, b: { text: 'b' } },
+      ],
     },
   },
   {
@@ -107,6 +119,7 @@ describe('question renderer cancellation', () => {
         pictureAlt: 'もんだいの え',
         experimentPredict: 'よそう',
         experimentTry: 'ためす',
+        pairMatchBack: 'ふせてある カード',
       },
     });
   });
