@@ -1237,14 +1237,8 @@ export class BattleScene extends Phaser.Scene {
         return;
       case 'skillLock': {
         playSfx(e.remain > 0 ? 'buff' : 'select');
-        const lockBanner = skillLockBanner(e.remain);
-        await this.showBanner(
-          'skill',
-          t(lockBanner.titleKey),
-          lockBanner.detailKey ? t(lockBanner.detailKey, { n: e.remain }) : undefined,
-          'kokugo',
-          800,
-        );
+        const lockBanner = skillLockBanner(e.remain, t);
+        await this.showBanner('skill', lockBanner.title, lockBanner.detail, 'kokugo', 800);
         return;
       }
       case 'itemUsed':
