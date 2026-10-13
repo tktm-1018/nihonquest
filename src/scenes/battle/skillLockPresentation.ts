@@ -54,11 +54,14 @@ export function lockedCommandOptions(active: boolean): CommandOption[] | null {
 }
 
 /** Scene が翻訳文言の分岐を持たないための表示モデル。 */
-export function skillLockBanner(remain: number): {
-  titleKey: 'battle.skillLockBanner' | 'battle.skillLockEnd';
-  detailKey?: 'battle.skillLockRemain';
-} {
+export function skillLockBanner(
+  remain: number,
+  translate: (key: string, vars?: { n: number }) => string,
+): { title: string; detail?: string } {
   return remain > 0
-    ? { titleKey: 'battle.skillLockBanner', detailKey: 'battle.skillLockRemain' }
-    : { titleKey: 'battle.skillLockEnd' };
+    ? {
+        title: translate('battle.skillLockBanner'),
+        detail: translate('battle.skillLockRemain', { n: remain }),
+      }
+    : { title: translate('battle.skillLockEnd') };
 }
