@@ -383,30 +383,6 @@ const naminoriGai: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-/** イヌボウケンの からだ（S＝キャンバスの 大きさ。40 と 32 で 同じ 形を ちぢめて つかう） */
-const inuParts = (S: number) => {
-  const k = S / 40;
-  const c = (S - 1) / 2;
-  const head = (x: number, y: number) => inEll(x, y, c, 19 * k, 11 * k, 7.5 * k);
-  const earL = (x: number, y: number) => {
-    const t = (y - 8 * k) / (7 * k);
-    return t >= 0 && t <= 1 && x >= c - 9.5 * k - t * 1.5 * k && x <= c - 8 * k + t * 5 * k;
-  };
-  const ear = (x: number, y: number) => earL(x, y) || earL(S - 1 - x, y);
-  const earInL = (x: number, y: number) => {
-    const t = (y - 10.5 * k) / (4.5 * k);
-    return t >= 0 && t <= 1 && x >= c - 8.6 * k && x <= c - 8 * k + t * 3 * k;
-  };
-  const earIn = (x: number, y: number) => earInL(x, y) || earInL(S - 1 - x, y);
-  const muzzle = (x: number, y: number) => inEll(x, y, c, 23.2 * k, 5.5 * k, 3.4 * k);
-  const body = (x: number, y: number) => inEll(x, y, c, 32 * k, 12.5 * k, 7 * k) && y <= S - 2;
-  const leg = (x: number, y: number) =>
-    y >= 30 * k &&
-    y <= S - 2 &&
-    (Math.abs(x - (c - 5 * k)) <= 2.4 * k || Math.abs(x - (c + 5 * k)) <= 2.4 * k);
-  return { head, ear, earIn, muzzle, body, leg };
-};
-
 /** 灯台の 光（あかりの へやから 左右へ ひろがる） */
 const beams = (S: number, cy: number, x0: number) =>
   plot(S, S, (x, y) => {
@@ -418,10 +394,10 @@ const beams = (S: number, cy: number, x0: number) =>
   });
 
 /**
- * イヌボウケン（中ボス）：犬吠埼の 灯台の あかりの へやを かぶった 大きな 白い 犬。金の まどわく、左右へ のびる 灯台の 光、
- * 赤い 首わに 金の ふだ、くるんと まいた しっぽ、足もとに 太平洋の 波。灯台の 屋根に 王冠（ヒカリ）
+ * イヌボウケン（中ボス）：犬吠埼の 灯台の あかりの へやを かぶとに した 大きな 白い 番犬。かぶとの よこから 金の つの、
+ * まん中に 赤い 宝石。くろい くまどりの 中で つり目が 黄色く 光り、きばを むいて ほえる。とげの 赤い 首わ、
+ * 肩を はって ふんばる 前足と くろい つめ、左右へ のびる 灯台の 光、足もとに 太平洋の 波しぶき（ヒカリ）
  */
-const INU = inuParts(40);
 const inubouken: MonsterDesign = {
   size: 40,
   colors: {
@@ -436,83 +412,63 @@ const inubouken: MonsterDesign = {
     Y: NQ.yellow,
     C: NQ.cream,
     Z: NQ.azure,
-    p: NQ.blush,
   },
   rim: { [NQ.white]: NQ.cloud, [NQ.gold]: NQ.ochre, [NQ.azure]: NQ.blue, [NQ.red]: NQ.brick },
   rimDepth: 2,
   layers: [
     { rows: beams(40, 8.5, 13) },
-    // くるんと まいた しっぽ（右）
-    { x: 29, y: 23, rows: ['..WWW..', '.WcccW.', 'WcWWWcW', 'WcW.WcW', 'WcWWccW', '.WccWW.', '..WW...'] },
-    // からだ・前足（つま先の すじ）
-    {
-      rows: plot(40, 40, (x, y) => {
-        if (INU.leg(x, y)) return y >= 37 && (x === 13 || x === 15 || x === 24 || x === 26) ? 'o' : 'W';
-        return INU.body(x, y) ? 'W' : '.';
-      }),
-    },
-    // 足の あいだの かげ・むねの ふわふわ
-    { x: 18, y: 32, rows: ['cccc', '.cc.', '.cc.', '.cc.', '.cc.', '.cc.'] },
-    { x: 15, y: 29, rows: ['.c........', 'c.c....c.c', '........c.'] },
-    // 耳・頭・はなづら
-    {
-      rows: plot(40, 40, (x, y) => {
-        if (INU.earIn(x, y)) return 'c';
-        if (INU.muzzle(x, y)) return 'E';
-        if (INU.ear(x, y) || INU.head(x, y)) return 'W';
-        if (y >= 19 && y <= 25 && (x === 8 || x === 31) && y % 3 !== 0) return 'W';
-        return '.';
-      }),
-    },
-    // 赤い 首わと 金の ふだ
-    { x: 11, y: 26, rows: ['RRRRRRRRRRRRRRRRRR', '.RRRRRRRGGRRRRRRR.', '........GG........'] },
-    // あかりの へや（金の まどわく）・見はらし台・屋根・王冠
+    // 足もとの 波しぶき（左右）
+    { mirror: true, y: 30, rows: ['W...', 'ZW..', 'ZZW.', 'ZZZW', 'ZZZZ', 'ZZZZ', 'ZZZZ', 'ZZZZ', '.ZZZ'] },
+    // かぶと（灯台の あかりの へや）・金の つの・赤い 宝石・顔・きば・とげの 首わ・からだ・前足
     {
       mirror: true,
       rows: [
+        '....G...............',
+        '....GG.............G',
+        '....QGG...........GG',
+        '.....QG..........NNN',
+        '.....QGG........NNNN',
+        '......QGG......NLNNN',
+        '.......QGG....GGGGGG',
+        '........QGG...GYCGYC',
+        '.........QG...GYCGYC',
+        '..........G...GYCGYC',
+        '..........GGNNNNNNNN',
+        '.....W..WWWQGGGGGGRR',
+        '.....WWWWWWWWWWWWWRR',
+        '.....WcWWWWWWWWWWWWW',
+        '....WcWWWWWWWWWWWWWW',
+        '....WcWoooWWWWWWWWcW',
+        '....cWNNNoooooWWWWcW',
+        '...WcNNYYNNNooooWcWW',
+        '..WccNNWYYYYNNNoWWWW',
+        '.WWcWNNNYYYYYoNWWWWW',
+        '..WccWNNNNNNNNWWEEEE',
+        '.WWcWWWWWWWWWWEEEooo',
+        '..WccWWWWWWWWEEEEooo',
+        '...WcWWWWWEooooooooo',
+        '...WccWWWWEoWWoooooo',
+        '....WcWWWWEoWooRRRRR',
+        '....WcWWWWEoooRRRRRR',
+        '.W...cWWWWEoWooooooo',
+        '.WW...cWWWWEoWWEEEEE',
+        '.WcW.GRRRRRRRRRRRRRR',
+        '.WcWGGRRGRRRRGRRRRGG',
+        '.WccWWWWWWWWWWWWWWGG',
+        '.WcWWWWWWWWWWWWWcWGG',
+        '.WcWWWWWWWWWWWWcWWWc',
+        '.cWWWWWWWWWWWWWWcWcW',
+        '.cWWWWWWWWWcWWWWWWcc',
+        '.WWWWWWWWWc.........',
+        '.WWWWWWWWWc.........',
+        '.WoWWoWWoWo.........',
         '....................',
-        '................G..G',
-        '................GGGR',
-        '................QQQQ',
-        '...................N',
-        '...............NNNNN',
-        '..............NLNNNN',
-        '..............GGGGGG',
-        '..............GYCGYC',
-        '..............GYCGYC',
-        '..............GYCGYC',
-        '............NNNNNNNN',
-        '............NLNNLNNL',
       ],
     },
-    // 顔：まゆ・金の 目（3×4）・はな・口・した・ほっぺ
-    {
-      mirror: true,
-      y: 14,
-      rows: [
-        '............ooo.....',
-        '...............oo...',
-        '.............YYY....',
-        '.............YYo....',
-        '.............Yoo....',
-        '.............YYo....',
-        '..........pp........',
-        '.................ooo',
-        '..................oo',
-        '...................o',
-        '.................oo.',
-        '...................p',
-        '...................p',
-      ],
-    },
-    // 足もとの 波（左右）
-    { x: 1, y: 32, rows: ['..WW....', '.WZZW...', 'WZZZZW..', 'ZZZZZZW.', 'ZZZZZZZW', 'ZZZZZZZZ'] },
-    { x: 31, y: 32, rows: ['....WW..', '...WZZW.', '..WZZZZW', '.WZZZZZZ', 'WZZZZZZZ', 'ZZZZZZZZ'] },
   ],
 };
 
-/** イヌボウケン（フィールドに 立つ 32×32）。光の すじは みじかく */
-const INU_F = inuParts(32);
+/** イヌボウケン（フィールドに 立つ 32×32）。バトルの すがたを ちいさく：つの・光る つり目・きば・とげの 首わ */
 const inuboukenField: MonsterDesign = {
   size: 32,
   colors: {
@@ -525,49 +481,45 @@ const inuboukenField: MonsterDesign = {
     R: NQ.red,
     Y: NQ.yellow,
     C: NQ.cream,
-    p: NQ.blush,
   },
   rim: { [NQ.white]: NQ.cloud, [NQ.gold]: NQ.ochre },
   layers: [
-    { rows: beams(32, 7, 10) },
-    { x: 24, y: 19, rows: ['.WWW.', 'WcWcW', 'WcccW', '.WWW.'] },
-    { rows: plot(32, 32, (x, y) => (INU_F.leg(x, y) || INU_F.body(x, y) ? 'W' : '.')) },
-    { x: 15, y: 26, rows: ['cc', 'cc', 'cc', 'cc', 'cc'] },
-    {
-      rows: plot(32, 32, (x, y) => {
-        if (INU_F.earIn(x, y)) return 'c';
-        if (INU_F.muzzle(x, y)) return 'E';
-        return INU_F.ear(x, y) || INU_F.head(x, y) ? 'W' : '.';
-      }),
-    },
-    { x: 9, y: 21, rows: ['RRRRRRRRRRRRRR', '......GG......'] },
+    { rows: beams(32, 6, 10) },
     {
       mirror: true,
       rows: [
+        '...G............',
+        '...GG..........G',
+        '...QGG........NN',
+        '....QG.......NNN',
+        '.....QG.....GGGG',
+        '......QG....GYCG',
+        '.......QG...GYCG',
+        '........GGNNNNNN',
+        '....W.WWWQGGGGRR',
+        '....WcWWWWWWWWWW',
+        '...WcWoooWWWWWWW',
+        '...cNNNNooooWWWW',
+        '..WcNWYYNNNooWWW',
+        '.WWcNNYYYYoNWWEE',
+        '..WcWNNNNNNWWEoo',
+        '.WWcWWWWWWWWEEoo',
+        '..WccWWWWEoooooo',
+        '...WcWWWWEoWWooo',
+        '.W..cWWWWEooRRRR',
+        '.WW..cWWWEoWoooo',
+        '.WcWGRRRRRRRRRRR',
+        '.WcGGRRGRRRRGRGG',
+        '.WccWWWWWWWWWWGG',
+        '.WcWWWWWWWWWWcWW',
+        'WWcWWWWWWWWWcWWc',
+        '.cWWWWWWWWcWWWcW',
+        '.cWWWWWWWcWWWWWW',
+        '.cWWWWWWWc.cccc.',
+        '.WWWWWWWWc......',
+        '.WWWWWWWWc......',
+        '.WoWWoWWoo......',
         '................',
-        '.............G.G',
-        '.............GGR',
-        '.............QQQ',
-        '............NNNN',
-        '...........GGGGG',
-        '...........GYCGY',
-        '...........GYCGY',
-        '..........NNNNNN',
-      ],
-    },
-    {
-      mirror: true,
-      y: 12,
-      rows: [
-        '..........ooo...',
-        '...........YY...',
-        '...........Yo...',
-        '...........Yo...',
-        '.........p......',
-        '..............oo',
-        '...............o',
-        '..............o.',
-        '...............p',
       ],
     },
   ],
@@ -636,48 +588,73 @@ const RYU_ARM = mirrorX(
   tube(
     [
       [19, 23],
-      [14, 26],
-      [10, 24.5],
+      [12, 27],
+      [7, 23],
     ],
-    2.4,
-    1.9,
+    2.8,
+    2.2,
   ),
   48,
 );
 const RYU_HORN = mirrorX(
   tube(
     [
-      [19.5, 8],
-      [17, 4],
-      [13.5, 1.5],
+      [18.5, 9],
+      [14, 5],
+      [10, 3.5],
+      [5.5, 1.5],
     ],
-    1.7,
-    0.7,
+    2.3,
+    0.6,
   ),
   48,
 );
 const RYU_WHISKER = mirrorX(
   tube(
     [
-      [18, 17.5],
-      [12, 20],
-      [7, 19],
-      [5, 16.5],
+      [19, 17.5],
+      [13, 18.5],
+      [8, 16],
+      [6, 12.5],
     ],
     0.55,
     0.45,
   ),
   48,
 );
-const RYU_HEAD = (x: number, y: number) => inEll(x, y, 23.5, 12.5, 10.5, 7.2);
-const RYU_SNOUT = (x: number, y: number) => inEll(x, y, 23.5, 16.6, 5.6, 3);
+/** 竜の 頭（左半分）：とがった とさか、赤い 宝石、太い まゆの ほね、かげの 中で 光る つり目、きばの ならぶ 大きな 口 */
+const RYU_HEAD = [
+  '........................',
+  '......................AA',
+  '......................AD',
+  '...................A..AD',
+  '...................ADDDD',
+  '................AADDDDGG',
+  '..............AADDDDDGRR',
+  '.............ADDDDDDDDGG',
+  '............ADDoooDDDDDD',
+  '...........ADKKKKoooDDDD',
+  '..........ADKYYKKKKoooDD',
+  '..........ADKWYYYYKKKKDD',
+  '..........ADKKYYYYYoKDDD',
+  '...........ADKKKKKKKDTTT',
+  '............ADDDDDDTTToT',
+  '............ADDDDDoooooo',
+  '...........ADDDDDoWWoWWo',
+  '...........ADDDDoWoRRRRR',
+  '...........ADDDDooRRRRRR',
+  '............ADDDoWooWooo',
+  '.............ADDTTTTTTTT',
+  '..............DTTTTTTTTT',
+];
 
 /** しっぽの 先の ひれ・頭の よこの ひれ（ミズの ひれ） */
 const RYU_FIN = ['A.....', 'AAA...', '.AAAA.', 'AAAAAA', '..AAAA', '.AAA..'];
 
 /**
- * ショウユリュウ（県ボス）：野田・銚子の しょうゆの 大だるから 立ちあがる こげ茶の 竜。金の つの と 王冠、
- * ミズの ひれ、長い ひげ、竜の 玉の かわりに 大豆（しょうゆの もと）を にぎる。たるの ふちから しょうゆが たれる（ミズ）
+ * ショウユリュウ（県ボス）：野田・銚子の しょうゆの 大だるから 立ちあがる こげ茶の 竜。うしろへ そりかえる 長い 金の つの、
+ * ひたいに 赤い 宝石、太い まゆの ほねの かげで つり目が 黄色く 光り、きばの ならぶ 口を 大きく あける。首に とげ、
+ * ミズの ひれ、長い ひげ、竜の 玉の かわりに 大豆（しょうゆの もと）を にぎり、反対の 手は つめを ひろげる（ミズ）
  */
 const shoyuRyu: MonsterDesign = {
   size: 48,
@@ -706,7 +683,9 @@ const shoyuRyu: MonsterDesign = {
     },
     { x: 33, y: 1, rows: ['..A..', '.AAA.', 'AAAAA', '.AAA.'] },
     // 頭の よこの ひれ
-    { mirror: true, x: 8, y: 9, rows: RYU_FIN },
+    { mirror: true, x: 4, y: 7, rows: RYU_FIN },
+    // 首の よこの とげ
+    { mirror: true, x: 14, y: 22, rows: ['..A', '.AA', 'AAA', '..A', '.AA', 'AAA'] },
     // 首（おなかは 大豆色の だんだん）
     {
       rows: plot(48, 48, (x, y) => {
@@ -732,42 +711,11 @@ const shoyuRyu: MonsterDesign = {
       rows: ['..SSSS..', '.SEESSS.', 'SEESSSSS', 'SSSSTTSS', 'SSSSSSSS', '.SSSSSS.', '..SSSS..', '.W.W.W..'],
     },
     // 右手の つめ（ひらく）
-    { x: 38, y: 21, rows: ['.W.W', 'W.DD', '.DDD', 'W.DD'] },
+    { x: 39, y: 18, rows: ['W.W.W', '.W.W.', 'DDDDD', 'DDDD.', '.DD..'] },
     // ひげ・つの
     { rows: plot(48, 48, (x, y) => (RYU_HORN(x, y) >= 0 ? 'G' : RYU_WHISKER(x, y) >= 0 ? 'T' : '.')) },
     // 頭
-    {
-      rows: plot(48, 48, (x, y) => {
-        if (RYU_SNOUT(x, y)) return 'T';
-        if (!RYU_HEAD(x, y)) return '.';
-        return litEdge(RYU_HEAD, x, y) ? 'A' : 'D';
-      }),
-    },
-    // 王冠・まゆ・目（3×4）・はなの あな・口と 小さな きば
-    {
-      mirror: true,
-      rows: [
-        '........................',
-        '....................G..G',
-        '....................GGGR',
-        '....................GGGR',
-        '....................QQQQ',
-        '........................',
-        '........................',
-        '...............AAA......',
-        '................AAAA....',
-        '................WYYY....',
-        '................YYYo....',
-        '................YYoo....',
-        '................YYoo....',
-        '........................',
-        '........................',
-        '.....................o..',
-        '........................',
-        '..................oooooo',
-        '...................W....',
-      ],
-    },
+    { mirror: true, rows: RYU_HEAD },
     // しょうゆの しずく
     { x: 2, y: 8, rows: ['.K', 'KK', 'KA'] },
     { x: 44, y: 30, rows: ['.K', 'KK', 'AK'] },
@@ -775,21 +723,35 @@ const shoyuRyu: MonsterDesign = {
   ],
 };
 
-/** ショウユリュウ 後半：しょうゆが ぐつぐつ にえたち、からだが 赤く かがやく。目は 白く 光り、たるの まわりに うずと ゆげ */
+/** たるの よこで もえる ほのお（左半分。F＝だいだい の しん、G＝金の ほのお） */
+const RYU_FLAME = [
+  '..A.....',
+  '..A...A.',
+  '.AFA..A.',
+  '.AA...A.',
+  '.AFA..AA',
+  'AFGFA.AF',
+  'AFGGFAAF',
+  'AFGGGFFA',
+  'AFGYGGFA',
+  '.AFGGFA.',
+  '..AAAA..',
+];
+
+/**
+ * ショウユリュウ 後半：しょうゆが ぐつぐつ にえたち、からだが まっ赤に やける。かげの 中の 目は 白く 光り、
+ * たるの 左右と 頭の うしろから ほのおが 立ちのぼる
+ */
 const shoyuRyuP0: MonsterDesign = {
   ...shoyuRyu,
-  colors: { ...shoyuRyu.colors, D: NQ.brick, A: NQ.vermilion, Y: NQ.white, C: NQ.cloud },
+  colors: { ...shoyuRyu.colors, D: NQ.brick, A: NQ.vermilion, Y: NQ.white, F: NQ.orange },
   rim: { [NQ.brick]: NQ.bark, [NQ.sand]: NQ.tan, [NQ.gold]: NQ.ochre },
   layers: [
     ...shoyuRyu.layers,
-    // ゆげ
-    { x: 1, y: 1, rows: ['.WW', 'WCW', '.W.'] },
-    { x: 43, y: 12, rows: ['.WW', 'WWC', 'CW.'] },
     // にえたつ あわ
     { x: 13, y: 30, rows: ['.W......W.......W...', 'W.W....W.W.....W.W..'] },
-    // たるの まわりの うず
-    { x: 1, y: 37, rows: ['.WWW', 'W...', 'W.W.', '.W..'] },
-    { x: 43, y: 37, rows: ['WWW.', '...W', '.W.W', '..W.'] },
+    // たるの 左右の ほのお
+    { mirror: true, x: 1, y: 31, rows: RYU_FLAME },
   ],
 };
 

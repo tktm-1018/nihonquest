@@ -280,11 +280,16 @@ interface KeepStyle {
 /** 天守（下から 1 だんずつ：かべ → ひさし。いちばん上に むね と しゃちほこ） */
 function keep(l: Grid, cx: number, by: number, tiers: Array<[number, number]>, s: KeepStyle): void {
   let y = by;
-  tiers.forEach(([hw, wh]) => {
+  tiers.forEach(([hw, wh], i) => {
     box(l, cx - hw, y - wh + 1, cx + hw - 1, y, s.wall);
     box(l, cx + hw - 1, y - wh + 1, cx + hw - 1, y, s.wsh);
     if (s.band) box(l, cx - hw, y - wh + 1, cx + hw - 1, y - wh + 1, s.band);
-    for (let x = cx - hw + 1; x < cx + hw - 1; x += 2) dot(l, x, y - 1, s.win);
+    // まどは 左右 たいしょうに。2 だんめの まん中は ちどりはふが くるので あける
+    for (let x = cx - hw + 1; x < cx; x += 2) {
+      if (i === 1 && tiers.length > 1 && x >= cx - 3) continue;
+      dot(l, x, y - 1, s.win);
+      dot(l, 2 * cx - 1 - x, y - 1, s.win);
+    }
     y -= wh;
     eave(l, cx - hw, cx + hw - 1, y, s.roof, s.edge);
     y -= 2;
@@ -299,9 +304,10 @@ function keep(l: Grid, cx: number, by: number, tiers: Array<[number, number]>, s
   // 1 だんめの 屋根の 三角（ちどりはふ）
   if (tiers.length > 1) {
     const ry = by - tiers[0]![1] - 1;
+    box(l, cx - 3, ry, cx + 2, ry, s.roof);
     box(l, cx - 2, ry - 1, cx + 1, ry - 1, s.roof);
     box(l, cx - 1, ry - 2, cx, ry - 2, s.roof);
-    box(l, cx - 1, ry - 1, cx, ry - 1, s.wall);
+    box(l, cx - 1, ry - 1, cx, ry - 1, s.edge);
   }
 }
 

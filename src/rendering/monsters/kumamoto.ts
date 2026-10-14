@@ -1,7 +1,25 @@
 /** 熊本県の モンスター（手描き。docs/06 §4・§6.3〜6.5 の 規格） */
 import { NQ } from '../palette';
-import type { MonsterDesign } from './design';
+import type { Layer, MonsterDesign } from './design';
 import { BEARD_FACE, HELMET, lord } from './lastbosses';
+
+/**
+ * ボスの 部品（うで・頭など）を ink で ふちどって 重ねる 2 まいの レイヤー。体の 上に 重ねても くっきり 分かれる。
+ * mirror の 部品は 地図を まん中（右はし）まで 書き、まん中の がわは ふちどらない
+ */
+function part(rows: readonly string[], x: number, y: number, mirror = true): Layer[] {
+  const w = Math.max(...rows.map((r) => r.length));
+  const at = (i: number, j: number) => (rows[j]?.[i] ?? '.') !== '.';
+  const edge = Array.from({ length: rows.length + 2 }, (_, j) =>
+    Array.from({ length: mirror ? w + 1 : w + 2 }, (_, i) =>
+      !at(i - 1, j - 1) && (at(i - 2, j - 1) || at(i, j - 1) || at(i - 1, j - 2) || at(i - 1, j)) ? 'o' : '.',
+    ).join(''),
+  );
+  return [
+    { mirror, x: x - 1, y: y - 1, rows: edge },
+    { mirror, x, y, rows },
+  ];
+}
 
 /** シマダマ：まんまるの スイカ。こい みどりの しまもよう、上に つるの ヘタと 葉っぱ（モリ） */
 const shimadama: MonsterDesign = {
@@ -239,292 +257,350 @@ const ebiguruma: MonsterDesign = {
 };
 
 /**
- * キンドウロウ（中ボス）：山鹿灯籠まつりの 金色の 灯籠が 動きだした すがた。六角の 屋根、
- * ぼんやり 光る まど、紙の うで。てっぺんに 王冠（ヒカリ）
+ * キンドウロウ（中ボス）：山鹿灯籠まつりの 金色の 灯籠が 動きだした すがた。六角の 屋根の はしは つのの ように はね上がり、
+ * てっぺんに 赤い 宝珠。まっ暗な まどの 中で 目が ぎらりと 光り、口から 火の 光。金の よろいの うでに つめ、
+ * 紙の すそから 火が ちろちろ（ヒカリ）
  */
 const kindouro: MonsterDesign = {
   size: 40,
   colors: {
     G: NQ.gold,
-    Q: NQ.ochre,
-    Y: NQ.cream,
     W: NQ.paper,
-    c: NQ.cloud,
+    Y: NQ.yellow,
+    C: NQ.cream,
+    O: NQ.orange,
+    V: NQ.vermilion,
     R: NQ.red,
-    B: NQ.bark,
-    p: NQ.blush,
   },
   rim: { [NQ.gold]: NQ.ochre, [NQ.paper]: NQ.cloud },
   rimDepth: 2,
   layers: [
+    // 屋根の つのの 先に ゆれる 火
+    { mirror: true, y: 1, rows: ['.V', '.VO', 'VOV', '.V'] },
+    // 屋根・灯籠の まど・紙の すそ
     {
       mirror: true,
       rows: [
         '....................',
-        '................G..G',
-        '................GGGR',
-        '................QQQQ',
-        '..............GGGGGG',
-        '...........GGGGGGGGG',
-        '........GGGGGGGGGGGG',
-        '......GGGGGGGGGGGGGG',
-        '.....GQGGQGGQGGQGGQG',
-        '.....GGGGGGGGGGGGGGG',
-        '........GGGGGGGGGGGG',
-        '........GYYYYYYYYYYY',
-        '........GYYYBBBYYYYY',
-        '........GYYYBBBYYYYY',
-        '........GYYYYYYYYYYY',
-        '........GGGGGGGGGGGG',
-        '........GGGGGGGGGGGG',
-        '........GYYYYYYYYYYY',
-        '........GYYYYYYYYYYY',
-        '........GYYYYYYYYYYY',
-        '........GGGGGGGGGGGG',
+        '...................R',
+        '..................RR',
+        '...................G',
+        '..................GG',
+        '.G...............GGG',
+        '.GG.............GGGG',
+        '..GG...........GGGGG',
+        '..GGG.......GGGGGGGG',
+        '...GGGGGGGGGGGGGGGGG',
+        '....GGGGGGGGGGGGGGGG',
+        '.......ooooooooooooo',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
+        '.......GGGGGGGGGGGGG',
         '.......GGGGGGGGGGGGG',
         '......GGGGGGGGGGGGGG',
-        '......GQGGQGGQGGQGGQ',
-        '......GGGGGGGGGGGGGG',
-        '........WWWWWWWWWWWW',
         '.......WWWWWWWWWWWWW',
-        '......WWWWWWWWWWWWWW',
+        '.......WWWWWWWWWWWWW',
         '......RRRRRRRRRRRRRR',
+        '......WWWWWWWWWWWWWW',
         '.....WWWWWWWWWWWWWWW',
         '.....WWWWWWWWWWWWWWW',
         '....WWWWWWWWWWWWWWWW',
         '....WWWWWWWWWWWWWWWW',
         '...WWWWWWWWWWWWWWWWW',
         '...WWWWWWWWWWWWWWWWW',
-        '...WWWWWWWWWWWWWWWWW',
-        '....cccccccccccccccc',
-        '......GGGG..........',
+        '..WWOWWWWWOWWWWWWOWW',
+        '..OVOOVVOVOOVOOVVOVO',
+        '...V..V..V..V...V..V',
+        '....................',
       ],
     },
-    // かお（まゆ・3×4 の 目・ほっぺ・口）
+    // すその 金の おび・紙の ほね
+    { mirror: true, y: 25, rows: ['......GoGGoGGoGGoGGo'] },
     {
       mirror: true,
-      y: 11,
+      y: 29,
       rows: [
-        '..........oo........',
-        '............oo......',
-        '............WWW.....',
-        '............WWo.....',
-        '............WWo.....',
-        '............Woo.....',
-        '..........pp........',
-        '................oooo',
-        '.................ooo',
+        '.......G....G....G..',
+        '.......G....G....G..',
+        '.......G....G....G..',
+        '......G....G.....G..',
+        '......G....G.....G..',
+        '.....G....G......G..',
+        '.....G....G......G..',
       ],
     },
-    // 紙の うで（ひらひら）
+    // 金の よろいの うでと つめ
+    ...part(
+      [
+        '....GGG............',
+        '...GGGG............',
+        '..GGGG.............',
+        '.GGGG..............',
+        '.GoGG..............',
+        '.GGG...............',
+        'GGGG...............',
+        'GoGo...............',
+        'G.G.G..............',
+      ],
+      1,
+      14,
+    ),
+    // 内がわから 光る まどに うかぶ いかりの 顔（つり上がった 目・赤い ひとみ・きばの 口）
     {
       mirror: true,
-      y: 17,
+      x: 8,
+      y: 13,
       rows: [
-        '...WWW..............',
-        '..WWW...............',
-        '.WWW................',
-        '.WW.................',
-        '.WWW................',
-        '.WW.................',
+        'OOOOOOOOOOOO',
+        'OYYYYYYYYYYY',
+        'OYoYYYYYYYYY',
+        'OYoooYYYYYYY',
+        'OYYooooYYYYY',
+        'OYYoRRooYYYY',
+        'OYYYooooYYYY',
+        'OYYoYYYYYYYY',
+        'OYYoWWoooWWo',
+        'OYYYoWoooWoo',
+        'OOOOoooWoooW',
       ],
     },
   ],
 };
 
-/** キンドウロウ（フィールドに立つ 32×32） */
+/** キンドウロウ（フィールドに立つ 32×32）：バトルの すがたを 小さく した もの */
 const kindouroField: MonsterDesign = {
   size: 32,
   colors: {
     G: NQ.gold,
-    Q: NQ.ochre,
-    Y: NQ.cream,
     W: NQ.paper,
-    c: NQ.cloud,
+    Y: NQ.yellow,
+    C: NQ.cream,
+    O: NQ.orange,
+    V: NQ.vermilion,
     R: NQ.red,
-    B: NQ.bark,
-    p: NQ.blush,
   },
   rim: { [NQ.gold]: NQ.ochre, [NQ.paper]: NQ.cloud },
   layers: [
+    { mirror: true, y: 4, rows: ['.V', 'VOV', '.V'] },
     {
       mirror: true,
+      y: 2,
       rows: [
         '................',
-        '............G..G',
-        '............GGGR',
-        '............QQQQ',
-        '..........GGGGGG',
-        '.......GGGGGGGGG',
-        '.....GGGGGGGGGGG',
-        '.....GQGGQGGQGGQ',
-        '.....GGGGGGGGGGG',
-        '......GYYYYYYYYY',
-        '......GYYBBBYYYY',
-        '......GYYBBBYYYY',
-        '......GYYYYYYYYY',
+        '...............R',
+        '..............RR',
+        '..............GG',
+        '.G..........GGGG',
+        '.GG.......GGGGGG',
+        '..GGG..GGGGGGGGG',
+        '...GGGGGGGGGGGGG',
+        '......oooooooooo',
         '......GGGGGGGGGG',
-        '......GYYYYYYYYY',
-        '......GYYYYYYYYY',
         '......GGGGGGGGGG',
-        '.....GGGGGGGGGGG',
-        '.....GQGGQGGQGGQ',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
+        '......GGGGGGGGGG',
         '.....GGGGGGGGGGG',
         '......WWWWWWWWWW',
-        '.....WWWWWWWWWWW',
         '.....RRRRRRRRRRR',
+        '.....WWWWWWWWWWW',
         '....WWWWWWWWWWWW',
         '....WWWWWWWWWWWW',
         '...WWWWWWWWWWWWW',
         '...WWWWWWWWWWWWW',
-        '...WWWWWWWWWWWWW',
-        '....cccccccccccc',
-        '.....GGGG.......',
+        '..WWOWWWWOWWWWOW',
+        '..OVOVVOVOOVVOVO',
+        '...V..V..V...V..',
       ],
     },
-    {
-      mirror: true,
-      y: 9,
-      rows: [
-        '........oo......',
-        '.........WW.....',
-        '.........Wo.....',
-        '.......pWWo.....',
-        '..............oo',
-        '...............o',
+    ...part(
+      [
+        '...GG..........',
+        '..GGG..........',
+        '.GGG...........',
+        '.GoG...........',
+        'GGG............',
+        'GoGo...........',
+        'G.G............',
       ],
-    },
+      1,
+      13,
+    ),
     {
       mirror: true,
-      y: 14,
-      rows: ['..WWW...........', '.WWW............', '.WWW............', '.WW.............'],
+      x: 7,
+      y: 12,
+      rows: ['OOOOOOOOO', 'OYoYYYYYY', 'OYoooYYYY', 'OYYoRooYY', 'OYYYoooYY', 'OYYoWoooW', 'OOOOooWoo'],
     },
   ],
 };
 
-/** 天守（黒い 屋根と 白い かべ、金の しゃちほこ）と 武者返しの 石垣（左半分） */
-const MUSHA_KEEP = [
-  '........................',
-  '........................',
-  '........................',
-  '........................',
-  '........................',
-  '.............G..........',
-  '............GGG.....NNNN',
-  '............GGG..NNNNNNN',
-  '...........GGG.NNNNNNNNN',
-  '..............NNNNNNNNNN',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '..............WWWWWWWWWW',
-  '...........NNNNNNNNNNNNN',
-  '..........NNNNNNNNNNNNNN',
-  '.........NNNNNNNNNNNNNNN',
-  '........NNNNNNNNNNNNNNNN',
-  '.........WWWWWWWWWWWWWWW',
-  '.........WWWWWWWWWWWWWWW',
-  '.........WWWWWWWWWWWWWWW',
-];
-
+/** 下ほど 広がる「武者返し」の 石垣（左半分、y 24〜46） */
 const MUSHA_WALL = [
-  '........ssssssssssssssss',
+  '............ssssssssssss',
+  '............gggggggggggg',
+  '...........gggsgggsgggsg',
+  '...........ggggggggggggg',
+  '...........ggggggggggggg',
+  '..........ssssssssssssss',
+  '..........gggggggggggggg',
+  '..........gggsgggsgggsgg',
+  '.........ggggggggggggggg',
+  '.........sssssssssssssss',
   '........gggggggggggggggg',
-  '.......gggsgggsgggsgggsg',
-  '.......gggggggggggggggg',
+  '........gggsgggsgggsgggs',
+  '.......ggggggggggggggggg',
+  '.......sssssssssssssssss',
   '......gggggggggggggggggg',
-  '......ssssssssssssssssss',
-  '.....gggggggggggggggggss',
-  '.....gggsgggsgggsgggsggg',
+  '......gggsgggsgggsgggsgg',
+  '.....ggggggggggggggggggg',
+  '.....sssssssssssssssssss',
+  '....gggggggggggggggggggg',
+  '....gggsgggsgggsgggsgggs',
   '....gggggggggggggggggggg',
   '....ssssssssssssssssssss',
-  '...gggggggggggggggggggss',
-  '...gggsgggsgggsgggsggggg',
-  '..gggggggggggggggggggggg',
-  '..ssssssssssssssssssssss',
-  '.ggggggggggggggggggggggg',
-  '.gggsgggsgggsgggsgggsggg',
-  '.gggggggggggggggggggggss',
-  '.ssssssssssssssssssssss',
-  '.gggggggggggggggggggggg',
-  '.gggsgggsgggsgggsgggsgg',
-  '.gggggggggggggggggggggg',
+  '....gggggggggggggggggggg',
 ];
 
 /**
- * ムシャガエシ（県ボス）：熊本城の 石垣から 生まれた 岩の 巨人。頭は 黒い 屋根と 白い かべの 天守、
- * 金の しゃちほこと 王冠、からだは 下ほど 広がる「武者返し」の 石垣（ツチ）
+ * ムシャガエシ（県ボス）：熊本城の 石垣から 生まれた 岩の 巨人。黒い 天守の 屋根が かぶとに なり、
+ * 金の しゃちほこが 大きな つのの ように そり立つ。かげの 顔に 黄色い 目が ぎらりと 光り、白い 歯を くいしばる。
+ * 屋根がわらの かたあて、石の 大きな こぶし、からだは 下ほど 広がる「武者返し」の 石垣（ツチ）
  */
 const mushagaeshi: MonsterDesign = {
   size: 48,
   colors: {
     N: NQ.night,
     W: NQ.paper,
-    c: NQ.cloud,
     g: NQ.gray,
     s: NQ.silver,
-    S: NQ.slate,
     G: NQ.gold,
-    Q: NQ.ochre,
     R: NQ.red,
+    Y: NQ.yellow,
   },
   rim: { [NQ.gray]: NQ.slate, [NQ.paper]: NQ.cloud, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    { mirror: true, rows: MUSHA_KEEP },
-    { mirror: true, y: 25, rows: MUSHA_WALL },
-    // 石の うで
-    {
-      mirror: true,
-      y: 26,
-      rows: [
-        '..ggg',
-        '.gggg',
-        '.gggg',
-        '.gsgg',
-        '.gggg',
-        '.gggg',
-        '.gsgg',
-        '.gggg',
-        '.gggg',
-        '.gggg',
-        '.gssg',
-        '.gggg',
+    { mirror: true, y: 24, rows: MUSHA_WALL },
+    // 石の 大きな うでと こぶし
+    ...part(
+      [
+        '..ggggg................',
+        '..gsggg................',
+        '..ggggg................',
+        '.gggggg................',
+        '.ggsggg................',
+        '.gggggg................',
+        '.gggggg................',
+        'gggggggg...............',
+        'gsggsggg...............',
+        'gggggggg...............',
+        'gsggsggg...............',
+        'gggggggg...............',
+        '.gggggg................',
       ],
-    },
-    // 天守の まどの 目・口
-    {
-      mirror: true,
-      y: 11,
-      rows: [
-        '...............ooo......',
-        '...............GGG......',
-        '...............GGo......',
-        '...............GGo......',
-        '...............Goo......',
-        '........................',
-        '.....................ooo',
+      1,
+      25,
+    ),
+    // 屋根がわらの かたあて（黒い 屋根と 白い かべ）
+    ...part(
+      [
+        '.......NNNN............',
+        '....NNNNNNNNN..........',
+        '.NNNNNNNNNNNNNN........',
+        'NNNNNNNNNNNNNNN........',
+        '.sssssssssssss.........',
+        '.WWWWWWWWWWWW..........',
+        '.WWoWWWoWWWW...........',
+        '.WWoWWWoWWW............',
+        '..WWWWWWWW.............',
       ],
-    },
-    // 王冠
+      1,
+      16,
+    ),
+    // 金の しゃちほこの つの
     {
       mirror: true,
       y: 1,
       rows: [
-        '....................G..G',
-        '....................GGGG',
-        '....................GGGR',
-        '....................QQQQ',
+        '.........GG.G',
+        '..........GGG',
+        '...........GG',
+        '...........GGG',
+        '............GGG',
+        '.............GGGG',
+        '..............GGGGG',
+        '................GGGG',
+      ],
+    },
+    // 天守の 屋根の かぶと
+    ...part(
+      [
+        '..........NNNNNNNN',
+        '........NNNNNNNNNN',
+        '......NNNNNNNNNNNN',
+        'N...NNNNNNNNNNNNNN',
+        'NNNNNNNNNNNNNNNNNN',
+        '.NNNNNNNNNNNNNNNNN',
+        '...sssssssssssssss',
+      ],
+      6,
+      8,
+    ),
+    // かげの 顔と 白かべの ほお当て
+    ...part(
+      [
+        'WWWNNNNNNNNNN',
+        'WoWNNNNNNNNNN',
+        'WWWNNNNNNNNNN',
+        'WoWNNNNNNNNNN',
+        'WWWNNNNNNNNNN',
+        'WoWNNNNNNNNNN',
+        'WWWNNNNNNNNNN',
+        '.WWWNNNNNNNNN',
+        '...WWNNNNNNNN',
+      ],
+      11,
+      15,
+    ),
+    // 赤い 宝石・つり上がった 光る 目・くいしばった 歯
+    {
+      mirror: true,
+      x: 14,
+      y: 9,
+      rows: [
+        '..........',
+        '.........R',
+        '........RR',
+        '.........R',
+        '..........',
+        '.........',
+        '.........',
+        '.YY......',
+        '.YYYYW...',
+        '..YYYYY..',
+        '.........',
+        '...oWoWoW',
+        '....WoWoW',
       ],
     },
   ],
 };
 
-/** ムシャガエシ 後半（ヒノ）：阿蘇の 火が 石垣の すきまから もえあがり、目が 白く 光る */
+/** ムシャガエシ 後半（ヒノ）：阿蘇の 火が 石垣の すきまから もえあがり、目は 白く 光る。両がわに 炎 */
 const mushagaeshiHot: MonsterDesign = {
   ...mushagaeshi,
   colors: { ...mushagaeshi.colors, s: NQ.vermilion, V: NQ.vermilion, A: NQ.apricot, C: NQ.cream },
@@ -534,20 +610,13 @@ const mushagaeshiHot: MonsterDesign = {
     {
       mirror: true,
       x: 1,
-      y: 33,
-      rows: ['..C.', '..A.', '.VAV', 'VVAV', '.C..', '.A..', 'VAV.', 'VAV.'],
+      y: 37,
+      rows: ['..C.', '..A.', '.VAV', 'VVAV', '.CA.', 'VAAV', 'VAAV'],
     },
+    // かたの 上に ゆらめく 炎
+    { mirror: true, x: 2, y: 9, rows: ['..V.', '.VAV', '.ACA', 'VACAV'] },
     // 白く 光る 目
-    {
-      mirror: true,
-      y: 12,
-      rows: [
-        '...............CCC......',
-        '...............CCo......',
-        '...............CCo......',
-        '...............Coo......',
-      ],
-    },
+    { mirror: true, x: 14, y: 16, rows: ['.CC......', '.CCCCC...', '..CCCCC..'] },
   ],
 };
 

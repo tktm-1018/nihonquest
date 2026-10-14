@@ -430,169 +430,175 @@ const tsukiyoMusasabi: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-/**
- * デンパオー（中ボス）：東京タワーの 鉄骨の ロボット。赤と 白の しまの 鉄骨、大展望台の 顔（黒い バイザーに 金の 目）、
- * 頭から のびる 上の 塔と アンテナ、左右へ ひろがる 電波。塔の 根もとに 王冠（カゼ → 後半 ヒカリ）
- */
-const towerParts = (S: number) => {
-  const k = S / 40;
-  const c = (S - 1) / 2;
-  const legTop = 21 * k;
-  const body = (x: number, y: number) => {
-    if (y < legTop || y > S - 2) return false;
-    const hw = 5 * k + (y - legTop) * 0.72;
-    const arch = y >= 29 * k && Math.abs(x - c) <= (y - 28 * k) * 0.8;
-    return Math.abs(x - c) <= Math.min(hw, 17 * k) && !arch;
-  };
-  const upper = (x: number, y: number) =>
-    y >= 5 * k && y <= 13 * k && Math.abs(x - c) <= 1.6 * k + (y - 5 * k) * 0.2;
-  const arm = mirrorX(
-    tube(
-      [
-        [c - 9 * k, 17 * k],
-        [c - 13 * k, 22 * k],
-        [c - 15 * k, 27 * k],
-      ],
-      2 * k,
-      1.8 * k,
-    ),
-    S,
+/** 手がきの 鉄骨（'V'）に ななめの 格子（'r'）を 入れる。x0・y0＝この 地図の 左上の 位置 */
+const truss = (rows: readonly string[], step: number, x0 = 0, y0 = 0): string[] =>
+  rows.map((r, y) =>
+    [...r]
+      .map((ch, x) =>
+        ch === 'V' && ((x + x0 + y + y0) % step === 0 || (x + x0 - y - y0 + 400) % step === 0) ? 'r' : ch,
+      )
+      .join(''),
   );
-  const waves = (x: number, y: number) => {
-    const d = Math.hypot(x - c, y - 4 * k);
-    const side = Math.abs(y - 4 * k) < Math.abs(x - c) * 0.55;
-    return side && y >= 1 && [6, 9.5, 13].some((r) => Math.abs(d - r * k) < 0.75)
-      ? d > 11 * k
-        ? 'A'
-        : 'M'
-      : '';
-  };
-  return { body, upper, arm, waves, c };
+
+const DENPA_COLORS = {
+  V: NQ.vermilion,
+  r: NQ.brick,
+  W: NQ.white,
+  c: NQ.cloud,
+  N: NQ.night,
+  Y: NQ.yellow,
+  R: NQ.red,
+  G: NQ.gold,
+  Q: NQ.ochre,
+  K: NQ.sky,
 };
-const TOWER = towerParts(40);
-/** 鉄骨の もよう：赤（V）の 中に ななめの 格子（o）、ところどころ 白い 帯 */
-const lattice = (x: number, y: number, bands: number[], step: number) =>
-  bands.includes(y) ? 'W' : (x + y) % step === 0 || (x - y + 80) % step === 0 ? 'o' : 'V';
+
+/**
+ * デンパオー（中ボス）：東京タワーの 鉄骨の ロボット。赤と 白の 鉄骨の 大きな かたに 金の とげ、
+ * 大展望台の 顔は 黒い バイザーに つりあがった 光る 目と 鉄の きば。頭の 塔に 金の つのかざりと 赤い ランプ、
+ * 大きな 白い こぶしを さげて 4 本の 足で ふんばる。まわりに 電波の いなずま（カゼ → 後半 ヒカリ）
+ */
 const denpaOh: MonsterDesign = {
   size: 40,
-  colors: {
-    V: NQ.vermilion,
-    W: NQ.white,
-    N: NQ.night,
-    Y: NQ.yellow,
-    K: NQ.sky,
-    G: NQ.gold,
-    Q: NQ.ochre,
-    R: NQ.red,
-    M: NQ.mint,
-    A: NQ.aqua,
-  },
+  colors: DENPA_COLORS,
   rim: { [NQ.vermilion]: NQ.brick, [NQ.white]: NQ.cloud, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    { rows: plot(40, 40, (x, y) => TOWER.waves(x, y) || '.') },
-    // 下の 塔（4 本の 足の あいだは アーチ）
-    { rows: plot(40, 40, (x, y) => (TOWER.body(x, y) ? lattice(x, y, [26, 27, 33, 34], 6) : '.')) },
-    // うで（鉄骨）と こぶし
-    { rows: plot(40, 40, (x, y) => (TOWER.arm(x, y) >= 0 ? ((x + y) % 4 === 0 ? 'W' : 'V') : '.')) },
-    { x: 2, y: 26, rows: ['.WWW', 'WWWW', 'WWWW', '.WW.'] },
-    { x: 34, y: 26, rows: ['WWW.', 'WWWW', 'WWWW', '.WW.'] },
-    // 上の 塔と アンテナ
-    { rows: plot(40, 40, (x, y) => (TOWER.upper(x, y) ? lattice(x, y, [9], 4) : '.')) },
-    { x: 19, y: 1, rows: ['VV', 'WW', 'VV', 'WW'] },
-    { x: 17, y: 5, rows: ['WWWWWW', 'WKKKKW'] },
-    // 大展望台の 顔（黒い バイザーに 金の 目 3×4）
     {
       mirror: true,
-      y: 13,
-      rows: [
-        '..........VVVVVVVVVV',
-        '.........WWWWWWWWWWW',
-        '.........WKWKWKWKWKW',
-        '.........NNNNNNNNNNN',
-        '.........NNNYYYNNNNN',
-        '.........NNNYYoNNNNN',
-        '.........NNNYooNNNNN',
-        '.........NNNYooNNNNN',
-        '.........WWWWWWWWWWW',
-        '..........VVVVVVVVVV',
-      ],
+      rows: truss(
+        [
+          '....................',
+          '...................Y',
+          '..................GR',
+          '..K...............GR',
+          '.KWK...............W',
+          '..KK.......G.......V',
+          '...KW......GG.....VV',
+          '..KK.......GGG....WW',
+          '..K.........GGQ...VV',
+          '.............GGQ.VVV',
+          '..............GGQWWW',
+          '...............GQVVV',
+          '...........WWWWWWWWW',
+          '..........VVVVVVVVVV',
+          '..G..G...NNNNNNNNNNN',
+          '.GVGGVG.NNNNNNNNNNNN',
+          '.VVVVVVVNRRNNNNNNNNN',
+          '.VVVVVVVNYYRRNNNNNNN',
+          '.WWWWWWWNNYYYRRNNNNN',
+          '.VVVVVVVNNNNYYYYNNNN',
+          '.VVVVVVVVNNNNNNNNNNN',
+          '.VVVVVVVVVVVVooooooo',
+          '.VVVV.VVVVVVVoWoWoWo',
+          '.VVVV..VVVVVVooooooo',
+          '.VVVV...VVVVVVVVVVVV',
+          '.WWWW....WWWWWWWWWWW',
+          '.WWWWW...VVVVVVVVVVV',
+          '.WcWcWW..VVVVVVVVVVV',
+          '.WWWWWW..VVVVVVVV...',
+          '.cWWWWc..VVVVVVV....',
+          '..cccc..VVVVVVV.....',
+          '.......WWWWWWW......',
+          '.......VVVVVV.......',
+          '......VVVVVVV.......',
+          '......VVVVVV........',
+          '.....WWWWWWW........',
+          '.....VVVVVV.........',
+          '....NNNNNNNN........',
+          '...NNNNNNNNN........',
+        ],
+        5,
+      ),
     },
-    // 王冠（上の 塔の 根もと）
-    { mirror: true, y: 10, rows: ['...............G...G', '...............GGGGR', '...............QQQQQ'] },
   ],
 };
 
-/** デンパオー（フィールドに 立つ 32×32） */
-const TOWER_F = towerParts(32);
+/** デンパオー（フィールドに 立つ 32×32）。同じ ロボットを ちいさく */
 const denpaOhField: MonsterDesign = {
   size: 32,
-  colors: {
-    V: NQ.vermilion,
-    W: NQ.white,
-    N: NQ.night,
-    Y: NQ.yellow,
-    K: NQ.sky,
-    G: NQ.gold,
-    Q: NQ.ochre,
-    R: NQ.red,
-    M: NQ.mint,
-    A: NQ.aqua,
-  },
+  colors: DENPA_COLORS,
   rim: { [NQ.vermilion]: NQ.brick, [NQ.gold]: NQ.ochre },
   layers: [
-    { rows: plot(32, 32, (x, y) => TOWER_F.waves(x, y) || '.') },
-    { rows: plot(32, 32, (x, y) => (TOWER_F.body(x, y) ? lattice(x, y, [21, 27], 5) : '.')) },
-    { rows: plot(32, 32, (x, y) => (TOWER_F.arm(x, y) >= 0 ? 'V' : '.')) },
-    { rows: plot(32, 32, (x, y) => (TOWER_F.upper(x, y) ? 'V' : '.')) },
-    { x: 15, y: 1, rows: ['VV', 'WW', 'VV'] },
     {
       mirror: true,
-      y: 10,
-      rows: [
-        '........VVVVVVVV',
-        '.......WWWWWWWWW',
-        '.......NNNNNNNNN',
-        '.......NNYYNNNNN',
-        '.......NNYoNNNNN',
-        '.......NNYoNNNNN',
-        '.......WWWWWWWWW',
-      ],
+      rows: truss(
+        [
+          '................',
+          '...............Y',
+          '..............GR',
+          '.K.............W',
+          '..KK....G......V',
+          '.KK.....GG....VV',
+          '.K.......GGQ..WW',
+          '..........GGQVVV',
+          '...........GQVVV',
+          '........VVVVVVVV',
+          '.......WWWWWWWWW',
+          '..G..GNNNNNNNNNN',
+          '.GVGGVNRRNNNNNNN',
+          '.VVVVVNYYRRNNNNN',
+          '.WWWWWNNYYYRRNNN',
+          '.VVVVVNNNNNYYYNN',
+          '.VVVVVVNNNNNNNNN',
+          '.VVVVVVVVVVooooo',
+          '.VVV.VVVVVVoWoWo',
+          '.VVV..VVVVVooooo',
+          '.WWWW..WWWWWWWWW',
+          '.WcWcW.VVVVVVVVV',
+          '.WWWWW.VVVVVV...',
+          '.cWWWc.VVVVV....',
+          '..ccc.VVVVV.....',
+          '.....WWWWWW.....',
+          '.....VVVVV......',
+          '....VVVVVV......',
+          '....WWWWW.......',
+          '...NNNNNNN......',
+          '..NNNNNNNN......',
+        ],
+        5,
+      ),
     },
-    { mirror: true, y: 7, rows: ['............G..G', '............GGGR', '............QQQQ'] },
   ],
 };
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/** 三原山の ぬしの 形：火山の 形の 頭（上に 火口）、岩の かた、太い うで と 足 */
+/** 三角の 岩の とげ（てっぺん ax, ay・下の はし by・下の はばの 半分 hw） */
+const spire = (ax: number, ay: number, by: number, hw: number) => (x: number, y: number) =>
+  y >= ay && y <= by && Math.abs(x - ax) <= (hw * (y - ay)) / (by - ay) + 0.4;
+const mirrorB = (f: (x: number, y: number) => boolean) => (x: number, y: number) => f(x, y) || f(47 - x, y);
+
+/** 三原山の ぬしの 形：火山の 頭（上に 火口）を まえに つきだし、とげの はえた 岩の かたを もりあげる。太い うで・大きな こぶし・ふんばる 足 */
 const MIHARA = {
-  head: (x: number, y: number) => y >= 6 && y <= 19 && Math.abs(x - 23.5) <= 4.5 + (y - 6) * 0.62,
-  crater: (x: number, y: number) => inEll(x, y, 23.5, 6.6, 3.6, 1.2),
-  shoulder: (x: number, y: number) => inEll(x, y, 11, 22, 7.5, 6.5) || inEll(x, y, 36, 22, 7.5, 6.5),
-  torso: (x: number, y: number) => inEll(x, y, 23.5, 30, 12.5, 10.5),
+  head: (x: number, y: number) => y >= 8 && y <= 23 && Math.abs(x - 23.5) <= 4 + (y - 8) * 0.5,
+  crater: (x: number, y: number) => inEll(x, y, 23.5, 8.4, 3.4, 1.1),
+  shoulder: mirrorB(
+    (x, y) => inEll(x, y, 11, 20, 8.5, 6.5) || spire(6, 6, 17, 3.2)(x, y) || spire(12.5, 9, 16, 2.6)(x, y),
+  ),
+  torso: (x: number, y: number) => inEll(x, y, 23.5, 30, 13.5, 10),
   arm: mirrorX(
     tube(
       [
-        [10, 24],
-        [6.5, 31],
-        [6.5, 36],
+        [9, 22],
+        [5.5, 29],
+        [5.5, 34],
       ],
-      4.2,
-      3.6,
+      4.6,
+      4,
     ),
     48,
   ),
-  fist: (x: number, y: number) => inEll(x, y, 6.5, 38.5, 4.5, 3.8) || inEll(x, y, 40.5, 38.5, 4.5, 3.8),
+  fist: mirrorB((x, y) => inEll(x, y, 6, 38, 5, 4.3)),
   leg: (x: number, y: number) =>
-    y >= 38 && y <= 46 && Math.abs(x - 23.5) >= 2.5 && Math.abs(x - 23.5) <= 10 + (y >= 44 ? 1 : 0),
+    y >= 37 && y <= 46 && Math.abs(x - 23.5) >= 2.5 && Math.abs(x - 23.5) <= 10.5 + (y >= 44 ? 1.5 : 0),
   crack: mirrorX(
     tube(
       [
-        [17, 23],
+        [16, 22],
         [20, 27],
-        [17.5, 31],
-        [21, 36],
+        [17, 31],
+        [21, 37],
       ],
       0.6,
       0.5,
@@ -616,8 +622,9 @@ const TSUBAKI = [
 ];
 
 /**
- * ミハラノヌシ（県ボス）：伊豆大島の 三原山の ぬし。火山の 形の 頭の 火口に 王冠、黒い 溶岩の 大きな からだに 光る ひび、
- * 両かたに 大島の 赤い つばきの 花。火口の まわりに ゆげ（ツチ → 後半 ヒノ）
+ * ミハラノヌシ（県ボス）：伊豆大島の 三原山の ぬし。火山の 頭の 火口から 溶岩が ふきあがり、とげの 岩の かたを もりあげて
+ * まえかがみに かまえる 黒い 溶岩の 大男。こい かげの 中で つりあがった 目が 光り、ひらいた 口に 岩の きばと 溶岩。
+ * からだに 光る ひび、両かたに 大島の 赤い つばきの 花（ツチ → 後半 ヒノ）
  */
 const miharaNoNushi: MonsterDesign = {
   size: 48,
@@ -639,9 +646,21 @@ const miharaNoNushi: MonsterDesign = {
   rim: { [NQ.gold]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    // ゆげ（火口の 左右）
-    { x: 10, y: 1, rows: ['..WW...', '.WWcW..', 'WWccWW.', '.WccW..'] },
-    { x: 31, y: 1, rows: ['...WW..', '..WcWW.', '.WWccWW', '..WccW.'] },
+    // 火口から ふきあがる 溶岩と 火の 粉
+    {
+      mirror: true,
+      rows: [
+        '........................',
+        '..............V.....V..V',
+        '...................VA.VA',
+        '..........V.......rVAVAY',
+        '..................rVAAAY',
+        '...................rVAAY',
+        '.............V......rVAY',
+        '....................rVAY',
+        '.....................VAY',
+      ],
+    },
     {
       rows: plot(
         48,
@@ -661,56 +680,68 @@ const miharaNoNushi: MonsterDesign = {
     { rows: plot(48, 48, rock(MIHARA.head)) },
     {
       rows: plot(48, 48, (x, y) =>
-        MIHARA.crater(x, y) ? (inEll(x, y, 23.5, 6.6, 2.4, 0.6) ? 'A' : 'V') : '.',
+        MIHARA.crater(x, y) ? (inEll(x, y, 23.5, 8.4, 2.2, 0.6) ? 'Y' : 'V') : '.',
       ),
     },
-    // 王冠（火口に のせる）
+    // 顔：こい かげ・太い 岩の まゆ・つりあがった 光る 目・きばの 口と 溶岩
     {
       mirror: true,
-      y: 1,
+      y: 11,
       rows: [
-        '....................G..G',
-        '....................GGGR',
-        '....................GGGR',
-        '....................QQQQ',
-      ],
-    },
-    // 顔：まゆ・光る 目（3×4）・溶岩の 口
-    {
-      mirror: true,
-      y: 9,
-      rows: [
-        '................oo......',
-        '..................ooo...',
-        '.................YYY....',
-        '.................YYo....',
-        '.................Yoo....',
-        '.................Yoo....',
+        '................LL......',
+        '................oLLLL...',
+        '................ooooLLLo',
+        '................RYYoooNN',
+        '................oRYYYooN',
+        '.................ooRYYoN',
+        '...................ooooN',
         '........................',
-        '.....................VVV',
-        '....................VAAA',
+        '..................oooooo',
+        '..................oWWoVV',
+        '...................WoVAA',
+        '...................oVAAY',
+        '..................oWoAAA',
+        '..................oWWooo',
+        '...................oo...',
       ],
     },
+    // こぶしの つめ（白い 岩）
+    { mirror: true, x: 1, y: 40, rows: ['.W.W.W....', 'cW.W.W....'] },
     // かたの つばき
-    { x: 4, y: 15, rows: TSUBAKI },
-    { x: 32, y: 15, rows: TSUBAKI.map((r) => [...r].reverse().join('')) },
+    { x: 4, y: 17, rows: TSUBAKI },
+    { x: 32, y: 17, rows: TSUBAKI.map((r) => [...r].reverse().join('')) },
     // むねの つばき
-    { x: 20, y: 27, rows: ['.RRRR..', 'RRrRRR.', 'RRGGRr.', 'RrGGRR.', '.RRRR..'] },
+    { x: 20, y: 28, rows: ['.RRRR..', 'RRrRRR.', 'RRGGRr.', 'RrGGRR.', '.RRRR..'] },
   ],
 };
 
-/** ミハラノヌシ 後半（ヒノ）：岩が 赤く 焼け、ひびと 火口が まぶしく かがやき、かたから 火が 立つ。目は 白く */
+/** ミハラノヌシ 後半（ヒノ）：岩が 赤く 焼け、火口が 大噴火。かたの とげから 火が 立ち、ひびが 足もとまで はしる。目は 白く 光る */
 const miharaNoNushiP0: MonsterDesign = {
   ...miharaNoNushi,
   colors: { ...miharaNoNushi.colors, L: NQ.brick, A: NQ.cream, Y: NQ.white, X: NQ.apricot },
   layers: [
-    // かたと 頭の 火
-    { x: 3, y: 6, rows: ['...V....', '..VXV...', '..VXV...', '.VXAXV..', '.VXAXV..', 'VVXAXVV.'] },
-    { x: 37, y: 6, rows: ['....V...', '...VXV..', '...VXV..', '..VXAXV.', '..VXAXV.', '.VVXAXVV'] },
-    ...miharaNoNushi.layers.slice(2),
+    // 大噴火（火口の 上に 大きな 火の 柱）
+    {
+      mirror: true,
+      rows: [
+        '........................',
+        '..........V.....VX...VX.',
+        '...............rVX..rVXA',
+        '.......V.......rVXXrVXAA',
+        '................rVXXXAAY',
+        '.................rVXXAAY',
+        '............V.....rVXAAY',
+        '..................rVXAAY',
+        '...................rVXAY',
+      ],
+    },
+    // かたの とげの 火
+    { x: 2, y: 1, rows: ['...V....', '..VXV...', '..VXV...', '.VXAXV..', '.VXAXV..'] },
+    { x: 38, y: 1, rows: ['....V...', '...VXV..', '...VXV..', '..VXAXV.', '..VXAXV.'] },
+    ...miharaNoNushi.layers.slice(1),
     // 足もとまで 走る ひび
-    { x: 15, y: 39, rows: ['V......', '.V.....', 'V......', '.V.....'] },
-    { x: 31, y: 39, rows: ['......V', '.....V.', '......V', '.....V.'] },
+    { x: 15, y: 38, rows: ['V......', '.V.....', 'V......', '.V.....', 'V......'] },
+    { x: 31, y: 38, rows: ['......V', '.....V.', '......V', '.....V.', '......V'] },
   ],
 };
 

@@ -493,71 +493,113 @@ const oomoriSoba: MonsterDesign = {
 // ───────────────────────── 中ボス ─────────────────────────
 
 /**
- * カラスジョウ（中ボス）：松本城の 黒い 天守が 動きだした。黒い 板の かべと 白い しっくい、
- * かどが はねた 屋根（とがった 耳）、金の しゃちほこと 金に 光る 窓の 目、石垣の 足（ヤミ → ツチ）
+ * カラスジョウ（中ボス）：松本城の 黒い 天守が 動きだした。黒い 板の かべと 白い しっくい、金の しゃちほこの つの、
+ * 黒い 板の 顔に 金に 光る つり目、しっくいの 口に きば、左右に カラスの 黒い つばさ、石垣の 足（ヤミ → ツチ）
  */
 const karasuColors = {
   K: NQ.night,
   k: NQ.hairBlack,
   P: NQ.paper,
   N: NQ.slate,
-  n: NQ.gray,
   S: NQ.silver,
+  n: NQ.gray,
   V: NQ.violet,
   G: NQ.gold,
-  Q: NQ.ochre,
+  Y: NQ.yellow,
   R: NQ.red,
+  W: NQ.white,
 };
 const karasuJo: MonsterDesign = {
   size: 40,
   colors: karasuColors,
-  rim: { [NQ.silver]: NQ.gray, [NQ.paper]: NQ.cloud },
+  rim: { [NQ.silver]: NQ.gray, [NQ.paper]: NQ.cloud, [NQ.slate]: NQ.night },
   rimDepth: 2,
   layers: [
+    // カラスの つばさ
+    {
+      mirror: true,
+      y: 4,
+      rows: [
+        '.K..................',
+        '.KK.................',
+        '.KKK................',
+        '.KKKK...............',
+        '.KKKKK..............',
+        '.KKVKKK.............',
+        '.KKKVKKK............',
+        '.KKKKVKKK...........',
+        '.KKVKKVKKK..........',
+        '.KKKVKKVKKK.........',
+        '.KKKKVKKVKKK........',
+        '.K.KKKVKKVKK........',
+        '.K.KKKKVKKVK........',
+        '...K.KKKKKKK........',
+        '...K.K.KKKKK........',
+        '.....K.K.KKK........',
+        '.......K..KK........',
+        '..........K.........',
+      ],
+    },
     {
       mirror: true,
       rows: [
         '....................',
-        '................G..G',
-        '................GGGR',
-        '..........G.....QQQQ',
-        '..........GG..NNNNNN',
+        '...........G........',
+        '...........GG.......',
+        '............GG......',
+        '............GGG.....',
+        '.............GG.NNNN',
+        '..............NNNNNN',
+        '.............NNNNNNN',
         '...........NNNNNNNNN',
-        '..........NNnnnnnnnn',
-        '...........PPPPPPPPP',
-        '...........PKKKKKKKK',
-        '...........PKGGGKKKK',
-        '...........PKGGoKKKK',
-        '...........PKGGoKKKK',
-        '...........PKGooKKKK',
-        '.......N...PKKKKKKKK',
+        '..........NNNNNNNNNN',
+        '............KKKKKKKK',
+        '............KKKKKKKK',
+        '............KKKKKKKK',
+        '............KKKKKKKK',
+        '............KKKKKKKK',
+        '............PPPPPPPP',
+        '............PPPPPPPP',
+        '............PPPPPPPP',
+        '.........NNNNNNNNNNN',
+        '........NNNNNNNNNNNN',
         '.......NNNNNNNNNNNNN',
-        '........NnnnnnnnnnNN',
-        '.........PPPPPPPPPPP',
-        '.........PKkKKkKKkKK',
-        '.........PKKKKKKKKKK',
-        '....N....PKkKKkKKooo',
-        '....NN...PKKKKKKKKKK',
-        '....NNNNNNNNNNNNNNNN',
-        '.....NnnnnnnnnnnnnNN',
-        '......VKKKKKKKKKKKKK',
-        '......VKkKKKkKKKkKKK',
-        '......VKKKKKKKKKKKKK',
-        '......VKkKKKkKKKkKKK',
-        '......VKKKKKKKKKKKKK',
-        '......VKKKKKKKKKKKKK',
+        '..........KKKKKKKKKK',
+        '..........KkKKKkKKKK',
+        '..........KKKKKKKKKK',
+        '..........PPPPPPPPPP',
+        '.........NNNNNNNNNNN',
+        '........NNNNNNNNNNNN',
+        '.........KKKKKKKKKKK',
+        '.........KkKKKkKKKkK',
+        '.........KKKKKKKKKKK',
+        '........SSSSSSSSSSSS',
+        '........SnSSSnSSSSnS',
+        '.......SSSSSSSSSSSSS',
+        '.......SSSnSSSSnSSSS',
+        '......SSSSSSSSSSSSSS',
+        '......SSnSSSSSnSSSSS',
         '.....SSSSSSSSSSSSSSS',
-        '.....SnSSSnSSSSnSSSS',
-        '....SSSSSSSSSSSSSSSS',
-        '....SSSnSSSSnSSSSSS.',
-        '...SSSSSSSSSSSSSSS..',
-        '...SSnSSSSSnSSSSSS..',
-        '..SSSSSSSSSSSSSSS...',
-        '..SSSSnSSSSSnSSSS...',
-        '..SSSSSSSSSSSSSSS...',
-        '..nnnnnnnnnnnnnnn...',
+        '.....SSSSnSSSSSnSSSS',
       ],
     },
+    // 屋根の まん中の 赤い 宝石
+    { mirror: true, x: 18, y: 7, rows: ['GG', 'GR', '.G'] },
+    // 金に 光る つり目
+    {
+      mirror: true,
+      y: 10,
+      rows: [
+        '...........ooo......',
+        '............ooooo...',
+        '............GGGoooo.',
+        '............GYYYGGo.',
+        '.............GGGGG..',
+        '..............GG....',
+      ],
+    },
+    // しっくいの 口と きば
+    { mirror: true, y: 16, rows: ['.............ooooooo', '.............oWoWWoW', '..............oWooWo'] },
   ],
 };
 
@@ -565,50 +607,73 @@ const karasuJo: MonsterDesign = {
 const karasuJoField: MonsterDesign = {
   size: 32,
   colors: karasuColors,
-  rim: { [NQ.silver]: NQ.gray, [NQ.paper]: NQ.cloud },
+  rim: { [NQ.silver]: NQ.gray, [NQ.slate]: NQ.night },
   layers: [
     {
       mirror: true,
+      y: 4,
       rows: [
-        '................',
-        '............G..G',
-        '............GGGR',
-        '........G...QQQQ',
-        '........GG.NNNNN',
-        '.........NNNNNNN',
-        '.........PPPPPPP',
-        '.........PKGGKKK',
-        '.........PKGoKKK',
-        '.........PKGoKKK',
-        '.....N...PKKKKKK',
-        '.....NNNNNNNNNNN',
-        '......PPPPPPPPPP',
-        '......PKkKKkKKoo',
-        '...N..PKKKKKKKKK',
-        '...NNNNNNNNNNNNN',
-        '....VKKKKKKKKKKK',
-        '....VKkKKkKKKkKK',
-        '....VKKKKKKKKKKK',
-        '....VKKKKKKKKKKK',
-        '...SSSSSSSSSSSSS',
-        '...SnSSSnSSSnSSS',
-        '..SSSSSSSSSSSSSS',
-        '..SSSnSSSSnSSS..',
-        '.SSSSSSSSSSSSS..',
-        '.SSnSSSSnSSSSS..',
-        '.SSSSSSSSSSSSS..',
-        '.nnnnnnnnnnnnn..',
-        '................',
+        '.K..............',
+        '.KK.............',
+        '.KKK............',
+        '.KKVK...........',
+        '.KKKVK..........',
+        '.KKVKVK.........',
+        '.KKKVKVK........',
+        '.K.KKVKVK.......',
+        '...K.KKKK.......',
+        '...K.K.KK.......',
+        '.....K..K.......',
       ],
-      y: 1,
     },
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '.........G......',
+        '.........GG.....',
+        '..........GG....',
+        '...........G.NNN',
+        '...........NNNNN',
+        '.........NNNNNNN',
+        '........NNNNNNNN',
+        '.........KKKKKKK',
+        '.........KKKKKKK',
+        '.........KKKKKKK',
+        '.........PPPPPPP',
+        '.........PPPPPPP',
+        '.......NNNNNNNNN',
+        '......NNNNNNNNNN',
+        '........KKKKKKKK',
+        '........KkKKkKKK',
+        '........PPPPPPPP',
+        '.......NNNNNNNNN',
+        '........KKKKKKKK',
+        '........KkKKkKKk',
+        '.......SSSSSSSSS',
+        '.......SnSSSnSSS',
+        '......SSSSSSSSSS',
+        '......SSnSSSSnSS',
+        '.....SSSSSSSSSSS',
+        '.....SSSnSSSSnSS',
+        '.....SSSSSSSSSSS',
+        '.....nnnnnnnnnnn',
+      ],
+    },
+    { mirror: true, x: 14, y: 6, rows: ['GG', 'GR'] },
+    {
+      mirror: true,
+      y: 8,
+      rows: ['.........oo.....', '..........ooo...', '..........GYGo..', '...........GG...'],
+    },
+    { mirror: true, y: 11, rows: ['...........ooooo', '...........oWoWW'] },
   ],
 };
 
 // ───────────────────────── 県ボス ─────────────────────────
 
 /**
- * 羽根：根もと (bx, by) から 角度 deg（真上 0、左が −）へ 長さ len・はば wid。先は まるい。
+ * 羽根：根もと (bx, by) から 角度 deg（真上 0、左が −）へ 長さ len・はば wid。先は とがる。
  * 下がわの ふちを かげ C に して、となりの 羽根と わける
  */
 function feather(
@@ -621,6 +686,7 @@ function feather(
   const ux = Math.sin(a);
   const uy = -Math.cos(a);
   const half = wid / 2;
+  const tip = len - half * 2;
   return Array.from({ length: h }, (_, y) =>
     Array.from({ length: w }, (_, x) => {
       if (x < 1 || y < 1) return '.';
@@ -628,121 +694,153 @@ function feather(
       const dy = y + 0.5 - by;
       const t = dx * ux + dy * uy;
       const s = dx * -uy + dy * ux;
-      const over = t - (len - half);
-      const lim = over > 0 ? Math.sqrt(Math.max(0, half * half - over * over)) : half;
+      const lim = t > tip ? half * (1 - (t - tip) / (len - tip)) : half;
       if (t < 0 || t > len || Math.abs(s) > lim) return '.';
       return s < -half / 3 ? 'C' : 'W';
     }).join(''),
   );
 }
 
-/** ライチョウの 頭と からだ（左半分。まるい 冬の まっ白な 羽、目の 上の 赤い とさか、目の 黒い すじ、黒い くちばし、よこに のぞく 黒い 尾） */
+/** ライチョウの 頭と からだ（左半分。とがった 冠羽、白い 羽の むね、羽毛の 足） */
 const RAICHO = [
   '........................',
-  '...................G...G',
-  '...................GG.GG',
-  '...................GGGGR',
-  '...................GGGGR',
-  '.................WWQQQQQ',
+  '........................',
+  '........................',
+  '....................W...',
+  '..................W.WW.W',
+  '.................WWWWWWW',
+  '................WWWWWWWW',
   '...............WWWWWWWWW',
   '..............WWWWWWWWWW',
   '.............WWWWWWWWWWW',
-  '.............WWWRRRRRWWW',
-  '.............WWWWRRRWWWW',
-  '.............WWNNeeeNNWW',
-  '.............WWNNeeoNNWW',
-  '.............WWWNeeoNWWW',
-  '.............WWWWeooWWNN',
-  '.............WWWWWWWWWNN',
-  '..............WWWWWWWWWN',
+  '.............WWWWWWWWWWW',
+  '.............WWWWWWWWWWW',
+  '.............WWWWWWWWWWW',
+  '.............WWWWWWWWWWW',
+  '..............WWWWWWWWWW',
+  '..............WWWWWWWWWW',
+  '...............WWWWWWWWW',
   '..............WWWWWWWWWW',
   '............WWWWWWWWWWWW',
-  '...........WWCWWCWWCWWWW',
-  '..........WWWWWWWWWWWWWW',
-  '..........WWCWWCWWCWWCWW',
-  '.........WWWWWWWWWWWWWWW',
-  '.........WWCWWCWWCWWCWWW',
-  '.........WWWWWWWWWWWWWWW',
-  '.........WWCWWCWWCWWCWWW',
-  '.........WWWWWWWWWWWWWWW',
-  '.........WWCWWCWWCWWCWWW',
-  '.........WWWWWWWWWWWWWWW',
-  '..........WWCWWCWWCWWCWW',
-  '..........WWWWWWWWWWWWWW',
-  '...........WWCWWCWWCWWWW',
   '...........WWWWWWWWWWWWW',
-  '............WWWWWWWWWWWW',
-  '..........NNNWWWWWWWWWWW',
-  '.........NNsNNWWWWWWWWWW',
-  '........NNsNNNNWWWWWWWWW',
-  '........N.N.NN..WWWWWWW.',
+  '..........WWWWWWWWWWWWWW',
+  '..........WWWWCWWWWWWWWW',
+  '..........WWWWWCCWWWWWWW',
+  '..........WWWWWWWCCWWWWC',
+  '...........WWWWWWWWCCWCC',
+  '...........WWWCWWWWWWCWW',
+  '...........WWWWCCWWWWWWW',
+  '............WWWWWCCWWWWC',
+  '............WWWWWWWCCWCC',
+  '.............WWWWWWWWCWW',
+  '.............WWWWWWWWWWW',
+  '..............WWWWWWWWWW',
+  '...............WWWWWWWWW',
+  '................WWWWWWWW',
+  '................WWWWWWWW',
 ];
-/** ひろげた つばさ（5 まいの 羽根を おうぎの ように ひろげる。左半分） */
+/** 大きく ふりあげた つばさ（5 まいの 羽根を 上へ おうぎの ように ひろげる。左半分） */
 const RAICHO_WING = (
   [
-    [13, 21, -22, 20, 4.6],
-    [12, 22, -40, 17, 4.6],
-    [12, 23, -58, 12.5, 4.4],
-    [12, 24, -76, 11, 4.2],
-    [12, 26, -96, 10, 4],
+    [15, 22, -4, 16, 4.6],
+    [14, 22, -20, 22, 5],
+    [14, 22, -37, 19, 5],
+    [14, 23, -54, 14, 4.8],
+    [14, 25, -72, 11, 4.4],
   ] as const
 ).map(([bx, by, deg, len, wid]) => feather(24, 48, [bx, by, deg, len], wid));
-/** 羽毛で おおわれた 足（黒い つめ） */
+/** 部品の まわりの 輪郭（ring を 24×48 の 左半分に おさめる） */
+const edge = (rows: readonly string[]) =>
+  ring(rows)
+    .slice(1, 49)
+    .map((r) => r.slice(1, 25));
+/** 羽毛で おおわれた 足と 金の つめ */
 const RAICHO_FOOT = [
-  '..WWWW',
-  '.WWCWW',
-  '.WWWWW',
-  '.WCWWC',
-  '.WWWWW',
-  'WWCWWW',
-  'WWWWWW',
-  'WCWWCW',
-  'WWWWWW',
-  'NWNWNW',
+  '..WWWW..',
+  '.WWCWW..',
+  '.WWWWW..',
+  '.WCWWC..',
+  '.WWWWW..',
+  'WWCWWW..',
+  'WWWWWW..',
+  'GWGWGWG.',
+  'G.G.G.G.',
 ];
-/** 小さな いなずま */
-const BOLT = ['...YY', '..YY.', '.YYYY', '..YY.', '.YY..', 'YY...', 'Y....'];
+/** いなずま */
+const BOLT = ['....YY', '...YY.', '..YY..', '.YYYYY', '...YY.', '..YY..', '.YY...', 'YY....', 'Y.....'];
 
-/** イナズマライチョウ（県ボス）：北アルプスの ライチョウの 王。まっ白な 羽を おうぎの ように ひろげ、目の 上に 赤い とさか、まわりに いなずま（カゼ） */
+/** イナズマライチョウ（県ボス）：北アルプスの ライチョウの 王。まっ白な つばさを 頭の 上へ ふりあげ、赤い とさかの 怒りまゆ、黒い 目の すじの 中で 光る 目、かぎの くちばし、金の つめ、まわりに いなずま（カゼ） */
 const raichoColors = {
   W: NQ.white,
-  C: NQ.cloud,
+  C: NQ.silver,
   N: NQ.night,
   s: NQ.slate,
   R: NQ.red,
-  e: NQ.white,
   G: NQ.gold,
   Q: NQ.ochre,
   Y: NQ.yellow,
+  e: NQ.white,
 };
 const inazumaRaicho: MonsterDesign = {
   size: 48,
   colors: raichoColors,
-  rim: { [NQ.white]: NQ.cloud, [NQ.yellow]: NQ.ochre },
+  rim: { [NQ.white]: NQ.cloud, [NQ.silver]: NQ.slate, [NQ.yellow]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    // ひろげた つばさ・まるい からだ・羽毛の 足
-    ...RAICHO_WING.map((rows) => ({ mirror: true, rows })),
+    // ふりあげた つばさ・からだ・羽毛の 足
+    ...RAICHO_WING.flatMap((rows) => [
+      { mirror: true, rows: edge(rows) },
+      { mirror: true, rows },
+    ]),
     { mirror: true, rows: RAICHO },
-    { mirror: true, x: 13, y: 36, rows: RAICHO_FOOT },
-    // いなずま（頭の よこ と 足もと）
-    { mirror: true, x: 8, y: 0, rows: ring(BOLT) },
-    { mirror: true, x: 9, y: 1, rows: BOLT },
-    { mirror: true, x: 1, y: 30, rows: ring(BOLT) },
-    { mirror: true, x: 2, y: 31, rows: BOLT },
+    { mirror: true, x: 14, y: 37, rows: RAICHO_FOOT },
+    // 赤い とさか（怒りまゆ）と 黒い 目の すじ・光る 目
+    {
+      mirror: true,
+      y: 8,
+      rows: [
+        '.............RR.........',
+        '.............RRRRR......',
+        '..............RRRRRRR...',
+        '.............NNNNNNNNN..',
+        '.............NYYYNNNNN..',
+        '.............NYeeYYYN...',
+        '..............NYYYYYN...',
+        '...............NNNNN....',
+      ],
+    },
+    // かぎの くちばし
+    {
+      mirror: true,
+      y: 11,
+      rows: [
+        '....................NNNN',
+        '...................NssNN',
+        '...................NsNNN',
+        '....................NNNN',
+        '.....................NNN',
+        '.....................NNN',
+        '......................NN',
+        '.......................N',
+      ],
+    },
+    // いなずま（足もと）
+    { mirror: true, x: 1, y: 34, rows: ring(BOLT) },
+    { mirror: true, x: 2, y: 35, rows: BOLT },
   ],
 };
 
-/** イナズマライチョウ 後半（ヒカリ）：いなずまが 白く 光り、羽の ふちが 金に 光り、目が 光る */
+/** イナズマライチョウ 後半（ヒカリ）：つばさの ふちが 金に 光り、いなずまが 白く 光り、目が 白く 光る。頭の 上にも いなずま */
 const inazumaRaichoP0: MonsterDesign = {
   ...inazumaRaicho,
   colors: { ...raichoColors, C: NQ.yellow, e: NQ.cream, Y: NQ.cream, c: NQ.cream },
   rim: { [NQ.white]: NQ.cream, [NQ.cream]: NQ.gold },
   layers: [
     ...inazumaRaicho.layers,
-    { mirror: true, x: 1, y: 40, rows: ['.c.', 'cGc', '.c.'] },
-    { mirror: true, x: 6, y: 42, rows: ['.c.', 'cGc', '.c.'] },
-    { mirror: true, x: 15, y: 1, rows: ['.c.', 'cGc', '.c.'] },
+    { mirror: true, x: 13, y: 12, rows: ['.cc', '.ccccc', '..cccc'] },
+    { mirror: true, x: 16, y: 0, rows: ring(['.YY', 'YY.', '.YY', 'YY.']) },
+    { mirror: true, x: 17, y: 1, rows: ['.YY', 'YY.', '.YY', 'YY.'] },
+    { mirror: true, x: 1, y: 44, rows: ['.c.', 'cGc', '.c.'] },
   ],
 };
 

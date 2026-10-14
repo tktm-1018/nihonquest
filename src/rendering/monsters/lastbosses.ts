@@ -66,52 +66,54 @@ export const SKIN = { F: NQ.skinLight, f: NQ.skinMid, W: NQ.white };
  * 頭：からだ ≒ 1：3.6。かたはば 26、こしは 16、顔は 12 ドット。うでは 胴から はなして 人の かたちに 見せる。前立て（かぶとの かざり）は head の 上の 行を そのまま つかう。
  */
 const HUMAN_HELMET = ['................NNNNNNNN', '...............NNLNNNNNN', '...............NLNNNNNNN'];
+// 2026-10-12「ボスが 強そうじゃない」：口もとを 面頬（めんぽお。きばの ある 面）に、かたは 大袖、うしろに 陣羽織の すそ
+// 顔は かぶとの かげで くらく、目だけが 光る（!）。口もとは きばの ある 面頬（めんぽお）
 const HUMAN_FACE = [
   '..............GGGGGGGGGG',
-  '...............NNNFFFFFF',
-  '...............NNNoooFFF',
-  '...............NNNFWoFFF',
-  '...............NNNFFFFFF',
-  '...............NNNfFFFoo',
-  '................NNffffff',
+  '...............NNNoooooo',
+  '...............NNN!!oooo',
+  '...............NNNo!!!oo',
+  '...............NNNKKKKKK',
+  '...............NNNKWoWoW',
+  '................NNoKKKKK',
 ];
 const HUMAN_BEARD_FACE = [
   '..............GGGGGGGGGG',
-  '...............NNNFFFFFF',
-  '...............NNNoooFFF',
-  '...............NNNFWoFFF',
-  '...............NNNFFFFFF',
-  '...............NNNfFMMoo',
-  '................NNfMMMMM',
+  '...............NNNoooooo',
+  '...............NNN!!oooo',
+  '...............NNNo!!!oo',
+  '...............NNNKKMMMM',
+  '...............NNNMWoWoW',
+  '................NNoMMMMM',
 ];
-/** 人の すがたの よろいの からだ（左半分。y 21〜46） */
+/** 人の すがたの よろいの からだ（左半分。y 21〜46）。% は うしろに ひるがえる 陣羽織（色は colors['%'] で かえられる） */
 export const HUMAN_BODY = [
   '..................GGGGGG',
-  '...........SSSSSKKKKKKKK',
-  '..........SKKKKSKKKKKKKK',
-  '..........SKKKKSKSSSSSSS',
-  '..........GGGGGSKKKRRKKK',
-  '..........SKKKKSKKKKRRKK',
-  '..........SKKKKSKSSSSSSS',
-  '..........GGGGG.KKKKKKKK',
-  '...........HHH..KKKKKKKK',
-  '...........HHH..SSSSSSSS',
-  '...........HHH..RRRRRRRR',
-  '...........HHH.TTTTTTTTT',
-  '...........FFF.TSSTTSSTT',
-  '...........FFFTTTTTTTTTT',
-  '.............TSSTTSSTTSS',
-  '.............TTTTTTTTTTT',
-  '.............GGGGGGGGGGG',
-  '...............KKKKK....',
-  '...............KKKKK....',
-  '..............HHHHH.....',
-  '..............HHHHH.....',
-  '..............HHHHH.....',
-  '..............HHHHH.....',
-  '..............HHHHH.....',
-  '.............KKKKKK.....',
-  '.............KKKKKK.....',
+  '.....SSSSSSSSSKKKKKKKKKK',
+  '....SKKKKKKKKSKKKKKKKKKK',
+  '...SKKKKKKKKKSKSSSSSSSSS',
+  '...GGGGGGGGGGSKKKRRKKKKK',
+  '...SKKKKKKKKKSKKKKRRKKKK',
+  '...%SKKKKKKKKSKSSSSSSSSS',
+  '...%GGGGGGGGG.KKKKKKKKKK',
+  '..%%%.HHHHH...KKKKKKKKKK',
+  '..%%%.HHHHH...SSSSSSSSSS',
+  '..%%%.HHHHH...RRRRRRRRRR',
+  '..%%%.HHHHH..TTTTTTTTTTT',
+  '..%%%.FFFFF..TSSTTSSTTSS',
+  '.%%%%.FFFFF.TTTTTTTTTTTT',
+  '.%%%%.......TSSTTSSTTSST',
+  '.%%%%%......TTTTTTTTTTTT',
+  '.%%%%%......GGGGGGGGGGGG',
+  '.%%%%%%.......KKKKKK....',
+  '%%%%%%%.......KKKKKK....',
+  '%%%%%%%%.....HHHHHHH....',
+  '%%%%%%%%.....HHHHHHH....',
+  '%%%%%%%%%....HHHHHH.....',
+  '%.%%.%%.%...HHHHHHH.....',
+  '............HHHHHHH.....',
+  '...........KKKKKKKK.....',
+  '..........KKKKKKKKK.....',
 ];
 /** 人の すがたの 頭（かぶと＋顔。y 11 から） */
 export const humanHead = (beard = false): string[] => [
@@ -120,7 +122,7 @@ export const humanHead = (beard = false): string[] => [
 ];
 
 /** するどい 目（人の すがたの 顔に かさねる）：外が 上がった まゆ と 白目 */
-const SHARP_EYES: Layer = { mirror: true, x: 18, y: 15, rows: ['o..', 'Foo', 'FWo'] };
+const SHARP_EYES: Layer = { mirror: true, x: 18, y: 16, rows: ['!!o', 'o!!'] };
 
 /**
  * head（むかしの 22 行の 頭：前立て ＋ HELMET ＋ FACE か BEARD_FACE）から 前立てだけ とりだして、人の すがたに のせる。
@@ -155,7 +157,8 @@ export const lord = (
   extra: Layer[] = [],
 ): MonsterDesign => ({
   size: 48,
-  colors: { ...SKIN, ...colors },
+  // 陣羽織は ひもの 赤（R）、目は 金（G）を つかいまわして 色数を ふやさない
+  colors: { ...SKIN, '%': colors.R ?? NQ.red, '!': colors.Y ?? colors.G ?? NQ.gold, ...colors },
   rim: { [NQ.gold]: NQ.ochre, [NQ.skinLight]: NQ.skinMid, ...rim },
   rimDepth: 2,
   layers: [...humanLayers(head), ...extra],

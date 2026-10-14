@@ -1,9 +1,26 @@
 /** 鹿児島県の モンスター（手描き。docs/06 §4・§6.3〜6.5 の 規格） */
 import { NQ } from '../palette';
-import type { MonsterDesign } from './design';
+import type { Layer, MonsterDesign } from './design';
+
+/**
+ * ボスの 部品（うで・頭など）を ink で ふちどって 重ねる 2 まいの レイヤー。体の 上に 重ねても くっきり 分かれる。
+ * mirror の 部品は 地図を まん中（右はし）まで 書き、まん中の がわは ふちどらない
+ */
+function part(rows: readonly string[], x: number, y: number, mirror = true): Layer[] {
+  const w = Math.max(...rows.map((r) => r.length));
+  const at = (i: number, j: number) => (rows[j]?.[i] ?? '.') !== '.';
+  const edge = Array.from({ length: rows.length + 2 }, (_, j) =>
+    Array.from({ length: mirror ? w + 1 : w + 2 }, (_, i) =>
+      !at(i - 1, j - 1) && (at(i - 2, j - 1) || at(i, j - 1) || at(i - 1, j - 2) || at(i - 1, j)) ? 'o' : '.',
+    ).join(''),
+  );
+  return [
+    { mirror, x: x - 1, y: y - 1, rows: edge },
+    { mirror, x, y, rows },
+  ];
+}
 
 const one = (rows: string[]) => [{ rows }];
-const half = (rows: string[]) => [{ mirror: true, rows }];
 
 /** ロッパクブー：つやつやの 黒豚。鼻の 先と 4 本の 足が 白い「六白」。さつまいもを かかえる（ツチ） */
 const roppakuBoo: MonsterDesign = {
@@ -369,201 +386,384 @@ const shinchaDou: MonsterDesign = {
 };
 
 /**
- * ツボムシャ（中ボス）：薩摩焼の つぼが 武者に なった。黒もんの ふたの かぶと、白もんの つぼの からだ。
- * 金の ふちどりの 赤い 花と みどりの 葉の 絵つけ、こまかい ひび。頭に 王冠（ツチ → ヒノ）
+ * ツボムシャ（中ボス）：薩摩焼の つぼが 武者に なった。黒もんの ふたの かぶとに 金の 大きな くわがた、
+ * かげの 顔に 黄色い 目が 光り、金の めんぼおの 歯を くいしばる。白もんの つぼの どうには こまかい ひびと
+ * 金の ふちどりの 赤い 花。黒い こての うでで こぶしを にぎる（ツチ → ヒノ）
  */
 const tsuboMusha: MonsterDesign = {
   size: 40,
   colors: {
     C: NQ.cream,
     S: NQ.sand,
-    t: NQ.tan,
     N: NQ.night,
     L: NQ.slate,
     Y: NQ.gold,
-    Q: NQ.ochre,
+    E: NQ.yellow,
     R: NQ.red,
     G: NQ.green,
     W: NQ.white,
-    p: NQ.blush,
   },
-  rim: { [NQ.cream]: NQ.sand },
+  rim: { [NQ.cream]: NQ.sand, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
-  layers: half([
-    '....................',
-    '................Y..Y',
-    '................YY.Y',
-    '................YYYY',
-    '................YYYR',
-    '................QQQQ',
-    '................LLNN',
-    '..............NLNNNN',
-    '.............NNNNNNN',
-    '.............NNNNNNN',
-    '..............NNNNNN',
-    '.............CCCNNNN',
-    '.............YYYYYYY',
-    '...............CCCCC',
-    '...............CCCCC',
-    '...............CCCCC',
-    '...............CCCCC',
-    '..........YYYYYYYYYY',
-    '.............CNNNCCC',
-    '..........WWCCCWWoCC',
-    '........CWCCCCCWWoCC',
-    '......CCWCCtCCCWWoCC',
-    '....CCCCCCCCtCCWooCC',
-    '....CCCCCCCCCpCCCCCC',
-    '...CCCCCCCCCCCCCCooo',
-    '...CtCCCCCCCCCCCCCCC',
-    '...CtCCCCCCCCCCCCCCC',
-    '...CCtCCCCYYCCCCCCCC',
-    '...CCCCCCYRRYGCCCCCC',
-    '..CCCCCCCYRRYGGCCCCC',
-    '..CCCCCCCCYYCCCCYCCC',
-    '...CCCC.CGGCCCCYRYCC',
-    '........GGCCCCCCYCtC',
-    '..........CCtCCCCtCC',
-    '........YYYYYtYYYYYY',
-    '.............CCCCCCC',
-    '..............SSSSSS',
-    '..............SSSSSS',
-    '..............SSSSSS',
-    '....................',
-  ]),
+  layers: [
+    // 白もんの つぼの どうと 黒い すねあて
+    {
+      mirror: true,
+      y: 18,
+      rows: [
+        '..........CCCCCCCCCC',
+        '.........CCCCCCCCCCC',
+        '.......CCCCCCSCCCCCC',
+        '......CCCCCCCCSCCCCC',
+        '.....CCCSCCCCCCCCCCC',
+        '.....CCCCSCCCCCCCCCR',
+        '....CCCCCCCCCCCRRCCR',
+        '....CCCCCCCCCCRRRRYY',
+        '....CCCCCCCCCGGRRRYY',
+        '....CCCSCCCCGGCCRCCR',
+        '....CCCCSCCCCGCCCCRR',
+        '.....CCCCSCCCCCCCCCC',
+        '.....CCCCCCCCSCCCCCC',
+        '......CCCCCCCCSCCCCC',
+        '.......CCCCCCCCCCCCC',
+        '.........CCCCCCCCCCC',
+        '.........NNNNNN.....',
+        '.........NLNNNN.....',
+        '........NNNNNNN.....',
+        '........NNNNNNN.....',
+      ],
+    },
+    // 黒い こての うでと こぶし
+    ...part(
+      [
+        '...NNN.............',
+        '..NNLN.............',
+        '..NNNN.............',
+        '.NNLN..............',
+        '.NNNN..............',
+        '.NNNN..............',
+        'YYYYYY.............',
+        'NNNNNN.............',
+        'NLNNLN.............',
+        'NNNNNN.............',
+        '.NNNN..............',
+      ],
+      1,
+      21,
+    ),
+    // 黒い そでの よろい
+    ...part(
+      [
+        '....NNNNN..........',
+        '..NNNNNNNNN........',
+        '.NNNNNNNNNN........',
+        'NLLLLLLLLN.........',
+        'NNNNNNNNNN.........',
+        'NLLLLLLLN..........',
+        'NNNNNNNN...........',
+        '.YYYYYY............',
+      ],
+      1,
+      15,
+    ),
+    // 金の 大きな くわがた
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '...YY...............',
+        '...YYY..............',
+        '....YYY.............',
+        '.....YYY............',
+        '......YYY...........',
+        '.......YYY..........',
+        '........YYYY........',
+        '.........YYYYYY.....',
+        '...........YYYYYYYYR',
+        '.............YYYYYYR',
+      ],
+    },
+    // 黒もんの ふたの かぶと
+    ...part(
+      [
+        '.......NNNNNNNN',
+        '.....NNNNNNNNNN',
+        '....NNNNNNNNNNN',
+        '...NNNNNNNNNNNN',
+        '..NNNNNNNNNNNNN',
+        '.NNNNNNNNNNNNNN',
+        'NNNNNYYYYYYYYYY',
+        'NNN............',
+      ],
+      5,
+      10,
+    ),
+    // かげの 顔・つり上がった 光る 目・赤い めんぼおの 歯
+    ...part(
+      [
+        'ooooooooo',
+        'EEooooooo',
+        'oEEEWoooo',
+        'ooEEEEooo',
+        'ooooooooo',
+        'RRRRRRRRR',
+        'RRWoooWoo',
+        '.RWRRRWRR',
+      ],
+      11,
+      17,
+    ),
+  ],
 };
 
-/** ツボムシャ（フィールドに 立つ 32×32） */
+/** ツボムシャ（フィールドに 立つ 32×32）：バトルの すがたを 小さく した もの */
 const tsuboMushaField: MonsterDesign = {
   size: 32,
   colors: {
     C: NQ.cream,
     S: NQ.sand,
     N: NQ.night,
+    L: NQ.slate,
     Y: NQ.gold,
-    Q: NQ.ochre,
+    E: NQ.yellow,
     R: NQ.red,
     G: NQ.green,
     W: NQ.white,
   },
   rim: { [NQ.cream]: NQ.sand },
-  layers: half([
-    '................',
-    '.............Y..',
-    '.............YY.',
-    '.............YYY',
-    '.............YYR',
-    '.............QQQ',
-    '...........NNNNN',
-    '...........NNNNN',
-    '............NNNN',
-    '...........CCCNN',
-    '...........YYYYY',
-    '............CCCC',
-    '............CCCC',
-    '............CCCC',
-    '........YYYYYYYY',
-    '.........CCCCCCC',
-    '........CCCCWWCC',
-    '.......CCCCCWoCC',
-    '......CCCCCCooCC',
-    '......CCCCCCCCCC',
-    '......CCCCCCCCoo',
-    '.....CCCCYCCCCCC',
-    '.....CCCYRYCCCCC',
-    '......CCCYCGCCCC',
-    '......CCCCCGGCCC',
-    '.......CCCCCCCCC',
-    '........CCCCCCCC',
-    '.......YYYYYYYYY',
-    '...........CCCCC',
-    '...........SSSSS',
-    '...........SSSSS',
-    '................',
-  ]),
+  layers: [
+    {
+      mirror: true,
+      y: 15,
+      rows: [
+        '........CCCCCCCC',
+        '......CCCCCSCCCC',
+        '.....CCCCCCCSCCC',
+        '....CCCSCCCCCCCR',
+        '....CCCCSCCCRRYY',
+        '...CCCCCCCCGRRYY',
+        '...CCCSCCCGGCCRR',
+        '...CCCCSCCCGCCCC',
+        '....CCCCCCCCSCCC',
+        '.....CCCCCCCCSCC',
+        '.......CCCCCCCCC',
+        '.......NNNNN....',
+        '.......NLNNN....',
+        '......NNNNNN....',
+        '......NNNNNN....',
+      ],
+    },
+    ...part(
+      [
+        '..NN...........',
+        '.NNN...........',
+        '.NLN...........',
+        '.NNN...........',
+        'YYYYY..........',
+        'NLNLN..........',
+        'NNNNN..........',
+        '.NNN...........',
+      ],
+      1,
+      17,
+    ),
+    ...part(
+      ['...NNNN........', '.NNNNNNNN......', 'NLLLLLLN.......', 'NNNNNNNN.......', '.YYYYY.........'],
+      1,
+      13,
+    ),
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '...YY...........',
+        '...YYY..........',
+        '....YYY.........',
+        '.....YYY........',
+        '.......YYYY.....',
+        '.........YYYYYYR',
+        '...........YYYYR',
+      ],
+    },
+    ...part(['.....NNNNNN', '...NNNNNNNN', '..NNNNNNNNN', '.NNNNNNNNNN', 'NNNNYYYYYYY'], 5, 8),
+    ...part(['ooooooo', 'EEooooo', 'oEEEWoo', 'ooooooo', 'RRRRRRR', 'RWoooWo'], 9, 13),
+  ],
 };
 
 /**
- * サクラジマグマ（県ボス）：桜島の 火山の 力から 生まれた 巨人。火口が 光る 山の 頭、もくもくの けむり、
- * マグマの ひびが 走る 岩の からだと 大きな こぶし。王冠は 火口の 上（ヒノ → ツチ）
+ * サクラジマグマ（県ボス）：桜島の 火山の 力から 生まれた 巨人。頭は 火口が まっ赤に 光る 山で、もくもくの けむりを ふき上げる。
+ * つり上がった 金の 目と マグマが のぞく ぎざぎざの 口、とがった 岩の かた、マグマの ひびが 走る 岩の からだと
+ * 大きな こぶし（ヒノ → ツチ）
  */
 const sakurajimaguma: MonsterDesign = {
   size: 48,
   colors: {
     B: NQ.brown,
-    K: NQ.bark,
     T: NQ.tan,
     V: NQ.vermilion,
     O: NQ.orange,
     C: NQ.cream,
+    R: NQ.red,
+    Y: NQ.gold,
     g: NQ.gray,
     s: NQ.silver,
-    Y: NQ.gold,
-    Q: NQ.ochre,
-    R: NQ.red,
-    W: NQ.white,
   },
   rim: { [NQ.brown]: NQ.bark, [NQ.gray]: NQ.slate },
   rimDepth: 2,
-  layers: half([
-    '........................',
-    '.....................ggg',
-    '...................ggssg',
-    '..................ggsggg',
-    '..................gggggg',
-    '.................gggYggY',
-    '................ggsYYgYY',
-    '................gggYYYYY',
-    '................gggYYYYR',
-    '...................QQQQQ',
-    '.................BOCCCCC',
-    '.................BOOOOOO',
-    '.................TBBBBBB',
-    '................KKKBBBBB',
-    '......B.........TBBKKKKB',
-    '.....BBT.......BBBWWoBBB',
-    '.....BTBBBB....TBBWWoBBB',
-    '...BBBBBBBBBB.BBBBWWoBBB',
-    '..BBBTBBBBBBBBBBBBWooBBB',
-    '..BBBBBBBVBBBBVBBBBBBBBB',
-    '..BBBBBBBBOBBBBOBBBBBBBB',
-    '..BBBBBBBBVBBBBVBBBBBBBB',
-    '..BBBBBBBBBVBBBBVBBVVVVV',
-    '..BBBBBBBBBBBBBBBBBBOOOO',
-    '...BBBBBBBBBBBBBBBBBBBBB',
-    '...BBBBBBBBBBBBBBBBBBBBB',
-    '...BBBBB..BBBBBBBBBBBBBB',
-    '...BBBVBB..BBBBBBBBBBBBB',
-    '..BTBBVBBBBBBBBBBBBBVBBB',
-    '..BTBVBBBBBBBBBBBBBBVBBB',
-    '..BBBOBBBBBBBVBBBBBBVBBB',
-    '..BBBVBBBBBBBBVBBBBBBVBB',
-    '..BBVBBBBBBBBBBOBBBBBVBB',
-    '..BBVBBBBBBBBBBBOBBBBBBB',
-    '..BBBBBBBBBBBBBBBVBBBBBB',
-    '..BBBBBBBBBBBBBBBVBBBBBB',
-    '.BBVBBBBBBBBBBBBVBBBBBBB',
-    '.BBBVVBBBBBBBBBBVBBBBBBB',
-    '.BBBBBVBBB.BBBBVBBBBBBBB',
-    '..BBBBBBB...BBBVBBBBBBBB',
-    '...BBBBB......BBBBBBBBBB',
-    '.............BBBBBBBBBBB',
-    '.............BBBBBBBBBBB',
-    '.............BBBBBBBB...',
-    '............KKKKKKKKKK..',
-    '............KKKKKKKKKK..',
-    '........................',
-    '........................',
-  ]),
+  layers: [
+    // 火口から ふき上がる けむり
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '..............ss...sss..',
+        '.............sggs.sgggs.',
+        '..............ggggggggss',
+        '................gggggggg',
+        '..................gggggg',
+        '...................ggggg',
+      ],
+    },
+    // マグマの ひびが 走る 岩の からだと 足
+    {
+      mirror: true,
+      y: 20,
+      rows: [
+        '..........BBBBBBBBBBBBBB',
+        '.........BBBBBBBBBBBBBBB',
+        '........BBBTBBBBBBBBBBBB',
+        '........BBBBBBVBBBBBBBBB',
+        '........BBBBBBBOBBBBBBBB',
+        '........BBTBBBBVBBBBBBBB',
+        '........BBBBBBBVOBBBBBBB',
+        '........BBBBBBBBVBBBBTBB',
+        '........BBBBTBBBVBBBBBBB',
+        '........BBBBBBBVBBBBBBBB',
+        '........BBBBBBBVBBBBVBBB',
+        '.........BBBBBBBOBBVBBBB',
+        '.........BBBBBBBBVVBBBBB',
+        '.........BBBTBBBBBBBBBBB',
+        '.........BBBBBBBBBBBBBBB',
+        '........BBBBBBBBBBBBTBBB',
+        '........BBBBBBBVBBBBBBBB',
+        '........BBBBBBBBVBBBBBBB',
+        '........BBBBBBBBVBBB....',
+        '........BBBTBBBBVBB.....',
+        '........BBBBBBBVBBB.....',
+        '.......BBBBBBBBBBBB.....',
+        '.......BBBBBBBVBBBB.....',
+        '......BBBBTBBBBVBBB.....',
+        '......BBBBBBBBBBBBB.....',
+        '......BBBBBBBBBBBBBB....',
+      ],
+    },
+    // 大きな 岩の こぶし（マグマの ひび）
+    ...part(
+      [
+        '...BBBBB...............',
+        '...BBTBB...............',
+        '..BBBBBB...............',
+        '..BBBVBB...............',
+        '..BBBBVB...............',
+        '..BTBBBB...............',
+        '..BBBBBB...............',
+        '.BBBBBBBB..............',
+        'BBBBBBBBBB.............',
+        'BTBBTBBTBB.............',
+        'BBBBBBBBBB.............',
+        'BVBBVBBVBB.............',
+        'BBBBBBBBBB.............',
+        'BBBTBBBBBB.............',
+        '.BBBBBBBB..............',
+      ],
+      1,
+      24,
+    ),
+    // とがった 岩の かた
+    ...part(
+      [
+        '..B......B..........',
+        '..BB....BB..........',
+        '.BBBB..BBBB.........',
+        '.BBBBBBBBBBBB.......',
+        'BBBTBBBBBBBBBBB.....',
+        'BBBBBBVBBBTBBBBB....',
+        'BBBBBBBVBBBBBBBB....',
+        'BBTBBBBVOBBBBBB.....',
+        '.BBBBBBBBVBBBBB.....',
+        '..BBBBBBBBBBBB......',
+      ],
+      1,
+      14,
+    ),
+    // 火山の 頭（火口が まっ赤に 光る）
+    ...part(
+      [
+        '........VOOOOO',
+        '.......BVVOCCO',
+        '......BBBVVOOV',
+        '.....BBBBBBVVV',
+        '.....BBBBBBBBB',
+        '....BBBTBBBBBB',
+        '....BBBBBBBBBB',
+        '...BBBBBBBBBBB',
+        '...BBBBBBBBBBB',
+        '..BBBBBBBBBBBB',
+        '..BBBBBBBBBBBB',
+        '.BBBBBBBBBBBBB',
+        '.BBBBBBBBBBBBB',
+        'BBBBBBBBBBBBBB',
+        'BBBBBBBBBBBBBB',
+      ],
+      10,
+      6,
+    ),
+    // ながれ落ちる マグマ・赤い 石・いかりの 目・マグマの 口
+    {
+      mirror: true,
+      x: 10,
+      y: 9,
+      rows: [
+        '...........V..',
+        '...........V..',
+        '..........V..R',
+        '.............R',
+        '....oo........',
+        '.....oooo.....',
+        '.....YYYYoo...',
+        '......YYYYCo..',
+        '.......oooo...',
+        '..............',
+        '......oooooooo',
+        '......oOoOOoOO',
+        '.......VOVVOVV',
+        '........oooooo',
+      ],
+    },
+  ],
 };
 
-/** サクラジマグマ 後半（ツチ）：大きな 噴火で けむりが ふくらみ、体に 火山灰が つもって 灰色に。灰が ふりそそぐ */
+/** サクラジマグマ 後半（ツチ）：大きな 噴火で けむりが ふくらみ、体に 火山灰が つもって 灰色に。目は 白く ぎらつき、灰が ふりそそぐ */
 const sakurajimagumaAsh: MonsterDesign = {
   ...sakurajimaguma,
-  colors: { ...sakurajimaguma.colors, B: NQ.gray, T: NQ.silver, K: NQ.slate },
+  colors: { ...sakurajimaguma.colors, B: NQ.gray, T: NQ.silver, W: NQ.white },
   rim: { [NQ.gray]: NQ.slate },
   layers: [
     ...sakurajimaguma.layers,
+    // ふくらんだ 噴煙
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '........ss...ss.........',
+        '.......sgggssggs........',
+        '........ggggggggs.......',
+        '..........gggggg........',
+      ],
+    },
+    // 白く 光る 目
+    { mirror: true, x: 15, y: 15, rows: ['YWWWoo', '.YWWWC'] },
+    // ふりそそぐ 灰
     { x: 2, y: 12, rows: ['s...s', '.....', '..s..', '.....', 's...s'] },
     { x: 41, y: 10, rows: ['s...s', '.....', '..s..', '.....', 's...s'] },
   ],

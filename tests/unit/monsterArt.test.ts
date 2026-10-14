@@ -103,7 +103,7 @@ describe('手描きモンスター（docs/06 の規格）', () => {
     }
   });
 
-  it('中ボス・県ボスは王冠のしるし（金と赤い宝石）がある', () => {
+  it('中ボス・県ボスはボスのしるし（金のつのと赤い宝石・目）がある', () => {
     for (const [key, _d] of entries) {
       const m = c.monsters.get(baseId(key))!;
       if (!m.isBoss || (!c.areas.has(m.area) && c.world.islands.some((i) => i.id === m.area))) continue;

@@ -527,8 +527,9 @@ const ootakimaru: MonsterDesign = {
 };
 
 /**
- * ウメボシヨコヅナ（中ボス）：南高梅の うめぼしの 大横綱。太い 肩と うで、しこを ふむ 足、
- * 太い 白い つな、大きな 梅の 花の けしょうまわし、するどい 目、王冠は へたの 上（ツチ → ヒノ）
+ * ウメボシヨコヅナ（中ボス）：南高梅の うめぼしの 大横綱。りょう うでを まげて ちからこぶを 見せつけ、
+ * 大きく 足を ひらいて しこを ふむ。へたの 葉の かざりと 金の つの、太い 怒りまゆ と 光る 黄色い 目、
+ * くいしばった きば、白い つなと こん色の まわし（金の ふち）、まわりに すっぱい 怒りの ほのお（ツチ → ヒノ）
  */
 const umeboshiYokozuna: MonsterDesign = {
   size: 40,
@@ -536,124 +537,94 @@ const umeboshiYokozuna: MonsterDesign = {
     R: NQ.red,
     r: NQ.brick,
     A: NQ.apricot,
+    P: NQ.vermilion,
+    K: NQ.bark,
+    Y: NQ.yellow,
     W: NQ.white,
     c: NQ.cloud,
-    V: NQ.violet,
+    N: NQ.navy,
     G: NQ.gold,
     Q: NQ.ochre,
-    K: NQ.bark,
     E: NQ.leaf,
-    Y: NQ.cream,
+    e: NQ.green,
   },
-  rim: { [NQ.red]: NQ.brick, [NQ.violet]: NQ.indigo, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.red]: NQ.brick },
   rimDepth: 2,
   layers: [
-    // しこを ふむ 足
+    // 怒りの ほのお（こぶしの 上）
+    { mirror: true, x: 1, y: 0, rows: ['....', '.P..', 'PAP.'] },
+    // うめぼしの からだ、するどい 顔、まわし、しこを ふむ 足
     {
       mirror: true,
-      y: 28,
       rows: [
-        '.......RRRRRRR......',
-        '......RRRRRRRR......',
-        '.....RRRRRRRRR......',
-        '....RRRRRRRRR.......',
-        '...RRRRRRRRRR.......',
-        '...RRRRRRRRR........',
-        '..RRRRRRRRRR........',
-        '..RRRRRRRRR.........',
-        '..RRRRRRRRR.........',
-        '.RRRRRRRRRRR........',
-      ],
-    },
-    // 太い うでと こぶし
-    {
-      mirror: true,
-      y: 15,
-      rows: [
-        '...RRRR.............',
-        '..RRRRR.............',
-        '.RRRRRR.............',
-        '.RRRRR..............',
-        '.RRRRR..............',
-        '.RRRRRR.............',
-        '.RRRRRR.............',
-        '..RRRRR.............',
-        '..RRRR..............',
-      ],
-    },
-    // うめぼしの からだ と するどい 顔
-    {
-      mirror: true,
-      y: 6,
-      rows: [
-        '..............RRRRRR',
-        '............RRRRRRRR',
-        '..........RRRRRRRRRR',
-        '.........RRRRRRRRRRR',
+        '.......G............',
+        '.......GG.......E...',
+        '........GG.....EEE..',
+        '........GGG...eEEEEK',
+        '.........GGGRRRRRRKK',
+        '.........QGGRRRRRRRR',
         '........RRRRRRRRRRRR',
-        '.......RRRRRRRRRRRRR',
-        '.......oooRRRRRRRRRR',
-        '......RRRRoooRRRRRRR',
-        '......RRooooRRRRRRRR',
-        '.....RRRWWooRRRRRRRR',
-        '.....RRRWWooRRRRRRRR',
-        '.....RRRRRRRRRRRRRRR',
-        '.....RRRRRRRRRRRRRRR',
-        '.....RRRRRRRRRoooooo',
-        '.....RRRRRRRRRRooooo',
-        '.....RRRRRRRRRRRoooo',
-        '.....RRRRRRRRRRRRRRR',
-        '.....RRRRRRRRRRRRRRR',
+        '.......RRAARRRRRRRRR',
+        '.......RAARRRRRRRRRR',
+        '......RRARRRRRRRRRRR',
+        '......RRRooRRRRRRRRR',
+        '......RRRoooooRRRRRR',
+        '......RRRRrooooooRRR',
+        '......RRRrrrYYYoooRR',
+        '......RRRrrrrYooorRR',
+        '......RRRRrrrrrrrRRR',
+        '......RRRRRRRRRRRRRR',
+        '......RRRRRRRRRooooo',
+        '......RRRRRRRRoWoWWW',
+        '......RRRRRRRRoooooo',
+        '......RRRRRRRRoWWoWW',
+        '......RRRRRRRRRooooo',
         '......RRRRRRRRRRRRRR',
         '......RRRRRRRRRRRRRR',
-        '.......RRRRRRRRRRRRR',
-        '........RRRRRRRRRRRR',
+        '......WWcWWcWWcWWcWW',
+        '......cWWcWWcWWcWWcW',
+        '......GGGGGGGGGGGGGG',
+        '......NNNNNNNNNNNNNN',
+        '.....RRNNNNNNNNNNNNN',
+        '....RRRRNNoNNNoNNNoN',
+        '...RRRRRRRR.........',
+        '...RRRRRRRR.........',
+        '..RRRRRRRRR.........',
+        '..RRRRRRRR..........',
+        '..RRRRRRR...........',
+        '..RRRRRRR...........',
+        '..RRRRRRR...........',
+        '.RRRRRRRRR..........',
+        '.RRRRRRRRRR.........',
       ],
     },
-    // 太い つな
-    { mirror: true, x: 6, y: 24, rows: ['WWcWWcWWcWWcWW', 'cWWcWWcWWcWWcW'] },
-    // 梅の 花の けしょうまわし
+    // ちからこぶを 見せる うでと こぶし
     {
       mirror: true,
-      x: 13,
-      y: 26,
+      y: 3,
       rows: [
-        'GGGGGGG',
-        'GVVVVVV',
-        'GVVWWVV',
-        'GVWWWWW',
-        'GVWWWYY',
-        'GVWWWWW',
-        'GVVWWVV',
-        'GVVVVVV',
-        'GGGGGGG',
+        '.RRRR',
+        '.RRRRR',
+        '.RoRoR',
+        '.RRRRR',
+        '.RRRRR',
+        '..RRRR',
+        '..RRRR',
+        '..RRRR',
+        '..RRRRR',
+        '..RRRRRRR',
+        '...RRRRRRR',
+        '....RRRRRR',
+        '.....RRRRR',
       ],
     },
-    // 王冠（金と 赤い 宝石）と へた
-    {
-      mirror: true,
-      y: 1,
-      rows: [
-        '................G..G',
-        '................GGGG',
-        '................GGGR',
-        '................QQQQ',
-        '..................KK',
-      ],
-    },
-    // 葉
-    { x: 24, y: 2, rows: ['..EE', '.EEE', 'EEE.'] },
-    // すっぱさの ゆげ
-    { mirror: true, x: 2, y: 5, rows: ['.cc..', '.cc..', '.....', 'cc...', 'cc...'] },
-    // しこの 土ぼこり
-    { mirror: true, x: 13, y: 35, rows: ['cc..', '.cc.'] },
-    // うでの つけねの かげ
-    { mirror: true, x: 5, y: 17, rows: ['r', 'r', 'r', 'r', 'r'] },
-    // つや と しわ
-    { x: 12, y: 9, rows: ['AAA', 'AA.'] },
-    { x: 26, y: 12, rows: ['.rr', 'r..'] },
-    { x: 7, y: 22, rows: ['rr.', '..r'] },
-    { x: 30, y: 20, rows: ['.r', 'r.'] },
+    // ちからこぶの つや
+    { mirror: true, x: 4, y: 12, rows: ['AA', '.A'] },
+    // しこの 土けむり
+    { mirror: true, x: 11, y: 36, rows: ['c...', '.cc.'] },
+    // しわ
+    { x: 27, y: 9, rows: ['.rr', 'r..'] },
+    { x: 9, y: 21, rows: ['rr.', '..r'] },
   ],
 };
 
@@ -664,166 +635,132 @@ const umeboshiYokozunaField: MonsterDesign = {
     R: NQ.red,
     r: NQ.brick,
     A: NQ.apricot,
+    Y: NQ.yellow,
     W: NQ.white,
     c: NQ.cloud,
-    V: NQ.violet,
+    N: NQ.navy,
     G: NQ.gold,
     K: NQ.bark,
     E: NQ.leaf,
   },
-  rim: { [NQ.red]: NQ.brick, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.red]: NQ.brick },
   layers: [
-    // 足
-    {
-      mirror: true,
-      y: 22,
-      rows: [
-        '......RRRRR.....',
-        '.....RRRRRR.....',
-        '....RRRRRRR.....',
-        '....RRRRRR......',
-        '...RRRRRRR......',
-        '...RRRRRRR......',
-        '..RRRRRRR.......',
-        '..RRRRRRRR......',
-      ],
-    },
-    // うで
-    {
-      mirror: true,
-      y: 12,
-      rows: [
-        '..RRR...........',
-        '.RRRR...........',
-        '.RRRR...........',
-        '.RRRR...........',
-        '.RRRRR..........',
-        '.RRRRR..........',
-        '..RRRR..........',
-      ],
-    },
-    // からだ と 顔
-    {
-      mirror: true,
-      y: 5,
-      rows: [
-        '...........RRRRR',
-        '.........RRRRRRR',
-        '........RRRRRRRR',
-        '.......RRRRRRRRR',
-        '......RRRRRRRRRR',
-        '.....oooRRRRRRRR',
-        '.....RoooRRRRRRR',
-        '.....RWWoRRRRRRR',
-        '....RRRRRRRRRRRR',
-        '....RRRRRRRRRRRR',
-        '....RRRRRRRooooo',
-        '....RRRRRRRRoooo',
-        '....RRRRRRRRRRRR',
-        '.....RRRRRRRRRRR',
-        '.....RRRRRRRRRRR',
-        '......RRRRRRRRRR',
-        '.......RRRRRRRRR',
-      ],
-    },
-    // つな
-    { mirror: true, x: 5, y: 18, rows: ['WcWcWcWcWcW', 'cWcWcWcWcWc'] },
-    // けしょうまわし
-    {
-      mirror: true,
-      x: 10,
-      y: 20,
-      rows: ['GGGGGG', 'GVVVVV', 'GVWWWW', 'GVWWWW', 'GVVVVV', 'GGGGGG'],
-    },
-    // 王冠 と へた
+    // からだ、顔、まわし、足
     {
       mirror: true,
       y: 1,
-      rows: ['............G..G', '............GGGG', '............GGGR', '..............KK'],
+      rows: [
+        '................',
+        '.......G....E...',
+        '........G..EEEEK',
+        '........GRRRRRKK',
+        '.......GRRRRRRRR',
+        '......RRRRRRRRRR',
+        '.....RRAARRRRRRR',
+        '.....RARRRRRRRRR',
+        '.....RRooRRRRRRR',
+        '.....RRRoooooRRR',
+        '.....RRrrYYooooR',
+        '.....RRrrrYoorRR',
+        '.....RRRRRRRRRRR',
+        '.....RRRRRRooooo',
+        '.....RRRRRRoWoWW',
+        '.....RRRRRRooooo',
+        '.....RRRRRRRoWWo',
+        '.....RRRRRRRRRRR',
+        '.....WcWWcWWcWWc',
+        '.....GGGGGGGGGGG',
+        '.....NNNNNNNNNNN',
+        '....RRNNNoNNNoNN',
+        '...RRRRRRR......',
+        '...RRRRRRR......',
+        '..RRRRRRR.......',
+        '..RRRRRR........',
+        '..RRRRRR........',
+        '..RRRRRR........',
+        '.RRRRRRRR.......',
+        '.RRRRRRRRR......',
+      ],
     },
-    // 葉
-    { x: 19, y: 2, rows: ['.EE', 'EE.'] },
-    // つや
-    { x: 8, y: 7, rows: ['AA'] },
+    // ちからこぶの うで
+    {
+      mirror: true,
+      y: 3,
+      rows: ['.RRR', '.RoR', '.RRR', '..RR', '..RR', '..RRR', '..RRRRR', '...RRRRR', '....RRR'],
+    },
+    { mirror: true, x: 3, y: 9, rows: ['A'] },
   ],
 };
 
 /**
- * クロシオリュウの 左半分：長く するどい 金の 角、白い なみの たてがみ、口を あけた 大きな 頭、
- * うねる ひげ、つめの ある 前足、大波から 立ちあがる からだ
+ * クロシオリュウの 左半分：うしろへ そりかえる 長い 金の 角、ひたいの 赤い 宝玉、頭の とげ、
+ * 白い しぶきの とがった たてがみ、太い まゆの 下で 光る 目、きばの ならぶ 大きな 口、
+ * 左右に ひろげた つめの 前足、大波から 立ちあがる からだ
  */
 const RYU_HORN = [
-  '.....GG.................',
-  '.....GGG................',
-  '......GGG...............',
-  '.......GGG..............',
-  '........GGG.............',
-  '.........GGGG...........',
-  '..........GGGG..........',
-  '...........GGGG.........',
-  '............GGGG........',
-];
-const RYU_CROWN = [
-  '....................G..G',
-  '....................GGGG',
-  '....................GGGR',
-  '....................QQQQ',
+  '..GG....................',
+  '..GGG...................',
+  '...GGQ..................',
+  '....GGQ.................',
+  '.....GGQ................',
+  '......GGQQ..............',
+  '.......GGGQQ............',
+  '.........GGGQQ..........',
+  '...........GGQQ.........',
 ];
 const RYU_MANE = [
-  '.........WWW............',
-  '.......WWWWW............',
-  '......WWWWWW............',
-  '....WWWWWWWW............',
-  '.....WWWWWWW............',
-  '...WWWWWWWWW............',
-  '....WWWWWWWW............',
-  '..WWWWWWWWWW............',
-  '...WWWWWWWWW............',
-  '.WWWWWWWWWWW............',
-  '...WWWWWWWWW............',
-  '..WWWWWWWWWW............',
-  '....WWWWWWWW............',
-  '...WWWWWWWWW............',
-  '.....WWWWWWW............',
-  '......WWWWWW............',
-  '.......WWWWW............',
-  '........WWWW............',
-  '.........WWW............',
+  '........WW..............',
+  '......WWWW..............',
+  '..WWWWWWWW..............',
+  '.....WWWWWW.............',
+  '.WWWWWWWWWW.............',
+  '....WWWWWWW.............',
+  '..WWWWWWWWW.............',
+  '.WWWWWWWWWW.............',
+  '....WWWWWWW.............',
+  '...WWWWWWWW.............',
+  '.....WWWWWW.............',
+  '.......WWWW.............',
 ];
 const RYU_HEAD = [
-  '..................NNNNNN',
-  '................NNNNNNNN',
-  '..............NNBBBBBBBB',
-  '............NNBBBBBBBBBB',
-  '...........NBBBBBBBBBBBB',
-  '..........NBBBBBBBBBBBBB',
-  '.........NBBNNNNNBBBBBBB',
-  '........NBBBooooBBBBBBBB',
-  '........NBBBWWooBBBBBBBB',
-  '........NBBBWWooBBBBBBBB',
+  '.......................N',
+  '..................N...NB',
+  '..................NB.NBB',
+  '.................NBBNBBB',
+  '...............NNBBBBBBB',
+  '.............NNBBBBBBBBG',
+  '...........NNBBBBBBBBBGR',
+  '..........NBBBBBBBBBBBGR',
+  '.........NBBBBBBBBBBBBBG',
+  '........NBBNNNBBBBBBBBBB',
+  '........NBBBBNNNNBBBBBBB',
+  '.......NBBBBBBBNNNNNBBBB',
+  '.......NBBBBBNEEEENNNNBB',
+  '.......NBBBBBNNEEEoNNBBB',
+  '.......NBBBBBBNNNNNNBBBB',
   '........NBBBBBBBBBBBBBBB',
-  '........NBBBBBBBBBBBBBBB',
+  '........NBBBBBBBBBBBBoBB',
   '.........NBBBBBBBBBBBBBB',
-  '.........NBBBBBBoooooooo',
-  '..........NBBBBBWoooWooo',
-  '..........NBBBBBoooooooo',
-  '...........NBBBBoooooooo',
-  '...........NBBBBBBBBBBBB',
-  '............NBBBBBBBBBBB',
+  '.........NBBoooooooooooo',
+  '..........NoWWoooWWooooR',
+  '..........NooWooooWooRRR',
+  '..........NBooooRRRRRRRR',
+  '...........NBoWooooWoooo',
+  '...........NBoWWoooWWooo',
+  '............NBBooooooooo',
   '.............NBBBBBBBBBB',
 ];
 const RYU_BODY = [
   '...........NBBBBBBBBBBBB',
-  '..........NBBBBBBBBBBBBB',
-  '.........NBBBBBBBBBBBBBB',
-  '.........NBBBBBBBSSSSSSS',
-  '........NBBBBBBBBIIIIIII',
-  '........NBBBBBBBBSSSSSSS',
-  '.......NBBBBBBBBBIIIIIII',
-  '.......NBBBBBBBBBSSSSSSS',
-  '......NBBBBBBBBBBIIIIIII',
-  '......NBBBBBBBBBBSSSSSSS',
-  '.....NBBBBBBBBBBBIIIIIII',
+  '..........NBBBBBBBSSSSSS',
+  '..........NBBBBBBBIIIIII',
+  '.........NBBBBBBBBSSSSSS',
+  '.........NBBBBBBBBIIIIII',
+  '........NBBBBBBBBBSSSSSS',
+  '........NBBBBBBBBBIIIIII',
+  '.......NBBBBBBBBBBSSSSSS',
+  '.......NBBBBBBBBBBIIIIII',
+  '......NBBBBBBBBBBBSSSSSS',
 ];
 const RYU_WAVE = [
   '..WWW...................',
@@ -844,28 +781,18 @@ const RYU_WAVE = [
   '...NNNNNNNNNNNNNNNNNNNNN',
 ];
 const RYU_ARM = [
-  '........BBBB',
-  '.......BBBBBB',
-  '......BBBBBBB',
-  '.....BBBBBBB',
-  '....ABBBBBB',
-  '...ABBBBBB',
-  '..ABBBBBB',
-  '..BBBBBBB',
-  '.WBBBBBB',
-  'WWBBBBB',
-  'WWBBBB',
-  '.WWBB',
-];
-const RYU_WHISKER = [
-  '.......AA',
-  '.....AA..',
-  '...AA....',
-  '..AA.....',
-  '.AA......',
-  '.AA......',
-  '..AA.....',
-  '...AA....',
+  '.W.W.W........',
+  '.W.W.W........',
+  '.BBBBB........',
+  '.ABBBBB.......',
+  '..ABBBB.......',
+  '..ABBBB.......',
+  '...ABBBB......',
+  '....ABBBB.....',
+  '.....ABBBB....',
+  '......ABBBB...',
+  '.......ABBBBB.',
+  '........NBBBBB',
 ];
 
 const ryuColors = {
@@ -878,42 +805,46 @@ const ryuColors = {
   G: NQ.gold,
   Q: NQ.ochre,
   R: NQ.red,
+  E: NQ.yellow,
 };
 
 const ryuLayers = [
-  { mirror: true, y: 1, rows: RYU_HORN },
-  { mirror: true, y: 2, rows: RYU_CROWN },
   { mirror: true, y: 9, rows: RYU_MANE },
-  { mirror: true, y: 6, rows: RYU_HEAD },
-  { mirror: true, y: 26, rows: RYU_BODY },
+  { mirror: true, y: 1, rows: RYU_HORN },
+  { mirror: true, y: 2, rows: RYU_HEAD },
+  { mirror: true, y: 27, rows: RYU_BODY },
   { mirror: true, y: 31, rows: RYU_WAVE },
-  { mirror: true, x: 1, y: 26, rows: RYU_ARM },
-  { mirror: true, x: 1, y: 19, rows: RYU_WHISKER },
+  { mirror: true, y: 21, rows: RYU_ARM },
   // むねの うろこの つや
-  { x: 20, y: 27, rows: ['AA', 'A.'] },
+  { x: 20, y: 28, rows: ['AA', 'A.'] },
 ];
 
 /**
- * クロシオリュウ（県ボス）：潮岬の おきを ながれる 黒潮の 海竜。大波から 立ちあがり、口を あけて ほえる。
- * 長く するどい 金の 角の あいだに 王冠、白い なみの たてがみ、うねる ひげ、つめの ある 前足（ミズ → カゼ）
+ * クロシオリュウ（県ボス）：潮岬の おきを ながれる 黒潮の 海竜。大波から 立ちあがり、つめの 前足を ひろげて ほえる。
+ * うしろへ そる 長い 金の 角、ひたいの 赤い 宝玉、太い まゆの 下で 黄色く 光る 目、きばの 口、白い しぶきの たてがみ（ミズ → カゼ）
  */
 const kuroshioRyu: MonsterDesign = {
   size: 48,
   colors: ryuColors,
-  rim: { [NQ.blue]: NQ.navy, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
+  rim: { [NQ.blue]: NQ.navy, [NQ.white]: NQ.cloud },
   rimDepth: 2,
   layers: ryuLayers,
 };
 
-/** クロシオリュウ 後半（カゼ）：からだが 青みどりに かわり、大きな 風の うずと しぶきが まきおこる */
+/**
+ * クロシオリュウ 後半（カゼ）：からだが 青みどりに かわり、目は 赤く もえる。
+ * つめの まわりに 風の うず、海を はしる 風の すじ
+ */
 const kuroshioRyuP0: MonsterDesign = {
   ...kuroshioRyu,
-  colors: { ...ryuColors, B: NQ.teal, A: NQ.aqua, S: NQ.mint, M: NQ.mint },
-  rim: { [NQ.teal]: NQ.navy, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
+  colors: { ...ryuColors, B: NQ.teal, A: NQ.aqua, S: NQ.mint, E: NQ.red, M: NQ.mint },
+  rim: { [NQ.teal]: NQ.navy, [NQ.white]: NQ.cloud },
   layers: [
     ...ryuLayers,
-    // 風の うず
-    { mirror: true, x: 1, y: 4, rows: ['.MMM.', 'M...M', 'M.MM.', 'M.M..', '.MM..'] },
+    // 目の 光
+    { mirror: true, x: 14, y: 14, rows: ['W'] },
+    // つめの まわりの 風の うず
+    { mirror: true, x: 6, y: 20, rows: ['.MM', 'M..', 'M.M', '.M.'] },
     // 海を はしる 風の すじ
     { mirror: true, x: 1, y: 39, rows: ['.MMMM...', 'MM..MMM.'] },
     { mirror: true, x: 2, y: 43, rows: ['MMMM....', '...MMMM.'] },

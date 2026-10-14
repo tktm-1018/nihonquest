@@ -4,7 +4,8 @@ import type { MonsterDesign } from './design';
 
 /**
  * ロクフユノオウ（六冬の王）：東北の 長い 冬 そのもの。雪と 氷の 大きな 王さま（ミズ）。
- * 雪の たてがみと つららの ひげ、6 本の 氷の とげの 王冠、むねに 6 つの 角の 雪の結晶、まわりに 雪。
+ * 雪の たてがみと つららの ひげ、6 本の 氷の とげの かんむり、むねに 6 つの 角の 雪の結晶、まわりに 雪。
+ * 顔は こん色の くまどりの お面で、赤い すじの 下に 金に 光る つり目、きばを むく 大きな 口。
  * 6 県の たからものを 1 つずつ 身につける：ねぶたの お面（青森）・わらの ケープ（秋田）・
  * 左手で ふりまわす 南部鉄びん（岩手）・三日月の 前立て（宮城）・こしの さくらんぼ（山形）・右手の 赤べこ（福島）
  */
@@ -34,7 +35,7 @@ const rokufuyu: MonsterDesign = {
   rim: { [NQ.sky]: NQ.azure, [NQ.sand]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    // 三日月の 前立て・氷の とげの 王冠・雪の たてがみ・ねぶたの お面・氷の 大そで・わらの ケープ・雪の結晶の むね
+    // 三日月の 前立て・氷の とげの かんむり・雪の たてがみ・くまどりの お面・氷の 大そで・わらの ケープ・雪の結晶の むね
     {
       mirror: true,
       rows: [
@@ -52,20 +53,20 @@ const rokufuyu: MonsterDesign = {
         '.............WWIIIGGGGGGGGGR',
         '...I........WWWIIIgggggggggR',
         '...IS...I..WWWIIIIoooooooooo',
-        '..IIS...IS.WWIIIIIoRPPPPPPPP',
-        '..IISS..IISWWIIIIIoRRPPPPPPP',
-        '..IISS.IIISWIIIIIIoPRRPPPPPP',
-        '.IIISSSIIISSWIIIIIoPRooPPPPP',
-        '.IIISSSIIISSSWIIIIoPPPoooooP',
-        '.IIISSSSIISSSSWIIIoPPoWWWSoP',
-        '..WWWWWWWWWWWWIIIIoPPoWWSSoP',
-        '.WWIWWIWWIWWWWIIIIoBBPooooPP',
-        '.SIIIIIIIIIIISIIIIoBBPPPoPPP',
-        '.SIIIIIIIIIISSIIIIoPBPPooooo',
-        '.SSIIIIIIIISSSWIIIoPPPoRRRRR',
-        '.SSSIIIIIISSSSWWIIoPPPPooooo',
-        '.ASSSSSSSSSSSAWWWWoooooooooo',
-        '.NBBBBBBBBBBBNWWWWWWWIWWWWIW',
+        '..IIS...IS.WWIIIIIoooooooooo',
+        '..IISS..IISWWIIIIIoNRNNNNNNN',
+        '..IISS.IIISWIIIIIIoNNRNNNNNN',
+        '.IIISSSIIISSWIIIIIoNNNRooNNN',
+        '.IIISSSIIISSSWIIIIoNNNNRoooN',
+        '.IIISSSSIISSSSWIIIoNNGGGNooo',
+        '..WWWWWWWWWWWWIIIIoNNNGGWGoN',
+        '.WWIWWIWWIWWWWIIIIoNNNNooooN',
+        '.SIIIIIIIIIIISIIIIoNBNNNNNNN',
+        '.SIIIIIIIIIISSIIIIoNNooooooo',
+        '.SSIIIIIIIISSSWIIIoNoWWrrrrr',
+        '.SSSIIIIIISSSSWWIIoNoWrrRRRR',
+        '.ASSSSSSSSSSSAWWWWoNNorrrWrr',
+        '.NBBBBBBBBBBBNWWWWoooooooooo',
         '.TTgTTgTIISSSSoSSSSWWIWWWIWW',
         '.TTgTTgTISSSSAoSSSSSWWIWWIWW',
         '.TTgTTgTBBBBBBoSSSSSSIWSIWIW',

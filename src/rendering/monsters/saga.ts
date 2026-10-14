@@ -206,42 +206,46 @@ const chakoron: MonsterDesign = {
   ],
 };
 
+const IKA_COLORS = {
+  I: NQ.ice,
+  A: NQ.azure,
+  K: NQ.sky,
+  b: NQ.berry,
+  W: NQ.white,
+  G: NQ.gold,
+  R: NQ.red,
+};
+
+const IKA_RIM = { [NQ.ice]: NQ.sky, [NQ.azure]: NQ.blue };
+
 /**
- * トウメイカ（中ボス）：呼子の 海の からだが すきとおった 大イカ。剣先の ような 三角の ひれ、大きな 目、
- * 8 本の 足と 長い 2 本の うで。とがった 頭の 先に 王冠（ミズ）
+ * トウメイカ（中ボス）：呼子の 海の からだが すきとおった 大イカ。矢じりの ように とがった 頭と 大きな ひれ、
+ * 頭に 赤い 玉。いかりの まゆの 下で 金の 目が ぎらりと 光り、赤い きゅうばんの 長い うでを ふり上げ、
+ * 8 本の 足を ひろげて せまる（ミズ）
  */
 const toumeika: MonsterDesign = {
   size: 40,
-  colors: {
-    I: NQ.ice,
-    A: NQ.azure,
-    K: NQ.sky,
-    W: NQ.white,
-    b: NQ.berry,
-    G: NQ.gold,
-    Q: NQ.ochre,
-    R: NQ.red,
-    p: NQ.blush,
-  },
-  rim: { [NQ.ice]: NQ.sky, [NQ.azure]: NQ.blue, [NQ.gold]: NQ.ochre },
+  colors: IKA_COLORS,
+  rim: IKA_RIM,
   rimDepth: 2,
   layers: [
-    // 長い 2 本の うで（先が ふくらむ）
+    // ふり上げた 長い 2 本の うで（先に 赤い きゅうばん）
     {
       mirror: true,
       x: 1,
-      y: 18,
+      y: 12,
       rows: [
-        '..AA.',
-        '.AKKA',
-        '.AKKA',
-        '..AA.',
+        '.AA..',
+        'ARKA.',
+        'AKRA.',
+        'ARKA.',
+        '.AA..',
         '..A..',
         '..A..',
         '...A.',
-        '...A.',
-        '....A',
-        '.....AA',
+        '...AA',
+        '....AA',
+        '.....AAA',
         '.......AAA',
       ],
     },
@@ -249,179 +253,89 @@ const toumeika: MonsterDesign = {
       mirror: true,
       rows: [
         '....................',
-        '................G..G',
-        '................GGGR',
-        '................QQQQ',
         '..................II',
         '.................III',
         '................IIII',
-        '.........II....IIIII',
-        '.......IIIIII..IIIII',
-        '.....IIIIIIIIIIIIIII',
-        '...IIIIIIIIIIIIIIIII',
-        '..IIIIIIIIIIIIIIIIII',
-        '...IIIIIIIIIIIIIIIII',
-        '.....IIIIIIIIIIIIIII',
-        '.......IIIIIIIIIIIII',
-        '.........IIIIIIIIIII',
-        '...........IIIIIIIII',
-        '............IIIIIIII',
-        '............IIIIIIII',
-        '............IIIIIIII',
-        '...........IIIIIIIII',
+        '...A...........IIIGG',
+        '...AA.........IIIIGR',
+        '...AAAA......IIIIIGR',
+        '....AAAAA...IIIIIIII',
+        '....AAAAAAAIIIIIIIII',
+        '.....AAAAAAIIIIIIIII',
+        '......AAAAAIIIIbIIII',
+        '.......AAAAIIIIIIIII',
+        '........AAAIIIIIIIII',
+        '..........IIIIIIIIII',
+        '..........IIIIIIbIII',
+        '..........IIIIIIIIII',
         '..........IIIIIIIIII',
         '.........IIIIIIIIIII',
-        '.........IIWWWIIIIII',
-        '.........IIWWoIIIIII',
-        '.........IIWWoIIIIII',
-        '.........IIWooIIIIII',
-        '.........IIIpIIIIIoo',
-        '..........IIIIIIIIII',
+        '........IIIIIIIIIIII',
+        '........AoooIIIIIIII',
+        '........AAGGoooIIIII',
+        '........AGGGGGGooIII',
+        '........AAGGGGGoIIII',
+        '........IAAAAAAIIIII',
+        '.........IIIIIoooooo',
+        '.........IIIIIoWoWoW',
         '.........AAAAAAAAAAA',
-        '........AA.AA.AAA.AA',
-        '.......AA.AA..AA..AA',
-        '......AA..AA..AA..AA',
-        '.....AA..AA...AA...A',
-        '....AA...AA...AA...A',
-        '....A....A....A....A',
-        '...AA...AA....AA....',
-        '...A.....A.....A....',
+        '........AAAAAAAAAAAA',
+        '.......AA..AA..AA..A',
+        '......AAR.AAR.AAR..A',
+        '.....AA...AA...AA..A',
+        '....AAR..AAR..AAR..A',
+        '...AA....AA....AA..A',
+        '..AAR...AAR....AAR.A',
+        '..AA....AA......AA.A',
+        '.AA....AAR......AAR.',
+        '.AAR...AA........AA.',
+        '..AA..AAR........AA.',
+        '...A..A..........A..',
       ],
     },
-    // まゆ（きりっと）
-    { mirror: true, y: 21, rows: ['..........oo........', '............oo......'] },
-    // からだの はんてん・つや
-    {
-      mirror: true,
-      y: 8,
-      rows: [
-        '..............b.....',
-        '',
-        '',
-        '.......b....b.......',
-        '',
-        '',
-        '...............b....',
-        '',
-        '',
-        '.............b......',
-        '',
-        '',
-        '...............b....',
-      ],
-    },
-    { x: 16, y: 5, rows: ['.W', 'WW', 'W.'] },
-    // 剣先の ような とがった ひれ（左右）
-    {
-      mirror: true,
-      y: 7,
-      rows: [
-        '....A...............',
-        '...AA...............',
-        '..AAAA..............',
-        '.AAAAA..............',
-        '.AAAAA..............',
-        '..AAAA..............',
-        '...AAA..............',
-        '....A...............',
-      ],
-    },
-    // 大きな 王冠と するどい 目
-    {
-      mirror: true,
-      y: 1,
-      rows: [
-        '..............G.G..G',
-        '..............GGGGGG',
-        '..............GGGGGR',
-        '..............GGGGGR',
-        '..............QQQQQQ',
-      ],
-    },
-    {
-      mirror: true,
-      y: 21,
-      rows: [
-        '..........oooo......',
-        '...........ooo......',
-        '.........WWWWo......',
-        '.........WWWoo......',
-        '.........WWWoo......',
-        '.........WWooo......',
-      ],
-    },
-    // 海の しぶき
-    { x: 2, y: 16, rows: ['.K.', 'KWK', '.K.'] },
-    { x: 35, y: 30, rows: ['.K.', 'KWK', '.K.'] },
   ],
 };
 
-/** トウメイカ（フィールドに立つ 32×32） */
+/** トウメイカ（フィールドに立つ 32×32）：バトルの すがたを 小さく した もの */
 const toumeikaField: MonsterDesign = {
   size: 32,
-  colors: {
-    I: NQ.ice,
-    A: NQ.azure,
-    W: NQ.white,
-    b: NQ.berry,
-    G: NQ.gold,
-    Q: NQ.ochre,
-    R: NQ.red,
-    p: NQ.blush,
-  },
-  rim: { [NQ.ice]: NQ.sky, [NQ.azure]: NQ.blue },
+  colors: IKA_COLORS,
+  rim: IKA_RIM,
   layers: [
     {
       mirror: true,
       rows: [
         '................',
-        '............G..G',
-        '............GGGR',
-        '............QQQQ',
-        '..............II',
+        '................',
+        '................',
         '.............III',
-        '.......I....IIII',
-        '.....IIIII.IIIII',
-        '...IIIIIIIIIIIII',
-        '..IIIIIIIIIIIIII',
-        '....IIIIIIIIIIII',
-        '......IIIIIIIIII',
-        '.........IIIIIII',
-        '..........IIIIII',
-        '..........IIIIII',
-        '.........IIIIIII',
+        '............IIGR',
+        '..A.........IIGR',
+        '..AAA......IIIII',
+        '...AAAA...IIIIII',
+        '...AAAAAAIIIIIII',
+        '....AAAAAIIIIbII',
+        '......AAAIIIIIII',
         '........IIIIIIII',
-        '........IWWIIIII',
-        '........IWoIIIII',
-        '........IWoIIIoo',
-        '........IIpIIIII',
-        '.......AAAAAAAAA',
-        '......AA.AA.AA.A',
-        '.....AA.AA..AA.A',
-        '....AA..AA..AA.A',
-        '...AA..AA...AA..',
-        '...A...AA...AA..',
-        '..AA...A.....A..',
-        '..A....A.....A..',
+        '.AA.....IIIIIIII',
+        'ARRA....IIIIIIII',
+        'ARRA...IIIIIIIII',
+        '.AA...AoooIIIIII',
+        '..A...AAGGoooIII',
+        '..A...AGGGGGooII',
+        '...A..IAAAAAIIII',
+        '...AA..IIIIooooo',
+        '....AAAAAAAAAAAA',
+        '......AAAAAAAAAA',
+        '.....AA.AA.AA..A',
+        '....AAR.AAR.AA.A',
+        '...AA..AA..AAR.A',
+        '..AAR..AA...AA.A',
+        '..AA..AAR...AAR.',
+        '.AA...AA.....AA.',
+        '.AAR..AR.....AA.',
+        '..A...A......A..',
       ],
-    },
-    { mirror: true, y: 8, rows: ['..........b.....', '', '.....b.....b....', '', '', '...........b....'] },
-    // とがった ひれと するどい 目
-    {
-      mirror: true,
-      y: 6,
-      rows: [
-        '...A............',
-        '..AAA...........',
-        '.AAAA...........',
-        '..AAA...........',
-        '...A............',
-      ],
-    },
-    {
-      mirror: true,
-      y: 16,
-      rows: ['.......ooo......', '.......WWo......', '.......WWo......', '.......Woo......'],
     },
   ],
 };
@@ -491,27 +405,28 @@ const SHISHI_FACE = [
   '..........RRRRRRRRRRRRRR',
 ];
 
-/** まゆ・金の 目・鼻・大きな 口（左半分、y 10〜28） */
+/** いかりの 金の まゆ・つり上がった 金の 目・鼻・きばの ならぶ ほえる 口（左半分、y 10〜29） */
 const SHISHI_FEATURES = [
-  '........GGG.............',
-  '.......GGGGGG...........',
-  '..........GGGGGG........',
-  '............oooo.GG.....',
-  '............GGGG........',
-  '............GGoo........',
-  '............GGoo.......V',
-  '............GGGGVVVVVVVV',
+  '.......GG...............',
+  '......GGGGG.............',
+  '.........GGGGGG.........',
+  '............GGGGGG......',
+  '.........GGGo...........',
+  '.........GGGGGoo........',
+  '..........GGGGGo.......V',
+  '................VVVVVVVV',
   '..................VRRRRR',
   '..................RRRRRR',
   '..................RoRRRR',
   '...................RRRRR',
-  '..........oooooooooooooo',
-  '..........oWWWWWWWWWWWWW',
-  '..........obbbbbbbbbbbbb',
-  '...........obbbbbbbbbbVV',
-  '...........oWbbbbbbbVVVV',
-  '............oWWWWWWWWWWW',
   '.............ooooooooooo',
+  '............oWWWWWWWWWWW',
+  '...........oWWWbbbbbWWbb',
+  '...........obWbbbbbbbWbb',
+  '..........obbbbbbbbbbbVV',
+  '..........obWbbbbbbbVVVV',
+  '..........oWWWbbbbbbbbbb',
+  '..........oooooooooooooo',
 ];
 
 /** 曳山の 台と 大きな 車（左半分） */
@@ -540,8 +455,8 @@ const SHISHI_WHEEL = [
 ];
 
 /**
- * アカジシオウ（県ボス）：唐津くんちの 曳山「赤獅子」が 動きだした 王。赤い 顔に 金の 目と まゆ、
- * 金の うずまきの 黒い たてがみ、大きく ひらいた 口。曳山の 台と 大きな 木の 車に のる（ヒノ）
+ * アカジシオウ（県ボス）：唐津くんちの 曳山「赤獅子」が 動きだした 王。赤い 顔に 金の つの、いかりの 金の まゆと
+ * つり上がった 金の 目、きばの ならぶ 口で ほえる。金の うずまきの さかだつ 黒い たてがみ。曳山の 台と 大きな 木の 車に のる（ヒノ）
  */
 const akajishiOh: MonsterDesign = {
   size: 48,
@@ -613,27 +528,24 @@ const akajishiOh: MonsterDesign = {
         '.....GGGG...............',
       ],
     },
-    // 大きな 王冠
-    {
-      mirror: true,
-      y: 1,
-      rows: [
-        '..................G.G..G',
-        '..................GGGGGG',
-        '..................GGGGGJ',
-        '..................GGGGGJ',
-        '..................QQQQQQ',
-      ],
-    },
   ],
 };
 
-/** アカジシオウ 後半（いかり）：顔が まっ赤に 燃え、たてがみの 上に 炎が 立ちのぼり、金の 目が 白く 光る */
+/** アカジシオウ 後半（いかり）：顔が まっ赤に 燃え、たてがみの 上に 炎が 立ちのぼり、金の 目が 白く 光り、口の おくが 赤く もえる */
 const akajishiOhRage: MonsterDesign = {
   ...akajishiOh,
-  colors: { ...akajishiOh.colors, R: NQ.vermilion, V: NQ.apricot, A: NQ.apricot, C: NQ.cream, E: NQ.cream },
+  colors: {
+    ...akajishiOh.colors,
+    R: NQ.vermilion,
+    b: NQ.red,
+    V: NQ.apricot,
+    A: NQ.apricot,
+    C: NQ.cream,
+    E: NQ.cream,
+  },
   rim: { [NQ.vermilion]: NQ.brick, [NQ.gold]: NQ.ochre, [NQ.brown]: NQ.bark },
   layers: [
+    ...akajishiOh.layers,
     // たてがみの 上の 炎
     {
       mirror: true,
@@ -644,17 +556,16 @@ const akajishiOhRage: MonsterDesign = {
         '.......G....C...',
         '......AGA...G...',
         '......AGA..AGA..',
-        '.....RAGAR.AGA..',
-        '.....RRARRRAGAR.',
-        '...........RRARR',
+        '.....JAGAJ.AGA..',
+        '.....JJAJJJAGAJ.',
+        '...........JJAJJ',
       ],
     },
-    ...akajishiOh.layers,
     // 白く 光る 目
     {
       mirror: true,
       y: 14,
-      rows: ['............EEEE', '............EEoo', '............EEoo', '............EEEE'],
+      rows: ['.........EEEo...', '.........EEEEEoo', '..........EEEEEo'],
     },
   ],
 };

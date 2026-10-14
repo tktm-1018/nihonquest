@@ -1,9 +1,26 @@
 /** 沖縄県の モンスター（手描き。docs/06 §4・§6.3〜6.5 の 規格） */
 import { NQ } from '../palette';
-import type { MonsterDesign } from './design';
+import type { Layer, MonsterDesign } from './design';
+
+/**
+ * ボスの 部品（うで・頭など）を ink で ふちどって 重ねる 2 まいの レイヤー。体の 上に 重ねても くっきり 分かれる。
+ * mirror の 部品は 地図を まん中（右はし）まで 書き、まん中の がわは ふちどらない
+ */
+function part(rows: readonly string[], x: number, y: number, mirror = true): Layer[] {
+  const w = Math.max(...rows.map((r) => r.length));
+  const at = (i: number, j: number) => (rows[j]?.[i] ?? '.') !== '.';
+  const edge = Array.from({ length: rows.length + 2 }, (_, j) =>
+    Array.from({ length: mirror ? w + 1 : w + 2 }, (_, i) =>
+      !at(i - 1, j - 1) && (at(i - 2, j - 1) || at(i, j - 1) || at(i - 1, j - 2) || at(i - 1, j)) ? 'o' : '.',
+    ).join(''),
+  );
+  return [
+    { mirror, x: x - 1, y: y - 1, rows: edge },
+    { mirror, x, y, rows },
+  ];
+}
 
 const one = (rows: string[]) => [{ rows }];
-const half = (rows: string[]) => [{ mirror: true, rows }];
 
 /** ゴーヤマル：いぼいぼの ゴーヤー。上に ヘタと つるの 葉（モリ） */
 const goyamaru: MonsterDesign = {
@@ -301,199 +318,368 @@ const nijiKurage: MonsterDesign = {
 };
 
 /**
- * エイサーダイコ（中ボス）：エイサーの 大太鼓が おどりだした すがた。赤い ふちと 金の はちまき、
- * 木の うでで ばちを かまえ、足で リズムを とる。頭に 王冠（カゼ）
+ * エイサーダイコ（中ボス）：エイサーの 大太鼓が おどりだした すがた。太鼓の かわに いかりの 顔が うかび、
+ * 黄色い 目と きばの 口で ほえる。金の はちまきの 赤い はしが 炎のように なびき、木の うでで 2 本の ばちを
+ * 頭の 上に ふりかざす。金の びょうと 赤い ふち、ふんばる 足（カゼ）
  */
 const eisaDaiko: MonsterDesign = {
   size: 40,
   colors: {
     C: NQ.cream,
-    S: NQ.sand,
     R: NQ.red,
     B: NQ.brown,
-    K: NQ.bark,
-    T: NQ.tan,
-    Y: NQ.gold,
-    Q: NQ.ochre,
+    K: NQ.hairBlack,
+    G: NQ.gold,
+    Y: NQ.yellow,
     W: NQ.white,
-    p: NQ.blush,
   },
-  rim: { [NQ.cream]: NQ.sand, [NQ.red]: NQ.brick },
+  rim: { [NQ.cream]: NQ.sand, [NQ.red]: NQ.brick, [NQ.brown]: NQ.bark, [NQ.white]: NQ.cloud },
   rimDepth: 2,
-  layers: half([
-    '....................',
-    '................Y..Y',
-    '................YY.Y',
-    '................YYYY',
-    '................YYYR',
-    '...RRRR.........QQQQ',
-    '.TTRRRRRRRRRRRRRRRRR',
-    '..TTRRRRYYYYYYYYYYYY',
-    '..TT....RRRRRRRRRRRR',
-    '...TT...............',
-    '...TT...............',
-    '....TT..............',
-    '....BBB........RRRRR',
-    '....BBBB.....RRRRKRR',
-    '.....BBB...RRRRRCCCC',
-    '......BBB.RRSKCCCCCC',
-    '......BBBRRSCKKCCCCC',
-    '.......BRRSCCCCKKKCC',
-    '.......BRKSCCCWWoCCC',
-    '.......RRCCCCCWWoCCC',
-    '......BRRCCCCCWWoCCC',
-    '......BRRCCCCCWooCCC',
-    '......BRKCCCCCCCCCCC',
-    '......BRRCCCCCCCCCCC',
-    '......BRRCCCpCCCCCCC',
-    '......BRRCCCCCCCCooo',
-    '......BRKCCCCCCCCCoo',
-    '.......BRRCCCCCCCCCC',
-    '.......BRRRCCCCCCCCC',
-    '........BRRRCCCCCCCC',
-    '.........BRKRCCCCCCC',
-    '..........BRRRRRCCCC',
-    '...........BBRRKRRRR',
-    '.............BBRRRRR',
-    '.............BBBBBBB',
-    '.............BBBB...',
-    '.............BBBB...',
-    '............WWWWWW..',
-    '............WWWWWW..',
-    '....................',
-  ]),
+  layers: [
+    // ふりかざした 2 本の ばち
+    {
+      mirror: true,
+      y: 1,
+      rows: ['...RR', '...RRB', '.....BB', '......BB', '.......B'],
+    },
+    // 金の はちまきの 赤い はし（炎のように なびく）
+    {
+      mirror: true,
+      y: 5,
+      rows: ['R...........', 'RR..........', '.RR.........', '..RRR.......', '...RRRRR....'],
+    },
+    // ふんばる 足
+    {
+      mirror: true,
+      y: 30,
+      rows: [
+        '........WWWWW.......',
+        '.......WWWWWW.......',
+        '......WWWWWW........',
+        '.....WWWWWW.........',
+        '....WWWWWW..........',
+        '....WWWWW...........',
+        '...BBBBBB...........',
+        '..KKKKKKK...........',
+      ],
+    },
+    // 木の うで
+    ...part(
+      [
+        '..BB...............',
+        '.BBBB..............',
+        '.BBBB..............',
+        '..BBB..............',
+        '..BBBB.............',
+        '...BBBB............',
+        '....BBBBB..........',
+        '.....BBBBB.........',
+      ],
+      1,
+      6,
+    ),
+    // 大太鼓（赤い ふち・金の びょう・太鼓の かわ）
+    ...part(
+      [
+        '........RRRRRRRRRRR',
+        '.....RRRRRRRRRRRRRR',
+        '...RRRRGCCCCCCCCCCC',
+        '..RRRGCCCCCCCCCCCCC',
+        '.RRRGCCCCCCCCCCCCCC',
+        '.RRRCCCCCCCCCCCCCCC',
+        'RRRGCCCCCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCCCCCC',
+        'RRRGCCCCCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCCCCCC',
+        'RRRGCCCCCCCCCCCCCCC',
+        '.RRRCCCCCCCCCCCCCCC',
+        '.RRRGCCCCCCCCCCCCCC',
+        '..RRRGCCCCCCCCCCCCC',
+        '...RRRRGCCCCCCCCCCC',
+        '.....RRRRRRRRRRRRRR',
+        '........RRRRRRRRRRR',
+      ],
+      1,
+      12,
+    ),
+    // 金の はちまき
+    {
+      mirror: true,
+      x: 1,
+      y: 12,
+      rows: ['.......GGGGGGGGGGGG', '....GGGGGGGGGGGGGGG', '....GoGGoGGoGGoGGoG'],
+    },
+    // いかりの まゆ・光る 目・きばの 口
+    {
+      mirror: true,
+      y: 15,
+      rows: [
+        '......oo............',
+        '.......oooo.........',
+        '.........oooooo.....',
+        '.......oYYYYooo.....',
+        '........oYYYWo......',
+        '.........oooo.......',
+        '....................',
+        '.......oooooooooooo.',
+        '.......oWWoooooWWooo',
+        '........WWooooooWooo',
+        '........oWoooooooooo',
+        '.........oooWoooWooo',
+        '..........oooooooooo',
+      ],
+    },
+  ],
 };
 
-/** エイサーダイコ（フィールドに 立つ 32×32） */
+/** エイサーダイコ（フィールドに 立つ 32×32）：バトルの すがたを 小さく した もの */
 const eisaDaikoField: MonsterDesign = {
   size: 32,
   colors: {
     C: NQ.cream,
-    S: NQ.sand,
     R: NQ.red,
     B: NQ.brown,
-    K: NQ.bark,
-    T: NQ.tan,
-    Y: NQ.gold,
-    Q: NQ.ochre,
+    K: NQ.hairBlack,
+    G: NQ.gold,
+    Y: NQ.yellow,
     W: NQ.white,
   },
-  rim: { [NQ.cream]: NQ.sand, [NQ.red]: NQ.brick },
-  layers: half([
-    '................',
-    '.............Y..',
-    '.............YY.',
-    '.............YYY',
-    '.............YYR',
-    '.............QQQ',
-    '.T.....RRRRRRRRR',
-    '..T....YYYYYYYYY',
-    '..T.............',
-    '..T.............',
-    '...TB...........',
-    '...BBB.....RRRRR',
-    '....BB...BRRRRRC',
-    '.....BB.RRKKCCCC',
-    '.....BBBRRCCCCCC',
-    '......BRRCCWWCCC',
-    '.....BRRCCCWoCCC',
-    '.....BRRCCCooCCC',
-    '.....BRRCCCCCCCC',
-    '.....BRCCCCCCCCC',
-    '.....BRCCCCCCCCC',
-    '.....BRRCCCCCooC',
-    '.....BRRCCCCCCCC',
-    '.....BBRRCCCCCCC',
-    '......BRRRCCCCCC',
-    '.......BRRRCCCCC',
-    '........BRRRRRCC',
-    '.........BBRRRRR',
-    '...........BBBRR',
-    '...........BBB..',
-    '..........WWWWW.',
-    '................',
-  ]),
+  rim: { [NQ.cream]: NQ.sand, [NQ.red]: NQ.brick, [NQ.brown]: NQ.bark },
+  layers: [
+    { mirror: true, y: 3, rows: ['..RR', '..RRB', '....BB', '.....B'] },
+    { mirror: true, y: 6, rows: ['R.........', 'RR........', '.RRR......', '..RRRRR...'] },
+    {
+      mirror: true,
+      y: 23,
+      rows: [
+        '......WWWW......',
+        '.....WWWWW......',
+        '....WWWWW.......',
+        '...WWWWW........',
+        '...BBBBB........',
+        '..KKKKKK........',
+      ],
+    },
+    ...part(
+      ['.BB............', '.BBB...........', '..BBB..........', '..BBBB.........', '...BBBBB.......'],
+      1,
+      7,
+    ),
+    ...part(
+      [
+        '......RRRRRRRRR',
+        '...RRRRRRRRRRRR',
+        '..RRRGCCCCCCCCC',
+        '.RRRCCCCCCCCCCC',
+        'RRRGCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCC',
+        'RRRCCCCCCCCCCCC',
+        'RRRGCCCCCCCCCCC',
+        '.RRRCCCCCCCCCCC',
+        '..RRRGCCCCCCCCC',
+        '...RRRRRRRRRRRR',
+        '......RRRRRRRRR',
+      ],
+      1,
+      12,
+    ),
+    { mirror: true, y: 12, rows: ['.......GGGGGGGGG', '....GGGGGGGGGGGG', '....GoGGoGGoGGoG'] },
+    {
+      mirror: true,
+      y: 15,
+      rows: [
+        '.....oo.........',
+        '......oooooo....',
+        '.....oYYYYoo....',
+        '......oYYWo.....',
+        '................',
+        '.....oooooooooo.',
+        '.....oWWooooWWoo',
+        '......oWoooooWoo',
+        '.......ooooooooo',
+      ],
+    },
+  ],
 };
 
 /**
- * ダイリュウチュウ（県ボス）：首里城の 正殿の 前に 立つ 石の 龍柱が 動きだした すがた。
- * 石の うろこの からだが 柱に まきつき、朱と 金の かざり。頭に 王冠（ツチ。後半は 2 回 行動）
+ * ダイリュウチュウ（県ボス）：首里城の 正殿の 前に 立つ 石の 龍柱が 動きだした すがた。うしろへ そり返る 石の つのと
+ * とげの たてがみ、黄色く 光る 目と きばの 大きな 口。石の うろこの からだが 朱ぬりの 柱に まきつき、
+ * 金の つめで つかむ。金の ひげと 金の おび、足もとは 石の 台（ツチ）
  */
 const dairyuchu: MonsterDesign = {
   size: 48,
   colors: {
     g: NQ.gray,
-    L: NQ.slate,
     i: NQ.silver,
     R: NQ.red,
     Y: NQ.gold,
-    Q: NQ.ochre,
+    E: NQ.yellow,
     W: NQ.white,
   },
-  rim: { [NQ.gray]: NQ.slate },
+  rim: { [NQ.gray]: NQ.slate, [NQ.red]: NQ.brick, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
-  layers: one([
-    '................................................',
-    '...........ig.......Y..YY..Y.......gi...........',
-    '..........ig.g.....YY.YYYY.YY.....g.gi..........',
-    '..........ggggg....YYYYYYYYYY....ggggg..........',
-    '.............g.g...YYYYRRYYYY...g.g.............',
-    '..............g.g.iQQQQQQQQQQi.g.g..............',
-    '...............LLLggggggggggggLLL...............',
-    '................ggLLLLggggLLLLgg................',
-    '...............ggWWoggggggggoWWgg...............',
-    '...............LgWWoggggggggoWWgL...............',
-    '............LLLLgWWoggggggggoWWgLLLL............',
-    '...........LLLLggWooggggggggooWggLLLL...........',
-    '..........LLLLLggggggggggggggggggLLLLL..........',
-    '..........LL...ggggggiiiiiigggggg...LL..........',
-    '................gggiiiiiiiiiiggg................',
-    '.................giiiioiioiiiig.................',
-    '.......i..........iiiiiiiiiiii..........i.......',
-    '........i.......iiiiiiiiiiiiiiii.......i........',
-    '.........i..iiii..giiiiiiiiiig..iiii..i.........',
-    '..........ii......goooooooooog......ii..........',
-    '...........LLLL...ggWggWWggWgg..................',
-    '...........gggLLLLLLLggiiggLgg..................',
-    '...........igggggggggLLLLLLLgg..................',
-    '........W..ggggigggiggggggggLLLLLLL.............',
-    '.........i.ggggggggggggigggiggggggLLLL..........',
-    '........i..ggggggggggggggggggggigggggg..........',
-    '...........LLLgggggggggggggggggggggigg..........',
-    '..............LLLLLLLggggggggggggggggg..........',
-    '..................ggLLLLLLLLggggggLLLL..........',
-    '..................ggLggiiggLLLLLLLLggi..........',
-    '..................ggLggiiggLgi.ggigggg..........',
-    '..............LLL.ggLigiiigLgg.ggggggg..........',
-    '...........LLLLggiggLggiiggLgg.ggggLLL..........',
-    '...........ggiggg.ggLggiiggLgg.LLLL.............',
-    '...........LLLLgg.ggLggiiggLgg..................',
-    '...........gggLLLLLLLggiiggLgg..................',
-    '...........igggggggggLLLLLLLgg..................',
-    '...........ggggigggiggggggggLLLLLLL.............',
-    '...........ggggggggggggigggiggggggLLLL.W........',
-    '...........ggggggggggggggggggggiggggggi.........',
-    '...........LLLgggggggggggggggggggggigg.i........',
-    '..............LLLLLLLggggggggggggggggg..........',
-    '..................ggLLLLLLLLgggggggggg..........',
-    '..............YYYYYYYYYYYYYYLLLLLLgggg..........',
-    '..............ggggggggggggggggggggLLLL..........',
-    '..............gggggggggggggggggggg..............',
-    '................RRRRRRRRRRRRRRRR................',
-    '................................................',
-  ]),
+  layers: [
+    // 朱ぬりの 柱と 金の おび
+    {
+      mirror: true,
+      y: 22,
+      rows: [
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........YYYYYYYYYYYYYY',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........RRRRRRRRRRRRRR',
+        '..........YYYYYYYYYYYYYY',
+      ],
+    },
+    // とげの たてがみ（石）
+    {
+      mirror: true,
+      x: 1,
+      y: 6,
+      rows: [
+        '.....i.................',
+        '......ii...............',
+        '..i....ggg.............',
+        '...ii..gggg............',
+        '....ggggggg............',
+        'i....gggggg............',
+        '.iigggggggg............',
+        '...gggggggg............',
+        'iggggggggg.............',
+        '.ggggggggg.............',
+        '...gggggggg............',
+        '.....gggggg............',
+        '.......ggggg...........',
+      ],
+    },
+    // 柱に まきつく 石の からだ（前を ななめに 横切る）
+    ...part(
+      [
+        '..gigg.................',
+        '.ggggggg...............',
+        '.ggggigggg.............',
+        '..gggggggggg...........',
+        '....ggggiggggg.........',
+        '......gggggggggg.......',
+        '........ggggiggggg.....',
+        '..........gggggggggg...',
+        '............ggggiggggg.',
+        '..............ggggggggg',
+        '................gggiggg',
+        '..................ggggg',
+        '....................ggg',
+      ],
+      1,
+      26,
+    ),
+    // 台の 上で とぐろを まく しっぽ
+    ...part(
+      [
+        '...gggggggggggggggggggg',
+        '..ggigggigggigggigggigg',
+        '..ggggggggggggggggggggg',
+        '...gggggggggggggggggggg',
+      ],
+      1,
+      39,
+    ),
+    // 柱を つかむ 金の つめ
+    { mirror: true, y: 24, rows: ['.........Y.Y.Y..........', '.........YYYYY..........'] },
+    // 石の 台
+    ...part(['......ggggggggggggggggg', '....iiiiiiiiiiiiiiiiiii', '....ggggggggggggggggggg'], 1, 43),
+    // うしろへ そり返る 石の つの
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '....ii',
+        '.....ii',
+        '......ggg',
+        '.......gggg',
+        '.........gggg',
+        '...........ggggg',
+        '.............gggg',
+      ],
+    },
+    // 頭
+    ...part(
+      [
+        '......ggggggggg',
+        '....ggggggggggg',
+        '..ggggggggggggg',
+        'ggggggggggggggg',
+        '.gggggggggggggg',
+        '..ggggggggggggg',
+        '..ggggggggggggg',
+        '...gggggggggggg',
+        '...gggggggggggg',
+        '....ggggggggggg',
+        '....ggggggggggg',
+        '....ggggggggggg',
+        '.....gggggggggg',
+        '.....gggggggggg',
+        '......ggggggggg',
+        '.......gggggggg',
+      ],
+      9,
+      7,
+    ),
+    // 金の まゆかざり・黄色く 光る 目・きばの 口・金の ひげ
+    {
+      mirror: true,
+      x: 9,
+      y: 7,
+      rows: [
+        '.......YY....YY',
+        '.....YY......Y.',
+        '..oooo.........',
+        '....oooooo.....',
+        '....EEEEooo....',
+        '.....EEEWo.....',
+        '......ooo......',
+        '..........i..i.',
+        '...............',
+        '......ooooooooo',
+        '.....oWWooooWoo',
+        '.....oWWooooWoo',
+        '......Woooooooo',
+        '......ooooooooo',
+        '.......oWooWooo',
+        '........ooooooo',
+      ],
+    },
+    { mirror: true, y: 15, rows: ['.........YYY', '.......YY', '.....YY', '....Y', '...Y', '...Y', '....Y'] },
+  ],
 };
 
-/** ダイリュウチュウ 後半：石が 朱と 金に 光りだし、まわりに きらめき */
+/** ダイリュウチュウ 後半：石が 朱と 金に 光りだし、目は 白く 光る。まわりに きらめき */
 const dairyuchuShine: MonsterDesign = {
   ...dairyuchu,
-  colors: { ...dairyuchu.colors, g: NQ.red, L: NQ.brick, i: NQ.vermilion },
-  rim: { [NQ.red]: NQ.brick },
+  colors: { ...dairyuchu.colors, g: NQ.vermilion, i: NQ.gold, E: NQ.white },
+  rim: { [NQ.vermilion]: NQ.brick, [NQ.red]: NQ.brick, [NQ.gold]: NQ.ochre },
   layers: [
     ...dairyuchu.layers,
-    { mirror: true, x: 2, y: 6, rows: ['.Y.', 'YQY', '.Y.'] },
-    { mirror: true, x: 5, y: 24, rows: ['.Y.', 'YQY', '.Y.'] },
-    { mirror: true, x: 9, y: 2, rows: ['Y'] },
+    { mirror: true, x: 1, y: 27, rows: ['.Y.', 'YWY', '.Y.'] },
+    { mirror: true, x: 2, y: 3, rows: ['.Y.', 'YWY', '.Y.'] },
+    { mirror: true, x: 8, y: 1, rows: ['Y'] },
   ],
 };
 

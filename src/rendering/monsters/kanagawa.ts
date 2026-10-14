@@ -392,37 +392,68 @@ const kazakiriTonbi: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-/** クロタマゴンの からだ（S＝キャンバスの 大きさ） */
+/** クロタマゴンの からだ（S＝キャンバスの 大きさ。40 と 32 で 同じ 形を ちぢめて つかう） */
 const tamagoParts = (S: number) => {
   const k = S / 40;
   const c = (S - 1) / 2;
-  const egg = (x: number, y: number) => inEll(x, y, c, 21.5 * k, 11.5 * k, 14 * k);
+  const egg = (x: number, y: number) => inEll(x, y, c, 21 * k, 10.8 * k, 13.2 * k);
+  // 岩の かたあて（いかった 肩）
+  const shoulder = (x: number, y: number) =>
+    inEll(x, y, c - 12.8 * k, 16.5 * k, 4.3 * k, 3.4 * k) ||
+    inEll(x, y, c + 12.8 * k, 16.5 * k, 4.3 * k, 3.4 * k);
+  // 肩の 上の とげ（3 本ずつ）
+  const spikeL = (x: number, y: number) =>
+    [
+      [c - 16.5 * k, 9.5 * k],
+      [c - 13 * k, 10 * k],
+    ].some(
+      ([sx, sy]) =>
+        y >= sy! && y <= 14 * k && Math.abs(x - sx!) <= ((y - sy!) / (14 * k - sy!)) * 1.6 * k + 0.3,
+    );
+  const spike = (x: number, y: number) => spikeL(x, y) || spikeL(S - 1 - x, y);
   const arm = mirrorX(
     tube(
       [
-        [c - 10 * k, 22 * k],
-        [c - 15 * k, 27 * k],
-        [c - 15.5 * k, 32 * k],
+        [c - 12 * k, 17 * k],
+        [c - 16.3 * k, 23 * k],
+        [c - 16.3 * k, 29 * k],
       ],
-      3.5 * k,
-      3 * k,
+      3.9 * k,
+      3.4 * k,
     ),
     S,
   );
   const fist = (x: number, y: number) =>
-    inEll(x, y, c - 15.5 * k, 33.5 * k, 3.8 * k, 3.2 * k) ||
-    inEll(x, y, c + 15.5 * k, 33.5 * k, 3.8 * k, 3.2 * k);
+    inEll(x, y, c - 15.8 * k, 32.5 * k, 4.4 * k, 4 * k) ||
+    inEll(x, y, c + 15.8 * k, 32.5 * k, 4.4 * k, 4 * k);
   const leg = (x: number, y: number) =>
-    y >= 32 * k && y <= S - 2 && Math.abs(x - c) >= 2.5 * k && Math.abs(x - c) <= 8.5 * k;
-  return { egg, arm, fist, leg };
+    y >= 31 * k &&
+    y <= S - 2 &&
+    Math.abs(x - c) >= 2 * k &&
+    Math.abs(x - c) <= 8.5 * k + Math.max(0, y - 36 * k) * 0.6;
+  // 頭の 岩の つの（先は 金）。u は 根もと 0 → 先 1
+  const horn = mirrorX(
+    tube(
+      [
+        [c - 5 * k, 10 * k],
+        [c - 8.5 * k, 6 * k],
+        [c - 8.2 * k, 1.5 * k],
+      ],
+      2.3 * k,
+      0.7 * k,
+    ),
+    S,
+  );
+  return { egg, shoulder, spike, arm, fist, leg, horn };
 };
 /** 岩：灰色（g）に 銀の ふち（s）と 黄色い 硫黄（Y）の つぶ */
 const rocky = (inside: (x: number, y: number) => boolean) => (x: number, y: number) =>
-  !inside(x, y) ? '.' : litEdge(inside, x, y) ? 's' : (x * 5 + y * 3) % 13 === 0 ? 'Y' : 'g';
+  !inside(x, y) ? '.' : litEdge(inside, x, y) ? 's' : (x * 5 + y * 3) % 23 === 0 ? 'Y' : 'g';
 
 /**
- * クロタマゴン（中ボス）：大涌谷の 黒たまごの 大きな モンスター。まっ黒で つやつやの たまごの からだ、上の ひびから 白身と ゆげ、
- * 硫黄の つぶが ついた 岩の うでと 足。たまごの てっぺんに 王冠（ツチ → 後半 ヒノ）
+ * クロタマゴン（中ボス）：大涌谷の 黒たまごの 岩の 巨人。まっ黒な たまごの からだに 赤く 光る ひび（地ねつ）、
+ * とげの ついた 岩の 肩と 大きな 岩の こぶし、頭に 先が 金の 岩の つの。ふとい 岩の まゆの 下で 黄色い 目が 光り、
+ * きばの 口の おくは まっ赤。てっぺんの ひびから 白身と ゆげが ふきあがる（ツチ）
  */
 const TAMA = tamagoParts(40);
 const kurotamagon: MonsterDesign = {
@@ -436,15 +467,19 @@ const kurotamagon: MonsterDesign = {
     G: NQ.gold,
     Q: NQ.ochre,
     R: NQ.red,
+    V: NQ.vermilion,
     W: NQ.white,
     c: NQ.cloud,
   },
   rim: { [NQ.gray]: NQ.slate, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
   rimDepth: 2,
   layers: [
-    // ゆげ
-    { x: 2, y: 3, rows: ['..WWW...', '.WWcWW..', 'WWccWWW.', '.WWcWW..', '..WW....'] },
-    { x: 30, y: 2, rows: ['...WWW..', '..WWcWW.', '.WWWccWW', '..WWcWW.', '....WW..'] },
+    // ふきあがる ゆげ
+    { x: 1, y: 1, rows: ['.WWW....', 'WWcWW...', 'WccWWW..', '.WWcWW..', '..WWW...'] },
+    { x: 31, y: 1, rows: ['....WWW.', '...WWcWW', '..WWWccW', '..WWcWW.', '...WWW..'] },
+    // 足（ふんばる）
+    { rows: plot(40, 40, rocky(TAMA.leg)) },
+    // うで・こぶし
     {
       rows: plot(
         40,
@@ -452,48 +487,63 @@ const kurotamagon: MonsterDesign = {
         rocky((x, y) => TAMA.arm(x, y) >= 0 || TAMA.fist(x, y)),
       ),
     },
-    { rows: plot(40, 40, rocky(TAMA.leg)) },
-    // 黒い たまご（左上に 大きな つや）
+    // 黒い たまご（左上に つや）
     {
       rows: plot(40, 40, (x, y) => {
         if (!TAMA.egg(x, y)) return '.';
-        if (inEll(x, y, 13.5, 13, 2.2, 3.6)) return 'L';
+        if (inEll(x, y, 13.5, 12.5, 1.6, 2.6)) return 'L';
         return litEdge(TAMA.egg, x, y) ? 'L' : 'N';
       }),
     },
-    { x: 12, y: 10, rows: ['.W', 'W.'] },
-    // 上の ひびから 白身
-    { x: 22, y: 8, rows: ['o.o.o', 'WoWoW', 'WWWWW', '.WWW.'] },
-    // 王冠
+    // とげの 肩
     {
-      mirror: true,
-      y: 3,
-      rows: ['................G..G', '................GGGR', '................GGGR', '................QQQQ'],
+      rows: plot(
+        40,
+        40,
+        rocky((x, y) => TAMA.shoulder(x, y) || TAMA.spike(x, y)),
+      ),
     },
-    // 顔：まゆ・白い 目（3×4）・歯を 見せて にやり
+    // 岩の つの（先は 金）
+    {
+      rows: plot(40, 40, (x, y) =>
+        TAMA.horn(x, y) < 0 ? '.' : TAMA.horn(x, y) > 0.45 ? 'G' : TAMA.horn(x, y) > 0.2 ? 's' : 'g',
+      ),
+    },
+    // 赤く 光る ひび（地ねつ）
+    { x: 9, y: 25, rows: ['V...', 'RV..', '.RV.', '.R..', 'RV..', 'V...'] },
+    { x: 26, y: 25, rows: ['...V', '..VR', '.VR.', '..R.', '..VR', '...V'] },
+    { x: 18, y: 10, rows: ['.R..', '.VR.', '..V.'] },
+    // てっぺんの ひびから 白身
+    { x: 16, y: 7, rows: ['.o.oo.o.', 'oWoWWoWo', 'WWWWWWWW', '.WWccWW.'] },
+    // 顔：岩の まゆ・光る 目・きばの 口
     {
       mirror: true,
-      y: 16,
+      y: 14,
       rows: [
-        '............sss.....',
-        '..............ss....',
-        '.............WWW....',
-        '.............WWo....',
-        '.............Woo....',
-        '.............Woo....',
         '....................',
-        '...............ooooo',
-        '...............oWWWW',
-        '................oooo',
+        '..........ss........',
+        '..........gsss......',
+        '...........ggsss....',
+        '............gggss...',
+        '.........YY..gggg...',
+        '.........YYYYY.ooo..',
+        '..........YWWWYY....',
+        '...........YYYYY....',
+        '....................',
+        '..........oooooooooo',
+        '.........oWWoooooooo',
+        '.........ooWWoRRRRRR',
+        '.........oRWWRRRVRRR',
+        '.........oRRWRRRRRRR',
+        '.........oRRRRRRWRRR',
+        '.........ooRRRRRWWRR',
+        '..........oooooWWWoo',
       ],
     },
-    // 足もとの 硫黄
-    { x: 3, y: 36, rows: ['.Y..', 'YYY.', 'YYYY'] },
-    { x: 33, y: 36, rows: ['..Y.', '.YYY', 'YYYY'] },
   ],
 };
 
-/** クロタマゴン（フィールドに 立つ 32×32） */
+/** クロタマゴン（フィールドに 立つ 32×32）。バトルの すがたを ちぢめた もの */
 const TAMA_F = tamagoParts(32);
 const kurotamagonField: MonsterDesign = {
   size: 32,
@@ -504,14 +554,15 @@ const kurotamagonField: MonsterDesign = {
     s: NQ.silver,
     Y: NQ.yellow,
     G: NQ.gold,
-    Q: NQ.ochre,
     R: NQ.red,
+    V: NQ.vermilion,
     W: NQ.white,
   },
-  rim: { [NQ.gray]: NQ.slate, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.gray]: NQ.slate },
   layers: [
-    { x: 2, y: 3, rows: ['.WW.', 'WWWW', '.WW.'] },
-    { x: 26, y: 2, rows: ['.WW.', 'WWWW', '.WW.'] },
+    { x: 1, y: 1, rows: ['.WW.', 'WWWW', '.WW.'] },
+    { x: 27, y: 1, rows: ['.WW.', 'WWWW', '.WW.'] },
+    { rows: plot(32, 32, rocky(TAMA_F.leg)) },
     {
       rows: plot(
         32,
@@ -519,25 +570,38 @@ const kurotamagonField: MonsterDesign = {
         rocky((x, y) => TAMA_F.arm(x, y) >= 0 || TAMA_F.fist(x, y)),
       ),
     },
-    { rows: plot(32, 32, rocky(TAMA_F.leg)) },
     {
       rows: plot(32, 32, (x, y) =>
-        !TAMA_F.egg(x, y) ? '.' : inEll(x, y, 11, 10.5, 1.6, 2.8) || litEdge(TAMA_F.egg, x, y) ? 'L' : 'N',
+        !TAMA_F.egg(x, y) ? '.' : inEll(x, y, 11, 10, 1.2, 2) || litEdge(TAMA_F.egg, x, y) ? 'L' : 'N',
       ),
     },
-    { x: 18, y: 7, rows: ['o.o.', 'WWWW'] },
-    { mirror: true, y: 2, rows: ['.............G.G', '.............GGR', '.............QQQ'] },
+    {
+      rows: plot(
+        32,
+        32,
+        rocky((x, y) => TAMA_F.shoulder(x, y) || TAMA_F.spike(x, y)),
+      ),
+    },
+    { rows: plot(32, 32, (x, y) => (TAMA_F.horn(x, y) < 0 ? '.' : TAMA_F.horn(x, y) > 0.4 ? 'G' : 'g')) },
+    { x: 8, y: 20, rows: ['V..', 'RV.', '.R.', 'V..'] },
+    { x: 21, y: 20, rows: ['..V', '.VR', '.R.', '..V'] },
+    { x: 13, y: 6, rows: ['o.oo.o', 'WWWWWW'] },
     {
       mirror: true,
-      y: 13,
+      y: 11,
       rows: [
-        '..........ss....',
-        '...........WW...',
-        '...........Wo...',
-        '...........Wo...',
         '................',
-        '............oooo',
-        '............oWWW',
+        '.........ss.....',
+        '..........gss...',
+        '.........YY.ggg.',
+        '.........YYYY.o.',
+        '..........YWWY..',
+        '................',
+        '.........ooooooo',
+        '........oWWooooo',
+        '........oRWRRRRR',
+        '........oRRRRVWR',
+        '.........ooooWWo',
       ],
     },
   ],
@@ -545,11 +609,20 @@ const kurotamagonField: MonsterDesign = {
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/** 獅子の 頭（大きな まるい 顔）と、うしろに ひろがる からだの 布 */
+/** 獅子の 頭（はばの 広い 顔）・とげとげの たてがみ・うしろに ひろがる からだの 布・前足 */
 const SHISHI = {
-  head: (x: number, y: number) => inEll(x, y, 23.5, 16, 16, 12),
-  cloth: (x: number, y: number) => y >= 18 && y <= 40 && Math.abs(x - 23.5) <= 13 + (y - 18) * 0.42,
-  leg: (x: number, y: number) => y >= 38 && y <= 46 && Math.abs(x - 23.5) >= 3.5 && Math.abs(x - 23.5) <= 9,
+  head: (x: number, y: number) => inEll(x, y, 23.5, 17, 16.5, 12.5),
+  mane: (x: number, y: number) => {
+    const nx = (x - 23.5) / 16.5;
+    const ny = (y - 16) / 12.5;
+    const a = Math.atan2(ny, Math.abs(nx)) + Math.PI / 2; // 0（上）→ π（下）
+    const f = (a / Math.PI) * 5.5 + 0.5;
+    const tri = 1 - Math.abs(2 * (f - Math.floor(f)) - 1);
+    const d = Math.hypot(nx, ny);
+    return x >= 1 && x <= 46 && y >= 1 && y <= 31 && d <= 0.98 + 0.44 * tri ? (d <= 1.1 ? 2 : 1) : 0;
+  },
+  cloth: (x: number, y: number) => y >= 24 && y <= 44 && Math.abs(x - 23.5) <= 13 + (y - 24) * 0.5,
+  paw: (x: number, y: number) => inEll(x, y, 9.5, 41.5, 6, 4.2) || inEll(x, y, 37.5, 41.5, 6, 4.2),
 };
 /** 布の うろこ もよう（金の 半円） */
 const scales = (x: number, y: number) => {
@@ -560,8 +633,9 @@ const scales = (x: number, y: number) => {
 };
 
 /**
- * ヨコハマシシオウ（県ボス）：横浜中華街の 春節の 獅子舞の 王。大きな 赤い 獅子の 頭、おでこに まるい かがみ、
- * 金の まぶたの 大きな 目、白い ふさふさの まゆと あごひげ、大きく あけた 口。うしろに うろこ もようの 布、足には 毛の すそ（ヒノ）
+ * ヨコハマシシオウ（県ボス）：横浜中華街の 春節の 獅子舞の 王。とげとげに さかだつ 白い たてがみ、おでこに 金の つのと
+ * 赤い 玉・まるい かがみ、ふとい 金の まゆの 下の くらい かげで 黄色い 目が 光る。大きく あけた 口に きば、
+ * 白い あごひげ。うしろに うろこ もようの 布を マントの ように ひろげ、金の つめの 前足で ふんばる（ヒノ）
  */
 const yokohamaShishiOh: MonsterDesign = {
   size: 48,
@@ -571,138 +645,151 @@ const yokohamaShishiOh: MonsterDesign = {
     Q: NQ.ochre,
     W: NQ.white,
     c: NQ.cloud,
+    M: NQ.white,
+    m: NQ.cloud,
     K: NQ.bark,
-    E: NQ.green,
     S: NQ.sky,
-    p: NQ.blush,
     A: NQ.apricot,
     Y: NQ.yellow,
+    V: NQ.vermilion,
   },
   rim: { [NQ.red]: NQ.brick, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
   rimDepth: 2,
   layers: [
-    // からだの 布（うしろ）と 白い 毛の すそ
+    // とげとげの たてがみ（うしろ）
+    { rows: plot(48, 48, (x, y) => ['.', 'M', 'm'][SHISHI.mane(x, y)]!) },
+    // からだの 布（マント）と 白い 毛の すそ
     {
       rows: plot(48, 48, (x, y) => {
         if (!SHISHI.cloth(x, y) || x < 1 || x > 46) return '.';
-        if (y >= 38) return (x + y) % 2 === 0 ? 'W' : 'c';
+        if (y >= 40) return (x + y) % 2 === 0 ? 'W' : 'c';
         return scales(x, y);
       }),
     },
-    // 足（毛の すそと くつ）
-    { rows: plot(48, 48, (x, y) => (SHISHI.leg(x, y) ? (y >= 45 ? 'K' : y >= 42 ? 'W' : 'R') : '.')) },
+    // 前足（金の つめ）
+    {
+      rows: plot(48, 48, (x, y) => {
+        if (!SHISHI.paw(x, y)) return '.';
+        if (y >= 44 && (x === 6 || x === 9 || x === 12 || x === 35 || x === 38 || x === 41)) return 'G';
+        return litEdge(SHISHI.paw, x, y) ? 'A' : 'R';
+      }),
+    },
+    { x: 5, y: 45, rows: ['.G..G..G', '.G..G..G'] },
+    { x: 34, y: 45, rows: ['G..G..G.', 'G..G..G.'] },
     // 頭
     { rows: plot(48, 48, (x, y) => (SHISHI.head(x, y) ? (litEdge(SHISHI.head, x, y) ? 'A' : 'R') : '.')) },
-    // 頭の まわりの 白い 毛・耳
+    // 目の まわりの くらい かげ
     {
       mirror: true,
-      y: 5,
+      x: 7,
+      y: 11,
       rows: [
-        '..............WW........',
-        '..........WWWWcW........',
-        '.......WWWcW............',
-        '.....WWcWW..............',
-        '....WcW.................',
-        '...WWW..................',
-        '..WcW...................',
-        '..WWW...................',
-        '.WcW....................',
-        '.WWW....................',
-        '.WcW....................',
-        '..WW....................',
-        '..WcW...................',
-        '...WW...................',
+        'KKKKK........',
+        'KKKKKKKKKK...',
+        'KKKKKKKKKKKKK',
+        'KKKKKKKKKKKKK',
+        'KKKKKKKKKKKKK',
+        '.KKKKKKKKKKK.',
+        '...KKKKKKK...',
       ],
     },
-    // 王冠・かがみ・まぶた・大きな 目・はな・口・あごひげ
+    // 光る 目（外が 上がった つり目）
+    {
+      mirror: true,
+      x: 9,
+      y: 13,
+      rows: ['WYY.......', '.YYYYY....', '..YYYYooY.', '...YYYooYY', '.....YYYY.'],
+    },
+    // ふとい 金の まゆと さかだつ 白い 毛
+    {
+      mirror: true,
+      x: 4,
+      y: 5,
+      rows: [
+        'M...M...........',
+        'MM.MM...........',
+        '.MMMMMM.........',
+        '..GGGGGMM.......',
+        '..QGGGGGGGM.....',
+        '...QQGGGGGGGG...',
+        '.....QQQGGGGGGG.',
+        '........QQQQGGGG',
+      ],
+    },
+    // 金の つの・赤い 玉・まるい かがみ・ほお
     {
       mirror: true,
       rows: [
         '........................',
-        '....................G..G',
-        '....................GGGR',
-        '....................GGGR',
-        '....................QQQQ',
+        '.......................G',
+        '.......................G',
+        '......................GG',
+        '......................GG',
+        '.....................GGG',
+        '.....................QRR',
+        '...................GGGGG',
+        '..................GSSWWS',
+        '..................GSSSSS',
+        '...................GSSSS',
         '....................GGGG',
-        '...................GGSSS',
-        '..................GGSSWW',
-        '..................GGSSSS',
-        '...................GGSSS',
-        '..........WWWWWW....GGGG',
-        '.........WWcWWcWW.......',
-        '.........GGGGGGGG.......',
-        '........GWWWWWWWG.......',
-        '........GWWWWooWG.......',
-        '........GWWWoooWG..AAAAA',
-        '........GWWWoooWG.AAAAAA',
-        '.........GWWWWWG..AAAAAY',
-        '..........GGGGG....AAAAA',
-        '....EE..................',
-        '...EEEE...oooooooooooooo',
-        '....EE...oKKWWWWWWWWWWWW',
-        '.........oKKKKKKKKKKKKKK',
-        '.........oKKKKKKpppppppp',
-        '..........oKKKppppppppp.',
-        '...........oWWWWWWWWWWWW',
-        '...........WWcWWcWWcWWcW',
-        '............WWcWWcWWcWWc',
-        '.............WWWcWWWcWWW',
-        '...............WWWWcWWWW',
-        '.................WWWWWWW',
+        '........................',
+        '........................',
+        '........................',
+        '........................',
+        '...................GGGGG',
+        '..................GAAAAA',
+        '......G..........GAAAAAA',
+        '......GG.........GAAAAoA',
+        '.......GG.........GGGGGG',
+      ],
+    },
+    // 大きく あけた 口と きば
+    {
+      mirror: true,
+      x: 8,
+      y: 21,
+      rows: [
+        '..oooooooooooooo',
+        '.oWWWWWoWoWoWoWo',
+        'oKWWWWKKKKKKKKKK',
+        'oKKWWWKKKKKKKKKK',
+        'oKKKWWKKKKVVVVVV',
+        'oKKKKWKKKVVVVVVV',
+        'oKKKKKKWKKVVVVVV',
+        '.oKKKKWWWKKKKKKK',
+        '..oWoWWWWWoWoWoW',
+        '...ooooooooooooo',
+      ],
+    },
+    // 白い あごひげ
+    {
+      mirror: true,
+      x: 8,
+      y: 31,
+      rows: [
+        '..WcWWcWWcWWcWWc',
+        '...WWcWWcWWcWWcW',
+        '....W.WWcWWcWWcW',
+        '.......W.WWcW.WW',
+        '...........W..W.',
       ],
     },
   ],
 };
 
-/** ヨコハマシシオウ 後半：まわりに 炎と 爆竹の 火花が はじけ、目が 金色に 光る（ヒノ・2 回 こうげき） */
+/** ヨコハマシシオウ 後半：たてがみが 炎に なって もえあがり、目は まっ白に 光る。まわりで 爆竹の 火花が はじける（ヒノ） */
 const yokohamaShishiOhP0: MonsterDesign = {
   ...yokohamaShishiOh,
-  colors: { ...yokohamaShishiOh.colors, V: NQ.vermilion, C: NQ.cream, W: NQ.white },
+  colors: { ...yokohamaShishiOh.colors, M: NQ.yellow, m: NQ.vermilion, Y: NQ.white, C: NQ.cream },
   layers: [
-    // 炎（うしろ）
-    {
-      mirror: true,
-      x: 1,
-      y: 2,
-      rows: [
-        '.....C.................',
-        '.....A.............',
-        '....VAV.......',
-        '....VAV..',
-        '...VVAVV',
-        '...VAAAV',
-        '..VVAAV',
-        '..VAAV',
-        '.VVAV',
-        '.VAAV',
-        '.VAV',
-        'VVAV',
-        'VAAV',
-        'VAV',
-        'VVAV',
-        '.VAV',
-        '.VV',
-      ],
-    },
     ...yokohamaShishiOh.layers,
-    // 目が 金色に
-    {
-      mirror: true,
-      y: 13,
-      rows: [
-        '........................',
-        '.........YYYYYYY........',
-        '.........YYYYooY........',
-        '.........YYYoooY........',
-        '.........YYYoooY........',
-        '..........YYYYY.........',
-      ],
-    },
+    // 目の ふちが 赤く もえる
+    { mirror: true, x: 7, y: 12, rows: ['V...........', 'V...........', 'V..........V', '............V'] },
     // 爆竹の 火花
-    { x: 2, y: 40, rows: ['.C.', 'CVC', '.C.'] },
-    { x: 43, y: 40, rows: ['.C.', 'CVC', '.C.'] },
-    { x: 1, y: 1, rows: ['C.C', '.V.', 'C.C'] },
-    { x: 44, y: 1, rows: ['C.C', '.V.', 'C.C'] },
+    { x: 1, y: 33, rows: ['.C.', 'CVC', '.C.'] },
+    { x: 44, y: 33, rows: ['.C.', 'CVC', '.C.'] },
+    { x: 2, y: 2, rows: ['C.C', '.V.', 'C.C'] },
+    { x: 43, y: 2, rows: ['C.C', '.V.', 'C.C'] },
   ],
 };
 

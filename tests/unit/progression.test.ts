@@ -4,7 +4,13 @@
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { createNewGame } from '../../src/core/state/newGame';
-import { midBossFlag, motifStamp, nextStop } from '../../src/core/progression/route';
+import {
+  bossDiscoveries,
+  discoveredByBoss,
+  midBossFlag,
+  motifStamp,
+  nextStop,
+} from '../../src/core/progression/route';
 import { canChallengeIslandBoss, completeIsland, hasAllAreaSigns } from '../../src/core/progression/island';
 import { applyReward, markDone, pickReward } from '../../src/core/progression/eventReward';
 import { applyArenaVictory, markMapVisited } from '../../src/core/progression/arena';
@@ -349,5 +355,24 @@ describe('名所エリア（青森）', () => {
           g.between.forEach((id) => open.add(id));
     expect([...open].sort()).toEqual([...ids].sort());
     for (const r of a.regions) expect(c.monsters.has(r.boss!.monsterId), r.id).toBe(true);
+  });
+});
+
+describe('ボスを倒して名所を見つける', () => {
+  it('青森は ぬしを 倒した エリアの 名所だけ（特産品は 宝箱なので のぞく）', async () => {
+    const c = await content();
+    const aomori = c.areas.get('aomori')!;
+    expect(bossDiscoveries(aomori, 'hirosaki').map((m) => m.id)).toEqual(['hirosaki-jo']);
+    expect(bossDiscoveries(aomori, 'nebuta').map((m) => m.id)).toEqual(['nebuta']);
+    expect(bossDiscoveries(aomori, 'no-such-region')).toEqual([]);
+  });
+
+  it('エリアの ない 県は 県ボスで 県の 名所 ぜんぶ', async () => {
+    const c = await content();
+    const iwate = c.areas.get('iwate')!;
+    const found = bossDiscoveries(iwate);
+    expect(found.length).toBeGreaterThan(0);
+    expect(found.every((m) => m.kind !== 'food' && m.kind !== 'craft')).toBe(true);
+    expect(found.length).toBe(iwate.motifs.filter((m) => discoveredByBoss(m)).length);
   });
 });

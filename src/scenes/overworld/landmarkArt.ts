@@ -178,27 +178,54 @@ export const LANDMARK_DRAW: Readonly<Record<string, () => HTMLCanvasElement>> = 
   // ── 弘前城
   tenshu: () =>
     canvas(48, 64, (r) => {
-      // 石垣
-      for (let y = 48; y < 64; y++) {
-        const inset = Math.floor((63 - y) / 4);
-        r(inset, y, 48 - inset * 2, 1, (y + Math.floor(y / 3)) % 4 === 0 ? NQ.silver : NQ.gray);
+      // 左右 たいしょう（x0〜47-x0）に よこ 1 れつを ぬる
+      const row = (y: number, x0: number, col: string) => r(x0, y, 48 - x0 * 2, 1, col);
+      const pair = (x: number, y: number, w: number, h: number, col: string) => {
+        r(x, y, w, h, col);
+        r(48 - x - w, y, w, h, col);
+      };
+      // そりの ある 屋根（上ほど せまい。下の はしは 両はしが はねあがる）
+      const roof = (yb: number, x0: number, rows: number) => {
+        for (let i = 0; i < rows; i++) row(yb - i, x0 + 2 + i * 2, i === 0 ? NQ.green : NQ.teal);
+        row(yb - rows + 1, x0 + 2 + (rows - 1) * 2, NQ.leaf);
+        pair(x0, yb - 1, 2, 1, NQ.teal);
+        pair(x0 + 1, yb, 1, 1, NQ.green);
+      };
+      // かべ（白・右は かげ）と まど
+      const wall = (y0: number, y1: number, x0: number, wins: number[]) => {
+        for (let y = y0; y <= y1; y++) row(y, x0, NQ.white);
+        r(47 - x0 - 2, y0, 3, y1 - y0 + 1, NQ.cloud);
+        row(y0, x0, NQ.cloud);
+        for (const x of wins) pair(x, y0 + 3, 2, 3, NQ.night);
+      };
+      // 石垣（すそが ひろがる・石の めじ）
+      for (let y = 50; y < 64; y++) {
+        const x0 = Math.round(7 - (y - 50) * 0.5);
+        row(y, x0, NQ.gray);
+        for (let x = x0 + ((y >> 1) % 2) * 3; x < 48 - x0; x += 6) r(x, y, 1, 1, NQ.slate);
+        if (y % 2 === 0) row(y, x0 + 1, NQ.gray);
+        if (y % 2 === 1) r(x0, y, 48 - x0 * 2, 1, (y >> 1) % 2 ? NQ.gray : NQ.silver);
       }
-      // 3 じゅうの 屋根（どうの みどり）と 白い かべ
-      const tiers: [number, number, number][] = [
-        [6, 36, 12],
-        [10, 22, 12],
-        [14, 8, 12],
-      ];
-      for (const [inset, y, hgt] of tiers) {
-        r(inset + 2, y + 4, 44 - inset * 2 - 4, hgt, NQ.white);
-        r(inset + 2, y + 4, 44 - inset * 2 - 4, 1, NQ.cloud);
-        for (let x = inset + 6; x < 44 - inset; x += 7) r(x, y + 7, 3, 3, NQ.night);
-        r(inset - 2, y, 52 - inset * 2, 4, NQ.teal);
-        r(inset - 2, y + 3, 52 - inset * 2, 1, NQ.green);
-      }
-      r(20, 0, 8, 8, NQ.teal);
-      r(19, 0, 2, 3, NQ.gold);
-      r(27, 0, 2, 3, NQ.gold);
+      row(50, 7, NQ.silver);
+      // 1 じゅう
+      wall(40, 49, 10, [13, 18]);
+      r(22, 44, 4, 6, NQ.bark);
+      roof(39, 4, 5);
+      // 2 じゅう
+      wall(28, 34, 13, [16, 20]);
+      // ちどりはふ（1 じゅうの 屋根の 三角）
+      for (let i = 0; i < 6; i++) r(24 - 1 - i, 31 + i, 2 + i * 2, 1, NQ.teal);
+      for (let i = 1; i < 5; i++) r(24 - i, 32 + i, i * 2, 1, NQ.white);
+      roof(27, 8, 5);
+      // 3 じゅう（さいじょうかい）
+      wall(15, 22, 16, [19]);
+      roof(14, 11, 6);
+      // むね と しゃちほこ
+      row(8, 20, NQ.green);
+      row(7, 21, NQ.teal);
+      pair(19, 4, 2, 4, NQ.gold);
+      pair(18, 3, 1, 2, NQ.gold);
+      pair(20, 4, 1, 1, NQ.ochre);
     }),
   sakura: () => roundTree(16, 24, NQ.blush, NQ.berry, NQ.white, 5),
   ringo: () => roundTree(16, 24, NQ.leaf, NQ.green, NQ.red, 4),

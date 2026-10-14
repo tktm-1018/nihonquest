@@ -724,6 +724,10 @@ const ooHamashion: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
+/** (x, y) → 文字 の 関数で 文字の 地図を 作る（'.' は とうめい） */
+const plot = (w: number, h: number, f: (x: number, y: number) => string): string[] =>
+  Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => f(x, y)).join(''));
+
 const kirikoColors = {
   C: NQ.cream,
   Y: NQ.gold,
@@ -735,106 +739,124 @@ const kirikoColors = {
   W: NQ.white,
   V: NQ.vermilion,
   A: NQ.apricot,
-  p: NQ.blush,
+  N: NQ.night,
 };
 
-/** キリコダイショウ（中ボス）：能登の キリコ祭りの 大きな あかり。屋根の 上に 王冠、下に かつぎ棒（ヒノ） */
+/**
+ * キリコダイショウ（中ボス）：能登の キリコ祭りの 大きな あかりが 武者に なった すがた。そりあがった 赤い 屋根は かぶとの ひさし、
+ * 金の くわがた（つの）に 赤い 玉。あかりの 顔は くらい かげに つりあがった 金の 目と きばの 口、金の 肩あてに かつぎ棒の うで、
+ * ふんばる 足。まわりで ほのおが もえあがる（ヒノ）
+ */
 const kirikoTaisho: MonsterDesign = {
   size: 40,
   colors: kirikoColors,
-  rim: { [NQ.cream]: NQ.ochre, [NQ.red]: NQ.brick, [NQ.tan]: NQ.brown },
+  rim: { [NQ.cream]: NQ.ochre, [NQ.red]: NQ.brick, [NQ.tan]: NQ.brown, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    // ほのお（あかりの まわりで もえあがる）
+    // うしろで もえあがる ほのお（左右で すこし ちがう）
+    { x: 1, y: 3, rows: ['.V..', 'VAV.', 'VAAV', 'VYAV', '.VAV', '.VV.', '..V.'] },
+    { x: 35, y: 1, rows: ['..V.', '.VAV', 'VAAV', 'VAYV', 'VAAV', '.VV.', '.V..'] },
+    // 金の くわがた と 赤い 玉
     {
       mirror: true,
-      y: 4,
       rows: [
-        '..V.................',
-        '.VA.................',
-        '.VA.................',
-        '.VA.................',
-        '..V.................',
-      ],
-    },
-    { x: 33, y: 6, rows: ['.V.', 'AV.', 'AV.', '.V.'] },
-    // 大きな 王冠
-    {
-      mirror: true,
-      y: 0,
-      rows: [
-        '...................Y',
-        '...............Y...Y',
-        '...............YY.YY',
-        '...............YYYYY',
-        '...............YYYYR',
+        '....................',
+        '.........Y..........',
+        '.........YY.........',
+        '..........YY........',
+        '...........YY.......',
+        '............YYY..QRR',
+        '.............YYYYRRR',
         '...............QQQQQ',
       ],
     },
-    // そりあがった 屋根と キリコの 本体
+    // そりあがった 屋根（かぶとの ひさし）・あかりの 本体・かつぎ棒・足
     {
       mirror: true,
-      y: 6,
+      y: 7,
       rows: [
-        '.......RRRRRRRRRRRRR',
-        '.....RRRRRRRRRRRRRRR',
-        '...RRRRRRRRRRRRRRRRR',
-        '..bbbbbbbbbbbbbbbbbb',
-        '....YYYYYYYYYYYYYYYY',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
-        '.....CCCCCCCCCCCCCCC',
+        '.Y..................',
+        '.RR...........RRRRRR',
+        '..RRR.....RRRRRRRRRR',
+        '..RRRRRRRRRRRRRRRRRR',
+        '...bbbbbbbbbbbbbbbbb',
         '.....YYYYYYYYYYYYYYY',
-        '.....bbbbbbbbbbbbbbb',
-        '.....KKKKKKKKKKKKKKK',
-        '.......KK.....KKKKKK',
-        '.......KK.....KKKKKK',
-        '.......TT.....TTTTTT',
-        '.......TT.....TTTTTT',
-        '.......TT.....TTTTTT',
-        '.......TT.....TTTTTT',
-        '.......TT.....TTTTTT',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......CCCCCCCCCCCCCC',
+        '......YYYYYYYYYYYYYY',
+        '.YKKKKKKKKKKKKKKKKKK',
+        '.Qbbbbbbbbbbbbbbbbbb',
+        '.......KKKKKK.......',
+        '.......TTTTTT.......',
+        '.......TTTTTT.......',
+        '......TTTTTTT.......',
+        '......TTTTTTT.......',
+        '.....TTTTTTTT.......',
+        '....KKKKKKKKK.......',
+        '....KKoKKoKKK.......',
       ],
     },
-    // かつぎ棒（左右に 長く）
-    { y: 31, rows: ['.KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK.', '.TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT.'] },
-    // 赤い もよう
-    { mirror: true, y: 14, rows: ['.....R.R.R.R.R.R.R.R'] },
-    { mirror: true, y: 27, rows: ['.....R.R.R.R.R.R.R.R'] },
-    // かお（するどい 目・まゆ・口）
+    // かつぎ棒の うでと 金の 肩あて（からだの 手前）
     {
       mirror: true,
-      y: 17,
+      x: 1,
+      y: 12,
       rows: [
-        '.........oo.........',
-        '...........oo.......',
-        '.........WWWo.......',
-        '.........WWWo.......',
-        '.........WWoo.......',
-        '.........Wooo.......',
+        '..YYYY.............',
+        '.YYRYYY............',
+        'QYYYYYYQ...........',
+        '.QKKKKQ............',
+        '.KTTTK.............',
+        '.KTTTK.............',
+        '.KTTTK.............',
+        '.KTTTK.............',
+        'KTTTTTK............',
+        'TTTTTTT............',
+        'ToToToT............',
+        'TTTTTTT............',
+        '.TTTTT.............',
+      ],
+    },
+    // あかりの 赤い もよう（ふちの ひし形）
+    { mirror: true, y: 13, rows: ['......R.R.R.R.R.R.R.'] },
+    { mirror: true, y: 26, rows: ['......R.R.R.R.R.R.R.'] },
+    // かお：くらい かげ・つりあがった まゆ・光る 金の 目・きばの 口
+    {
+      mirror: true,
+      y: 14,
+      rows: [
+        '........oo..........',
+        '........NNoo........',
+        '........NNNNoo......',
+        '........NNNNNNooo...',
+        '........NYYYNNNNN...',
+        '.........NWYYYNNN...',
+        '..........NNNNNN....',
         '....................',
-        '...........ooooooo..',
+        '.........ooooooooooo',
+        '.........oWWNNNNWWNN',
+        '..........oWNNbbbWNN',
+        '..........oNNbbbbbbb',
+        '..........oWNNNNNWNN',
+        '...........ooooooooo',
       ],
     },
   ],
 };
 
-/** キリコダイショウ（フィールドに立つ 32×32） */
+/** キリコダイショウ（フィールドに立つ 32×32）。くわがた・ひさし・光る 目・きばの 口・肩あてを ちぢめて */
 const kirikoTaishoField: MonsterDesign = {
   size: 32,
   colors: {
@@ -847,67 +869,82 @@ const kirikoTaishoField: MonsterDesign = {
     T: NQ.tan,
     W: NQ.white,
     V: NQ.vermilion,
+    N: NQ.night,
   },
   rim: { [NQ.cream]: NQ.ochre, [NQ.red]: NQ.brick },
   layers: [
-    // ほのお
+    { x: 1, y: 3, rows: ['.V.', 'VVV', 'VYV', '.V.'] },
+    { x: 28, y: 1, rows: ['.V.', 'VVV', 'VYV', '.V.'] },
     {
       mirror: true,
-      y: 3,
-      rows: ['.V..............', 'VV..............', 'VV..............', '.V..............'],
-    },
-    // 王冠
-    {
-      mirror: true,
-      y: 0,
-      rows: ['...........Y...Y', '...........YY.YY', '...........YYYYY', '...........QQQQR'],
-    },
-    {
-      mirror: true,
-      y: 4,
       rows: [
-        '.....RRRRRRRRRRR',
-        '...RRRRRRRRRRRRR',
-        '..bbbbbbbbbbbbbb',
-        '...YYYYYYYYYYYYY',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....CCCCCCCCCCCC',
-        '....YYYYYYYYYYYY',
-        '....bbbbbbbbbbbb',
-        '....KKKKKKKKKKKK',
-        '......KK....KKKK',
-        '......KK....KKKK',
-        '......TT....TTTT',
-        '......TT....TTTT',
-        '......TT....TTTT',
-        '......TT....TTTT',
+        '................',
+        '........Y.......',
+        '.........Y......',
+        '.........YYY.QRR',
+        '...........YYRRR',
+        '............QQQQ',
       ],
     },
-    { y: 24, rows: ['.KKKKKKKKKKKKKKKKKKKKKKKKKKKKK.', '.TTTTTTTTTTTTTTTTTTTTTTTTTTTTT.'] },
-    { mirror: true, y: 11, rows: ['....R.R.R.R.R.R.'] },
-    { mirror: true, y: 20, rows: ['....R.R.R.R.R.R.'] },
     {
       mirror: true,
-      y: 13,
+      y: 9,
+      rows: [
+        '..YYY...........',
+        '.YYRYY..........',
+        '.QKKKQ..........',
+        '..KTK...........',
+        '..KTK...........',
+        '..KTK...........',
+        '.KTTTK..........',
+        '.ToToT..........',
+        '.TTTTT..........',
+      ],
+    },
+    {
+      mirror: true,
+      y: 5,
+      rows: [
+        '.Y..............',
+        '.RR........RRRRR',
+        '..RRRRRRRRRRRRRR',
+        '...bbbbbbbbbbbbb',
+        '....YYYYYYYYYYYY',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....CCCCCCCCCCC',
+        '.....YYYYYYYYYYY',
+        '.YKKKKKKKKKKKKKK',
+        '......KKKK......',
+        '......TTTT......',
+        '.....TTTTT......',
+        '....TTTTTT......',
+        '...KKKKKKK......',
+        '...KKKKKKK......',
+        '...KKoKKoK......',
+      ],
+    },
+    {
+      mirror: true,
+      y: 11,
       rows: [
         '.......oo.......',
-        '........WWo.....',
-        '........WWo.....',
-        '........Woo.....',
+        '.......NNoo.....',
+        '.......NNNNooo..',
+        '.......NYYNNNN..',
+        '........NWYYNN..',
         '................',
-        '.........ooooo..',
+        '........oooooooo',
+        '........oWWNNNWN',
+        '........oNNbbbbb',
+        '.........ooooooo',
       ],
     },
   ],
@@ -915,27 +952,70 @@ const kirikoTaishoField: MonsterDesign = {
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/** 雪つりの なわ（まん中の ぼうから 左右へ。左半分） */
-const YUKITSURI = [
-  '.......................S',
-  '......................S.',
-  '.....................S..',
-  '....................S...',
-  '...................S....',
-  '..................S.....',
-  '.................S......',
-  '................S.......',
-  '...............S........',
-  '..............S.........',
-  '.............S..........',
-  '............S...........',
-  '...........S............',
-  '..........S.............',
-  '.........S..............',
-  '........S...............',
+/** 雪つりの なわ：てっぺん（23.5, 3）から 葉の ふちへ のびる 4 本（左右） */
+const ROPE_ENDS: readonly (readonly [number, number])[] = [
+  [3, 21],
+  [8, 16],
+  [13, 12],
+  [18, 10],
 ];
+const onRope = (x: number, y: number) => {
+  const xx = x < 24 ? x : 47 - x;
+  return ROPE_ENDS.some(([ex, ey]) => {
+    if (y < 4 || y > ey) return false;
+    const t = (y - 3) / (ey - 3);
+    return Math.abs(xx - (23.5 + (ex - 23.5) * t)) <= 0.5;
+  });
+};
 
-/** ユキツリオオマツ（県ボス）：兼六園の 大きな 松。まん中の ぼうから なわを つった「雪つり」、雪の のった 松の 葉（モリ） */
+/** 松の 葉の かたまり（左半分の 中心 cx, cy・半径 rx, ry）。上の だんから 順に 重ね、下の だんほど 手前 */
+const PINE_PADS = [
+  [23.5, 10, 9, 3.2],
+  [14, 15.5, 9.5, 3.2],
+  [23.5, 20, 8, 3.2],
+  [7, 21, 6.5, 3],
+] as const;
+/** 1 つの かたまり（左右 対称）。下の ふちから 針の とげが たれる */
+const padIn =
+  (pad: (typeof PINE_PADS)[number]) =>
+  (x: number, y: number): boolean => {
+    const [cx, cy, rx, ry] = pad;
+    const xx = x < 24 ? x : 47 - x;
+    if (((xx - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1) return true;
+    // 針：下の ふちの 1 つ おきに 2 ドット たれる
+    return y > cy && xx % 2 === 0 && ((xx - cx) / (rx - 0.5)) ** 2 + ((y - 1.8 - cy) / ry) ** 2 <= 1;
+  };
+/** かたまり 1 つの 色：上に 雪 2 だん、左上の ふちに 明るい 葉、下の ふちと 針は こい かげ */
+const padRows = (pad: (typeof PINE_PADS)[number]) => {
+  const inside = padIn(pad);
+  return plot(48, 48, (x, y) => {
+    if (!inside(x, y)) return '.';
+    if (!inside(x, y - 1)) return 'W';
+    if (!inside(x, y - 2)) return (x + y) % 4 === 0 ? 'c' : 'W';
+    if (!inside(x, y + 1) || y > pad[1] + pad[3] - 0.5) return 'F';
+    if (!inside(x, y - 3)) return 'L';
+    return (x * 3 + y * 5) % 11 === 0 ? 'L' : 'G';
+  });
+};
+
+/** みき（上は 細く 下で ふとい）と 地面を つかむ ねっこの つめ */
+const trunkHalf = (y: number) => 8 + Math.max(0, y - 30) * 0.3;
+const rootAt = (x: number, y: number) => {
+  const dx = Math.abs(x - 23.5);
+  if (y < 38 || y > 45) return false;
+  const reach = 9 + (y - 38) * 1.9;
+  if (dx > reach) return false;
+  // ねっこの すきま（つめの あいだ）
+  if (y >= 43 && dx > 7 && Math.floor(dx) % 5 === 1) return false;
+  if (y === 45 && Math.floor(dx) % 5 !== 3 && dx > 7) return false;
+  return true;
+};
+
+/**
+ * ユキツリオオマツ（県ボス）：兼六園の 雪つりの 大松が いかりの 大木に なった すがた。てっぺんの 金の ほのお形の 飾りに
+ * 赤い 玉、そこから 張る 雪つりの なわ、雪を かぶった とげとげの 松の 葉の かたまり。みきの 顔は くらい うろに 金の 目が
+ * つり上がり、木の きばの 大口。左右に 枝の うでを ひろげ、ねっこの つめで 地面を つかむ（モリ）
+ */
 const yukitsuriOomatsuColors = {
   F: NQ.forest,
   G: NQ.green,
@@ -949,158 +1029,132 @@ const yukitsuriOomatsuColors = {
   Y: NQ.gold,
   Q: NQ.ochre,
   R: NQ.red,
-  p: NQ.blush,
+  N: NQ.night,
 };
 
 const yukitsuriOomatsu: MonsterDesign = {
   size: 48,
   colors: yukitsuriOomatsuColors,
-  rim: { [NQ.green]: NQ.forest, [NQ.brown]: NQ.bark },
+  rim: { [NQ.green]: NQ.forest, [NQ.brown]: NQ.bark, [NQ.gold]: NQ.ochre },
   rimDepth: 2,
   layers: [
-    // まん中の ぼうと なわ
-    { mirror: true, y: 8, rows: YUKITSURI },
+    // まん中の ぼう
     {
       mirror: true,
-      y: 6,
+      y: 5,
       rows: [
+        '.......................T',
+        '.......................T',
+        '.......................T',
         '.......................T',
         '.......................T',
         '.......................T',
         '.......................T',
       ],
     },
-    // 王冠（ぼうの てっぺん）
+    // 枝の うで（左右へ ひろげ、先は とがった 小枝の つめ）
     {
       mirror: true,
-      y: 1,
+      y: 26,
       rows: [
+        '.B.B....................',
+        '.BB.B...................',
+        '..BBB..B................',
+        '...BBBBB................',
+        '....BBBBBB..............',
+        '......BBBBBBB...........',
+        '........BBBBBBBB........',
+        '...........BBBBBBB......',
+        '..............BBBB......',
+      ],
+    },
+    // みきと ねっこ
+    {
+      rows: plot(48, 48, (x, y) => {
+        const dx = Math.abs(x - 23.5);
+        if (y >= 22 && y < 40 && dx <= trunkHalf(y)) return y < 25 || (x * 3 + y * 2) % 13 === 0 ? 'K' : 'B';
+        if (rootAt(x, y)) return 'B';
+        return '.';
+      }),
+    },
+    // みきの すじ（ねじれ）
+    {
+      mirror: true,
+      y: 39,
+      rows: [
+        '................K.......',
+        '...............K........',
+        '.............KK.........',
+        '...........KK...........',
+        '.........KK.............',
+      ],
+    },
+    // 松の 葉の かたまり（上の だんから。雪を かぶり、下に 針の とげ）
+    ...PINE_PADS.map((p) => ({ rows: padRows(p) })),
+    // 雪つりの なわ（葉の 手前）
+    { rows: plot(48, 48, (x, y) => (onRope(x, y) ? 'S' : '.')) },
+    // ぼうの てっぺんの 金の 飾り（ほのおの 形）と 赤い 玉
+    {
+      mirror: true,
+      rows: [
+        '........................',
         '.......................Y',
-        '...................Y...Y',
-        '...................YY.YY',
-        '...................YYYYY',
-        '...................YYYYR',
-        '...................QQQQQ',
+        '......................YY',
+        '.....................QYR',
+        '......................RR',
+        '......................QQ',
       ],
     },
-    // 松の 葉（3 だん）
+    // かお：くらい うろ・つり上がった まゆ・光る 金の 目・木の きばの 大口
     {
       mirror: true,
-      y: 14,
-      rows: [
-        '..............GGGGGGGGGG',
-        '...........GGGGGGGGGGGGG',
-        '.........GGGGGGGGGGGGGGG',
-        '........GGGGGGGGGGGGGGGG',
-        '.......GGGGGGGGGGGGGGGGG',
-        '......GGGGGGGGGGGGGGGGGG',
-        '.....GGGGGGGGGGGGGGGGGGG',
-        '....GGGGGGGGGGGGGGGGGGGG',
-        '...GGGGGGGGGGGGGGGGGGGGG',
-        '..GGGGGGGGGGGGGGGGGGGGGG',
-        '..GGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '..GGGGGGGGGGGGGGGGGGGGGG',
-        '...GGGGGGGGGGG..GGGGGGGG',
-        '.....GGGGGGG......GGGGGG',
-      ],
-    },
-    // 葉の 明るい ところ と 雪
-    {
-      mirror: true,
-      y: 14,
-      rows: [
-        '..............LLLLLWWWWW',
-        '...........LLLLLWWWWWWWW',
-        '.........LLLLWWWWWWWGGGG',
-        '........LLLWWWWWGGGGGGGG',
-        '.......LLWWWWGGGGGGGGGGG',
-        '......LWWWGGGGGGGGGGGGGG',
-        '.....WWGGGGGGGGGGGGGGGGG',
-        '....WGGGGGGGGGGGGGGGGGGG',
-        '...LGGGGGGGGGGGGGGGGGGGG',
-        '..LGGGGGGGGGGGGGGGGGGGGG',
-        '..GGGGGGGGGGGGGGGGGGGGGG',
-        '.LGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-        '.GGGGGGGGGGGGGGGGGGGGGGG',
-      ],
-    },
-    // 雪つりの なわ（葉の 手前に もう 一度）
-    { mirror: true, y: 8, rows: YUKITSURI },
-    // みきと ねっこ（顔つき）
-    {
-      mirror: true,
-      y: 30,
-      rows: [
-        '..............BBBBBBBBBB',
-        '.............BBBBBBBBBBB',
-        '............BBBBBBBBBBBB',
-        '............BBBBBBBBBBBB',
-        '...........BBBBBBBBBBBBB',
-        '...........BBBBBBBBBBBBB',
-        '..........BBBBBBBBBBBBBB',
-        '.........BBBBBBBBBBBBBBB',
-        '........BBBBBBBBBBBBBBBB',
-        '......BBBBBBBBBBBBBBBBBB',
-        '...BBBBBBBBBBBBBBBBBBBBB',
-        '..BBBBBBBBBBBBBBBBBBBBBB',
-        '.BBBBBBBBBBBBBBBBBBBBBBB',
-        '.BBBBBBBBBBBBBBBBBBBBBBB',
-        '.BBBBBBBBBBBBBBBBBBBBBBB',
-        '.BBB..BBBBB..BBBBBBBBBBB',
-        '.BB....BBB....BBBBBBBBBB',
-      ],
-    },
-    // みきの かげ
-    {
-      mirror: true,
-      y: 33,
-      rows: [
-        '............K...........',
-        '...........K............',
-        '..........K.............',
-        '.........K..............',
-        '........K...............',
-      ],
-    },
-    // かお（みきに ある 3×4 の 目・まゆ・口）
-    {
-      mirror: true,
-      y: 33,
+      y: 26,
       rows: [
         '...............ooo......',
-        '..................ooo...',
-        '.................WWo....',
-        '.................WWo....',
-        '.................WWo....',
-        '.................Woo....',
+        '...............KKooo....',
+        '...............KNNNooo..',
+        '...............KNYYYYYo.',
+        '...............KNWYYYYN.',
+        '................KNNNNN..',
         '........................',
-        '..............pp........',
-        '.................oooooo.',
+        '..................oooooo',
+        '................ooSSNSSN',
+        '...............oNSSNNSNN',
+        '...............oNNSNNNNN',
+        '...............oNNNNSNNN',
+        '................oNNSSNSN',
+        '.................ooooooo',
       ],
     },
   ],
 };
 
-/** ユキツリオオマツ 後半：金沢の 金箔を まとい、松の 葉と なわが 金色に かがやく */
+/**
+ * ユキツリオオマツ 後半：いかりで 金沢の 金箔を まとい、雪と 葉の ふちが 金色に。目は 赤く もえ、みきの ひびから 金の 光が もれる。
+ * まわりで 金箔と 雪が うずを まいて ふきあれる
+ */
 const yukitsuriOomatsuP0: MonsterDesign = {
   ...yukitsuriOomatsu,
-  colors: { ...yukitsuriOomatsuColors, L: NQ.gold, W: NQ.cream, S: NQ.gold, c: NQ.yellow },
+  colors: { ...yukitsuriOomatsuColors, L: NQ.gold, c: NQ.yellow },
   rim: { [NQ.green]: NQ.forest, [NQ.brown]: NQ.bark, [NQ.gold]: NQ.ochre },
   layers: [
     ...yukitsuriOomatsu.layers,
-    // 金箔の きらめき
-    { x: 3, y: 12, rows: ['.Y.', 'YWY', '.Y.'] },
-    { x: 41, y: 18, rows: ['.Y.', 'YWY', '.Y.'] },
-    { x: 20, y: 10, rows: ['.Y.', 'YWY', '.Y.'] },
-    { x: 8, y: 26, rows: ['Y'] },
-    { x: 38, y: 30, rows: ['Y'] },
+    // 赤く もえる 目
+    { mirror: true, y: 29, rows: ['.................RRRRR', '.................WRRRR'] },
+    // みきの ひびから もれる 金の 光
+    {
+      mirror: true,
+      y: 35,
+      rows: ['................Y', '...............Y.', '...............Y.', '..............Y..'],
+    },
+    { mirror: true, y: 41, rows: ['...........YY....', '.........YY......'] },
+    // 金箔と 雪の うず
+    { x: 2, y: 5, rows: ['.Y.', 'YWY', '.Y.'] },
+    { x: 43, y: 9, rows: ['.Y.', 'YWY', '.Y.'] },
+    { x: 8, y: 7, rows: ['W'] },
+    { x: 36, y: 4, rows: ['W.', '.W'] },
+    { x: 2, y: 33, rows: ['.WW', 'W..', 'W.Y'] },
+    { x: 43, y: 33, rows: ['WW.', '..W', 'Y.W'] },
   ],
 };
 

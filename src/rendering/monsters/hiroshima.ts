@@ -468,12 +468,14 @@ const fudeColors = {
   Q: NQ.ochre,
   R: NQ.red,
   T: NQ.tan,
+  W: NQ.white,
 };
 
 /**
  * フデダイショウ（中ボス）：熊野筆の 大将。キャンバスいっぱいの 大きな すがた。
- * 頭は すみを ふくんだ とがった 筆の 毛、細く するどい 金の 目、
- * 大きく はった かみしもの かた、赤い 帯、せの たけほどの 大きな 筆（ヤミ）
+ * 頭は すみを ふくんで 炎の ように さかだつ 筆の 毛、金の くわがたと 赤い 宝石の 前立て、
+ * まっ黒な かげの 顔に つり上がって 光る 金の 目と 食いしばった 歯、
+ * とがって はりだした かみしもの かた、にぎった こぶし、せの たけほどの 大きな 筆（ヤミ）
  */
 const fudeDaisho: MonsterDesign = {
   size: 40,
@@ -481,61 +483,87 @@ const fudeDaisho: MonsterDesign = {
   rim: { [NQ.violet]: NQ.indigo, [NQ.paper]: NQ.cloud, [NQ.tan]: NQ.brown, [NQ.denim]: NQ.navy },
   rimDepth: 2,
   layers: [
-    // 筆の 毛の 頭（先は すみで まっ黒）と 顔
+    // とがって はりだした かみしもの かた・赤い 帯・はかま
+    {
+      mirror: true,
+      y: 17,
+      rows: [
+        '.L..................',
+        '.LL.................',
+        '.LVL................',
+        '.LVVL...............',
+        '.LVVVL..............',
+        '.LVVVVL.............',
+        '.LVVVVVL............',
+        '.LVVVVVVLLLLLLLLLLLL',
+        '.LVVVVVVVVVVVVVVVPPR',
+        '.VVVVVVVVVVVVVVVVPPR',
+        '..VVVVVVVVVVVVVVVVPR',
+        '...VVVVVVVVVVVVVVVVP',
+        '....VVVVVVVVVVVVVVVV',
+        '.....RRRRRRRRRRRRRRR',
+        '.....RRRRRRRRRRRRGGG',
+        '.....DDDDDDDDDDDDDDD',
+        '....DDDDDDDnDDDDDDDD',
+        '....DDDDDDnDDDDDDDDD',
+        '...DDDDDDnDDDDDDDDDD',
+        '...DDDDDDDDDDDDDD...',
+        '..NNNNNNNNNNNNNN....',
+        '..NNNNNNNNNNNNN.....',
+      ],
+    },
+    // 炎の ように さかだつ 筆の 毛（先は すみ）と かげの 顔
     {
       mirror: true,
       y: 1,
       rows: [
-        '...................N',
-        '..................NN',
-        '..................NN',
-        '.................NNN',
-        '.................NNN',
-        '................NNNN',
-        '...............NNNNN',
-        '..............NNNNPN',
-        '.............NNNPNNP',
-        '............NNPNNPNN',
-        '...........NPPNPPNPP',
-        '..........NPLPPPLPPP',
-        '.........PPLPPPLPPPP',
-        '........PPPPPPPPPPPP',
-        '.......PPPPPPPPPPPPP',
+        '.........N.........N',
+        '..N......NN.......NN',
+        '..NN.....NNN.....NNN',
+        '...NN....NPNN....NPN',
+        '...NNN...NPPN...NPPN',
+        '....NPN..NPPPN..NPPP',
+        '....NPPN.NPLPPN.NPLP',
+        '.....NPPNNPLPPPNPPLP',
+        '.....NPLPPPLPPPPPPLP',
+        '......PLPPPLPPPPPPLP',
         '......PPPPPPPPPPPPPP',
-        '......PPPPPPPPPPPPPP',
-        '......PPPPPPPoooPPPP',
-        '......PPPPPPGGGGoPPP',
-        '......PPPPPPGGGGoPPP',
-        '......PPPPPPGGGooPPP',
-        '......PPPPPPPPPPPPPP',
-        '......PPPPPPPPPPPPoo',
-        '.......PPPPPPPPPPPPP',
+        '.....PPPPPPPPPPPPPPP',
+        '....PPPPPPPPPPPPPPPP',
+        '....PPNNNNNNNNNNNNNN',
+        '....PPNNNNNNNNNNNNNN',
+        '....PPNNNNGGNNNNNNNN',
+        '....PPNNNNWGGGGNNNNN',
+        '....PPNNNNNGGGGGGNNN',
+        '....PPPNNNNNNNNNNNNN',
+        '.....PPNNNNNNNNNNNNN',
+        '.....PPNNWWoWWoWWoWW',
+        '......PNNWWoWWoWWoWW',
+        '......PPNNWNNNNNNNNN',
+        '.......PPNNNNNNNNNNN',
+        '........PPPNNNNNNNNN',
       ],
     },
-    // 王冠（おでこ）
-    ...inked(['..G..G', '..GGGG', '..GGGR', '..QQQQ'], 14, 14, true),
-    // かみしもの 大きな かた・赤い 帯・はかま
-    {
-      mirror: true,
-      y: 25,
-      rows: [
-        '.LLLLLLLLLLLLLLVGGGG',
-        '.VVVVVVVVVVVVVVVVVPP',
-        '..VVVVVVVVVVVVVVVVVP',
-        '...VVVVVVVVVVVVVVVVV',
-        '.....VVVVVVVVVVVVVVV',
-        '......RRRRRRRRRRRRRR',
-        '......RRRRRRRRRRRRRR',
-        '......DDDDDDDDDDDDDD',
-        '.....DDDDDDDnDDDDDDD',
-        '.....DDDDDDnDDDDDDDD',
-        '....DDDDDDnDDDDDDDDD',
-        '....DDDDDDDDDDDD....',
-        '...NNNNNNNNNNNN.....',
+    // 金の くわがたと 赤い 宝石の 前立て
+    ...inked(
+      [
+        'G...........',
+        'GG..........',
+        '.GG.........',
+        '.GG.........',
+        '..GG........',
+        '..GGG.......',
+        '...GGG......',
+        '....GGGG..GG',
+        '.....QGGGGGR',
+        '.......QQQGR',
       ],
-    },
-    // 左の こぶし（こしに あてる）
-    { x: 2, y: 30, rows: ['..VV', '.VVV', 'PPVV', 'PPPV', '.PP.'] },
+      8,
+      3,
+      true,
+    ),
+    // 左の にぎった こぶし
+    ...inked(['LVVVV', 'VVVVV', 'PPPPP', 'PPPPP', '.PPP.'], 2, 28),
     // せの たけほどの 大きな 筆（右手で つえの ように もつ。先は すみ）
     ...inked(
       [
@@ -573,21 +601,22 @@ const fudeDaisho: MonsterDesign = {
       4,
     ),
     // 右手（筆を にぎる）
-    ...inked(['.PPP', 'PPPP', '.PP.'], 33, 27),
+    ...inked(['VVVVV', 'PPPPP', 'PPPPP', '.PPP.'], 32, 26),
     // とびちる すみ
-    { x: 1, y: 9, rows: ['.N.', 'N.N', '.N.'] },
-    { x: 2, y: 20, rows: ['N.', '.N'] },
+    { x: 1, y: 7, rows: ['.N.', 'N.N', '.N.'] },
+    { x: 1, y: 15, rows: ['N.', '.N'] },
     { x: 36, y: 1, rows: ['.N.', 'N.N', '.N.'] },
   ],
 };
 
-/** フデダイショウ（フィールドに 立つ 32×32） */
+/** フデダイショウ（フィールドに 立つ 32×32）：さかだつ 筆の 毛・金の くわがた・かげの 顔に 光る 目と 歯・とがった かた */
 const fudeDaishoField: MonsterDesign = {
   size: 32,
   colors: {
     N: NQ.night,
     P: NQ.paper,
     V: NQ.violet,
+    L: NQ.lavender,
     D: NQ.denim,
     G: NQ.gold,
     Q: NQ.ochre,
@@ -596,48 +625,65 @@ const fudeDaishoField: MonsterDesign = {
   },
   rim: { [NQ.violet]: NQ.indigo, [NQ.paper]: NQ.cloud },
   layers: [
+    // とがった かた・赤い 帯・はかま
     {
       mirror: true,
-      y: 1,
+      y: 13,
       rows: [
-        '...............N',
-        '..............NN',
-        '.............NNN',
-        '............NNNN',
-        '...........NNNNN',
-        '..........NNNNPN',
-        '.........NNPNNPN',
-        '........NPPNPPNP',
-        '.......PPVPPPVPP',
-        '......PPPPPPPPPP',
-        '......PPPPPPPPPP',
-        '......PPPPoooPPP',
-        '......PPPGGGoPPP',
-        '......PPPGGGoPPP',
-        '......PPPGGooPPP',
-        '......PPPPPPPPPP',
-        '......PPPPPPPPoo',
-        '.......PPPPPPPPP',
-      ],
-    },
-    ...inked(['..G..G', '..GGGG', '..GGGR', '..QQQQ'], 10, 9, true),
-    {
-      mirror: true,
-      y: 19,
-      rows: [
-        '.VVVVVVVVVVVVGGG',
-        '.VVVVVVVVVVVVVPP',
+        '.L..............',
+        '.LL.............',
+        '.LVL............',
+        '.LVVL...........',
+        '.LVVVLLLLLLLLLLL',
+        '.LVVVVVVVVVVVPPR',
+        '.VVVVVVVVVVVVVPR',
         '..VVVVVVVVVVVVVP',
         '...VVVVVVVVVVVVV',
         '....RRRRRRRRRRRR',
-        '....RRRRRRRRRRRR',
+        '....RRRRRRRRRRGG',
         '....DDDDDDDDDDDD',
         '...DDDDDDDDDDDDD',
         '...DDDDDDDDDDDDD',
         '...DDDDDDDDDD...',
         '..NNNNNNNNNN....',
+        '..NNNNNNNNN.....',
       ],
     },
+    // さかだつ 筆の 毛と かげの 顔
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '.......N.......N',
+        '..N....NN.....NN',
+        '..NN...NPN....NP',
+        '...NN..NPPN..NPP',
+        '...NPN.NPLPN.NPL',
+        '....NPNNPLPPNPPL',
+        '....NPLPPLPPPPPL',
+        '.....PPPPPPPPPPP',
+        '....PPPPPPPPPPPP',
+        '...PPNNNNNNNNNNN',
+        '...PPNNNGGNNNNNN',
+        '...PPNNNPGGGGNNN',
+        '...PPNNNNNGGGGGN',
+        '...PPNNNNNNNNNNN',
+        '....PPNPPoPPoPPP',
+        '....PPNPPoPPoPPP',
+        '.....PPNPNNNNNNN',
+        '......PPNNNNNNNN',
+      ],
+    },
+    // 金の くわがたと 赤い 宝石
+    ...inked(
+      ['G........', 'GG.......', '.GG......', '..GG.....', '..GGG..GG', '...QGGGGR', '.....QQGR'],
+      7,
+      3,
+      true,
+    ),
+    // 左の こぶし
+    ...inked(['VVVV', 'PPPP', '.PP.'], 2, 21),
+    // 大きな 筆
     ...inked(
       [
         '.TT.',
@@ -656,9 +702,9 @@ const fudeDaishoField: MonsterDesign = {
         '.N..',
       ],
       27,
-      13,
+      12,
     ),
-    ...inked(['.PP', 'PPP'], 26, 20),
+    ...inked(['VVVV', 'PPPP', '.PP.'], 26, 19),
   ],
 };
 
@@ -667,111 +713,121 @@ const fudeDaishoField: MonsterDesign = {
 /** もみじの 葉（7×7）。R 赤、V 光、r すじ */
 const MOMIJI = ['...R...', 'R..V..R', 'RV.V.VR', '.RVrVR.', 'RRRrRRR', '.R.r.R.', '...r...'];
 
-/** たてがみの もみじ（左半分の 位置） */
+/** たてがみの もみじ（左半分の 位置）。頭の まわりに 炎の ように ひろがる */
 const MANE_AT: readonly [number, number][] = [
-  [4, 2],
-  [1, 9],
-  [8, 9],
-  [2, 16],
+  [8, 3],
+  [2, 8],
+  [1, 15],
+  [4, 20],
 ];
 
+/** 頭：こい あいの かげに つり上がって 光る 目（E）、とがった まゆ、はなの あな、大きく ひらいた 口と きば */
 const RYU_HEAD = [
   '................AAAAAAAA',
-  '...............AAAAAAAAA',
-  '..............AASSAAAAAA',
-  '..............ASAAAAAAAA',
-  '..............AAoAAAAAAA',
-  '..............AAAooAAAAA',
-  '..............AAoooAAAAA',
-  '..............AAGGGoAAAA',
-  '..............AAGGGoAAAA',
-  '..............AAGGooAAAA',
-  '...............AAAAAAKKK',
-  '...............AAAAKKKKK',
-  '................AAKKKoKK',
-  '................AAKKKKKK',
-  '.................AKKKKKK',
-  '.................AKooooo',
-  '.................AKKWKKK',
-  '..................AKKKKK',
+  '..............AAAAAAAAAA',
+  '............AAAAAAAAAAAA',
+  '..........AAAAAAAAAAAAAA',
+  '........nnAAAAAAAAAAAAAA',
+  '.........nnnnAAAAAAAAAAA',
+  '..........AnnnnnAAAAAAAA',
+  '..........ABnnnnnnnAAAAA',
+  '..........ABBEEEEEnnBAAA',
+  '..........ABBYEEEEEEnBAA',
+  '..........ABBBBBBEEEnBAA',
+  '..........AABBBBBBBBBBAA',
+  '...........AAABBBBBBAAAA',
+  '............AAAAAAAAAAAA',
+  '.............AAAAAAAAnAA',
+  '............AAAAAAAAAAAA',
+  '...........AAAoooooooooo',
+  '..........AAAoWWWMWWWMWW',
+  '..........AAoMWMMMWMMMWM',
+  '..........AAoMMMMmmmmmmm',
+  '..........AAoMWMMMWMMMWM',
+  '...........AoWWWMWWWMWWW',
+  '...........AAooooooooooo',
+  '............AAAAAAAAAAAA',
 ];
 
+/** ほおの とがった ひれ */
+const RYU_FIN = ['.....BB', '...BBBB', '.BBBBBB', '..BBBBB', 'BBBBBB.', '..BBBB.'];
+
+/** からだ：はらの うろこ（K・I）と うねる とぐろ、足もとの 波 */
 const RYU_BODY = [
-  '...............AAAAAAAAA',
-  '..............AAAAAIIIII',
-  '.............AAAAAAIIIII',
-  '............AABAAAAKKKKK',
-  '............AAAAAAAIIIII',
-  '............ABAAAAAIIIII',
-  '............AAAAAAAKKKKK',
-  '............AAABAAAIIIII',
-  '.............AAAAAAIIIII',
-  '.............ABAAAAKKKKK',
-  '....AAAAAAAA.AAAAAAIIIII',
-  '..AAAABAAABAAAAAAAAIIIII',
-  '.AAABAAABAAAABAAAAAAAAAA',
-  '.AAIIIIIIIIIIAAAAABAAABA',
-  '.AIIIIIIIIIIIIIAAAAAAAAA',
-  '.AAKKKKKKKKKKKKAABAAABAA',
-  '..AAAAAAAAAAAAAAAAAAAAAA',
-  '...AAABAAABAAABAAAABAAAA',
+  '..............AAAAAAAAAA',
+  '.............AAAAAAAAAAA',
+  '............AAAAAAAAAAAA',
+  '...........AAAAAAAKKKKKK',
+  '..........AAAAAAAAIIIIII',
+  '..........AABAAAAAKKKKKK',
+  '..........AAAAAAAAKKKKKK',
+  '..........ABAAAAAAIIIIII',
+  '...........AAAAAAAKKKKKK',
+  '...AAAAAA..AAAAAAAKKKKKK',
+  '.AAAABAAAA.AABAAAAIIIIII',
+  '.AABAAABAAAAAAAAAAKKKKKK',
+  '.AAAAAAAAAABAAAAAAKKKKKK',
+  '.AnnnnnnnAAAAAAAAAAAAAAA',
+  '..AAAAAAAAAAABAAABAAAAAA',
+  '...AAABAAABAAAAAAAAAAAAA',
   '....AAAAAAAAAAAAAAAAAAAA',
-  '...WWKKWWWKKKWWWKKWWWKKW',
-  '..KKAAKKKAAAKKKAAAKKKAAA',
+  '...WWnnWWWnnnWWWnnWWWnnW',
+  '..nnAAnnnAAAnnnAAAnnnAAA',
+  '.nnnnnnnnnnnnnnnnnnnnnnn',
 ];
 
+/** 大きく ひろげて ふりあげた うでと 白い つめ */
 const RYU_ARM = [
-  '..W.W....',
-  '..WAW.W..',
-  '.AAAAAW..',
-  '.AAAAAA..',
-  '..AAAA...',
-  '..AAAA...',
-  '..AAAA...',
-  '..AAAAA..',
-  '...AAAAA.',
-  '....AAAAA',
-  '.....AAAA',
+  '.W.W.W......',
+  '.WAWAW......',
+  '.AAAAA......',
+  '.BAAAAB.....',
+  '..BAAAB.....',
+  '..BAAABB....',
+  '..BBAAABBBB.',
+  '...BBAAAAABB',
+  '....BBBBBBBB',
 ];
 
+/** うしろへ 大きく そりかえる 金の 角 */
 const RYU_HORN = [
-  '......G.................',
-  '.....GG.......G.........',
-  '.....GG......GG.........',
-  '......GG....GG..........',
-  '.......GG..GG...........',
-  '........GGGG............',
-  '.........GGG............',
-  '..........GG............',
-  '..........GG............',
+  'G......................',
+  'GG.....................',
+  '.GG....................',
+  '.GGG...................',
+  '..GGG..................',
+  '...GGGG................',
+  '....GGGGG..............',
+  '......GGGGG............',
+  '........GGGG...........',
 ];
 
 const ryuLayers = (mane: Layer[], extra: Layer[] = []): Layer[] => [
   ...mane,
-  ...inked(RYU_BODY, 0, 25, true),
-  ...inked(RYU_ARM, 3, 19, true),
-  ...inked(RYU_HORN, 0, 1, true),
-  ...inked(RYU_HEAD, 0, 7, true),
-  // 王冠（角の あいだ）
-  ...inked(['....G..G', '....GGGG', '....GGGJ', '....QQQQ'], 16, 3, true),
-  // ひげ（ながれる）
-  {
-    mirror: true,
-    y: 19,
-    rows: ['..............KK', '.............K..', '...........KK...', '..........K.....'],
-  },
+  ...inked(RYU_BODY, 0, 26, true),
+  ...inked(RYU_ARM, 1, 24, true),
+  ...inked(RYU_HORN, 1, 1, true),
+  ...inked(RYU_FIN, 5, 18, true),
+  ...inked(RYU_HEAD, 0, 6, true),
+  // ひたいの 金の つのと 赤い 宝石
+  ...inked(['.G', '.G', 'GG', 'GG', 'GJ', 'QJ'], 22, 2, true),
   // うろこの つや（左上）
-  { x: 15, y: 9, rows: ['SS', 'S.'] },
+  { x: 15, y: 8, rows: ['SS', 'S.'] },
   ...extra,
 ];
 
 const ryuColors = {
   A: NQ.azure,
   B: NQ.blue,
+  n: NQ.navy,
   K: NQ.sky,
   I: NQ.ice,
   W: NQ.white,
   S: NQ.ice,
+  E: NQ.gold,
+  Y: NQ.cream,
+  M: NQ.red,
+  m: NQ.brick,
   R: NQ.red,
   V: NQ.vermilion,
   r: NQ.brick,
@@ -780,7 +836,11 @@ const ryuColors = {
   J: NQ.red,
 };
 
-/** モミジリュウ（県ボス）：三段峡の 淵に すむ 青い 竜。もみじの たてがみ・金の 角・つめ・とぐろ（ミズ） */
+/**
+ * モミジリュウ（県ボス）：三段峡の 淵に すむ 青い 竜。頭の まわりに 炎の ように ひろがる もみじの たてがみ、
+ * うしろへ そりかえる 金の 角と ひたいの 赤い 宝石、こい かげに つり上がって 光る 金の 目、
+ * 大きく ひらいた 口と きば、ふりあげた うでの 白い つめ、とぐろと 波（ミズ）
+ */
 const momijiRyu: MonsterDesign = {
   size: 48,
   colors: ryuColors,
@@ -789,21 +849,28 @@ const momijiRyu: MonsterDesign = {
   layers: ryuLayers(MANE_AT.flatMap(([x, y]) => inked(MOMIJI, x, y, true))),
 };
 
-/** モミジリュウ 後半（モリ）：たてがみが だいだいと 金に もえる もみじに なり、目が 光り、もみじの あらしが まう */
+/** モミジリュウ 後半（モリ）：たてがみが だいだいと 金に もえあがり、目が 赤く 光り、火の 粉の もみじの あらしが まう */
 const momijiRyuP0: MonsterDesign = {
   ...momijiRyu,
-  colors: { ...ryuColors, R: NQ.orange, V: NQ.cream, r: NQ.vermilion, W: NQ.cream },
+  colors: { ...ryuColors, R: NQ.orange, V: NQ.cream, r: NQ.vermilion, E: NQ.red, Y: NQ.white },
   rim: { [NQ.azure]: NQ.blue, [NQ.orange]: NQ.amber, [NQ.gold]: NQ.ochre },
   layers: ryuLayers(
-    MANE_AT.flatMap(([x, y]) => inked(MOMIJI, x, y, true)),
     [
-      // まう もみじ
-      ...inked(['.R.', 'RVR', '.r.'], 2, 29),
-      ...inked(['.R.', 'RVR', '.r.'], 43, 25),
-      ...inked(['.R.', 'RVR', '.r.'], 41, 35),
-      ...inked(['.R.', 'RVR', '.r.'], 4, 37),
-      ...inked(['.R.', 'RVR', '.r.'], 10, 1),
-      ...inked(['.R.', 'RVR', '.r.'], 35, 1),
+      // もえあがる たてがみの 炎
+      ...inked(
+        ['..R.......', '..RR...R..', '.RRR..RR..', '.RVRR.RRR.', 'RRVVRRRVR.', 'RVVVVRVVR.'],
+        3,
+        2,
+        true,
+      ),
+      ...MANE_AT.flatMap(([x, y]) => inked(MOMIJI, x, y, true)),
+    ],
+    [
+      // まう 火の 粉の もみじ
+      ...inked(['.R.', 'RVR', '.r.'], 1, 33),
+      ...inked(['.R.', 'RVR', '.r.'], 44, 33),
+      ...inked(['.R.', 'RVR', '.r.'], 7, 43),
+      ...inked(['.R.', 'RVR', '.r.'], 38, 43),
     ],
   ),
 };

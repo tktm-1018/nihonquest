@@ -61,11 +61,13 @@ import {
 } from '../core/progression/eventReward';
 import {
   areaBossFlag,
+  bossDiscoveries,
+  discoveredByBoss,
   lastBossFlag,
   midBossFlag,
   motifStamp,
-  regionBossFlag,
   nextStop,
+  regionBossFlag,
   type NextStop,
 } from '../core/progression/route';
 import { canChallengeIslandBoss, completeIsland } from '../core/progression/island';
@@ -149,6 +151,7 @@ import { applyChestReward, chestModel, specialtyChestModel } from './overworld/c
 import { itemKindPresentation, specialtyRewardLines } from './overworld/treasurePresentation';
 import { movementDecision } from './overworld/movementDecision';
 import { buildStructureArt, structureKey, type StructureKind } from '../rendering/overworld/structureArt';
+import { createSign, discoverByBoss, lockedLine, type Sign } from './overworld/landmarkSigns';
 import { askFirst, buildAskEnv, relaxedQueries } from './shared/askEnv';
 import {
   mapArrivalStory,
@@ -273,15 +276,6 @@ interface Warp {
   toName: string;
 }
 
-/** 名所の ★ 看板 */
-interface Sign {
-  /** dex.motifs に入る名所スタンプ。持っている＝その名所を見つけた */
-  stamp: string;
-  found: () => boolean;
-  /** 見つけた・チャレンジを終えた あとに、★ の色と「！」をいまの進みぐあいに合わせる */
-  refresh: () => void;
-}
-
 /** 開発者モード（ぜんぶの 場所へ ワープ）の しるし。セーブの progress.counters に 1 */
 const DEV_ALL_KEY = 'dev:all';
 /** たいせんじょうで かったときの しょうきん（ふつうの ごほうびの ほかに） */
@@ -325,6 +319,8 @@ export class OverworldScene extends Phaser.Scene {
   private triggers = new Map<number, FieldTrigger>();
   private insideTrigger: string | null = null;
   private signs = new Map<number, () => Promise<void>>();
+  /** スタンプ → 看板（ボスを たおして 見つけた ときに ★ の 色を かえる） */
+  private signsByStamp = new Map<string, Sign>();
   private npcs = new Map<number, Npc>();
   private chests = new Map<number, Chest>();
   private midBoss: MidBoss | null = null;
@@ -476,6 +472,7 @@ export class OverworldScene extends Phaser.Scene {
     this.triggers = new Map();
     this.insideTrigger = null;
     this.signs = new Map();
+    this.signsByStamp = new Map();
     this.npcs = new Map();
     this.chests = new Map();
     this.midBoss = null;
@@ -1241,6 +1238,7 @@ export class OverworldScene extends Phaser.Scene {
       lines.push({ text: t('field.gateOpened', { to: to?.name ?? '' }) });
     }
     await this.talk(lines);
+    await this.discoverByBoss(area, bossDiscoveries(area, rb.regionId));
     this.busy = false;
   }
 
@@ -1382,7 +1380,9 @@ export class OverworldScene extends Phaser.Scene {
     const done = () => ev.once && challenged();
     const sign = this.addSign(tx, ty, motifStamp(area.id, ev.motifId), challenged);
     const run = () => this.runEvent(area, ev, motif, sign);
-    this.addTrigger(tx, ty, { id: ev.id, auto: () => !done(), run });
+    // ボスで 見つける 名所は、見つけるまで 近づいても 何も おきない
+    const locked = () => !!motif && discoveredByBoss(motif) && !sign.found();
+    this.addTrigger(tx, ty, { id: ev.id, auto: () => !done() && !locked(), run });
     this.signs.set(this.idx(tx, ty), run);
     if (this.kind() === 'field') this.stampIds.push(sign.stamp);
   }
@@ -1393,59 +1393,21 @@ export class OverworldScene extends Phaser.Scene {
     // チャレンジの無い名所は、見つけたら終わり（すぐ金色）
     const sign = this.addSign(tx, ty, motifStamp(area.id, motif.id), () => true);
     const run = () => this.visitLandmark(area, motif, sign);
-    this.addTrigger(tx, ty, { id: `lm.${motif.id}`, auto: () => !sign.found(), run });
+    this.addTrigger(tx, ty, {
+      id: `lm.${motif.id}`,
+      auto: () => !sign.found() && !discoveredByBoss(motif),
+      run,
+    });
     this.signs.set(this.idx(tx, ty), run);
     this.stampIds.push(sign.stamp);
   }
 
-  /** 名所の★看板。灰色=未発見、白＋!=未挑戦、金色=完了。 */
+  /** 名所の ★ 看板（GDD §7。絵と ★ の 色は overworld/landmarkSigns.ts。灰色=未発見、白＋!=未挑戦、金色=完了） */
   private addSign(tx: number, ty: number, stamp: string, challenged: () => boolean): Sign {
-    const x = tx * TILE + 8;
-    const y = ty * TILE + 8;
     const found = () => this.gs()?.dex.motifs.includes(stamp) ?? false;
-    const texture = () => (!found() ? 'fld.sign' : challenged() ? 'fld.sign.done' : 'fld.sign.todo');
-    const img = this.add.image(x, y, texture()).setDepth(y);
-    let mark: Phaser.GameObjects.Image | null = null;
-    const syncMark = () => {
-      const todo = found() && !challenged();
-      if (todo && !mark) {
-        mark = this.add
-          .image(x, y - 8, 'fld.sign.mark')
-          .setOrigin(0.5, 1)
-          .setDepth(y + 1);
-        this.tweens.add({
-          targets: mark,
-          y: y - 11,
-          yoyo: true,
-          repeat: -1,
-          duration: 400,
-          ease: 'Stepped',
-          easeParams: [1],
-        });
-      } else if (!todo && mark) {
-        mark.destroy();
-        mark = null;
-      }
-    };
-    syncMark();
-    return {
-      stamp,
-      found,
-      refresh: () => {
-        const next = texture();
-        syncMark();
-        if (img.texture.key === next) return;
-        img.setTexture(next);
-        this.tweens.add({
-          targets: img,
-          y: y - 3,
-          yoyo: true,
-          duration: 120,
-          ease: 'Stepped',
-          easeParams: [3],
-        });
-      },
-    };
+    const sign = createSign(this, tx * TILE + 8, ty * TILE + 8, stamp, found, challenged);
+    this.signsByStamp.set(stamp, sign);
+    return sign;
   }
 
   /** 名所を見つけた：スタンプを押し、看板の ★ を白（チャレンジがまだ）か金色に。はじめて見つけたときだけ true */
@@ -1478,11 +1440,35 @@ export class OverworldScene extends Phaser.Scene {
     return this.discover(sign) ? [{ text: t('field.stampGet', this.stampCount()) }] : [];
   }
 
+  /** ボスで 見つける 名所の 看板を まだ 見つけずに しらべた：どの ボスを たおせば よいか 教えて おわり（true） */
+  private async lockedLandmark(area: Area, motif: Motif | undefined, sign: Sign): Promise<boolean> {
+    const line = motif && !sign.found() ? lockedLine(area, motif) : null;
+    if (!line) return false;
+    await this.talk([line]);
+    this.busy = false;
+    return true;
+  }
+
+  /** ボスを たおした：その 地域の 名所を 見つける（overworld/landmarkSigns.ts） */
+  private discoverByBoss(area: Area, motifs: readonly Motif[]): Promise<void> {
+    return discoverByBoss(area, motifs, {
+      gs: () => this.gs(),
+      setGame: (gs) => this.setGame(gs),
+      cutin: (m) => this.cutin(area.id, m),
+      refreshSign: (stamp) => this.signsByStamp.get(stamp)?.refresh(),
+      renderHud: () => this.renderHud(),
+      talk: (lines) => this.talk(lines),
+      stampCount: () => this.stampCount(),
+      checkMeisan: () => this.checkMeisan(),
+    });
+  }
+
   /** 名所スタンプ：（はじめてなら カットイン → ★ が黄色に）→ 名所の説明 → スタンプ */
   private async visitLandmark(area: Area, motif: Motif, sign: Sign): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.standStill();
+    if (await this.lockedLandmark(area, motif, sign)) return;
     const stampLine = await this.arriveAt(area, motif, sign);
     await this.talk([
       { speaker: t('field.landmarkSpeaker'), text: motif.blurb },
@@ -1497,6 +1483,7 @@ export class OverworldScene extends Phaser.Scene {
     if (this.busy) return;
     this.busy = true;
     this.standStill();
+    if (await this.lockedLandmark(area, motif, sign)) return;
     const stampLine = await this.arriveAt(area, motif, sign);
     if (ev.once && this.gs()?.progress.eventsDone.includes(ev.id)) {
       await this.talk([
@@ -1751,6 +1738,8 @@ export class OverworldScene extends Phaser.Scene {
       ...areaBossStoryLines(area.id, this.gs() ?? gs, this.storyCompanion()),
       { text: t('field.areaSign', { name: area.name }) },
     ]);
+    // 名所エリアの ない 県は 県ボスで 県の 名所を 見つける（エリアの ある 県は ぬしごと）
+    if (!area.regions.length) await this.discoverByBoss(area, bossDiscoveries(area));
     this.busy = false;
   }
 

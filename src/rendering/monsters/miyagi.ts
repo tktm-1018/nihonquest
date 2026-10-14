@@ -255,12 +255,12 @@ const kokeshina: MonsterDesign = {
   ],
 };
 
-/** タナバタドリ：七夕の ふきながしを つばさと 尾に した 大きな鳥。胸に くす玉（カゼ・中ボス） */
+/** タナバタドリ：七夕の ふきながしを つばさと 尾に した 大きな 猛禽（カゼ・中ボス）。とげの かざり羽と ひたいの 赤い 宝玉、光る つり目、金の かぎくちばし、胸に くす玉、金の つめ */
 const tanabataDori: MonsterDesign = {
   size: 40,
   colors: {
-    A: NQ.aqua,
-    m: NQ.mint,
+    A: NQ.teal,
+    m: NQ.aqua,
     Y: NQ.gold,
     y: NQ.ochre,
     R: NQ.red,
@@ -273,27 +273,25 @@ const tanabataDori: MonsterDesign = {
     v: NQ.indigo,
     W: NQ.white,
   },
-  rim: { [NQ.aqua]: NQ.teal },
+  rim: { [NQ.teal]: NQ.navy },
   rimDepth: 2,
   layers: [
     // つばさの 上の はね（ぎざぎざ）
     { mirror: true, y: 3, rows: ['..m', '.....', '.....m', '', '........m', '', '', '...........m'] },
-    // 頭の かざり羽（王冠の 両わきに はねあがる）
-    { mirror: true, y: 1, rows: ['...........m', '............m', '............mA', '.............A'] },
     {
       mirror: true,
       rows: [
         '....................',
-        '...............Y...Y',
-        '...............YY.YY',
-        '.m.............YYYYR',
-        '.Am............yyyyy',
+        '...........m......m.',
+        '...........mm....mA.',
+        '.m..........mm..mAA.',
+        '.Am..........mAmAAYR',
         '.AAmm.........AAAAAA',
-        '.RAAAm.......AAooAAA',
-        '.RrAAAm.....mAAWWoAA',
-        '.RrYyAAmm..mmAAWWoAA',
-        '.RrYyBAAAm..mAAWooAY',
-        '.RrYyBbAAAm..AAAAAYY',
+        '.RAAAm.......AoooAAA',
+        '.RrAAAm.....mAAAoooo',
+        '.RrYyAAmm..mmAoWYYoY',
+        '.RrYyBAAAm..mAAAooYY',
+        '.RrYyBbAAAm..AAAAyYY',
         '.RrYyBbGgAAm.AAAAAyY',
         '.RrYyBbGgVAAm.AAAAAy',
         '.RrYyBbGgVvAAAAAAmmm',
@@ -331,8 +329,8 @@ const tanabataDori: MonsterDesign = {
 const tanabataDoriField: MonsterDesign = {
   size: 32,
   colors: {
-    A: NQ.aqua,
-    m: NQ.mint,
+    A: NQ.teal,
+    m: NQ.aqua,
     Y: NQ.gold,
     y: NQ.ochre,
     R: NQ.red,
@@ -341,20 +339,20 @@ const tanabataDoriField: MonsterDesign = {
     V: NQ.violet,
     W: NQ.white,
   },
-  rim: { [NQ.aqua]: NQ.teal },
+  rim: { [NQ.teal]: NQ.navy },
   layers: [
     {
       mirror: true,
       rows: [
         '................',
-        '............Y..Y',
-        '............YYYR',
-        '.mm.........yyyy',
+        '..........m...m.',
+        '...........m.mA.',
+        '.mm.........mAYR',
         '.AAmm......AAAAA',
-        '.R.AAm....AAoAAA',
-        '.R.Y.Amm..AWWAAA',
-        '.R.Y.BAAm.AWoAAY',
-        '.R.Y.B.GAmAWoAYY',
+        '.R.AAm....AoooAA',
+        '.R.Y.Amm..AAAooo',
+        '.R.Y.BAAm.AoWYoY',
+        '.R.Y.B.GAmAAooYY',
         '.R.Y.B.G.AAAAAAy',
         '.R.Y.B.G.VAAAmmy',
         '.R.Y.B.G.VAAAYYY',
@@ -382,7 +380,11 @@ const tanabataDoriField: MonsterDesign = {
   ],
 };
 
-/** ミカヅキショウグン：仙台城あとで 目をさました、三日月の かぶとの 黒い よろい（中は からっぽ）。ヤミ・県ボス */
+/**
+ * ミカヅキショウグン：仙台城あとで 目をさました、三日月の かぶとの 黒い よろい（中は からっぽ）。ヤミ・県ボス。
+ * 大きな 金の 三日月の まえだて、かぶとの てっぺんに 赤い 宝玉、まっ黒な 顔の おくで 赤く 光る つり目、
+ * きばの めんぼお、むらさきの じんばおり、むねの 前で こぶしを あわせて 石垣に 立ちはだかる
+ */
 const mikazukiShogun: MonsterDesign = {
   size: 48,
   colors: {
@@ -397,7 +399,7 @@ const mikazukiShogun: MonsterDesign = {
     y: NQ.ochre,
     R: NQ.red,
     e: NQ.cream,
-    // 刀
+    // 石垣の ふち・めんぼおの きば
     E: NQ.silver,
     W: NQ.white,
     // じんばおり（うしろの マント）
@@ -453,9 +455,9 @@ const mikazukiShogun: MonsterDesign = {
       mirror: true,
       rows: [
         '........................',
-        '...................Y...Y',
-        '...................YY.YY',
-        '...................YYYYR',
+        '.......................Y',
+        '......................YY',
+        '.....................YYR',
         '..................yyyyyy',
         '.................KKKKKKK',
         '...............KkkKKkKKk',
@@ -470,10 +472,10 @@ const mikazukiShogun: MonsterDesign = {
         '....YKKKKKKYYYYYYYYYYYYY',
         '....YKKKKKKKKKyyyyyyyyyy',
         '...YKKKKKKKKKKoooooooooo',
-        '...YkkkkkkkkkKooeeeooooo',
-        '...YKKKKKKKKKKoooeeeoooo',
+        '...YkkkkkkkkkKoRRReooooo',
+        '...YKKKKKKKKKKoooRReeooo',
         '...YYYYYYYYYYKKkkkkkkkkk',
-        '....YYYYYYYoKKkkkYYYkkKK',
+        '....YYYYYYYoKKoWoWoWoWoW',
         '....kKKKKKKoYYYYYYYYYYYY',
         '...kKKKKKKKoKKKKKKKKKKKK',
         '...kkkkkkkkoKKKKKKKKKKKK',
@@ -498,7 +500,7 @@ const mikazukiShogun: MonsterDesign = {
         '..........KKKKKKKKKK....',
       ],
     },
-    // うでと こぶし（刀の つかを 両手で おさえる）
+    // うでと こぶし（むねの 前で 両の こぶしを あわせる）
     {
       mirror: true,
       y: 24,
@@ -532,41 +534,13 @@ const mikazukiShogun: MonsterDesign = {
         '.....................mmm',
       ],
     },
-    // 刀（つかを 両手で おさえ、石垣に つきたてる）
-    {
-      x: 20,
-      y: 22,
-      rows: [
-        '...YY',
-        '...Ek',
-        '...kE',
-        '...Ek',
-        '...kE',
-        '...Ek',
-        '...kE',
-        '...Ek',
-        'YYYYYYYY',
-        'yyyyyyyy',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-        '...WE',
-      ],
-    },
   ],
 };
 
-/** 後半：三日月が 月の光で 白く かがやき、まわりに 光の つぶ（ヒカリ） */
+/** 後半：三日月が 月の光で 白く かがやき、目の 光が 白く もえ、まわりに 光の つぶ（ヒカリ） */
 const mikazukiShogunP0: MonsterDesign = {
   ...mikazukiShogun,
-  colors: { ...mikazukiShogun.colors, M: NQ.cream, m: NQ.gold, C: NQ.white },
+  colors: { ...mikazukiShogun.colors, M: NQ.cream, m: NQ.gold, C: NQ.white, e: NQ.white },
   layers: [
     ...mikazukiShogun.layers,
     // 月の光のつぶ

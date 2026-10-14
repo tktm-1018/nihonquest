@@ -106,44 +106,6 @@ function rays(
   );
 }
 
-/** 富士山の かたち：y の だんでの はばの 半分（上は 平ら、すそは 広がる） */
-const fujiHalf = (y: number, top: number, base: number, hwTop: number, hwBase: number) =>
-  hwTop + (hwBase - hwTop) * ((y - top) / (base - top)) ** 1.6;
-
-/** 湖に うつる 逆さ富士：上は 雪の 富士山（W・C・A）、水面（I・W）、下に さかさまの 富士（S・I） */
-function sakasaFuji(
-  S: number,
-  top: number,
-  base: number,
-  hwTop: number,
-  hwBase: number,
-  snow: number,
-): string[] {
-  const cx = S / 2;
-  const water = base + 1;
-  const bottom = S - 2;
-  return Array.from({ length: S }, (_, y) =>
-    Array.from({ length: S }, (_, x) => {
-      const dx = Math.abs(x + 0.5 - cx);
-      if (x < 1 || x > S - 2) return '.';
-      if (y >= top && y <= base) {
-        if (dx > fujiHalf(y, top, base, hwTop, hwBase)) return '.';
-        const jag = (Math.floor(x / 2) % 2) * 2 - (x % 3 === 0 ? 1 : 0);
-        if (y < top + snow + jag) return (x * 3 + y) % 7 === 0 ? 'C' : 'W';
-        return 'A';
-      }
-      if (y === water) return dx <= hwBase ? (x % 4 === 0 ? 'W' : 'I') : '.';
-      if (y > water && y <= bottom) {
-        const yu = base - ((y - water - 1) * (base - top)) / (bottom - water - 1);
-        if (dx > fujiHalf(yu, top, base, hwTop, hwBase)) return '.';
-        if (yu < top + snow) return 'I';
-        return y % 3 === 0 ? 'I' : 'S';
-      }
-      return '.';
-    }).join(''),
-  );
-}
-
 /** 地図の 上に 部品を かさねた 新しい 地図（'.' は 下の まま） */
 function stamp(rows: readonly string[], x: number, y: number, part: readonly string[]): string[] {
   const out = [...rows];
@@ -713,49 +675,133 @@ const suzuriTatsujin: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-/** サカサフジン（中ボス）：富士五湖の 水の せい。上は 雪を かぶった 富士山、水面の 下に 逆さ富士、水の うで（ミズ） */
-const SAKASA_ARM = [
-  '.WW.',
-  'WWWW',
-  'WSSW',
-  '.SIS',
-  '.SIS',
-  '.SI.',
-  '.SI.',
-  '.SI.',
-  '.SI.',
-  '..SI',
-  '..SI',
-  '..SI',
-  '..SI',
-  '...S',
-];
+/**
+ * サカサフジン（中ボス）：富士五湖の 水の せい。上は 氷の つのと 雪の とげを かぶった 富士山、ひたいに 赤い 宝石、
+ * 暗い 山はだに 金に 光る つり目と きば、湖面の 下に とがった 逆さ富士、左右に ふりあげた 水しぶきの つめ（ミズ）
+ */
 const sakasaColors = {
   W: NQ.white,
-  C: NQ.cloud,
   A: NQ.azure,
+  n: NQ.navy,
   I: NQ.ice,
   S: NQ.sky,
   G: NQ.gold,
-  Q: NQ.ochre,
+  Y: NQ.cream,
   R: NQ.red,
-  p: NQ.blush,
 };
 const sakasaFujin: MonsterDesign = {
   size: 40,
   colors: sakasaColors,
-  rim: { [NQ.azure]: NQ.blue },
+  rim: { [NQ.azure]: NQ.blue, [NQ.sky]: NQ.azure },
   rimDepth: 2,
   layers: [
-    { mirror: true, x: 1, y: 8, rows: SAKASA_ARM },
-    { rows: sakasaFuji(40, 4, 21, 3, 18.5, 7) },
-    // 王冠（山の てっぺん）
-    { mirror: true, x: 16, y: 1, rows: ['G..G', 'GGGR', 'QQQQ'] },
-    // まゆ・目・ほっぺ・口
-    { mirror: true, x: 14, y: 10, rows: ['oo..', '..oo'] },
-    { mirror: true, x: 15, y: 12, rows: ['WWW', 'WWo', 'WWo', 'Woo'] },
-    { mirror: true, x: 13, y: 16, rows: ['pp'] },
-    { mirror: true, x: 17, y: 17, rows: ['ooo', '.W.'] },
+    // 水しぶきの うで と つめ
+    {
+      mirror: true,
+      y: 4,
+      rows: [
+        '.I..I...............',
+        '.II.I...I...........',
+        '.IIIII.II...........',
+        '..SIIIII............',
+        '..SSIII.............',
+        '..SSSI..............',
+        '...SSI..............',
+        '...SSSI.............',
+        '....SSSI............',
+        '.....SSSI...........',
+        '......SSSI..........',
+        '.......SSSI.........',
+        '........SSSI........',
+        '.........SSSI.......',
+        '..........SSSI......',
+      ],
+    },
+    // 氷の つの
+    {
+      mirror: true,
+      y: 3,
+      rows: [
+        '.........W..........',
+        '.........WW.........',
+        '..........WW........',
+        '..........IWW.......',
+        '...........IWW......',
+        '............IWW.....',
+        '.............IWW....',
+      ],
+    },
+    // 雪の とげを かぶった 富士山（上）・湖面・逆さ富士（下）
+    {
+      mirror: true,
+      y: 2,
+      rows: [
+        '...................W',
+        '..................WW',
+        '..................WW',
+        '.................WWW',
+        '................WWWW',
+        '...............WWWWW',
+        '..............WWWWWW',
+        '.............WWWWWWW',
+        '............WWWWWWWW',
+        '...........AWWWAWWWW',
+        '..........AAWWAAAWWA',
+        '.........AAAWAAAAAWA',
+        '.........AAAAAAAAAAA',
+        '........AAAAAAAAAAAA',
+        '.......AAAAAAAAAAAAA',
+        '.......AAAAAAAAAAAAA',
+        '......AAAAAAAAAAAAAA',
+        '.....AAAAAAAAAAAAAAA',
+        '.....AAAAAAAAAAAAAAA',
+        '....AAAAAAAAAAAAAAAA',
+        '...AAAAAAAAAAAAAAAAA',
+        '..WIWWIWWIWWIWWIWWIW',
+        '.IWIIWIIWIIWIIWIIWII',
+        '...SSSSSSSSSSSSSSSSS',
+        '.....SSSSIIISSSSSSSS',
+        '......SSSSSSSSSSSSSS',
+        '........SSSSSSIIISSS',
+        '.........SSSSSSSSSSS',
+        '...........SSSIIISSS',
+        '............SSSSSSSS',
+        '..............SSSSII',
+        '...............SSIII',
+        '................SIII',
+        '.................III',
+        '..................II',
+        '...................I',
+      ],
+    },
+    // ひたいの 赤い 宝石
+    { mirror: true, x: 17, y: 11, rows: ['.GG', 'GRR', '.GR'] },
+    // 暗い かお
+    {
+      mirror: true,
+      y: 15,
+      rows: ['..........nnnnnnnnnn', '..........nnnnnnnnnn', '...........nnnnnnnnn', '............nnnnnnnn'],
+    },
+    // つり上がって 金に 光る 目
+    {
+      mirror: true,
+      y: 13,
+      rows: [
+        '.........ooo........',
+        '..........oooooo....',
+        '...........ooooooo..',
+        '...........GGGoooo..',
+        '...........GYYGGGo..',
+        '............GGGGGG..',
+        '.............GGG....',
+      ],
+    },
+    // きばの 口
+    {
+      mirror: true,
+      y: 19,
+      rows: ['.............ooooooo', '.............oWoWWoW', '..............oWooWo', '...............ooooo'],
+    },
   ],
 };
 
@@ -763,93 +809,183 @@ const sakasaFujin: MonsterDesign = {
 const sakasaFujinField: MonsterDesign = {
   size: 32,
   colors: sakasaColors,
-  rim: { [NQ.azure]: NQ.blue },
+  rim: { [NQ.azure]: NQ.blue, [NQ.sky]: NQ.azure },
   layers: [
-    { rows: sakasaFuji(32, 5, 16, 2.5, 14.5, 5) },
-    { mirror: true, x: 12, y: 2, rows: ['G..G', 'GGGR', 'QQQQ'] },
-    { mirror: true, x: 11, y: 8, rows: ['oo.', '..o'] },
-    { mirror: true, x: 12, y: 10, rows: ['WW', 'Wo', 'Wo'] },
-    { mirror: true, x: 14, y: 14, rows: ['oo'] },
+    {
+      mirror: true,
+      y: 3,
+      rows: [
+        '.I..I...........',
+        '.IIIII..........',
+        '..SIII..........',
+        '..SSI...........',
+        '...SSI..........',
+        '....SSI.........',
+        '.....SSI........',
+        '......SSI.......',
+        '.......SSI......',
+        '........SSI.....',
+      ],
+    },
+    {
+      mirror: true,
+      y: 2,
+      rows: [
+        '........W.......',
+        '........WW......',
+        '.........IW.....',
+        '..........IW....',
+        '...........IW...',
+      ],
+    },
+    {
+      mirror: true,
+      y: 1,
+      rows: [
+        '...............W',
+        '..............WW',
+        '.............WWW',
+        '............WWWW',
+        '...........WWWWW',
+        '..........WWWWWW',
+        '.........AWWAWWW',
+        '........AAWAAAWA',
+        '........AAAAAAAA',
+        '.......AAAAAAAAA',
+        '......AAAAAAAAAA',
+        '......AAAAAAAAAA',
+        '.....AAAAAAAAAAA',
+        '....AAAAAAAAAAAA',
+        '...AAAAAAAAAAAAA',
+        '..WIWWIWWIWWIWWI',
+        '.IWIIWIIWIIWIIWI',
+        '...SSSSSSSSSSSSS',
+        '....SSSSIISSSSSS',
+        '......SSSSSSSIIS',
+        '.......SSSSSSSSS',
+        '.........SSSIIIS',
+        '..........SSSSSS',
+        '...........SSIII',
+        '............SIII',
+        '.............III',
+        '..............II',
+        '...............I',
+      ],
+    },
+    { mirror: true, x: 14, y: 7, rows: ['GG', 'GR'] },
+    { mirror: true, y: 10, rows: ['........nnnnnnnn', '.........nnnnnnn', '..........nnnnnn'] },
+    {
+      mirror: true,
+      y: 9,
+      rows: [
+        '.......oo.......',
+        '........ooooo...',
+        '.........GGooo..',
+        '.........GYGGo..',
+        '..........GGG...',
+      ],
+    },
+    { mirror: true, y: 13, rows: ['...........ooooo', '...........oWoWW', '............oWoo'] },
   ],
 };
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/** 竜の からだ（左半分。頭・むねの 金の うろこ・足・昇仙峡の 岩） */
+/** 竜の からだ（左半分。つのの 生えた 頭・赤く 光る 目・きばの 口・金の むねの うろこ・ふんばる 足・昇仙峡の 岩） */
 const RYU = [
   '........................',
-  '....................G..G',
-  '....................GGGR',
-  '....................GGGR',
-  '....................QQQQ',
-  '................VVVVVVVV',
+  '........................',
+  '........................',
+  '........................',
+  '........................',
+  '........................',
+  '.................VVVVVVV',
+  '...............VVVVVVVVV',
   '..............VVVVVVVVVV',
   '.............VVVVVVVVVVV',
-  '.............VVVVVVVVVVV',
-  '............VVVVoooVVVVV',
-  '............VVVVVVVooVVV',
-  '............VVVVVVeeeVVV',
-  '............VVVVVVeeoVVV',
-  '............VVVVVVeeoVVV',
-  '.............VVVVVeooVVV',
-  '.............VVVVVVVVLLL',
-  '..............VVVVLLLLLL',
-  '..............VVVLLLLoLL',
-  '...............VVLLLLLLL',
-  '...............VVoooooWo',
-  '................VVVVVVVV',
-  '...............VVVVVYYYY',
-  '..............VVVVVYYYYY',
-  '.............VVVVVVQQQQQ',
-  '............VVVVVVYYYYYY',
-  '...........VVVVVVVYYYYYY',
-  '..........VVVVVVVVQQQQQQ',
-  '.........VVVVVVVVVYYYYYY',
-  '.........VVVVVVVVVYYYYYY',
-  '.........VVVVVVVVVQQQQQQ',
-  '..........VVVVVVVVYYYYYY',
-  '..........VVVVVVVVYYYYYY',
-  '...........VVVVVVVQQQQQQ',
-  '...........VVVVVVVVYYYYY',
   '............VVVVVVVVVVVV',
-  '...........VVVVVVV......',
-  '...........VVVVVVV......',
-  '...........VVVVVVV......',
-  '..........VVVVVVVV......',
-  '.........VVVVVVVVV......',
-  '.........GVGVGVGVV......',
+  '..........VVVVVVVVVVVVVV',
+  '...........VVVVVVVVVVVVV',
+  '..........VVVVVVVVVVVVVV',
+  '............VVVVVVVVVVVV',
+  '.............VVVVVVVVVVV',
+  '..............VVVVVVVVVV',
+  '..............VVVVVVVVVV',
+  '...............VVVVVVVVV',
+  '...............VVVVVVVVV',
+  '.............VVVVVVVVVVV',
+  '...........VVVVVVVVVVVVV',
+  '.........VVVVVVVVVVVVVVV',
+  '.........VVVVVVVVVVVVVVV',
+  '..........VVVVVVVVVGGGGG',
+  '..........VVVVVVVVGGGGGG',
+  '..........VVVVVVVVQQQQQQ',
+  '...........VVVVVVVGGGGGG',
+  '...........VVVVVVVGGGGGG',
+  '...........VVVVVVVQQQQQQ',
+  '............VVVVVVVGGGGG',
+  '............VVVVVVVGGGGG',
+  '............VVVVVVVQQQQQ',
+  '............VVVVVVVVGGGG',
+  '...........VVVVVVVVVVVVV',
+  '..........VVVVVVVVVVVVVV',
+  '.........VVVVVVVVVV.VVVV',
+  '........VVVVVVVVVV...VVV',
+  '........VVVVVVVVV.......',
+  '........VVVVVVVVV.......',
+  '.......VVVVVVVVVV.......',
+  '.......VVVVVVVVVV.......',
+  '......GVGVGVVVVVV.......',
   '....sSSSSSSSSSSSSSSSSSSS',
   '...sSSSSSSSSSSSSSSSSSSSS',
   '..sSSSSsSSSSSSSSsSSSSSSS',
-  '..sSSSSSSSSSSsSSSSSSSSSS',
   '..ssssssssssssssssssssss',
 ];
-const RYU_ARM = ['...VVVV', '..VVVVV', '..VVVV.', '.VVVV..', '.VVVV..', '.VVVV..', 'VVVV...', 'GVGV...'];
-/** 水晶の つばさ（左半分。かたから 上と 横へ） */
+/** 横に はりだした うで（金の つめ） */
+const RYU_ARM = [
+  '.....VVVVV',
+  '....VVVVVV',
+  '...VVVVVV.',
+  '..VVVVV...',
+  '.VVVVV....',
+  '.VVVV.....',
+  'VVVVV.....',
+  'VVVVV.....',
+  'GVGVG.....',
+  'G.G.G.....',
+];
+/** 水晶の つばさ（左半分。かたから 上と 外へ 大きく ひろげる） */
 const RYU_WING = (
   [
-    [13, 24, -80, 12, 4],
-    [13, 24, -58, 16, 4.5],
-    [13, 24, -36, 18, 4.5],
-    [13, 24, -16, 15, 4],
-    [17, 7, -28, 8, 3],
-    [15, 9, -58, 6, 2.6],
-    [6, 42, -12, 6, 3],
+    [12, 21, -75, 12, 4],
+    [12, 21, -52, 16, 4.4],
+    [12, 21, -30, 20, 4.8],
+    [13, 21, -10, 19, 4.4],
   ] as const
 ).map(([bx, by, deg, len, wid]) => crystal(24, 48, [bx, by, deg, len], wid));
+/** 部品の まわりの 輪郭（ring を 24×48 の 左半分に おさめる） */
+const edge = (rows: readonly string[]) =>
+  ring(rows)
+    .slice(1, 49)
+    .map((r) => r.slice(1, 25));
+/** 金の つの（頭の 上で 外へ そりかえる） */
+const RYU_HORN = [
+  crystal(24, 48, [18, 10, -35, 12], 3.4, 'YGQ'),
+  crystal(24, 48, [14, 12, -72, 7], 2.6, 'YGQ'),
+];
 
-/** スイショウリュウ（県ボス）：昇仙峡の 岩の おくで ねむっていた 水晶の 竜。水晶の つのと つばさ、金の うろこ（ヒカリ） */
+/** スイショウリュウ（県ボス）：昇仙峡の 岩の おくで ねむっていた 水晶の 竜。大きく ひろげた 水晶の つばさ、金の つの と むねの うろこ、赤く 光る つり目と きば、金の つめ（ヒカリ） */
 const ryuColors = {
   V: NQ.violet,
   L: NQ.lavender,
-  Y: NQ.cream,
+  n: NQ.indigo,
   Q: NQ.ochre,
-  e: NQ.white,
+  G: NQ.gold,
+  Y: NQ.yellow,
+  R: NQ.red,
   W: NQ.white,
   I: NQ.ice,
   K: NQ.sky,
-  G: NQ.gold,
-  R: NQ.red,
   S: NQ.silver,
   s: NQ.gray,
 };
@@ -859,22 +995,64 @@ const suishoRyu: MonsterDesign = {
   rim: { [NQ.violet]: NQ.indigo, [NQ.silver]: NQ.gray },
   rimDepth: 2,
   layers: [
-    ...RYU_WING.map((rows) => ({ mirror: true, rows })),
+    ...RYU_WING.flatMap((rows) => [
+      { mirror: true, rows: edge(rows) },
+      { mirror: true, rows },
+    ]),
+    ...RYU_HORN.map((rows) => ({ mirror: true, rows })),
     { mirror: true, rows: RYU },
-    { mirror: true, x: 4, y: 25, rows: ring(RYU_ARM) },
-    { mirror: true, x: 5, y: 26, rows: RYU_ARM },
+    { mirror: true, x: 0, y: 20, rows: ring(RYU_ARM) },
+    { mirror: true, x: 1, y: 21, rows: RYU_ARM },
     // うろこの つや（左上）
-    { x: 14, y: 7, rows: ['LL', 'L.'] },
+    { mirror: true, x: 13, y: 8, rows: ['LL', 'L.'] },
+    { mirror: true, x: 11, y: 24, rows: ['L.', 'LL', '.L'] },
+    // 暗い 目もと と 赤く 光る つり目
+    {
+      mirror: true,
+      y: 10,
+      rows: [
+        '.............nnnnnnnnn',
+        '............nnnnnnnnnn',
+        '.............nnnnnnnnn',
+        '...............nnnnnnn',
+      ],
+    },
+    {
+      mirror: true,
+      y: 9,
+      rows: [
+        '...........ooo..........',
+        '............ooooo.......',
+        '.............RRRoooo....',
+        '.............RWWRRRoo...',
+        '..............RRRRRR....',
+        '................RRR.....',
+      ],
+    },
+    // はなの あな と きばの 口
+    { mirror: true, y: 15, rows: ['.....................o..'] },
+    {
+      mirror: true,
+      y: 16,
+      rows: [
+        '...............ooooooooo',
+        '...............oWWoWWoWo',
+        '...............ooWooWooo',
+        '................oooooooo',
+        '.................oWooWoo',
+      ],
+    },
   ],
 };
 
-/** スイショウリュウ 後半：水晶が 金色に かがやき、うしろに 光の とげ、目が 光る */
+/** スイショウリュウ 後半：水晶が 金色に かがやき、うしろに 光の とげ、目が 白く 光る */
 const suishoRyuP0: MonsterDesign = {
   ...suishoRyu,
-  colors: { ...ryuColors, I: NQ.cream, K: NQ.yellow, e: NQ.cream, c: NQ.cream, y: NQ.white },
+  colors: { ...ryuColors, I: NQ.cream, K: NQ.yellow, c: NQ.cream, y: NQ.white },
   layers: [
     { rows: rays(48, 16, 12, 23, 14, 30) },
     ...suishoRyu.layers,
+    { mirror: true, x: 13, y: 11, rows: ['yyy', 'yWWyyy', '.yyyyy'] },
     { x: 2, y: 2, rows: ['.y.', 'yGy', '.y.'] },
     { x: 43, y: 2, rows: ['.y.', 'yGy', '.y.'] },
   ],

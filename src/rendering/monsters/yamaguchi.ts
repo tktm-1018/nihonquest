@@ -341,61 +341,119 @@ const mikanDaimyo: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-const HEBI_HEAD = [
-  '..............WWWWWW',
-  '............WWWWWWWW',
-  '...........WWCWWWWWW',
-  '..........WWCWWWWWWW',
-  '..........WWWWWWWWWW',
-  '..........WWoooWWWWW',
-  '..........WWBBBoWWWW',
-  '..........WWBBBoWWWW',
-  '..........WWBBBoWWWW',
-  '..........WWBBooWWWW',
-  '...........WWWWWWWWW',
-  '...........WWWWWWWWW',
-  '............WWWWWWWo',
-  '.............WWWWWWW',
-  '..............WWWWWW',
-];
-
 /** とぐろの 1 だん（左半分。上が つや、下が かげ、うろこの つぶ） */
 const coil = (left: number, w: number): string[] => {
   const row = (l: number, ch: string) => '.'.repeat(l) + ch.repeat(w - l);
   return [
     row(left + 2, 'W'),
     row(left, 'W'),
-    '.'.repeat(left) + 'WWC'.repeat(w).slice(0, w - left),
+    '.'.repeat(left) + 'WWS'.repeat(w).slice(0, w - left),
     row(left, 'W'),
-    row(left, 'P'),
-    row(left + 2, 'P'),
+    row(left, 'c'),
+    row(left + 2, 'c'),
   ];
 };
 
-/** キンタイシロヘビ（中ボス）：錦帯橋の 木の アーチの 上で とぐろを まく、白い 大ヘビ。王冠と 青い 目、赤い した（ヒカリ） */
+/** 大きく ひろげた フード（左半分）。白い ふちの 内がわは 灰色で、s は うろこの すじ */
+const HEBI_HOOD = [
+  '..........WWWWWWWWWW',
+  '........WWWWWWWWWWWW',
+  '.......WWSSSSSWWWWWW',
+  '......WWSSsSSSSWWWWW',
+  '.....WWSSsSSSSSSWWWW',
+  '.....WSSsSSSsSSSSWWW',
+  '....WWSsSSSsSSSSSSWW',
+  '....WSSsSSSsSSSSSSSW',
+  '....WSsSSSsSSSSSSSSW',
+  '....WSsSSSsSSSSSSSSW',
+  '....WSSsSSSsSSSSSSSW',
+  '.....WSsSSSsSSSSSSWW',
+  '.....WSSsSSSsSSSSWWW',
+  '......WWSsSSSSSWWWWW',
+  '.......WWWWWWWWWWWWW',
+  '.........WWWWWWWWWWW',
+  '...........WWWWWWWWW',
+];
+
+/** 頭（左半分）：かげの 中で 光る 赤い つり目、ふとい まゆ、きばの ある 大きな 口、ひたいの 赤い 宝石 */
+const HEBI_HEAD = [
+  '...WWWWWW',
+  '.WWWWWWWW',
+  'WWWWWWWGG',
+  'WWWWWWGRR',
+  'WooSSSSGR',
+  'WSoooSSSG',
+  'WRRSoooSS',
+  'WSYRRRoSS',
+  'WSSRRRSSS',
+  '.WSSSSSSS',
+  '.oooooooo',
+  '.oWoorrrr',
+  '.oWorrrRR',
+  '..oWrrrRr',
+  '..oorrrrr',
+  '...ooWooo',
+  '...WWWWWW',
+  '....WWWWW',
+];
+
+/** 首の おなか（白と 灰の だんだん） */
+const HEBI_NECK = ['WWcccc', 'WSSSSS', 'WWcccc', 'WSSSSS', 'WWcccc', 'WSSSSS'];
+
+/** キンタイシロヘビ（中ボス）：錦帯橋の 木の アーチに とぐろを まき、コブラの ように フードを ひろげて 立ちあがる 白い 大ヘビ。
+ *  2 本の 金の つの、ひたいの 赤い 宝石、かげの 中で 光る 赤い つり目、きばを むいた 口、うしろに むらさきの 妖気（ヒカリ） */
 const kintaiShirohebi: MonsterDesign = {
   size: 40,
   colors: {
     W: NQ.white,
-    P: NQ.paper,
-    C: NQ.cream,
-    B: NQ.sky,
-    Y: NQ.cream,
+    c: NQ.cloud,
+    S: NQ.silver,
+    s: NQ.gray,
+    R: NQ.red,
+    r: NQ.brick,
+    Y: NQ.yellow,
     G: NQ.gold,
     Q: NQ.ochre,
-    R: NQ.red,
     T: NQ.tan,
     K: NQ.brown,
-    S: NQ.silver,
-    p: NQ.blush,
+    V: NQ.violet,
+    I: NQ.indigo,
   },
-  rim: { [NQ.white]: NQ.cloud, [NQ.tan]: NQ.brown, [NQ.silver]: NQ.gray, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.white]: NQ.cloud, [NQ.tan]: NQ.brown, [NQ.gold]: NQ.ochre, [NQ.violet]: NQ.indigo },
   rimDepth: 2,
   layers: [
+    // むらさきの 妖気（フードの うしろで ゆらめく）
+    {
+      mirror: true,
+      y: 4,
+      rows: [
+        '....V...............',
+        '...VV.......V.......',
+        '..VVV......VV.......',
+        '..VIV.....VVV.......',
+        '.VVIVV...VVV........',
+        '.VIIVVVVVVV.........',
+        '.VIIVVVVV...........',
+        'VVIIVVV.............',
+        '.VIIVV..............',
+        '.VVIIV..............',
+        'VVIIVV..............',
+        '.VIIVV..............',
+        '.VVIIV..............',
+        'VVIIVV..............',
+        '.VIIVV..............',
+        '.VVIIVV.............',
+        '..VIIVV.............',
+        '.VVIIVV.............',
+        '..VVIVVV............',
+        '...VVVVV............',
+        '....VVV.............',
+      ],
+    },
     // 錦帯橋（木の アーチと 石の 橋げた）
     {
       mirror: true,
-      y: 29,
+      y: 32,
       rows: [
         '..........TTTTTTTTTT',
         '.......TTTTTTTTTTTTT',
@@ -404,27 +462,19 @@ const kintaiShirohebi: MonsterDesign = {
         '.TTTTTTTKKKKKKKKKKKK',
         '.TKTTTKK............',
         '.SSSSSS.............',
-        '.SSSSSS.............',
-        '.SSSSSS.............',
-        '.SSSSSS.............',
       ],
     },
-    // とぐろ（3 だん。下から。キャンバスいっぱいに 太く）
-    ...inked(coil(1, 20), 0, 24, true),
-    ...inked(coil(3, 20), 0, 19, true),
-    ...inked(coil(6, 20), 0, 14, true),
-    // しっぽの 先（右へ）
-    ...inked(['...WW', '..WW.', 'WWW..'], 33, 21),
+    // ひろげた フード
+    ...inked(HEBI_HOOD, 0, 8, true),
+    // とぐろ（2 だん。下から）
+    ...inked(coil(5, 20), 0, 29, true),
+    ...inked(coil(8, 20), 0, 25, true),
+    // 首
+    ...inked(HEBI_NECK, 14, 21, true),
+    // 金の つの
+    ...inked(['GG.....', '.GG....', '.GGG...', '..GGQ..', '...GGQ.', '....GGQ'], 6, 1, true),
     // 頭
-    ...inked(HEBI_HEAD, 0, 2, true),
-    // 王冠
-    ...inked(['...G..G', '...GGGG', '...GGGR', '...QQQQ'], 13, 1, true),
-    // ちょろっと 出た 赤い した
-    { x: 18, y: 17, rows: ['.RR.', 'R..R'] },
-    // きらきら
-    { x: 2, y: 5, rows: ['.Y.', 'YGY', '.Y.'] },
-    { x: 35, y: 7, rows: ['.Y.', 'YGY', '.Y.'] },
-    { x: 4, y: 12, rows: ['Y.', '.G'] },
+    ...inked(HEBI_HEAD, 11, 4, true),
   ],
 };
 
@@ -433,169 +483,294 @@ const kintaiShirohebiField: MonsterDesign = {
   size: 32,
   colors: {
     W: NQ.white,
-    P: NQ.paper,
-    C: NQ.cream,
-    B: NQ.sky,
-    G: NQ.gold,
-    Q: NQ.ochre,
+    c: NQ.cloud,
+    S: NQ.silver,
+    s: NQ.gray,
     R: NQ.red,
+    r: NQ.brick,
+    Y: NQ.yellow,
+    G: NQ.gold,
     T: NQ.tan,
     K: NQ.brown,
-    S: NQ.silver,
+    V: NQ.violet,
   },
   rim: { [NQ.white]: NQ.cloud, [NQ.tan]: NQ.brown },
   layers: [
     {
       mirror: true,
-      y: 24,
+      y: 3,
       rows: [
-        '........TTTTTTTT',
-        '.....TTTTTTTTTTT',
-        '..TTTKTTTKTTTKTT',
+        '.V..............',
+        '.VV......V......',
+        'VVV.....VV......',
+        '.VVV..VVV.......',
+        'VVVVVVV.........',
+        '.VVVV...........',
+        'VVVV............',
+        '.VVV............',
+        'VVVV............',
+        '.VVV............',
+        '..VVV...........',
+        '...VV...........',
+      ],
+    },
+    {
+      mirror: true,
+      y: 26,
+      rows: [
+        '.......TTTTTTTTT',
+        '...TTTKTTTKTTTKT',
         '.TTTTTTKKKKKKKKK',
-        '.SSSSS..........',
+        '.TKTTKK.........',
         '.SSSSS..........',
       ],
     },
-    ...inked(coil(1, 16), 0, 19, true),
-    ...inked(coil(4, 16), 0, 14, true),
     ...inked(
       [
-        '..........WWWWWW',
-        '.........WWWWWWW',
-        '........WWWWWWWW',
-        '........WWoooWWW',
-        '........WWBBoWWW',
-        '........WWBBoWWW',
-        '.........WWWWWWo',
-        '..........WWWWWW',
+        '......WWWWWWWWWW',
+        '....WWSSSSWWWWWW',
+        '...WSSsSSSSWWWWW',
+        '..WSsSSsSSSSWWWW',
+        '..WSsSSsSSSSSWWW',
+        '..WSsSSsSSSSSSWW',
+        '..WSSsSSsSSSSSWW',
+        '...WSsSSSSSSWWWW',
+        '....WWWWWWWWWWWW',
+        '......WWWWWWWWWW',
       ],
       0,
       6,
       true,
     ),
-    ...inked(['..G.G', '..GGG', '..GGR', '..QQQ'], 11, 3, true),
-    { x: 15, y: 14, rows: ['RR'] },
+    ...inked(coil(3, 16), 0, 23, true),
+    ...inked(coil(6, 16), 0, 19, true),
+    ...inked(['GG....', '.GG...', '..GG..', '...GG.'], 5, 1, true),
+    ...inked(
+      [
+        '...WWWWW',
+        '.WWWWWGG',
+        'WWWWWGRR',
+        'WooSSSSG',
+        'WRRooSSS',
+        'WSYRRoSS',
+        'oooooooo',
+        'oWorrrRR',
+        '.oWooooo',
+        '..WWWWWW',
+      ],
+      8,
+      4,
+      true,
+    ),
   ],
 };
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/** アキヨシダイオウ（県ボス）：秋吉台の 石灰岩の 大王。草の かみと かた から 白い 石が つき出し、むねの 洞くつの おくに 黄金の 柱（ツチ）。
- *  g/G 草、w/W 石灰岩、s/S 石の からだ、N 洞くつ、Y 黄金柱 */
+/** アキヨシダイオウ（県ボス）：秋吉台の 石灰岩の 大王。かたに カルストの 白い 岩の とげが むらがり、草の たてがみ。
+ *  前のめりに かまえた 太い うでと 大きな こぶし、くらい 顔に 光る つり目と くいしばった 歯、金の つのと 赤い 宝石、
+ *  むねの 洞くつの おくに 光る 黄金の 柱（ツチ）。
+ *  s/S 石の からだ、K 顔の かげ、k ひび、w/W 石灰岩、g/G 草、N 洞くつ、P 黄金柱、E 光る 目 */
 const daiouColors = {
-  s: NQ.silver,
-  S: NQ.cloud,
+  s: NQ.gray,
+  S: NQ.silver,
+  K: NQ.slate,
+  k: NQ.slate,
   w: NQ.cloud,
   W: NQ.white,
-  g: NQ.leaf,
-  G: NQ.lime,
+  g: NQ.green,
+  G: NQ.leaf,
   N: NQ.night,
+  P: NQ.gold,
+  E: NQ.cream,
   Y: NQ.gold,
   Q: NQ.ochre,
   J: NQ.red,
-  K: NQ.slate,
 };
 
-const akiyoshiLayers = (grassHi: Layer[] = []): Layer[] => [
-  // からだ・うで・足（左半分）
+const akiyoshiLayers = (extra: Layer[] = []): Layer[] => [
+  // からだ
   {
     mirror: true,
-    y: 18,
+    y: 13,
     rows: [
-      '.......ww...........gggg',
-      '..ww..wWw.....gggggggggg',
-      '.gwWgggWwgggggggGggggggg',
-      '.ggwWgggGggggGggggssssss',
-      '.GgggggggggGgggsssssssss',
-      '.ggggGggggggggssssssssss',
-      '..sssssssssss.ssssssKsss',
-      '..sssssssssss.sssssNNNNN',
-      '..ssKsssssKss.ssssNNNNNN',
-      '..sssssssssss.sssNNWNWNN',
-      '..sssssKsssss.sssNNNNNYY',
-      '..ssssssssss..sssNNNNYYY',
-      '..SSSSssss....sssNNNNNYY',
-      '.SSSSSSsss....sssNNNNYYY',
-      '.SSSSSSSs.....sssNNNNNYY',
-      '..SSSSSS......sssNNNNYYY',
-      '...SSSS.......ssssssssss',
-      '..............sssKssssss',
-      '.............sssssssssss',
-      '............ssssssss.sss',
-      '............ssssssss....',
-      '...........sssssssss....',
-      '...........sssssssss....',
-      '...........sssssssss....',
-      '...........ssssKssss....',
-      '...........sssssssss....',
-      '..........KKKKKKKKKK....',
+      '..........SSSSSSSSSSSSSS',
+      '.......SSSSSSSSSSSSSSSSS',
+      '.....SSSSSsssssssssssss',
+      '....SSssssssssssssssssss',
+      '...SSsssssssssssssssssss',
+      '...Sssssssssssssssssssss',
+      '...ssssssksssssssssssss',
+      '....sssssskksssssssssss',
+      '....ssssssssksssssssssss',
+      '.....sssssssssssssssssss',
+      '.....ssssssssssssssssss',
+      '......ssssssssssssssssss',
+      '......sssssssskkssssssss',
+      '.......sssssssssksssssss',
+      '.......sssssssssssssssss',
+      '........ssssssssssssssss',
+      '........ssssssssssssssss',
+      '.........ssssssssssssss',
+      '.........sssssssssssss..',
     ],
   },
-  // 頭
+  // 足（ふんばる）
   {
     mirror: true,
-    y: 3,
+    y: 31,
     rows: [
-      '.......w................',
-      '.......ww...............',
-      '......wWw...............',
-      '......wWw.......w.......',
-      '.....gwWwg.....wWw......',
-      '.....ggggggg.ggwWwgg....',
-      '.....gggGggggggggggggggg',
-      '.....ggggggGggggGggggggg',
-      '......gGgggsssssssssssss',
-      '......ggggssssssssssssss',
-      '.......ggssooosssssssss',
-      '........gssssoosssssssss',
-      '........gsssYYYossssssss',
-      '........gsssYYYossssssss',
-      '........gsssYYYossssssss',
-      '........gsssYYoossssssss',
-      '.........sssssssssssssss',
-      '..........sssssssKoooooo',
-      '...........ssssssssssss',
+      '.........ssssssssssss...',
+      '........sssssssssssss...',
+      '........ssssskssssss....',
+      '.......sssssskksssss....',
+      '.......ssssssssssss.....',
+      '.......ssssssssssss.....',
+      '......sssssssssssss.....',
+      '......ssssssssssss......',
+      '......ssssssssssss......',
+      '.....sssssssssssss......',
+      '.....ssssssssssss.......',
+      '....SSSSSSSSSSSSSS......',
+      '...sssssssssssssss......',
+      '...sssssssssssssss......',
+      '...KKKKKKKKKKKKKKK......',
     ],
   },
-  // 王冠（2 本の 石の つのの あいだ）
-  ...inked(['..Y..Y', '..YYYY', '..YYYJ', '..QQQQ'], 18, 1, true),
-  // かたから つき出す 石灰岩の とげ
+  // むねの 洞くつ（とがった アーチ）と 黄金の 柱
   {
     mirror: true,
-    y: 14,
+    x: 15,
+    y: 21,
     rows: [
-      '.....W..................',
-      '....wWw.................',
-      '....wWw.................',
-      '...wwWww................',
-      '..wwWWWww...............',
-      '..wWWWWWw...............',
+      '......NN',
+      '....NNNN',
+      '...NNWNN',
+      '..NNNNNN',
+      '..NNNNPP',
+      '.NNNWNPE',
+      '.NNNNNPE',
+      '.NNNNNPE',
+      'NNNNNNPE',
+      'NNNNNNPP',
+      'NNNNNNPP',
     ],
   },
-  ...grassHi,
+  // かたに むらがる 石灰岩の とげ（カルスト）
+  ...inked(
+    [
+      '..W..........',
+      '..WW.........',
+      '.WWw....W....',
+      '.WWw...WW....',
+      '.WWw..WWw..W.',
+      'WWWw..WWw.WW.',
+      'WWWWw.WWwWWw.',
+      'WWWWwWWWwWWw.',
+      'WWWWWWWWWWww.',
+      '.wwwwwwwwwww.',
+    ],
+    2,
+    3,
+    true,
+  ),
+  // 前のめりに かまえた 太い うでと 大きな こぶし
+  ...inked(
+    [
+      '..ssssss.',
+      '.Sssssss.',
+      'Ssssssss.',
+      'ssssssss.',
+      'ssssskss.',
+      'sssssks..',
+      'sssssss..',
+      'ssssssss.',
+      'sssssss..',
+      'ssssss...',
+      'ssssss...',
+      'sssssss..',
+      'SSSSSSSSS',
+      'sssssssss',
+      'sKsKsKsss',
+      'sssssssss',
+      'sssssssss',
+      'sKssKsss.',
+      '.ssssss..',
+    ],
+    1,
+    14,
+    true,
+  ),
+  // 草の たてがみ（かたに たれる）
+  {
+    mirror: true,
+    x: 2,
+    y: 12,
+    rows: ['..ggggggggggg', '.gggGgggGgggg', 'gGggggggggGg.', 'gg.ggg.g.gg..', 'g...g..g..g..'],
+  },
+  // 金の つの
+  ...inked(['Y....', 'YY...', '.YY..', '.YYQ.', '..YYQ', '..YYQ', '...YY'], 13, 1, true),
+  // 頭：くらい かげの 顔に 光る つり目、ふとい まゆ、くいしばった 歯、ひたいの 赤い 宝石
+  ...inked(
+    [
+      '...ggggggggg',
+      '.gggGggggGgg',
+      'ggGgggGggggY',
+      'gggKKKKKKYYJ',
+      'gsooooKKKKYJ',
+      'gsKEEooooKKY',
+      'gsKKEEEEEoKK',
+      'gsKKKKKKKKKK',
+      'gssKKKKKKKKK',
+      'gssooooooooo',
+      '.ssoWWoWWoWW',
+      '.ssoWWoWWoWW',
+      '..sooooooooo',
+      '...sssssssss',
+    ],
+    12,
+    7,
+    true,
+  ),
+  ...extra,
 ];
 
 const akiyoshiDaiou: MonsterDesign = {
   size: 48,
   colors: daiouColors,
-  rim: { [NQ.silver]: NQ.gray, [NQ.leaf]: NQ.green, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.gray]: NQ.slate, [NQ.green]: NQ.forest, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
   rimDepth: 2,
   layers: akiyoshiLayers(),
 };
 
-/** アキヨシダイオウ 後半（ヒノ）：山焼きの 炎が 草の かみと かたに もえひろがり、洞くつの 黄金の 柱が 赤く かがやく */
+/** アキヨシダイオウ 後半（ヒノ）：山焼きの 炎が 草の たてがみと かたに もえひろがり、からだの ひびから 赤い 火が もれ、
+ *  目は 赤く もえ、洞くつの 柱が 赤く かがやく */
 const akiyoshiDaiouP0: MonsterDesign = {
   ...akiyoshiDaiou,
-  colors: { ...daiouColors, g: NQ.vermilion, G: NQ.gold, Y: NQ.apricot, N: NQ.brick },
-  rim: { [NQ.silver]: NQ.gray, [NQ.vermilion]: NQ.red, [NQ.gold]: NQ.ochre },
+  colors: {
+    ...daiouColors,
+    g: NQ.vermilion,
+    G: NQ.apricot,
+    k: NQ.orange,
+    N: NQ.brick,
+    P: NQ.apricot,
+    E: NQ.red,
+    F: NQ.gold,
+  },
+  rim: { [NQ.gray]: NQ.slate, [NQ.vermilion]: NQ.brick, [NQ.gold]: NQ.ochre, [NQ.white]: NQ.cloud },
   layers: akiyoshiLayers([
-    // 立ちのぼる 炎
+    // 立ちのぼる 山焼きの 炎
     {
       mirror: true,
-      y: 14,
-      rows: ['..G.............', '..gG.......G....', '.ggG......gGg...', '.gGgg....ggGg...'],
+      y: 3,
+      rows: [
+        '.................g......',
+        '..........g......gg.....',
+        '.........gg.....gFg.....',
+        '.........gFg....gFg.....',
+      ],
     },
+    { mirror: true, x: 1, y: 13, rows: ['.g..g...g', 'gFggFg.gFg', 'gFFgFFggFg'] },
   ]),
 };
 

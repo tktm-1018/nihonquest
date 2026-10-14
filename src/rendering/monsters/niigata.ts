@@ -764,7 +764,81 @@ const akebonoToki: MonsterDesign = {
 
 // ───────────────────────── 中ボス ─────────────────────────
 
-/** サンシャクドン（中ボス）：長岡の 正三尺玉の 花火だま。うしろで 花火が ひらき、頭の 右で 導火線に 火花。王冠（ヒノ） */
+/** (x, y) → 文字 の 関数で 文字の 地図を 作る（'.' は とうめい。外周 1 ドットは 空ける） */
+const plot = (S: number, f: (x: number, y: number) => string): string[] =>
+  Array.from({ length: S }, (_, y) =>
+    Array.from({ length: S }, (_, x) => (x < 1 || y < 1 || x > S - 2 || y > S - 2 ? '.' : f(x, y))).join(''),
+  );
+
+type Pt = readonly [number, number];
+/** 折れ線に そった 太い ひも（はじめ r0 → おわり r1）。入れば 0〜1（はじめ→おわり）、入らなければ -1 */
+const tube = (pts: readonly Pt[], r0: number, r1: number) => {
+  const lens = pts.slice(1).map((p, i) => Math.hypot(p[0] - pts[i]![0], p[1] - pts[i]![1]));
+  const total = lens.reduce((a, b) => a + b, 0);
+  return (x: number, y: number): number => {
+    let run = 0;
+    let best = -1;
+    for (let i = 0; i < lens.length; i++) {
+      const [ax, ay] = pts[i]!;
+      const [bx, by] = pts[i + 1]!;
+      const L = lens[i]!;
+      const t = Math.max(0, Math.min(1, ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / (L * L)));
+      const u = (run + t * L) / total;
+      const d = Math.hypot(x - (ax + t * (bx - ax)), y - (ay + t * (by - ay)));
+      if (d <= r0 + (r1 - r0) * u) best = u;
+      run += L;
+    }
+    return best;
+  };
+};
+
+/** サンシャクドンの 鉄の 花火だま（S＝キャンバス。40 と 32 で 同じ 形を ちぢめて つかう） */
+const sanjakuParts = (S: number) => {
+  const k = S / 40;
+  const c = (S - 1) / 2;
+  const cy = 21 * k;
+  const R = 12.5 * k;
+  const ball = (x: number, y: number) => Math.hypot(x - c, y - cy) <= R;
+  // まわりの 鉄の とげ（上は 金の つのと 導火線、下は 足なので あける）
+  const spikeAt = [55, 95, 135].flatMap((a) => [a, -a]).map((a) => (a * Math.PI) / 180);
+  const spike = (x: number, y: number) => {
+    const d = Math.hypot(x - c, y - cy);
+    const len = R + 5.5 * k;
+    if (d < R - 1 || d > len) return false;
+    const ang = Math.atan2(x - c, cy - y);
+    return spikeAt.some((a) => Math.abs(ang - a) * d <= (len - d) * 0.6);
+  };
+  // 金の つの（ななめ上へ そりあがる）
+  const hornL = tube(
+    [
+      [c - 5.5 * k, cy - 10 * k],
+      [c - 9.5 * k, cy - 15 * k],
+      [c - 9 * k, cy - 19.5 * k],
+    ],
+    2.2 * k,
+    0.6,
+  );
+  const horn = (x: number, y: number) => hornL(x, y) >= 0 || hornL(S - 1 - x, y) >= 0;
+  /** からだの 色：左上が 明るい 朱、ほかは れんが（右下の ふちは rim で こげ茶） */
+  const body = (x: number, y: number) => {
+    const u = (x - c) / R;
+    const v = (y - cy) / R;
+    if (Math.hypot(u + 0.45, v + 0.5) < 0.28) return 'A';
+    return u + v < -0.55 ? 'V' : 'b';
+  };
+  return { c, cy, R, ball, spike, horn, body };
+};
+
+/** 足もとで はぜる 火の粉 */
+const SPARK_L = ['.G..', 'GAG.', '.AV.', '..V.'];
+const SPARK_R = ['..G.', '.GAG', '.VA.', '.V..'];
+
+/**
+ * サンシャクドン（中ボス）：長岡の 正三尺玉の 花火だまが 鉄の とげを はやした すがた。うしろで 花火が 大きく はじけ、
+ * 頭に 金の つの と 火花の とぶ 導火線。顔は 黒い かげの 中で 黄色い 目が つりあがって 光り、
+ * 金の たがの まん中に 赤い 宝石、大きく あけた 口に きば（ヒノ）
+ */
+const SJ = sanjakuParts(40);
 const sanjakuDon: MonsterDesign = {
   size: 40,
   colors: {
@@ -774,114 +848,85 @@ const sanjakuDon: MonsterDesign = {
     G: NQ.gold,
     Q: NQ.ochre,
     R: NQ.red,
+    Y: NQ.yellow,
     C: NQ.cream,
     W: NQ.white,
-    Z: NQ.azure,
-    L: NQ.leaf,
-    T: NQ.tan,
     N: NQ.night,
+    L: NQ.slate,
+    T: NQ.tan,
   },
-  rim: { [NQ.vermilion]: NQ.brick, [NQ.gold]: NQ.ochre },
+  rim: { [NQ.gold]: NQ.ochre, [NQ.brick]: NQ.bark },
   rimDepth: 2,
   layers: [
-    // うしろで ひらく 花火
-    { rows: hanabi(40, 19.5, 22, 12, 19, 14, 'C', 'GZLZ') },
-    // かたの とげ（黒い 鉄）
+    // うしろで はじける 花火
+    { rows: hanabi(40, 19.5, 20, 14, 19, 12, 'G', 'CA') },
+    // 鉄の とげ・金の つの
+    {
+      rows: plot(40, (x, y) => {
+        if (SJ.horn(x, y)) return 'G';
+        if (!SJ.spike(x, y)) return '.';
+        return x < SJ.c && (x + y) % 3 === 0 ? 'L' : 'N';
+      }),
+    },
+    // 花火だまの からだ
+    { rows: plot(40, (x, y) => (SJ.ball(x, y) ? SJ.body(x, y) : '.')) },
+    // 鉄の 足（ふんばる）
     {
       mirror: true,
-      y: 13,
+      y: 32,
       rows: [
-        '..N.................',
-        '.NNN................',
-        '.NNNN...............',
-        '..NNNN..............',
-        '...NNN..............',
-        '....NN..............',
+        '.........NNNN.......',
+        '........NNNNN.......',
+        '.......NNNNNN.......',
+        '......NNNNNNN.......',
+        '.....NNNNNNNN.......',
+        '.....LLLLLLLL.......',
       ],
     },
-    // 花火だまの からだ（キャンバスいっぱい）
+    // 顔の 黒い かげ（上の ふちが V の 字の まゆに なる）と つりあがって 光る 目
     {
       mirror: true,
-      y: 8,
+      y: 11,
       rows: [
-        '..............VVVVVV',
-        '...........VVVVVVVVV',
-        '.........VVVVVVVVVVV',
-        '........VVVVVVVVVVVV',
-        '.......VVVVVVVVVVVVV',
-        '......VVVVVVVVVVVVVV',
-        '.....VVVVVVVVVVVVVVV',
-        '.....VVVVVVVVVVVVVVV',
-        '....VVVVVVVVVVVVVVVV',
-        '....VVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '..VVVVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVVVVVV',
-        '....VVVVVVVVVVVVVVVV',
-        '....VVVVVVVVVVVVVVVV',
-        '.....VVVVVVVVVVVVVVV',
-        '......VVVVVVVVVVVVVV',
-        '.......VVVVVVVVVVVVV',
-        '.........VVVVVVVVVVV',
-        '...........bbbbVVVVV',
-        '.........bbbbbbbbbbb',
-        '.........bbbbbbbbbbb',
+        '....................',
+        '...........NNN......',
+        '..........NNNNNN....',
+        '.........NNNNNNNNN..',
+        '.........NYYNNNNNNNN',
+        '........NNYWWYYYNNNN',
+        '........NNNYYYYYYNNN',
+        '........NNNNNNYYNNNN',
+        '.........NNNNNNNNNNN',
       ],
     },
-    // 鉄の たが（金の おび）
+    // 金の たが（びょう）と 赤い 宝石
+    { mirror: true, y: 20, rows: ['........GGGGGGGGGGGG', '........QGGGQGGGQGGG'] },
+    { x: 18, y: 18, rows: ['.RR.', 'RWRR', 'RRRR', '.RR.'] },
+    // 大きく あけた 口・きば・した
     {
       mirror: true,
-      y: 23,
-      rows: ['..GGGGGGGGGGGGGGGGGG', '..QQQQQQQQQQQQQQQQQQ', '..GGGGGGGGGGGGGGGGGG'],
-    },
-    { x: 18, y: 23, rows: ['RRRR', 'RRRR'] },
-    // 大きな 王冠
-    {
-      mirror: true,
-      y: 2,
+      y: 22,
       rows: [
-        '...................G',
-        '...............G...G',
-        '...............GG.GG',
-        '...............GGGGG',
-        '...............GGGGR',
-        '...............QQQQQ',
+        '.........ooooooooooo',
+        '.........oWWoWWWoWWW',
+        '..........oWooWWooWo',
+        '..........ooooooRRRR',
+        '...........oWoooRRRR',
+        '...........WWoWWoWWo',
+        '............oooooooo',
       ],
     },
-    // かお（するどい 目・まゆ・きばの ある 口）
-    {
-      mirror: true,
-      y: 15,
-      rows: [
-        '..........oo........',
-        '............oo......',
-        '..........WWWo......',
-        '..........WWWo......',
-        '..........WWoo......',
-        '..........Wooo......',
-      ],
-    },
-    { mirror: true, y: 28, rows: ['..........oooooooooo', '...........WoWoWoWo.'] },
-    // つや（左上）
-    { x: 9, y: 14, rows: ['..AA', '.A..', 'A...', 'A...'] },
-    // 導火線と 火花（右上）
-    { x: 26, y: 3, rows: ['...G.C', '..GCG.', '.T.G..', '.T....', 'T.....', 'T.....'] },
-    // 足もとの ほのお
-    { x: 3, y: 31, rows: ['.A.', 'AVA', 'AVA', '.A.'] },
-    { x: 34, y: 33, rows: ['.A.', 'AVA', '.A.'] },
+    // 導火線と 火花
+    { x: 19, y: 6, rows: ['T', 'T', 'T'] },
+    { x: 17, y: 1, rows: ['A...A', '.YWY.', 'AWWWA', '.YWY.', 'A...A'] },
+    // 足もとの 火の粉
+    { x: 3, y: 33, rows: SPARK_L },
+    { x: 33, y: 33, rows: SPARK_R },
   ],
 };
 
-/** サンシャクドン（フィールドに立つ 32×32） */
+/** サンシャクドン（フィールドに立つ 32×32）：バトルの すがたを ちぢめた もの */
+const SJF = sanjakuParts(32);
 const sanjakuDonField: MonsterDesign = {
   size: 32,
   colors: {
@@ -891,122 +936,170 @@ const sanjakuDonField: MonsterDesign = {
     G: NQ.gold,
     Q: NQ.ochre,
     R: NQ.red,
-    C: NQ.cream,
+    Y: NQ.yellow,
     W: NQ.white,
-    Z: NQ.azure,
-    T: NQ.tan,
     N: NQ.night,
+    L: NQ.slate,
   },
-  rim: { [NQ.vermilion]: NQ.brick },
+  rim: { [NQ.gold]: NQ.ochre, [NQ.brick]: NQ.bark },
   layers: [
-    { rows: hanabi(32, 15.5, 17, 9, 15, 12, 'C', 'GZ') },
-    // かたの とげ
-    { mirror: true, y: 12, rows: ['..N.............', '.NNN............', '.NNN............'] },
+    { rows: hanabi(32, 15.5, 16.8, 11, 15, 10, 'G', 'A') },
+    {
+      rows: plot(32, (x, y) => {
+        if (SJF.horn(x, y)) return 'G';
+        if (!SJF.spike(x, y)) return '.';
+        return 'N';
+      }),
+    },
+    { rows: plot(32, (x, y) => (SJF.ball(x, y) ? SJF.body(x, y) : '.')) },
     {
       mirror: true,
-      y: 8,
+      y: 26,
+      rows: ['.......NNN......', '......NNNN......', '.....NNNNN......', '.....LLLLL......'],
+    },
+    {
+      mirror: true,
+      y: 9,
       rows: [
-        '..........VVVVVV',
-        '........VVVVVVVV',
-        '.......VVVVVVVVV',
-        '......VVVVVVVVVV',
-        '.....VVVVVVVVVVV',
-        '.....VVVVVVVVVVV',
-        '....VVVVVVVVVVVV',
-        '....VVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '...VVVVVVVVVVVVV',
-        '....VVVVVVVVVVVV',
-        '....VVVVVVVVVVVV',
-        '.....VVVVVVVVVVV',
-        '.....VVVVVVVVVVV',
-        '......VVVVVVVVVV',
-        '.......VVVVVVVVV',
-        '........bbbVVVVV',
-        '.......bbbbbbbbb',
-        '.......bbbbbbbbb',
+        '.........NN.....',
+        '........NNNNN...',
+        '.......NYYNNNNNN',
+        '.......NYWYYYNNN',
+        '.......NNNNYYNNN',
+        '........NNNNNNNN',
       ],
     },
-    // 金の たが
-    { mirror: true, y: 19, rows: ['...GGGGGGGGGGGGG', '...QQQQQQQQQQQQQ'] },
-    { x: 14, y: 19, rows: ['RRRR'] },
-    // 王冠
+    { mirror: true, y: 15, rows: ['.......GGGGGGGGG'] },
+    { x: 14, y: 14, rows: ['.RR.', 'RRRR', '.RR.'] },
     {
       mirror: true,
-      y: 4,
-      rows: ['...........G...G', '...........GG.GG', '...........GGGGG', '...........QQQQR'],
+      y: 17,
+      rows: [
+        '........oooooooo',
+        '........oWWoWWoW',
+        '.........oooRRRR',
+        '.........WWoWWoW',
+        '..........oooooo',
+      ],
     },
-    // かお（するどい 目）
-    {
-      mirror: true,
-      y: 13,
-      rows: ['........oo......', '.........WWo....', '.........WWo....', '.........Woo....'],
-    },
-    { mirror: true, y: 24, rows: ['.........ooooooo', '..........WoWoWo'] },
-    { x: 6, y: 12, rows: ['.A', 'A.'] },
-    { x: 21, y: 2, rows: ['..G.C', '.GCG.', 'T.G..', 'T....', 'T....'] },
+    { x: 15, y: 4, rows: ['W', 'W'] },
+    { x: 14, y: 1, rows: ['A.A', '.W.', 'A.A'] },
   ],
 };
 
 // ───────────────────────── 県ボス ─────────────────────────
 
-/**
- * 錦鯉（紅白）の よこがお（左むき）。I = ひれ、j = ひれの すじ、R = 赤い もよう、c = うろこ・えら、
- * Y = 金の ひげと 王冠、足もとは 川の 水しぶき
- */
-const KOI = [
-  '................................................',
-  '................................................',
-  '................................................',
-  '................................................',
-  '................................................',
-  '................................................',
-  '...................II...........................',
-  '.........Y..Y..Y..IIIjI.........................',
-  '.........YY.Y.YY.IIIjIII........................',
-  '.........YYYYYYYIIIjIIIjII......................',
-  '.........YYRRYYYIIjIIIjIIIjI....................',
-  '.........YYRRYYYPPRRRRRIIjIII...................',
-  '.........QQQQQQQRRRRRRRRRRIIIII..........IIj....',
-  '..........RRRRRRRRRRRRRRRRRRIII.........IIjII...',
-  '........RoooRRRRRRRRRRRRRRRRRP..........IjIII...',
-  '.......ooRRRRRRrPRRRRRRRRRRRRRRR.......IjIIIjI..',
-  '......PPPooRRRPPcPRRRRRRRRRRPRRRRR.....IIIIjIII.',
-  '.....PPPoWooPPPPcPPRRRRRRRRPPRRRRRRR..IIIjIIIII.',
-  '.....PPPooooPPPPPcPcPPPcPPPcPRRRRRRRPIIIIIIIIjI.',
-  '....PPPPPooPPPPPPcPPPPPPPPPPPPRRRRRPPPjIIIII....',
-  '....PPPPPPPPPPPPPcPPPcPPPcPPPcPRRRPPPPPIIIII....',
-  '....PpPPPppPPPPPPcPPPPPPPPPPPPPPPPPPPPPjjjjj....',
-  '....ppoPPPPPPPPPPcPcPPPcPPPcPPPcPPPcPPPIIIII....',
-  '....pooPPPPPPPPPPcPPPPPPPPPPPPPPPPPPPPjIIIII....',
-  '.....YPYPPPPPPPPccPPPcPPPcPPPcPPPcPPPIIIIIIIIjI.',
-  '....YPPYPPPPPPPPcPPPPPPPPPPPPPPPPPPP..IIIjIIIII.',
-  '....Y.PPYPPPPPPcPPPcPPPcPPPcPPPcPP.....IIIIjIII.',
-  '...Y...PPPPPPPPPPPPPPPPPPPPPPPPP.......IjIIIjI..',
-  '...Y....PPPPPPPPPcPPPcPPPcPPPc..........IjIII...',
-  '....Y.....PPPPIjIPPPPPPPPPIjI...........IIjII...',
-  '............PPIjIPPPPPPPPPIjI............IIj....',
-  '..............IIjIIPPPP...IIjII.................',
-  '..............IIjII........IIjII................',
-  '..............IIIjIII.....IIIjIII...............',
-  '..........W....IIIjIII.............W............',
-  '.........WSW..IIIIjWIII...........WSW...........',
-  '..........S.......WSW..............S......W.....',
-  '.........SSS.......S..............SSS....WSW....',
-  '....W...SSASS.....SSS............SSASS....S.....',
-  '...WSW.SAAAAAS...SSASS.....W....SAAAAAS..SSS....',
-  '....S..SAAAAAS..SAAAAAS...WSW...SAAAAAS.SSASS...',
-  '...SSSSSAAAAASSSSAAAAASSSSSSSSSSSAAAAASSSAAAAS..',
-  '.SSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAS.',
-  '.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.',
-  '.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.',
-  '.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.',
-  '..BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB..',
-  '................................................',
+/** 正面の 錦鯉：はばの ひろい 頭と、水から 出た むね（まん中 23.5） */
+const koiHead = (x: number, y: number) => {
+  const dy = y - 18;
+  const rx = 13.5 + (dy > 0 ? 1.2 : 0) - Math.max(0, -dy - 6) * 0.9;
+  return Math.abs(x - 23.5) <= rx * Math.sqrt(Math.max(0, 1 - (dy / 12.5) ** 2));
+};
+const koiBody = (x: number, y: number) => ((x - 23.5) / 13) ** 2 + ((y - 36) / 9) ** 2 <= 1;
+/** 左右へ つばさの ように ひろがる とがった むなびれ（ゆびの ような とげ） */
+const koiFin = (x: number, y: number) => {
+  const xl = x < 24 ? x : 47 - x;
+  const d = Math.hypot(xl - 13, y - 27);
+  const a = (Math.atan2(13 - xl, y - 27) * 180) / Math.PI; // 0 = 下、90 = 外がわ、180 = 上
+  if (a < 35 || a > 150 || xl > 15) return '.';
+  const u = ((a - 35) % 23) / 23;
+  const tip = 7.5 + 6 * (1 - 2 * Math.abs(u - 0.5));
+  if (d > tip) return '.';
+  return d < 5 || Math.abs(u - 0.5) < 0.09 ? 'j' : 'I';
+};
+/** 金の つの（頭の 左右から うしろへ そりあがる）と 竜の ような 金の ひげ */
+const KOI_HORN = tube(
+  [
+    [15, 10],
+    [10, 5],
+    [8, 1.5],
+  ],
+  2,
+  0.6,
+);
+const KOI_WHISKER = tube(
+  [
+    [16, 27],
+    [12, 30],
+    [13, 34],
+    [9, 37],
+  ],
+  0.7,
+  0.5,
+);
+const mirrored = (f: (x: number, y: number) => number) => (x: number, y: number) =>
+  f(x, y) >= 0 || f(47 - x, y) >= 0;
+const koiHorn = mirrored(KOI_HORN);
+const koiWhisker = mirrored(KOI_WHISKER);
+
+/** 紅白の 赤い もよう（ひたい・ほお・むね） */
+const koiRed = (x: number, y: number) =>
+  ((x - 23.5) / 7) ** 2 + ((y - 10) / 4) ** 2 <= 1 ||
+  ((Math.abs(x - 23.5) - 10) / 3) ** 2 + ((y - 21) / 3.5) ** 2 <= 1 ||
+  ((Math.abs(x - 23.5) - 6) / 4) ** 2 + ((y - 36) / 3) ** 2 <= 1;
+
+/** 頭の 上の とげの せびれ（まん中が いちばん 高い） */
+const KOI_CREST = [
+  '......................II',
+  '.................I....II',
+  '.................II..III',
+  '................IIIj.IjI',
+  '................IIIjIIjI',
+  '...............IIIIjIIjI',
+  '...............IIIIIIIjI',
+];
+
+/** からだ（うろこは 金の ふちどりの よろい）・頭・赤い もよう */
+const KOI_SKIN = plot(48, (x, y) => {
+  const head = koiHead(x, y);
+  if (!head && !koiBody(x, y)) return '.';
+  if (koiRed(x, y)) return 'R';
+  if (!head) {
+    // うろこ（3 ドットの 段ごとに ずらした 金の ふち）
+    const row = Math.floor((y - 28) / 3);
+    const sx = (x + row * 2) % 4;
+    if ((y - 28) % 3 === 2 && sx === 2) return 'Y';
+    if (sx === 0) return 'c';
+  }
+  return 'P';
+});
+
+/** 顔：太い いかりの まゆ・光る 目・大きく ひらいた 口と はの ならび（左半分） */
+const KOI_FACE = [
+  '..........ooo...........',
+  '..........ooooo.........',
+  '...........ooooooo......',
+  '.........oEEEoooooo.....',
+  '.........oEWEEERo.......',
+  '..........oEEERRo.......',
+  '...........ooooo........',
+  '........................',
+  '...................o....',
+  '.................ccccccc',
+  '...............ccooooooo',
+  '..............ccWWoWWoWW',
+  '..............coWooWooWo',
+  '..............cooooorrrr',
+  '..............coWoorWrrW',
+  '..............ccWWoWWoWW',
+  '...............ccooooooo',
+  '.................ccccccc',
+];
+
+/** 足もとの 信濃川の 大波と しぶき */
+const KOI_WAVE = [
+  '..........W.....W................W......W.....',
+  '.........WSW...WSW..............WSW....WSW....',
+  '....W.....S.....S........W.......S......S.....',
+  '...WSW...SSS...SSS......WSW.....SSS....SSS....',
+  '....S...SSASS.SSASS......S.....SSASS..SSASS...',
+  '...SSS.SAAAAASAAAAAS....SSS...SAAAAASSAAAAAS..',
+  '..SSASSAAAAAAAAAAAASS..SSASS..SAAAAAAAAAAAAS..',
+  '.SAAAAAAAAAAAAAAAAAAASSAAAAASSAAAAAAAAAAAAAAS.',
+  '.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.',
+  '.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.',
+  '.BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.',
+  '..BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB..',
 ];
 
 const koiColors = {
@@ -1016,18 +1109,19 @@ const koiColors = {
   r: NQ.brick,
   W: NQ.white,
   Y: NQ.gold,
-  Q: NQ.ochre,
-  p: NQ.blush,
-  I: NQ.ice,
-  j: NQ.sky,
+  I: NQ.red,
+  j: NQ.brick,
   S: NQ.sky,
   A: NQ.azure,
   B: NQ.blue,
+  E: NQ.yellow,
+  n: NQ.navy,
 };
 
 /**
- * シナノガワノヌシ（県ボス）：信濃川に すむ 大きな 錦鯉（紅白）。頭の 上に 王冠、金の ひげ、大きな 尾びれと せびれ。
- * 川の 水しぶきを あげて とびはねる（ミズ）
+ * シナノガワノヌシ（県ボス）：信濃川に すむ 大きな 錦鯉（紅白）が 川から 正面へ ぬっと 立ちあがる。頭に 金の つのと
+ * とげの せびれ、左右へ つばさの ように ひろがる 赤い むなびれ、むねの うろこは 金の ふちどりの よろい。
+ * 太い いかりの まゆの 下で 黄色い 目が 光り、大きく ひらいた 口から 竜の ような 金の ひげが たれる（ミズ）
  */
 const shinanogawaNoNushi: MonsterDesign = {
   size: 48,
@@ -1035,31 +1129,50 @@ const shinanogawaNoNushi: MonsterDesign = {
   rim: {
     [NQ.paper]: NQ.cloud,
     [NQ.red]: NQ.brick,
-    [NQ.ice]: NQ.sky,
     [NQ.azure]: NQ.blue,
     [NQ.gold]: NQ.ochre,
   },
   rimDepth: 2,
-  layers: [{ rows: KOI }],
+  layers: [
+    { mirror: true, rows: KOI_CREST },
+    { rows: plot(48, koiFin) },
+    { rows: KOI_SKIN },
+    { rows: plot(48, (x, y) => (koiHorn(x, y) || koiWhisker(x, y) ? 'Y' : '.')) },
+    { mirror: true, y: 13, rows: KOI_FACE },
+    { x: 1, y: 35, rows: KOI_WAVE },
+  ],
 };
 
-/** シナノガワノヌシ 後半：滝を のぼった 鯉は 竜に なる…。ひれが 金色に 光り、うしろに 金の 光、ひげが 竜の ように のびる */
+/** 後半の うしろの いなずま（左右に 1 本ずつ） */
+const BOLT_L = ['..E.', '.EE.', 'EE..', '.EEE', '..EE', '.EE.', '.E..', 'E...'];
+const BOLT_R = ['.E..', '.EE.', '..EE', 'EEE.', 'EE..', '.EE.', '..E.', '...E'];
+
+/**
+ * シナノガワノヌシ 後半：滝を のぼった 鯉は 竜に なる…。うしろに 黒い うずと 金の いなずま、ひれは 朱に もえ、
+ * うろこの よろいが 金に かがやく。目は 白く 光る
+ */
 const shinanogawaNoNushiP0: MonsterDesign = {
   ...shinanogawaNoNushi,
-  colors: { ...koiColors, I: NQ.cream, j: NQ.yellow, C: NQ.cream },
+  colors: { ...koiColors, I: NQ.vermilion, S: NQ.white },
   rim: {
     [NQ.paper]: NQ.cloud,
     [NQ.red]: NQ.brick,
-    [NQ.cream]: NQ.yellow,
+    [NQ.vermilion]: NQ.brick,
     [NQ.azure]: NQ.blue,
     [NQ.gold]: NQ.ochre,
   },
   layers: [
-    { rows: hanabi(48, 23.5, 20, 16, 23, 16, 'C', 'Y') },
-    { rows: KOI },
-    // 竜の ように 長く のびた ひげ
-    { x: 1, y: 27, rows: ['..Y', '.Y.', '.Y.', 'Y..', 'Y..', '.Y.'] },
-    { x: 8, y: 26, rows: ['Y..', '.Y.', '.Y.', '..Y'] },
+    // 黒い うず（とげとげの 先は 金）
+    { rows: hanabi(48, 23.5, 20, 16, 23, 14, 'n', 'Y') },
+    ...shinanogawaNoNushi.layers.slice(0, 4),
+    {
+      mirror: true,
+      y: 13,
+      rows: KOI_FACE.map((r, i) => (i >= 3 && i <= 5 ? r.replace(/E/g, 'W').replace(/R/g, 'E') : r)),
+    },
+    { x: 2, y: 2, rows: BOLT_L },
+    { x: 42, y: 2, rows: BOLT_R },
+    shinanogawaNoNushi.layers[5]!,
   ],
 };
 
