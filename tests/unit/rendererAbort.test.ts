@@ -5,6 +5,7 @@ import { act } from 'preact/test-utils';
 import type { QuestionBase, QuestionRenderer, RendererContext } from '../../src/questions/contracts';
 import { choiceRenderer } from '../../src/questions/renderers/choice';
 import { experimentRenderer } from '../../src/questions/renderers/experiment';
+import { kanjiTraceRenderer } from '../../src/questions/renderers/kanji-trace';
 import { numberBuildRenderer } from '../../src/questions/renderers/number-build';
 import { pairMatchRenderer } from '../../src/questions/renderers/pair-match';
 import { pictureWordRenderer } from '../../src/questions/renderers/picture-word';
@@ -60,6 +61,11 @@ const cases: { name: string; renderer: QuestionRenderer; payload: unknown }[] = 
     },
   },
   {
+    name: 'kanji-trace',
+    renderer: kanjiTraceRenderer,
+    payload: { kanji: '山', reading: 'やま' },
+  },
+  {
     name: 'experiment',
     renderer: experimentRenderer,
     payload: {
@@ -110,6 +116,8 @@ function context(
 
 describe('question renderer cancellation', () => {
   beforeEach(() => {
+    // jsdom は canvas を 描けない（kanji-trace は 描けない ときも 動く つくり）
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
     setDictionary({
       question: {
         speak: 'よみあげ',
@@ -126,6 +134,7 @@ describe('question renderer cancellation', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
     document.body.replaceChildren();
   });
 

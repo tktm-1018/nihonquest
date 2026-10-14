@@ -546,3 +546,49 @@
   border-color: #ff9f6d;
   animation: nq-shake 0.3s;
 }
+
+/* kanji-trace：お手本を なぞる／読みを えらぶ */
+.nq-kt-canvas {
+  align-self: center;
+  width: min(240px, 60vw);
+  aspect-ratio: 1;
+  background: #fff8e6;
+  border: 4px solid #f6e7c1;
+  background-image:
+    linear-gradient(
+      to right,
+      transparent calc(50% - 1px),
+      rgba(42, 26, 5, 0.15) 50%,
+      transparent calc(50% + 1px)
+    ),
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 1px),
+      rgba(42, 26, 5, 0.15) 50%,
+      transparent calc(50% + 1px)
+    );
+  touch-action: none;
+  cursor: crosshair;
+}
+.nq-kt-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.nq-kt-submit {
+  min-width: 160px;
+  background: #6cc070;
+}
+.nq-kt-strokes {
+  margin-left: 12px;
+  opacity: 0.8;
+}
+.nq-kt-hint {
+  margin: 0;
+  text-align: center;
+}
+.nq-kt-big {
+  align-self: center;
+  font-size: 96px;
+  line-height: 1.1;
+}
