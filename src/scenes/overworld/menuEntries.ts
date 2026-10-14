@@ -1,6 +1,6 @@
 import type { ContentIndex } from '../../core/content/loader';
 import type { Item } from '../../core/content/schemas';
-import { canUse, EQUIP_SLOTS, isEquip } from '../../core/progression/inventory';
+import { canUse, EQUIP_SLOTS, equipSetProgress, isEquip } from '../../core/progression/inventory';
 import type { GameState } from '../../core/state/schema';
 import type { QuestionBank } from '../../questions/engine';
 import type { MenuEntry, MenuTab } from '../../shared/menuModel';
@@ -9,6 +9,16 @@ import { itemIconUrl } from '../art/itemIcons';
 
 type HeroStats = { hp: number; mp: number; atk: number; def: number; spd: number; wis: number };
 type MenuView = { entries: MenuEntry[]; summary?: string; empty: string };
+
+/** セット そうびの 行。そろったら 効果と「なぜ この県か」の ひとことを 出す（GDD §4.6） */
+function setLines(content: ContentIndex, gs: GameState, item: Item): string[] {
+  const set = item.setId ? content.sets.get(item.setId) : undefined;
+  if (!set) return [];
+  const { have, total, complete } = equipSetProgress(set, gs.player.equipment);
+  return complete
+    ? [t('field.equipSetDone', { name: set.name }), set.bonus.description]
+    : [t('field.equipSetProgress', { name: set.name, have, total })];
+}
 
 export function menuTabs(mistakeCount: number): {
   key: MenuTab;
@@ -78,6 +88,7 @@ export function bagMenu(
       const lines = [t('field.townHave', { n: count })];
       if (item.use?.heal) lines.push(t('field.bagHeal', { n: item.use.heal }));
       if (isEquip(item) && item.stats) lines.push(statText(item));
+      if (isEquip(item)) lines.push(...setLines(content, gs, item));
       return {
         key: item.id,
         name: item.name,
@@ -117,7 +128,9 @@ export function equipmentMenu(
       known: true,
       right: t(`slots.${slot}`),
       sub: t('field.equipSlot', { slot: t(`slots.${slot}`) }),
-      lines: item ? [statText(item)].filter(Boolean) : [t('field.equipEmptyHint')],
+      lines: item
+        ? [statText(item), ...setLines(content, gs, item)].filter(Boolean)
+        : [t('field.equipEmptyHint')],
       blurb: item?.blurb,
       action: item ? { label: t('field.bagUnequip'), ok: true } : null,
     };
