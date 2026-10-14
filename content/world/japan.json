@@ -21,9 +21,10 @@
       "mapKey": "hokkaido-island",
       "areas": ["hokkaido"],
       "bossId": "hokkaido-boss",
-      "recommendedGrade": [1, 6],
-      "featuredSubjects": ["rika"],
-      "status": "stub"
+      "recommendedGrade": [1, 2],
+      "featuredSubjects": ["seikatsu", "rika"],
+      "status": "playable",
+      "opensAfter": "tohoku"
     },
     {
       "id": "kanto",

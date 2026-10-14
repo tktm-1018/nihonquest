@@ -52,6 +52,9 @@ export const islandSchema = z.object({
     .default(['shakai'])
     .describe('この地方で主に出題し、限定モンスターが得意とする教科'),
   status: z.enum(['playable', 'stub']).default('stub').describe('stub = シルエット表示のみ'),
+  opensAfter: idSchema
+    .optional()
+    .describe('この島の地方ボスを浄化すると航路がひらく。それまでは playable でも結界のまま'),
 });
 
 export const worldSchema = z.object({

@@ -24,8 +24,8 @@ function expectedSize(key: string): number {
   const id = baseId(key);
   const m = c.monsters.get(id)!;
   if (key.endsWith('.field')) return 32;
-  // 北海道は 県 id と 島 id が 同じ。地方ボスは 島 id だけの モンスター
-  if (!c.areas.has(m.area) && c.world.islands.some((i) => i.id === m.area)) return MONSTER_SIZE.islandBoss;
+  // 北海道は 県 id と 島 id が 同じ。地方ボスは 島の bossId で 見分ける
+  if (c.world.islands.some((i) => i.bossId === id)) return MONSTER_SIZE.islandBoss;
   if ([...c.areas.values()].some((a) => a.midBoss === id)) return MONSTER_SIZE.midBoss;
   return m.isBoss ? MONSTER_SIZE.boss : MONSTER_SIZE.normal;
 }

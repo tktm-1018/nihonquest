@@ -12,13 +12,31 @@ export function hasAllAreaSigns(world: World, islandId: string, areaSigns: reado
   return island.areas.every((areaId) => signs.has(areaId));
 }
 
+/**
+ * 島に上陸できるか。playable で、opensAfter の島の地方ボスを浄化していれば ひらく。
+ * 結界の中の島は、にほんちずで シルエットだけを見せる。
+ */
+export function isIslandOpen(
+  world: World,
+  islandId: string,
+  progress: Pick<GameState['progress'], 'islandsCleared'>,
+): boolean {
+  const island = world.islands.find((candidate) => candidate.id === islandId);
+  if (!island || island.status !== 'playable') return false;
+  return !island.opensAfter || progress.islandsCleared.includes(island.opensAfter);
+}
+
 /** 県のしるしが揃い、まだクリアしていない島だけ地方ボスへ挑戦できる。 */
 export function canChallengeIslandBoss(
   world: World,
   islandId: string,
   progress: Pick<GameState['progress'], 'areaSigns' | 'islandsCleared'>,
 ): boolean {
-  return !progress.islandsCleared.includes(islandId) && hasAllAreaSigns(world, islandId, progress.areaSigns);
+  return (
+    isIslandOpen(world, islandId, progress) &&
+    !progress.islandsCleared.includes(islandId) &&
+    hasAllAreaSigns(world, islandId, progress.areaSigns)
+  );
 }
 
 /**
@@ -36,3 +54,6 @@ export function completeIsland(prev: GameState, world: World, islandId: string, 
     },
   };
 }
+
+/** progress.eventsDone に入れる「航路で ひらいた 島に はじめて 着いた」しるし */
+export const islandArrivalFlag = (islandId: string): string => `arrive.${islandId}`;

@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "hokkaido-boss",
+  "name": "リュウヒョウオオワシ",
+  "area": "hokkaido",
+  "motifId": "ryuhyo",
+  "element": "mizu",
+  "weakness": "hino",
+  "baseStats": {
+    "hp": 600,
+    "mp": 80,
+    "atk": 23,
+    "def": 18,
+    "spd": 10,
+    "wis": 15
+  },
+  "growth": {
+    "hp": 0,
+    "mp": 0,
+    "atk": 0,
+    "def": 0,
+    "spd": 0,
+    "wis": 0
+  },
+  "skills": ["sk-fubuki", "sk-uzushio", "sk-mizu-teppo"],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 750,
+  "gold": 850,
+  "spriteKey": "mon.hokkaido-boss",
+  "dexBlurb": "オホーツクの 海[うみ]を おおう 流氷[りゅうひょう]に すむ 大[おお]わし。北海道[ほっかいどう]の 知識[ちしき]を つばさに とじこめている。",
+  "isBoss": true,
+  "bossPhases": [
+    {
+      "hpBelow": 0.66,
+      "element": "kaze",
+      "skills": ["sk-habataki", "sk-fubuki", "sk-uzushio"],
+      "line": "つばさが こおりを くだく……！ 北[きた]の 風[かぜ]よ、ふけ！"
+    },
+    {
+      "hpBelow": 0.25,
+      "element": "none",
+      "skills": ["sk-happa-arashi", "sk-hikari-no-ya"],
+      "line": "……春[はる]の 海[うみ]は、こんなに あかるかったのか。"
+    }
+  ]
+}

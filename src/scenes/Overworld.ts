@@ -80,6 +80,7 @@ import {
   type NextStop,
 } from '../core/progression/route';
 import { canChallengeIslandBoss, completeIsland } from '../core/progression/island';
+import { islandArrival, islandBossIntro, islandBossOutro } from './overworld/islandStory';
 import { createRng, freshSeed, type Rng } from '../core/rng';
 import type { GameState } from '../core/state/schema';
 import { askById, MasteryStore, type QuestionBank } from '../questions/engine';
@@ -487,7 +488,8 @@ export class OverworldScene extends Phaser.Scene {
     this.baseMap = this.readBaseMap();
     this.renderHud();
     if (!this.pendingDebugBattle) this.showPlaceTitle();
-    if (!this.pendingDebugBattle) this.time.delayedCall(2850, () => void this.showPrologue());
+    if (!this.pendingDebugBattle)
+      this.time.delayedCall(2850, () => void this.showPrologue().then(() => this.showIslandArrival()));
 
     const debug = this.pendingDebugBattle;
     if (debug) {
@@ -3874,14 +3876,7 @@ export class OverworldScene extends Phaser.Scene {
 
     this.busy = true;
     this.standStill();
-    const choice = await this.choose(
-      [
-        { speaker: t('field.prologueFairy'), text: t('field.islandBossAsk') },
-        { speaker: t('field.prologueFairy'), text: t('field.islandBossIntroFairy') },
-        { speaker: boss.name, text: t('field.islandBossRoar') },
-      ],
-      [t('ui.yes'), t('ui.no')],
-    );
+    const choice = await this.choose(islandBossIntro(islandId, boss.name), [t('ui.yes'), t('ui.no')]);
     if (choice !== 0) {
       this.busy = false;
       return;
@@ -3902,16 +3897,21 @@ export class OverworldScene extends Phaser.Scene {
     this.setGame(next);
     await this.wait(650);
     playSfx('victory');
-    const island = content.world.islands.find((candidate) => candidate.id === islandId);
-    const bossName = content.monsters.get(island?.bossId ?? '')?.name;
-    await this.talk([
-      { speaker: bossName, text: t('field.islandBossSecret') },
-      { speaker: t('field.prologueFairy'), text: t('field.islandFairyDeflect') },
-      { text: t('field.islandBossCleared') },
-      { text: t('field.islandBagGrew') },
-      { speaker: t('field.prologueFairy'), text: t('field.islandFairyNext') },
-      { text: t('field.islandChapterEnd') },
-    ]);
+    await this.talk(islandBossOutro(content, islandId, next));
+    this.busy = false;
+  }
+
+  /** 航路で ひらいた 島に はじめて 着いたときの 妖精の ひとこと（islandStory.ts） */
+  private async showIslandArrival(): Promise<void> {
+    const [content, gs] = [this.content(), this.gs()];
+    const ready = !this.inBattle && this.kind() === 'field' && gs?.progress.counters[PROLOGUE_COUNTER] !== 0;
+    const arrival = ready && content && gs ? islandArrival(content, gs, this.areaId()) : null;
+    if (!arrival || !gs) return;
+    if (this.busy) return void this.time.delayedCall(500, () => void this.showIslandArrival());
+    this.busy = true;
+    this.standStill();
+    this.setGame(markDone(gs, { flag: arrival.flag }));
+    await this.talk([arrival.line]);
     this.busy = false;
   }
 

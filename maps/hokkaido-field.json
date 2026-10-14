@@ -709,6 +709,33 @@
         },
         {
           "id": 9,
+          "name": "event_hokkaido_ryuhyo",
+          "type": "event",
+          "x": 1216,
+          "y": 544,
+          "width": 16,
+          "height": 16
+        },
+        {
+          "id": 10,
+          "name": "event_hokkaido_furano-lavender",
+          "type": "event",
+          "x": 784,
+          "y": 736,
+          "width": 16,
+          "height": 16
+        },
+        {
+          "id": 11,
+          "name": "event_hokkaido_yuki-matsuri",
+          "type": "event",
+          "x": 480,
+          "y": 848,
+          "width": 16,
+          "height": 16
+        },
+        {
+          "id": 12,
           "name": "lm_shiretoko",
           "type": "landmark",
           "x": 1424,
@@ -718,7 +745,7 @@
           "properties": [{ "name": "motifId", "type": "string", "value": "shiretoko" }]
         },
         {
-          "id": 10,
+          "id": 13,
           "name": "lm_mashuko",
           "type": "landmark",
           "x": 1280,
@@ -728,17 +755,7 @@
           "properties": [{ "name": "motifId", "type": "string", "value": "mashuko" }]
         },
         {
-          "id": 11,
-          "name": "lm_ryuhyo",
-          "type": "landmark",
-          "x": 1216,
-          "y": 544,
-          "width": 16,
-          "height": 16,
-          "properties": [{ "name": "motifId", "type": "string", "value": "ryuhyo" }]
-        },
-        {
-          "id": 12,
+          "id": 14,
           "name": "lm_asahidake",
           "type": "landmark",
           "x": 880,
@@ -748,17 +765,7 @@
           "properties": [{ "name": "motifId", "type": "string", "value": "asahidake" }]
         },
         {
-          "id": 13,
-          "name": "lm_furano-lavender",
-          "type": "landmark",
-          "x": 784,
-          "y": 736,
-          "width": 16,
-          "height": 16,
-          "properties": [{ "name": "motifId", "type": "string", "value": "furano-lavender" }]
-        },
-        {
-          "id": 14,
+          "id": 15,
           "name": "lm_toyako",
           "type": "landmark",
           "x": 400,
@@ -768,7 +775,7 @@
           "properties": [{ "name": "motifId", "type": "string", "value": "toyako" }]
         },
         {
-          "id": 15,
+          "id": 16,
           "name": "lm_goryokaku",
           "type": "landmark",
           "x": 384,
@@ -776,16 +783,6 @@
           "width": 16,
           "height": 16,
           "properties": [{ "name": "motifId", "type": "string", "value": "goryokaku" }]
-        },
-        {
-          "id": 16,
-          "name": "lm_yuki-matsuri",
-          "type": "landmark",
-          "x": 480,
-          "y": 848,
-          "width": 16,
-          "height": 16,
-          "properties": [{ "name": "motifId", "type": "string", "value": "yuki-matsuri" }]
         },
         {
           "id": 17,

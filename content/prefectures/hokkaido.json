@@ -277,13 +277,14 @@
         }
       ],
       "question": {
-        "subject": "rika",
+        "subject": "seikatsu",
         "gradeRange": [
-          3,
-          6
+          1,
+          2
         ],
         "tags": [
-          "prefecture:hokkaido"
+          "prefecture:hokkaido",
+          "event:kushiro-shitsugen"
         ]
       },
       "rewardByScore": [
@@ -313,6 +314,174 @@
         {
           "speaker": "釧路湿原[くしろしつげん]の レンジャーさん",
           "text": "よく しらべたね！ 湿原[しつげん]には、頭[あたま]の 赤[あか]い タンチョウも くらしているんだ。"
+        }
+      ]
+    },
+    {
+      "id": "ev-hokkaido-ryuhyo",
+      "motifId": "ryuhyo",
+      "trigger": {
+        "map": "hokkaido-field",
+        "objectName": "event_hokkaido_ryuhyo"
+      },
+      "once": true,
+      "cutinImageKey": "motif.hokkaido.ryuhyo",
+      "dialogue": [
+        {
+          "speaker": "網走[あばしり]の 漁師[りょうし]さん",
+          "text": "冬[ふゆ]に なると、この 海[うみ]は 白[しろ]い 氷[こおり]で いっぱいに なるんだ。氷[こおり]の ひみつ、わかるかな？"
+        }
+      ],
+      "question": {
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:hokkaido",
+          "event:ryuhyo"
+        ]
+      },
+      "rewardByScore": [
+        {
+          "min": 1,
+          "reward": {
+            "xp": 40,
+            "gold": 100
+          }
+        },
+        {
+          "min": 0.5,
+          "reward": {
+            "xp": 20,
+            "gold": 50
+          }
+        },
+        {
+          "min": 0,
+          "reward": {
+            "xp": 10,
+            "gold": 10
+          }
+        }
+      ],
+      "afterDialogue": [
+        {
+          "speaker": "網走[あばしり]の 漁師[りょうし]さん",
+          "text": "すごいね！ 氷[こおり]の 下[した]には、ちいさな クリオネも およいでいるよ。"
+        }
+      ]
+    },
+    {
+      "id": "ev-hokkaido-furano-lavender",
+      "motifId": "furano-lavender",
+      "trigger": {
+        "map": "hokkaido-field",
+        "objectName": "event_hokkaido_furano-lavender"
+      },
+      "once": true,
+      "cutinImageKey": "motif.hokkaido.furano-lavender",
+      "dialogue": [
+        {
+          "speaker": "富良野[ふらの]の 花[はな]ばたけの 人[ひと]",
+          "text": "夏[なつ]の 丘[おか]が むらさき色[いろ]に なるのは なぜだと おもう？ 花[はな]の もんだいに ちょうせんしてみて！"
+        }
+      ],
+      "question": {
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:hokkaido",
+          "event:furano-lavender"
+        ]
+      },
+      "rewardByScore": [
+        {
+          "min": 1,
+          "reward": {
+            "xp": 40,
+            "gold": 100
+          }
+        },
+        {
+          "min": 0.5,
+          "reward": {
+            "xp": 20,
+            "gold": 50
+          }
+        },
+        {
+          "min": 0,
+          "reward": {
+            "xp": 10,
+            "gold": 10
+          }
+        }
+      ],
+      "afterDialogue": [
+        {
+          "speaker": "富良野[ふらの]の 花[はな]ばたけの 人[ひと]",
+          "text": "よく わかったね！ 花[はな]の いい かおりを、むねいっぱい すってごらん。"
+        }
+      ]
+    },
+    {
+      "id": "ev-hokkaido-yuki-matsuri",
+      "motifId": "yuki-matsuri",
+      "trigger": {
+        "map": "hokkaido-field",
+        "objectName": "event_hokkaido_yuki-matsuri"
+      },
+      "once": true,
+      "cutinImageKey": "motif.hokkaido.yuki-matsuri",
+      "dialogue": [
+        {
+          "speaker": "雪[ゆき]まつりの 係[かかり]の 人[ひと]",
+          "text": "雪[ゆき]で 作[つく]った 大[おお]きな 像[ぞう]が ならんでいるよ。冬[ふゆ]の あそびの もんだいだ！"
+        }
+      ],
+      "question": {
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:hokkaido",
+          "event:yuki-matsuri"
+        ]
+      },
+      "rewardByScore": [
+        {
+          "min": 1,
+          "reward": {
+            "xp": 40,
+            "gold": 100
+          }
+        },
+        {
+          "min": 0.5,
+          "reward": {
+            "xp": 20,
+            "gold": 50
+          }
+        },
+        {
+          "min": 0,
+          "reward": {
+            "xp": 10,
+            "gold": 10
+          }
+        }
+      ],
+      "afterDialogue": [
+        {
+          "speaker": "雪[ゆき]まつりの 係[かかり]の 人[ひと]",
+          "text": "せいかい！ さむい 冬[ふゆ]も、みんなで あそべば たのしいね。"
         }
       ]
     }

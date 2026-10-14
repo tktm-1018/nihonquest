@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { createNewGame } from '../../src/core/state/newGame';
 import { earnAreaSign } from '../../src/core/progression/eventReward';
-import { canChallengeIslandBoss, completeIsland } from '../../src/core/progression/island';
+import { canChallengeIslandBoss, completeIsland, isIslandOpen } from '../../src/core/progression/island';
 import { areaBossFlag, midBossFlag, nextStop } from '../../src/core/progression/route';
 import { content } from './helpers';
 
@@ -34,7 +34,12 @@ describe('東北章の進行契約', () => {
     expect(tohoku?.areas).toEqual(TOHOKU);
     expect(tohoku?.status).toBe('playable');
     expect(c.world.islands.find((island) => island.id === 'koshinetsu')?.status).toBe('playable');
-    expect(c.world.islands.find((island) => island.id === 'hokkaido')?.status).toBe('stub');
+    expect(c.world.islands.find((island) => island.id === 'hokkaido')).toMatchObject({
+      status: 'playable',
+      opensAfter: 'tohoku',
+    });
+    expect(isIslandOpen(c.world, 'hokkaido', gs.progress)).toBe(false);
+    expect(isIslandOpen(c.world, 'kanto', gs.progress)).toBe(false);
     expect(gs.progress).toMatchObject({
       currentIsland: 'tohoku',
       currentArea: 'aomori',
@@ -109,7 +114,7 @@ describe('東北章の進行契約', () => {
     expect(canChallengeIslandBoss(c.world, 'tohoku', gs.progress)).toBe(true);
   });
 
-  it('中ボス撃破印・県のしるし・地方クリアは重複せず、北海道は結界のまま', async () => {
+  it('中ボス撃破印・県のしるし・地方クリアは重複せず、東北クリアで北海道への航路だけがひらく', async () => {
     const c = await content();
     let gs = createNewGame({ name: 'ハル', starterMonsterId: 'aomori-nebutan', grade: 1 }, 0);
     for (const id of TOHOKU) gs = earnAreaSign(gs, id, 1);
@@ -118,8 +123,24 @@ describe('東北章の進行契約', () => {
     const repeated = completeIsland(cleared, c.world, 'tohoku', 3);
     expect(cleared.progress.islandsCleared).toEqual(['tohoku']);
     expect(repeated).toBe(cleared);
+    expect(isIslandOpen(c.world, 'hokkaido', gs.progress)).toBe(false);
+    expect(isIslandOpen(c.world, 'hokkaido', cleared.progress)).toBe(true);
+    expect(isIslandOpen(c.world, 'kanto', cleared.progress)).toBe(false);
     expect(canChallengeIslandBoss(c.world, 'hokkaido', cleared.progress)).toBe(false);
-    expect(c.world.islands.find((island) => island.id === 'hokkaido')?.status).toBe('stub');
     for (const id of TOHOKU) expect(midBossFlag(id)).toBe(`midboss.${id}`);
+  });
+
+  it('北海道の県のしるしが あっても、航路が ひらくまで 北海道の地方ボスには いどめない', async () => {
+    const c = await content();
+    let gs = createNewGame({ name: 'ハル', starterMonsterId: 'aomori-nebutan', grade: 1 }, 0);
+    gs = earnAreaSign(gs, 'hokkaido', 1);
+    expect(canChallengeIslandBoss(c.world, 'hokkaido', gs.progress)).toBe(false);
+    expect(completeIsland(gs, c.world, 'hokkaido', 2)).toBe(gs);
+
+    for (const id of TOHOKU) gs = earnAreaSign(gs, id, 3);
+    gs = completeIsland(gs, c.world, 'tohoku', 4);
+    expect(canChallengeIslandBoss(c.world, 'hokkaido', gs.progress)).toBe(true);
+    gs = completeIsland(gs, c.world, 'hokkaido', 5);
+    expect(gs.progress.islandsCleared).toEqual(['tohoku', 'hokkaido']);
   });
 });
