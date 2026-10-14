@@ -94,8 +94,14 @@ test('バトル：必殺技を えらぶと 問題が出て、答えると採点
   // 必殺技で敵を倒した場合はターン2ではなく決着へ進む。どちらも正常なターン完了として扱う。
   const deadline = Date.now() + 30_000;
   while (Date.now() < deadline) {
-    if ((await page.locator('.nq-turn-stage').textContent())?.includes('ターン 2')) return;
+    // 必殺技で決着すると ターン表示は 消えるので、先に 決着を見て、ターン表示は あるときだけ 読む
     if (await page.locator('.nq-result').isVisible()) return;
+    const stage = page.locator('.nq-turn-stage');
+    if (
+      (await stage.count()) > 0 &&
+      (await stage.first().textContent({ timeout: 1_000 }))?.includes('ターン 2')
+    )
+      return;
     const message = page.locator('.nq-box');
     if (await message.isVisible()) await message.click({ force: true });
     await page.waitForTimeout(100);
