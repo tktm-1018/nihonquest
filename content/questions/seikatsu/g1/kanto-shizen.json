@@ -1,0 +1,205 @@
+[
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0001",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:ibaraki", "event:fukuroda-no-taki", "review:pending-human"],
+    "payload": {
+      "prompt": "袋田[ふくろだ]の 滝[たき]の 水[みず]が こおって かたまるのは、どんな とき？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "とても さむい とき"
+        },
+        {
+          "id": "b",
+          "text": "とても あつい とき"
+        },
+        {
+          "id": "c",
+          "text": "雨[あめ]が ふる とき"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "とても さむい ふゆには、水[みず]が こおって 滝[たき]まで かたまる ことが あるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0002",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:chiba", "event:kujukurihama", "review:pending-human"],
+    "payload": {
+      "prompt": "九十九里浜[くじゅうくりはま]の すなはまに、海[うみ]から よせてくる ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "なみ"
+        },
+        {
+          "id": "b",
+          "text": "ゆき"
+        },
+        {
+          "id": "c",
+          "text": "はっぱ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "海[うみ]の なみが、すなはまに なんども よせてくるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0003",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:chiba", "event:kujukurihama", "review:pending-human"],
+    "payload": {
+      "prompt": "海[うみ]の すなはまで あそぶとき、よい ことは どれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "大人[おとな]と いっしょに あそぶ"
+        },
+        {
+          "id": "b",
+          "text": "ひとりで 海[うみ]の おくへ 行[い]く"
+        },
+        {
+          "id": "c",
+          "text": "なみに ねころがる"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "海[うみ]では、かならず 大人[おとな]と いっしょに あそぼう。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0004",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:tokyo", "event:takaosan", "review:pending-human"],
+    "payload": {
+      "prompt": "高尾山[たかおさん]の 森[もり]で、木[き]から 木[き]へ とぶように うつる 生[い]きものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ムササビ"
+        },
+        {
+          "id": "b",
+          "text": "ペンギン"
+        },
+        {
+          "id": "c",
+          "text": "カメ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "ムササビは、手[て]と 足[あし]の あいだの まくを ひろげて、木[き]から 木[き]へ とぶよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0005",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:tokyo", "event:takaosan", "review:pending-human"],
+    "payload": {
+      "prompt": "山[やま]に のぼるとき、もって いくと よい ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "水[すい]とう"
+        },
+        {
+          "id": "b",
+          "text": "せんぷうき"
+        },
+        {
+          "id": "c",
+          "text": "ふとん"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "山[やま]では のどが かわくので、水[すい]とうを もって いこう。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0006",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:kanagawa", "event:owakudani", "review:pending-human"],
+    "payload": {
+      "prompt": "大涌谷[おおわくだに]の 温泉[おんせん]の おゆで ゆでた たまごは、からが 何色[なにいろ]に なる？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "くろ"
+        },
+        {
+          "id": "b",
+          "text": "あお"
+        },
+        {
+          "id": "c",
+          "text": "ピンク"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "温泉[おんせん]の おゆで ゆでると、からが くろく なるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.kanto-shizen.0007",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.kanto-shizen",
+    "tags": ["prefecture:kanagawa", "event:owakudani", "review:pending-human"],
+    "payload": {
+      "prompt": "大涌谷[おおわくだに]で、地面[じめん]から ふき出[だ]している 白[しろ]い ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ゆげ"
+        },
+        {
+          "id": "b",
+          "text": "ゆき"
+        },
+        {
+          "id": "c",
+          "text": "わたあめ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "大涌谷[おおわくだに]では、地面[じめん]から 白[しろ]い ゆげ（湯[ゆ]けむり）が 出[で]ているよ。"
+  }
+]

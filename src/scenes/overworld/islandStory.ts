@@ -24,17 +24,27 @@ export function islandBossIntro(islandId: string, bossName: string): DialogueLin
   ];
 }
 
-/** 地方ボスを 浄化した あとの 会話。cleared は 島クリアを 記録した あとの セーブ */
-export function islandBossOutro(content: ContentIndex, islandId: string, cleared: GameState): DialogueLine[] {
+/**
+ * 地方ボスを 浄化した あとの 会話。prev は 浄化前、cleared は 島クリアを 記録した あとの セーブ。
+ * バッグが 広がらなかった ときは バッグの 一言を 出さない。
+ */
+export function islandBossOutro(
+  content: ContentIndex,
+  islandId: string,
+  prev: GameState,
+  cleared: GameState,
+): DialogueLine[] {
   const island = content.world.islands.find((candidate) => candidate.id === islandId);
   const bossName = content.monsters.get(island?.bossId ?? '')?.name;
-  const vars = { region: island?.name ?? '', ...bagDimensions(cleared) };
+  const [before, after] = [bagDimensions(prev), bagDimensions(cleared)];
+  const grew = before.w !== after.w || before.h !== after.h;
+  const vars = { region: island?.name ?? '', ...after };
   const fairy = t('field.prologueFairy');
   return [
     { speaker: bossName, text: islandText(islandId, 'islandBossSecret', vars) },
     { speaker: fairy, text: islandText(islandId, 'islandFairyDeflect', vars) },
     { text: islandText(islandId, 'islandBossCleared', vars) },
-    { text: islandText(islandId, 'islandBagGrew', vars) },
+    ...(grew ? [{ text: islandText(islandId, 'islandBagGrew', vars) }] : []),
     { speaker: fairy, text: islandText(islandId, 'islandFairyNext', vars) },
     { text: islandText(islandId, 'islandChapterEnd', vars) },
   ];

@@ -34,4 +34,20 @@ describe('にほんちずの 結界と 航路', () => {
     const tohoku = regions.find((region) => region.id === 'tohoku');
     expect(tohoku?.areas.find((area) => area.id === 'iwate')?.visited).toBe(false);
   });
+
+  it('北海道を 浄化すると 関東の 最初の 県（茨城）へ わたれる', async () => {
+    const c = await content();
+    let gs = createNewGame({ name: 'ハル', starterMonsterId: 'aomori-nebutan', grade: 1 }, 0);
+    for (const id of TOHOKU) gs = earnAreaSign(gs, id, 1);
+    gs = completeIsland(gs, c.world, 'tohoku', 2);
+    const kantoOf = () =>
+      buildWorldMapRegions(WORLD_MAP, c, gs, new Set(['aomori'])).find((region) => region.id === 'kanto');
+    expect(kantoOf()?.status).toBe('stub');
+
+    gs = earnAreaSign(gs, 'hokkaido', 3);
+    gs = completeIsland(gs, c.world, 'hokkaido', 4);
+    const kanto = kantoOf();
+    expect(kanto?.status).toBe('playable');
+    expect(kanto?.areas.filter((area) => area.visited).map((area) => area.id)).toEqual(['ibaraki']);
+  });
 });

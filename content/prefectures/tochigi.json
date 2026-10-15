@@ -190,9 +190,15 @@
         }
       ],
       "question": {
-        "subject": "shakai",
-        "gradeRange": [3, 6],
-        "tags": ["prefecture:tochigi"]
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:tochigi",
+          "event:nikko-toshogu"
+        ]
       },
       "rewardByScore": [
         {
