@@ -33,9 +33,10 @@
       "mapKey": "kanto-island",
       "areas": ["ibaraki", "tochigi", "gunma", "saitama", "chiba", "tokyo", "kanagawa"],
       "bossId": "kanto-boss",
-      "recommendedGrade": [2, 6],
-      "featuredSubjects": ["shakai"],
-      "status": "stub"
+      "recommendedGrade": [1, 2],
+      "featuredSubjects": ["seikatsu", "shakai"],
+      "status": "playable",
+      "opensAfter": "hokkaido"
     },
     {
       "id": "hokuriku",

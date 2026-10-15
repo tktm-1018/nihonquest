@@ -198,9 +198,15 @@
         }
       ],
       "question": {
-        "subject": "rika",
-        "gradeRange": [3, 6],
-        "tags": ["prefecture:kanagawa"]
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:kanagawa",
+          "event:owakudani"
+        ]
       },
       "rewardByScore": [
         {

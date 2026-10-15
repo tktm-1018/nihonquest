@@ -64,6 +64,11 @@ function ryuhyoTint(d: MonsterDesign): MonsterDesign {
   };
 }
 
+/** 関東の地方ボスの 仮絵：氷の 青を 町の 灰色・銀色に かえる（王冠の 金と 赤は のこす） */
+function machiTint(d: MonsterDesign): MonsterDesign {
+  return { ...d, colors: { ...d.colors, I: NQ.cloud, S: NQ.silver, A: NQ.gray, B: NQ.slate } };
+}
+
 export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   // 東北
   ...AOMORI,
@@ -78,6 +83,8 @@ export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   // 北海道の地方ボス。本番の絵ができるまで 東北の地方ボスの 形を ぬりかえて つかう（形態が かわっても 同じ 絵）。
   'hokkaido-boss': ryuhyoTint(TOHOKU['tohoku-boss-rokufuyu']!),
   // 関東
+  // 関東の地方ボス。本番の絵ができるまで 東北の地方ボスの 形を 町の 灰色に ぬりかえて つかう。
+  'kanto-boss': machiTint(TOHOKU['tohoku-boss-rokufuyu']!),
   ...IBARAKI,
   ...TOCHIGI,
   ...GUNMA,

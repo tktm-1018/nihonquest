@@ -190,9 +190,15 @@
         }
       ],
       "question": {
-        "subject": "shakai",
-        "gradeRange": [3, 6],
-        "tags": ["prefecture:saitama"]
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:saitama",
+          "event:sakitama-kofun"
+        ]
       },
       "rewardByScore": [
         {

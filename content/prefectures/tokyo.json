@@ -197,9 +197,15 @@
         }
       ],
       "question": {
-        "subject": "rika",
-        "gradeRange": [3, 6],
-        "tags": ["prefecture:tokyo"]
+        "subject": "seikatsu",
+        "gradeRange": [
+          1,
+          2
+        ],
+        "tags": [
+          "prefecture:tokyo",
+          "event:takaosan"
+        ]
       },
       "rewardByScore": [
         {

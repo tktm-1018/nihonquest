@@ -3897,7 +3897,7 @@ export class OverworldScene extends Phaser.Scene {
     this.setGame(next);
     await this.wait(650);
     playSfx('victory');
-    await this.talk(islandBossOutro(content, islandId, next));
+    await this.talk(islandBossOutro(content, islandId, gs, next));
     this.busy = false;
   }
 

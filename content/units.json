@@ -2078,6 +2078,18 @@
     "grade": 2
   },
   {
+    "id": "seikatsu.g1.kanto-shizen",
+    "name": "関東のしぜんとあそび",
+    "subject": "seikatsu",
+    "grade": 1
+  },
+  {
+    "id": "seikatsu.g2.kanto-machi",
+    "name": "関東のまちとくらし",
+    "subject": "seikatsu",
+    "grade": 2
+  },
+  {
     "id": "shakai.g3.legacy-cur-1403-01",
     "name": "身近な地域や市区町村の様子",
     "subject": "shakai",
