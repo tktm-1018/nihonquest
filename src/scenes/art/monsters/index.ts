@@ -4,6 +4,7 @@
  * ここに無いモンスターは battle/pixelArt.ts の monsterArt（属性の形で自動生成）になる。
  */
 import { toCanvas } from '../grid';
+import { NQ } from '../palette';
 import { AICHI } from './aichi';
 import { AKITA } from './akita';
 import { AOMORI } from './aomori';
@@ -55,6 +56,14 @@ import { YAMAGATA } from './yamagata';
 import { YAMAGUCHI } from './yamaguchi';
 import { YAMANASHI } from './yamanashi';
 
+/** 北海道の地方ボスの 仮絵：こい 青を あい色に、赤れんがの かざりを ラベンダーに かえる（王冠の 金と 赤は のこす） */
+function ryuhyoTint(d: MonsterDesign): MonsterDesign {
+  return {
+    ...d,
+    colors: { ...d.colors, N: NQ.indigo, n: NQ.indigo, r: NQ.lavender },
+  };
+}
+
 export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   // 東北
   ...AOMORI,
@@ -66,6 +75,8 @@ export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   ...TOHOKU,
   // 北海道
   ...HOKKAIDO,
+  // 北海道の地方ボス。本番の絵ができるまで 東北の地方ボスの 形を ぬりかえて つかう（形態が かわっても 同じ 絵）。
+  'hokkaido-boss': ryuhyoTint(TOHOKU['tohoku-boss-rokufuyu']!),
   // 関東
   ...IBARAKI,
   ...TOCHIGI,

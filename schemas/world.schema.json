@@ -104,6 +104,11 @@
                 ],
                 "default": "stub",
                 "description": "stub = シルエット表示のみ"
+              },
+              "opensAfter": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9.-]*$",
+                "description": "この島の地方ボスを浄化すると航路がひらく。それまでは playable でも結界のまま"
               }
             },
             "required": [

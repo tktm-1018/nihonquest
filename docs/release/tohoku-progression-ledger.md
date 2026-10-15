@@ -18,7 +18,7 @@
 6. 県ボス撃破で `boss.<県>` と県のしるしを1回だけ得る。
 7. 6県すべてのしるしが揃った場合だけ `tohoku-boss-rokufuyu` に挑戦できる。
 8. 地方ボス撃破で `islandsCleared` に `tohoku` が1回だけ記録される。
-9. 北海道は `stub` のままで、東北章終了時点では上陸できない。
+9. 北海道は `opensAfter: "tohoku"` のため、東北の地方ボスを浄化するまで上陸できない（浄化後は第二章として渡れる）。
 
 ## 6県のデータ台帳
 
@@ -31,7 +31,7 @@
 | 5 | 山形 | `yamagata-field` | `yamagata-town` | `yamagata-dungeon` | `yamagata-midboss-juhyon` | `yamagata-boss-juhyo-no-kami` | `boss.yamagata` + `yamagata`のしるし | 福島 |
 | 6 | 福島 | `fukushima-field` | `fukushima-town` | `fukushima-dungeon` | `fukushima-midboss-goshiki-slime` | `fukushima-boss-tsurugajo-no-nushi` | `boss.fukushima` + `fukushima`のしるし | なし（地方ボスが結界を管理） |
 
-地方ボスは `tohoku-boss-rokufuyu`。撃破後の記録は `islandsCleared: ["tohoku"]`。次地方の北海道は `status: "stub"` のため、本リリースでは結界表示を維持する。
+地方ボスは `tohoku-boss-rokufuyu`。撃破後の記録は `islandsCleared: ["tohoku"]`。次地方の北海道は `opensAfter: "tohoku"` のため、浄化前は結界表示、浄化後は航路が開く。
 
 ## 自動検査の証拠
 
@@ -44,7 +44,7 @@
 - 中ボス後のワープ順と福島での停止
 - しるし不足時の地方ボス封鎖
 - しるしと地方クリア記録の重複防止
-- 東北クリア後も北海道が `stub` であること
+- 東北クリア前は北海道が結界のままで、クリア後に北海道だけへ渡れること
 
 補助検査として既存の `tests/unit/maps.test.ts` が全物体への到達可能性、遷移先スポーン、`maps/` と `public/maps/` の一致を確認し、`tests/unit/content.test.ts` が参照切れ、所属漏れ、県・島の重複を確認する。
 

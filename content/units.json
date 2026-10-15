@@ -2066,6 +2066,18 @@
     "legacyNode": "cur-1802-05"
   },
   {
+    "id": "seikatsu.g1.hokkaido-shizen",
+    "name": "北海道のしぜんときせつ",
+    "subject": "seikatsu",
+    "grade": 1
+  },
+  {
+    "id": "seikatsu.g2.hokkaido-kurashi",
+    "name": "北海道のくらしと生きもの",
+    "subject": "seikatsu",
+    "grade": 2
+  },
+  {
     "id": "shakai.g3.legacy-cur-1403-01",
     "name": "身近な地域や市区町村の様子",
     "subject": "shakai",

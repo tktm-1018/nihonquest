@@ -76,25 +76,35 @@ test('東北6県のしるしが1つでも欠けると地方ボスへ挑戦でき
 });
 
 async function savedTohokuClear(page: Page): Promise<boolean> {
+  return (await savedProgress(page))?.islandsCleared?.includes('tohoku') ?? false;
+}
+
+async function savedFlag(page: Page, flag: string): Promise<boolean> {
+  return (await savedProgress(page))?.eventsDone?.includes(flag) ?? false;
+}
+
+async function savedProgress(
+  page: Page,
+): Promise<{ islandsCleared?: string[]; eventsDone?: string[] } | undefined> {
   return page.evaluate(async () => {
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open('nihonquest');
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
     });
-    const state = await new Promise<{ progress?: { islandsCleared?: string[] } } | undefined>(
-      (resolve, reject) => {
-        const request = database.transaction('saves').objectStore('saves').get('save:3');
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-      },
-    );
+    const state = await new Promise<
+      { progress?: { islandsCleared?: string[]; eventsDone?: string[] } } | undefined
+    >((resolve, reject) => {
+      const request = database.transaction('saves').objectStore('saves').get('save:3');
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
     database.close();
-    return state?.progress?.islandsCleared?.includes('tohoku') ?? false;
+    return state?.progress;
   });
 }
 
-test('タップだけで東北地方ボスを倒し、再読込後もバッグ拡張と北海道の結界が残る', async ({ page }) => {
+test('タップだけで東北地方ボスを倒し、再読込後もバッグ拡張が残って北海道へ わたれる', async ({ page }) => {
   test.setTimeout(240_000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(String(error)));
@@ -177,9 +187,21 @@ test('タップだけで東北地方ボスを倒し、再読込後もバッグ�
   await page.getByRole('button', { name: 'ちずを ひらく（M）' }).click();
   await page.getByRole('button', { name: 'にほんちず' }).click();
   await expect(page.getByRole('button', { name: /浄化.*ずみ/ })).toBeDisabled();
+  // 東北の つぎの 北海道は 航路が ひらいて わたれる。その つぎの 関東は まだ 結界
+  await page.locator('.nq-wmap-arrow').filter({ hasText: '▶' }).click();
+  await expect(page.locator('.nq-wmap-barrier')).toHaveCount(0);
+  await expect(page.locator('.nq-wmap-aname').first()).toContainText('北海道');
+  await expect(page.getByRole('button', { name: /いく/ })).toBeEnabled();
   await page.locator('.nq-wmap-arrow').filter({ hasText: '▶' }).click();
   await expect(page.locator('.nq-wmap-barrier')).toContainText('結界');
   await expect(page.locator('.nq-wmap-barrier')).toContainText('上陸');
   await expect(page.getByRole('button', { name: /いく/ })).toBeDisabled();
+
+  // 北海道へ わたると、妖精が 第二章の はじまりを つげる
+  await page.locator('.nq-wmap-arrow').filter({ hasText: '◀' }).click();
+  await page.getByRole('button', { name: /いく/ }).click();
+  await expect(page.locator('.nq-dlg')).toContainText('ここが 北海道', { timeout: 20_000 });
+  await clickThroughDialogue(page);
+  await expect.poll(() => savedFlag(page, 'arrive.hokkaido'), { timeout: 20_000 }).toBe(true);
   expect(errors).toEqual([]);
 });

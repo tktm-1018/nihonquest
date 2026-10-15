@@ -1,0 +1,292 @@
+[
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0001",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]の 冬[ふゆ]に、空[そら]から たくさん ふってくる 白[しろ]い ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ゆき"
+        },
+        {
+          "id": "b",
+          "text": "あめ"
+        },
+        {
+          "id": "c",
+          "text": "はっぱ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "北海道[ほっかいどう]の 冬[ふゆ]は さむくて、ゆきが たくさん ふるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0002",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:ryuhyo"],
+    "payload": {
+      "prompt": "冬[ふゆ]に 北海道[ほっかいどう]の 海[うみ]へ ながれてくる、大[おお]きな こおりの ことを なんと いう？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "りゅうひょう"
+        },
+        {
+          "id": "b",
+          "text": "くも"
+        },
+        {
+          "id": "c",
+          "text": "すなはま"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "冬[ふゆ]の オホーツク海[かい]には、りゅうひょう（流氷[りゅうひょう]）が ながれてくるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0003",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:furano-lavender"],
+    "payload": {
+      "prompt": "富良野[ふらの]で 夏[なつ]に さく、むらさき色[いろ]で いい においの 花[はな]は？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ラベンダー"
+        },
+        {
+          "id": "b",
+          "text": "ひまわり"
+        },
+        {
+          "id": "c",
+          "text": "さくら"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "富良野[ふらの]の おかは、夏[なつ]に ラベンダーで むらさき色[いろ]に なるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0004",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:yuki-matsuri"],
+    "payload": {
+      "prompt": "さっぽろ雪[ゆき]まつりで、雪[ゆき]を つかって 作[つく]る ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "大[おお]きな 雪[ゆき]の ぞう"
+        },
+        {
+          "id": "b",
+          "text": "すなの 山[やま]"
+        },
+        {
+          "id": "c",
+          "text": "木[き]の ふね"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "雪[ゆき]まつりでは、雪[ゆき]や こおりで 大[おお]きな ぞう（かたち）を 作[つく]るよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0005",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:yuki-matsuri"],
+    "payload": {
+      "prompt": "雪[ゆき]だるまを 作[つく]って あそべるのは、どの きせつ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ふゆ"
+        },
+        {
+          "id": "b",
+          "text": "なつ"
+        },
+        {
+          "id": "c",
+          "text": "あき"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "雪[ゆき]が つもる ふゆに、雪[ゆき]だるまを 作[つく]って あそべるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0006",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "雪[ゆき]の 日[ひ]に 外[そと]で あそぶとき、手[て]を つめたさから まもるのに つける ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "てぶくろ"
+        },
+        {
+          "id": "b",
+          "text": "くつした"
+        },
+        {
+          "id": "c",
+          "text": "めがね"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "てぶくろを つけると、手[て]が つめたく なりにくいよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0007",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "はるに なって あたたかく なると、つもった 雪[ゆき]は どう なる？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "とけて 水[みず]に なる"
+        },
+        {
+          "id": "b",
+          "text": "かたい 石[いし]に なる"
+        },
+        {
+          "id": "c",
+          "text": "赤[あか]く なる"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "あたたかく なると、雪[ゆき]は とけて 水[みず]に なるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0008",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]の はたけで たくさん とれる、土[つち]の 中[なか]に できる やさいは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "じゃがいも"
+        },
+        {
+          "id": "b",
+          "text": "りんご"
+        },
+        {
+          "id": "c",
+          "text": "みかん"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "じゃがいもは 土[つち]の 中[なか]に できるよ。北海道[ほっかいどう]で たくさん とれるんだ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0009",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]に すむ、しっぽが ふさふさの きつねは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "キタキツネ"
+        },
+        {
+          "id": "b",
+          "text": "ペンギン"
+        },
+        {
+          "id": "c",
+          "text": "コアラ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "キタキツネは 北海道[ほっかいどう]に すむ きつねだよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g1.hokkaido-shizen.0010",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 1,
+    "unit": "seikatsu.g1.hokkaido-shizen",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "あきに、木[き]の はっぱが 赤[あか]や 黄色[きいろ]に かわる ことを なんと いう？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "こうよう"
+        },
+        {
+          "id": "b",
+          "text": "ゆうやけ"
+        },
+        {
+          "id": "c",
+          "text": "にじ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "あきに はっぱの 色[いろ]が かわる ことを こうよう（紅葉[こうよう]）と いうよ。"
+  }
+]

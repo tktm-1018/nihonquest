@@ -348,12 +348,11 @@ export class BattleScene extends Phaser.Scene {
 
   /**
    * モンスターの絵の大きさ：地方ボス 56 / 中ボス 40 / 県ボス 48 / 通常 32。
-   * 地方ボスは area が「県には無い 地方の id」の モンスター（北海道のように 県 id と 地方 id が
-   * 同じ ところが あるので、県に ある id は 県あつかい）
+   * 地方ボスは world の島の bossId に なっている モンスター（北海道のように 県 id と 地方 id が
+   * 同じ ところが あるので、area では 見分けない）
    */
   private sizeOf(def: Monster, isBoss: boolean): number {
-    if (!this.content.areas.has(def.area) && this.content.world.islands.some((i) => i.id === def.area))
-      return MONSTER_SIZE.islandBoss;
+    if (this.content.world.islands.some((i) => i.bossId === def.id)) return MONSTER_SIZE.islandBoss;
     if ([...this.content.areas.values()].some((a) => a.midBoss === def.id)) return MONSTER_SIZE.midBoss;
     return isBoss ? MONSTER_SIZE.boss : MONSTER_SIZE.normal;
   }
