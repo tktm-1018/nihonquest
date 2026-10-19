@@ -11,9 +11,11 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { createNewGame } from '../../src/core/state/newGame';
+import { chooseStoryCompanion } from '../../src/core/progression/storyCompanion';
 import { encounterLevel, partyFromGameState, pickEncounter, zoneForMap } from '../../src/core/battle/setup';
 import {
   applyBattleResult,
+  syncHeroLevel,
   xpToNextLevel,
   type BattleSummary,
 } from '../../src/core/progression/battleResult';
@@ -27,9 +29,19 @@ const ja = JSON.parse(readFileSync(join(ROOT, 'content/i18n/ja.json'), 'utf8')) 
 
 beforeAll(() => setDictionary(ja));
 
-const newGame = () => createNewGame({ name: 'ハル', starterMonsterId: 'aomori-nebutan', grade: 1 }, 0);
+const newGame = () => chooseStoryCompanion(createNewGame({ name: 'ハル', grade: 1 }, 0), 'iwate-kagurabi');
 
 describe('GameState → Party', () => {
+  it('戦闘外で経験値を得た状態も保存用レベルへ同期できる', async () => {
+    const c = await content();
+    const gs = newGame();
+    gs.player.xp = c.xp.hero[2]!;
+
+    const synced = syncHeroLevel(gs, c.xp.hero);
+    expect(synced.player.level).toBe(3);
+    expect(gs.player.level).toBe(1);
+  });
+
   it('主人公と相棒が入り、今の HP/MP から始まる', async () => {
     const c = await content();
     const gs = newGame();
@@ -37,9 +49,9 @@ describe('GameState → Party', () => {
     const party = partyFromGameState(gs, c);
     expect(party.hero.name).toBe('ハル');
     expect(party.hero.hp).toBe(12);
-    expect(party.hero.stats.hp).toBe(40);
-    expect(party.monsters.map((m) => m.refId)).toEqual(['aomori-nebutan']);
-    // さいしょは どうぐを もっていない（やくそうは なくした）
+    expect(party.hero.stats.hp).toBe(24);
+    expect(party.monsters.map((m) => m.refId)).toEqual(['iwate-kagurabi']);
+    // 入門装備は所持していても、バトルへ持ち込む消耗品ではない。
     expect(party.items).toEqual({});
   });
 
@@ -48,6 +60,24 @@ describe('GameState → Party', () => {
     const gs = newGame();
     gs.player.hp = 0;
     expect(partyFromGameState(gs, c).hero.hp).toBe(1);
+  });
+
+  it('レベルごとの小さな成長とLv5の攻撃節目成長を戦闘ステータスへ反映する', async () => {
+    const c = await content();
+    const level1 = newGame();
+    const level2 = newGame();
+    const level5 = newGame();
+    level2.player.xp = c.xp.hero[1]!;
+    level5.player.xp = c.xp.hero[4]!;
+
+    const before = partyFromGameState(level1, c).hero;
+    const afterLevel = partyFromGameState(level2, c).hero;
+    const afterMilestone = partyFromGameState(level5, c).hero;
+    expect(afterLevel.level).toBe(2);
+    expect(afterLevel.stats.hp).toBeGreaterThan(before.stats.hp);
+    expect(afterLevel.stats.scienceAtk).toBe(before.stats.scienceAtk);
+    expect(afterMilestone.level).toBe(5);
+    expect(afterMilestone.stats.scienceAtk).toBeGreaterThan(afterLevel.stats.scienceAtk);
   });
 
   it('content に無いモンスターは連れていかない', async () => {
@@ -111,6 +141,7 @@ describe('バトル結果の反映（GDD §4.5〜4.6）', () => {
     expect(state.player.gold).toBe(108);
     expect(state.player.hp).toBe(20);
     expect(state.inventory['aomori-ringo']).toBe(1);
+    expect(state.dex.items).toContain('aomori-ringo');
     expect(state.inventory['akita-kiritanpo']).toBe(2);
     expect(state.dex.monsters).toContain('aomori-ringoron');
     expect(state.progress.counters['defeat:aomori-ringoron']).toBe(1);
@@ -121,6 +152,23 @@ describe('バトル結果の反映（GDD §4.5〜4.6）', () => {
     const gs = newGame();
     applyBattleResult(gs, summary(), { defeatGoldLossRate: 0.1 });
     expect(gs.player.xp).toBe(0);
+  });
+
+  it('勝利報酬とカウンターが安全整数を超えてセーブ不能にならない', () => {
+    const gs = newGame();
+    gs.player.xp = Number.MAX_SAFE_INTEGER;
+    gs.player.gold = Number.MAX_SAFE_INTEGER;
+    gs.inventory['aomori-ringo'] = Number.MAX_SAFE_INTEGER;
+    gs.progress.counters['defeat:aomori-ringoron'] = Number.MAX_SAFE_INTEGER;
+    gs.progress.counters['perfect:sansu'] = Number.MAX_SAFE_INTEGER;
+
+    const { state } = applyBattleResult(gs, summary(), { defeatGoldLossRate: 0.1 });
+
+    expect(state.player.xp).toBe(Number.MAX_SAFE_INTEGER);
+    expect(state.player.gold).toBe(Number.MAX_SAFE_INTEGER);
+    expect(state.inventory['aomori-ringo']).toBe(Number.MAX_SAFE_INTEGER);
+    expect(state.progress.counters['defeat:aomori-ringoron']).toBe(Number.MAX_SAFE_INTEGER);
+    expect(state.progress.counters['perfect:sansu']).toBe(Number.MAX_SAFE_INTEGER);
   });
 
   it('敗北：ゴールド 10% を失い、HP/MP 全快。仲間は失わない', () => {
@@ -251,7 +299,7 @@ describe('メッセージ（narrate）', () => {
 
   it('ボス戦で逃げられないときの文', () => {
     expect(narrate({ t: 'fleeAttempt', success: false, chance: 0 }, { ...ctx, isBossBattle: true })).toEqual([
-      'ボスからは にげられない！',
+      '強[つよ]い ワスレモノからは にげられない！',
     ]);
   });
 
@@ -285,6 +333,8 @@ describe('メッセージ（narrate）', () => {
       { t: 'gaugeUse', subject: 'kokugo', amount: 50, value: 50 },
       { t: 'gaugeShort', subject: 'rika', need: 100, have: 0 },
       { t: 'itemUsed', itemId: 'aomori-ringo', targetId: 'pal' },
+      { t: 'itemUsed', itemId: 'common-musubi-dama', targetId: 'enemy', side: 'enemy' },
+      { t: 'recruitGift', itemId: 'aomori-ringo', targetId: 'enemy' },
       { t: 'swap', from: 'pal', to: 'hero' },
       { t: 'recruitAttempt', targetId: 'enemy', success: false, chance: 0.1 },
       { t: 'recruited', monsterId: 'x' },
@@ -300,6 +350,11 @@ describe('メッセージ（narrate）', () => {
 });
 
 describe('文言キー（content/i18n/ja.json）', () => {
+  it('空のどうぐ・いれかえを押したときの案内がある', () => {
+    expect(lookup(ja, 'battle.noItems')).toBe('どうぐが ないよ');
+    expect(lookup(ja, 'battle.noPartner')).toBe('いれかえられる なかまが いないよ');
+  });
+
   it('format は {name} を埋め、知らない {x} は残す', () => {
     expect(format('{a}と{b}', { a: 1 })).toBe('1と{b}');
   });
@@ -317,7 +372,7 @@ describe('文言キー（content/i18n/ja.json）', () => {
     const keys = new Set<string>();
     for (const f of files)
       for (const m of readFileSync(f, 'utf8').matchAll(
-        /['"]((?:battle|cmd|ui|elements|subjects|feedback|field)\.[A-Za-z]+)['"]/g,
+        /['"]((?:battle|cmd|ui|elements|subjects|feedback|field|question)\.[A-Za-z]+)['"]/g,
       ))
         keys.add(m[1]!);
     expect(keys.size).toBeGreaterThan(20);
@@ -331,6 +386,7 @@ describe('前の セーブの どうぐ', () => {
     const c = await content();
     const gs = newGame();
     gs.inventory = { 'common-yakusou': 3, 'aomori-ringo': 1 };
+    gs.party.bagItems = ['common-yakusou', 'aomori-ringo'];
     expect(partyFromGameState(gs, c).items).toEqual({ 'aomori-ringo': 1 });
   });
 });

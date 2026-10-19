@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { finishHeroIntroduction } from './helpers/onboarding';
+import { completeNewGameSetup } from './newGame';
 
 test('タイトル画面が立ち上がり、コンテンツが読み込まれる', async ({ page }) => {
   const errors: string[] = [];
@@ -14,40 +14,68 @@ test('タイトル画面が立ち上がり、コンテンツが読み込まれ�
   // Boot が終わるとローディングが消える
   await expect(page.locator('.nq-loading')).toHaveCount(0, { timeout: 15_000 });
   await expect(page.locator('.nq-error')).toHaveCount(0);
+  await expect
+    .poll(() => page.evaluate(() => Boolean((window as unknown as { __nq?: unknown }).__nq)))
+    .toBe(true);
   expect(errors.filter((e) => !e.includes('favicon'))).toEqual([]);
   expect(contentRequests).toEqual(['/content/content-bundle.json']);
 });
 
 test('Playground で choice 問題を解くと QuestionResult が返る', async ({ page }) => {
   await page.goto('/playground.html');
+  await expect(page.getByLabel('学年', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('制限(秒)', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('問題ファイル', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('問題 JSON（直接編集して試せます）', { exact: true })).toBeVisible();
   // 問題ファイルを選ぶ → 最初の問題が JSON 欄に入る
   await page.locator('select#pg-file').selectOption({ index: 1 });
-  await expect(page.locator('textarea#pg-json')).not.toBeEmpty({ timeout: 10_000 });
+  // 問題ファイルを ぜんぶ 読みこむ あいだは 待たされる（教材が ふえて 10秒を こえる）
+  await expect(page.locator('textarea#pg-json')).not.toBeEmpty({ timeout: 30_000 });
   await page.click('button.pg-run');
   await expect(page.locator('.nq-q-choice')).toBeVisible({ timeout: 10_000 });
   await page.locator('.nq-choice').first().click();
   await expect(page.locator('.pg-result')).toContainText('"score"', { timeout: 10_000 });
 });
 
-test('問題データはタイトルでは取得せず、ゲーム開始時に一度だけ取得する', async ({ page }) => {
+test('問題Webエディタの主要入力と選択肢操作に名前がある', async ({ page }) => {
+  await page.goto('/editor.html');
+  for (const label of [
+    '問題 ID',
+    '問題タイプ (type)',
+    '教科 (subject)',
+    '学年 (grade)',
+    '単元コード (unit)',
+    '制限時間 (秒)',
+    '解説文 (RubyText)',
+    '問題文 (prompt)',
+    '選択肢 1',
+    '選択肢 1を正解にする',
+  ]) {
+    await expect(page.getByLabel(label, { exact: true })).toBeVisible();
+  }
+  await expect(page.getByRole('button', { name: '選択肢 1を削除' })).toBeVisible();
+});
+
+test('問題データはタイトルでは取得せず、開始時に選択学年だけ取得する', async ({ page }) => {
   test.setTimeout(60_000);
   const requests: string[] = [];
-  await page.route('**/content/questions-bundle.json', async (route) => {
+  await page.route('**/content/questions-g1-bundle.json', async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 800));
     await route.continue();
   });
   page.on('request', (request) => requests.push(new URL(request.url()).pathname));
   await page.goto('/');
   await expect(page.getByRole('menuitem', { name: /はじめから/ })).toBeVisible({ timeout: 20_000 });
-  expect(requests).not.toContain('/content/questions-bundle.json');
+  expect(requests.filter((path) => /questions-g\d-bundle\.json$/.test(path))).toEqual([]);
 
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
-  await page.getByRole('button', { name: 'はじめる' }).click();
+  await completeNewGameSetup(page, 'テスト');
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 30_000 });
-  await finishHeroIntroduction(page);
   await expect(page.locator('.nq-loading')).toHaveCount(0);
-  expect(requests.filter((path) => path === '/content/questions-bundle.json')).toHaveLength(1);
+  expect(requests.filter((path) => path === '/content/questions-g1-bundle.json')).toHaveLength(1);
+  expect(requests).not.toContain('/content/questions-bundle.json');
+  expect(requests.filter((path) => /questions-g[2-6]-bundle\.json$/.test(path))).toEqual([]);
 });
 
 test('保護者メニューで概念別学習状態と診断欄を確認できる', async ({ page }) => {
@@ -55,26 +83,62 @@ test('保護者メニューで概念別学習状態と診断欄を確認でき�
   await page.goto('/');
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
-  await page.getByRole('button', { name: 'はじめる' }).click();
-  await finishHeroIntroduction(page);
+  await completeNewGameSetup(page, 'テスト');
+  const story = page.getByRole('dialog', { name: 'ものがたりの シーン' });
+  await expect(story).toBeVisible({ timeout: 30_000 });
+  await story.getByRole('button', { name: 'スキップ' }).click();
+  const battleTutorial = page.locator('.nq-dlg');
+  await expect(battleTutorial).toBeVisible();
+  for (let step = 0; step < 12 && (await battleTutorial.isVisible()); step += 1) {
+    await battleTutorial.click();
+  }
+  await expect(battleTutorial).toHaveCount(0);
   await page.getByRole('button', { name: 'メニュー' }).click({ timeout: 30_000 });
   await page.getByRole('button', { name: /ほごしゃ/ }).click();
   await page.getByLabel('こたえ').fill('12');
   await page.getByRole('button', { name: 'ひらく', exact: true }).click();
 
-  await expect(page.getByRole('heading', { name: '知識・技能ごとの学習状態' })).toBeVisible();
-  await expect(page.getByText('知識グラフに対応した問題にこたえると表示されます')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'つまずきの候補' })).toBeVisible();
-  await expect(page.getByText('診断できる不正解はまだありません')).toBeVisible();
+  await expect(
+    page.getByRole('heading', {
+      name: /^(?:知識|ちしき)・(?:技能|ぎのう)ごとの(?:学習状態|がくしゅうじょうたい)$/,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      /^(?:知識|ちしき)グラフに(?:対応|たいおう)した(?:問題|もんだい)にこたえると(?:表示|ひょうじ)されます$/,
+    ),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^つまずきの(?:候補|こうほ)$/ })).toBeVisible();
+  await expect(page.getByText(/^しんだんできる (?:不正解|ふせいかい)は まだ ありません$/)).toBeVisible();
 
-  await page.getByRole('button', { name: 'JSONを表示' }).click();
+  const exportButton = page.getByRole('button', { name: /^JSONを(?:表示|ひょうじ)$/ });
+  const importButton = page.getByRole('button', { name: /^JSONを(?:読|よ)みこむ$/ });
+  const importError = page.getByText(/^JSONを(?:読|よ)みこめませんでした$/);
+  await exportButton.click();
   const jsonBox = page.getByLabel('セーブデータJSON');
   const state = JSON.parse(await jsonBox.inputValue()) as {
+    progress: { currentMap: string; lastInn: { map: string; x: number; y: number } | null };
     learning: {
       attempts: Record<string, unknown>[];
       conceptStates: Record<string, Record<string, unknown>>;
     };
   };
+  const currentMap = state.progress.currentMap;
+  state.progress.currentMap = 'missing-map';
+  await jsonBox.fill(JSON.stringify(state));
+  await importButton.click();
+  await expect(importError).toBeVisible();
+  await exportButton.click();
+  const unchanged = JSON.parse(await jsonBox.inputValue()) as { progress: { currentMap: string } };
+  expect(unchanged.progress.currentMap).toBe(currentMap);
+
+  state.progress.currentMap = currentMap;
+  state.progress.lastInn = { map: 'missing-map', x: 0, y: 0 };
+  await jsonBox.fill(JSON.stringify(state));
+  await importButton.click();
+  await expect(importError).toBeVisible();
+
+  state.progress.lastInn = null;
   const now = Date.now();
   state.learning.conceptStates['sansu.g1.addition.single-digit'] = {
     understanding: 0.6,
@@ -106,14 +170,14 @@ test('保護者メニューで概念別学習状態と診断欄を確認でき�
     appVersion: 'e2e',
   });
   await jsonBox.fill(JSON.stringify(state));
-  await page.getByRole('button', { name: 'JSONを読みこむ' }).click();
+  await importButton.click();
   await page.getByRole('button', { name: 'メニュー' }).click({ timeout: 30_000 });
   await page.getByRole('button', { name: /ほごしゃ/ }).click();
   await page.getByLabel('こたえ').fill('12');
   await page.getByRole('button', { name: 'ひらく', exact: true }).click();
 
-  await expect(page.getByText('一位数の加法').first()).toBeVisible();
-  await expect(page.getByText(/理解 60%/)).toBeVisible();
-  await expect(page.getByText('復習の時期です')).toBeVisible();
-  await expect(page.getByText(/選んだ答え「b」/)).toBeVisible();
+  await expect(page.getByText(/^(?:一位数の加法|いちいすうの かほう)$/).first()).toBeVisible();
+  await expect(page.getByText(/(?:理解|りかい) 60%/)).toBeVisible();
+  await expect(page.getByText(/(?:復習の時期です|ふくしゅうのじきです)/)).toBeVisible();
+  await expect(page.getByText(/(?:選んだ答え|えらんだこたえ)「b」/)).toBeVisible();
 });

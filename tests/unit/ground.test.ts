@@ -3,7 +3,15 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { zoneForGround } from '../../src/core/battle/setup';
 import { loadContent, type ContentIndex } from '../../src/core/content/loader';
-import { GROUND_TILES, GROUNDS, groundOfTile, RIDGE_TILE, type Ground } from '../../src/core/world/ground';
+import {
+  GROUND_TILES,
+  GROUNDS,
+  groundOfTile,
+  isRoadTile,
+  RIDGE_TILE,
+  ROAD_TILE,
+  type Ground,
+} from '../../src/core/world/ground';
 import { read } from './helpers';
 
 const MAPS = fileURLToPath(new URL('../../maps/', import.meta.url));
@@ -29,6 +37,14 @@ describe('フィールドの 地面の 性質（docs/00 §2.2）', () => {
     expect(groundOfTile(undefined)).toBeNull();
   });
 
+  it('土の道だけを安全な道路として判定する', () => {
+    expect(isRoadTile(ROAD_TILE)).toBe(true);
+    expect(isRoadTile(1)).toBe(false);
+    expect(isRoadTile(161)).toBe(false);
+    expect(isRoadTile(undefined)).toBe(false);
+    expect(groundOfTile(ROAD_TILE)).toBe('grass');
+  });
+
   it('フィールドでは 地面の 出現表。くさはら・表の 無い 地面は field、ダンジョンは そのまま', () => {
     // 青森は 名所エリアの 表（region）に したので、地面の 表の 例は 岩手
     const iwate = c.areas.get('iwate')!;
@@ -41,7 +57,7 @@ describe('フィールドの 地面の 性質（docs/00 §2.2）', () => {
     expect(zoneForGround(c.areas.get('akita')!, 'field', 'beach')).toBe('field');
   });
 
-  it('県の フィールドの 陸は どの マスも どれかの 地面（3 は 海・湖・県の外、RIDGE_TILE は 名所エリアの さかい）', () => {
+  it('県の フィールドの 陸は どの マスも どれかの 地面（3 は 海・湖、RIDGE_TILE は 名所エリアの さかい）', () => {
     for (const a of c.areas.values()) {
       if (!a.mapKeys) continue;
       const bad = background(a.mapKeys.field).filter((t) => t !== 3 && t !== RIDGE_TILE && !groundOfTile(t));

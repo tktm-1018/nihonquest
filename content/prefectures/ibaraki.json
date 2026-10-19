@@ -82,6 +82,65 @@
       "blurb": "霞ヶ浦[かすみがうら]の まわりの 田[た]んぼで 作[つく]られる。茨城県[いばらきけん]は れんこんの 生産量[せいさんりょう]が 日本[にほん]で いちばん。"
     }
   ],
+  "regions": [
+    {
+      "id": "mito-hitachi",
+      "name": "水戸[みと]・ひたちエリア",
+      "motifs": [
+        "kairakuen",
+        "nemophila",
+        "natto",
+        "hoshiimo"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "ibaraki-aozora-hime",
+        "level": 21
+      }
+    },
+    {
+      "id": "daigo-kasama",
+      "name": "大子[だいご]・笠間[かさま]エリア",
+      "motifs": [
+        "fukuroda-no-taki",
+        "kasamayaki"
+      ],
+      "boss": {
+        "monsterId": "ibaraki-hasu-kabuto",
+        "level": 21
+      }
+    },
+    {
+      "id": "tsukuba-kasumigaura",
+      "name": "つくば・霞ヶ浦[かすみがうら]エリア",
+      "motifs": [
+        "kasumigaura",
+        "tsukubasan",
+        "ibaraki-melon",
+        "renkon"
+      ],
+      "boss": {
+        "monsterId": "ibaraki-hobiki-maru",
+        "level": 21
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "mito-hitachi",
+        "daigo-kasama"
+      ],
+      "openedBy": "mito-hitachi"
+    },
+    {
+      "between": [
+        "mito-hitachi",
+        "tsukuba-kasumigaura"
+      ],
+      "openedBy": "daigo-kasama"
+    }
+  ],
   "encounters": [
     {
       "zone": "field",
@@ -158,6 +217,66 @@
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "mito-hitachi",
+      "table": [
+        {
+          "monsterId": "ibaraki-natton",
+          "weight": 55
+        },
+        {
+          "monsterId": "ibaraki-nemofin",
+          "weight": 45
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "daigo-kasama",
+      "table": [
+        {
+          "monsterId": "ibaraki-renkonta",
+          "weight": 50
+        },
+        {
+          "monsterId": "ibaraki-natton",
+          "weight": 25
+        },
+        {
+          "monsterId": "ibaraki-nemofin",
+          "weight": 25
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "tsukuba-kasumigaura",
+      "table": [
+        {
+          "monsterId": "ibaraki-hobikin",
+          "weight": 45
+        },
+        {
+          "monsterId": "ibaraki-renkonta",
+          "weight": 30
+        },
+        {
+          "monsterId": "ibaraki-natton",
+          "weight": 15
+        },
+        {
+          "monsterId": "ibaraki-nemofin",
+          "weight": 10
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
     }
   ],
   "boss": "ibaraki-boss-tsukuba-gama-o",
@@ -180,17 +299,20 @@
         {
           "speaker": "袋田[ふくろだ]の 滝[たき]の ガイドさん",
           "text": "ここは 袋田[ふくろだ]の 滝[たき]。冬[ふゆ]に こおる ことも あるんだ。水[みず]の すがたの ふしぎを しらべよう！"
+        },
+        {
+          "speaker": "見聞帳[けんぶんちょう]の シオリ",
+          "text": "『今年[ことし]は 完全[かんぜん]に こおった』という 噂[うわさ]が あるけど、写真[しゃしん]の 日付[ひづけ]が 見[み]えない。今[いま]の 滝[たき]を 観察[かんさつ]しよう。"
         }
       ],
       "question": {
-        "subject": "seikatsu",
+        "subject": "rika",
         "gradeRange": [
-          1,
-          2
+          3,
+          6
         ],
         "tags": [
-          "prefecture:ibaraki",
-          "event:fukuroda-no-taki"
+          "prefecture:ibaraki"
         ]
       },
       "rewardByScore": [
@@ -220,6 +342,10 @@
         {
           "speaker": "袋田[ふくろだ]の 滝[たき]の ガイドさん",
           "text": "よく しらべたね！ 滝[たき]が こおると「氷瀑[ひょうばく]」と いうんだよ。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "写真[しゃしん]は 本物[ほんもの]でも、いつの 写真[しゃしん]かで 答[こた]えは 変[か]わる。日付[ひづけ]も 大切[たいせつ]な 情報[じょうほう]だね。"
         }
       ]
     }

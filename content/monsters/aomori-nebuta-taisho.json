@@ -6,13 +6,57 @@
   "motifId": "nebuta",
   "element": "hino",
   "weakness": "mizu",
-  "baseStats": { "hp": 58, "mp": 16, "atk": 17, "def": 11, "spd": 10, "wis": 8 },
-  "growth": { "hp": 6.5, "mp": 1.5, "atk": 2.2, "def": 1.5, "spd": 1.3, "wis": 1.1 },
-  "skills": ["sk-hono-no-mai", "sk-yamadashi-tosshin", "sk-rasseraa-no-hono"],
+  "baseStats": {
+    "hp": 34.8,
+    "mp": 9.6,
+    "spd": 7.1,
+    "wis": 4.8,
+    "scienceAtk": 10.6,
+    "humanitiesAtk": 10.6,
+    "scienceDef": 7.3,
+    "humanitiesDef": 7.3
+  },
+  "growth": {
+    "base": {
+      "hp": 3.2,
+      "mp": 0.6,
+      "spd": 0.6,
+      "wis": 0.6,
+      "scienceAtk": 1.1,
+      "humanitiesAtk": 1.1,
+      "scienceDef": 0.7,
+      "humanitiesDef": 0.7
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
+  },
+  "skills": [
+    "sk-hono-no-mai",
+    "sk-yamadashi-tosshin",
+    "sk-rasseraa-no-hono"
+  ],
   "drops": [],
   "recruitRate": 0,
   "xp": 50,
   "gold": 30,
   "spriteKey": "mon.aomori-nebuta-taisho",
-  "dexBlurb": "ネブタムシャが ねぶたの 灯[あか]りを あつめて しんかした すがた。中[ちゅう]ボスと おなじ 大将[たいしょう]の かぶとで、なかまを まもる。"
+  "dexBlurb": "ネブタムシャが ねぶたの 灯[あか]りを あつめて しんかした すがた。土地[とち]の ぬしと おなじ 大将[たいしょう]の かぶとで、なかまを まもる。"
 }

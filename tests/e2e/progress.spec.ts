@@ -1,39 +1,156 @@
-import { expect, test } from '@playwright/test';
-import { finishHeroIntroduction } from './helpers/onboarding';
+import { expect, test, type Page } from '@playwright/test';
+import { completeNewGameSetup } from './newGame';
 
-test('新規ゲームから2Dロードマップを開き、セーブ後に同じスロットを続行できる', async ({ page }) => {
-  test.setTimeout(90_000);
+async function expectEightStatsFit(page: Page) {
+  const info = page.locator('.nq-party-info');
+  const stats = info.locator('.nq-party-stats > span');
+  await expect(stats).toHaveCount(8);
+  for (const label of [
+    /HP/,
+    /MP/,
+    /理系.*こうげき/,
+    /文系攻撃/,
+    /理系.*ぼうぎょ/,
+    /文系.*ぼうぎょ/,
+    /すばやさ/,
+    /かしこさ/,
+  ])
+    await expect(info).toContainText(label);
+  await expect(stats.locator('small').filter({ hasText: '文系攻撃' })).toHaveText('文系攻撃');
+  await expect(info.locator('.nq-party-stats')).not.toContainText(/[[\]]/);
+  const [infoBox, statsBox] = await Promise.all([
+    info.boundingBox(),
+    info.locator('.nq-party-stats').boundingBox(),
+  ]);
+  expect(infoBox).not.toBeNull();
+  expect(statsBox).not.toBeNull();
+  expect(statsBox!.x).toBeGreaterThanOrEqual(infoBox!.x);
+  expect(statsBox!.x + statsBox!.width).toBeLessThanOrEqual(infoBox!.x + infoBox!.width + 1);
+}
+
+test('新規ゲームから2Dロードマップを開き、セーブ後に同じスロットを続行できる', async ({ page }, testInfo) => {
+  test.setTimeout(180_000);
   await page.goto('/');
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 3/ }).click();
-  await page.getByRole('button', { name: 'はじめる' }).click();
+  await completeNewGameSetup(page, 'テスト');
 
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 40_000 });
-  await finishHeroIntroduction(page, 'テスト');
+  await page
+    .getByRole('dialog', { name: 'ものがたりの シーン' })
+    .getByRole('button', { name: 'スキップ' })
+    .click();
+  const battleTutorial = page.locator('.nq-dlg');
+  await expect(battleTutorial).toBeVisible();
+  for (let step = 0; step < 12 && (await battleTutorial.isVisible()); step += 1) {
+    await battleTutorial.click();
+  }
+  await expect(battleTutorial).toHaveCount(0);
   await page.getByRole('button', { name: 'メニュー' }).click();
+  const menuHome = page.locator('.nq-menu-home');
+  await expect(menuHome).toBeVisible();
+  for (const label of ['がくしゅう', 'まちがい', 'ずかん', 'もちもの・へんせい']) {
+    await expect(menuHome.getByRole('button', { name: new RegExp(label) })).toBeVisible();
+  }
+  for (const card of await menuHome.locator('.nq-menu-card').all()) {
+    const cardBox = await card.boundingBox();
+    const labelBox = await card.locator('.nq-menu-card-label').boundingBox();
+    expect(cardBox).not.toBeNull();
+    expect(labelBox).not.toBeNull();
+    expect(labelBox!.x).toBeGreaterThanOrEqual(cardBox!.x);
+    expect(labelBox!.x + labelBox!.width).toBeLessThanOrEqual(cardBox!.x + cardBox!.width);
+  }
+  const bagLabel = menuHome.locator('.nq-menu-card-party .nq-menu-card-label');
+  const bagLabelBox = await bagLabel.boundingBox();
+  expect(bagLabelBox).not.toBeNull();
+  expect(bagLabelBox!.height).toBeLessThanOrEqual(40);
+  await menuHome.getByRole('button', { name: /もちもの・へんせい/ }).focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(menuHome.getByRole('button', { name: /もちもの・へんせい/ })).toBeFocused();
+  await expect(page.getByRole('button', { name: /セーブ/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /ほごしゃ/ })).toBeVisible();
+  await page.getByRole('button', { name: /セーブ/ }).click();
+  await expect(page.getByText('セーブしたよ')).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('menu-home.png') });
+  await menuHome.getByRole('button', { name: /がくしゅう/ }).click();
   const roadmap = page.getByRole('region', { name: 'がくしゅうロードマップ' });
   await expect(roadmap).toBeVisible();
-  const allSubjects = page.getByRole('button', { name: '全教科' });
+  const allSubjects = page.getByRole('button', { name: 'ぜんきょうか' });
+  const allSubjectsOverview = page.locator('.nq-roadmap-overview');
   await expect(allSubjects).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByLabel('全教科の学習進捗')).toBeVisible();
+  await expect(allSubjectsOverview).toBeVisible();
   for (const label of ['こくご', 'さんすう', 'りか', 'しゃかい', 'せいかつ', 'えいご']) {
     await expect(page.getByRole('button', { name: new RegExp(`^${label} `) })).toBeVisible();
   }
-  await expect(page.getByLabel('全教科の学習進捗')).toContainText('つぎ：');
+  await expect(allSubjectsOverview).toContainText('つぎ：');
   await page.getByRole('button', { name: 'さんすう', exact: true }).click();
   await expect(roadmap).toContainText('10までのかず');
   await allSubjects.click();
-  await expect(page.getByLabel('全教科の学習進捗')).toBeVisible();
-  await page.screenshot({ path: '/tmp/education-rpg-roadmap-all.png' });
+  await expect(allSubjectsOverview).toBeVisible();
   await page.setViewportSize({ width: 640, height: 540 });
   await expect(allSubjects).toBeVisible();
-  await expect(page.getByLabel('全教科の学習進捗')).toBeVisible();
+  await expect(allSubjectsOverview).toBeVisible();
+  await page.getByRole('button', { name: /もどる/ }).click();
+  await expect(menuHome).toBeVisible();
+  await menuHome.getByRole('button', { name: /ずかん/ }).click();
+  await expect(page.getByRole('button', { name: 'マナビモノ' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'とくさん' })).toBeVisible();
+  const dexRegions = page.getByLabel(/^(?:地方|ちほう)ごとの ずかん$/);
+  await expect(dexRegions.getByRole('button')).toHaveCount(8);
+  const regionBox = await dexRegions.boundingBox();
+  expect(regionBox).not.toBeNull();
+  expect(regionBox!.height).toBeLessThanOrEqual(36);
+  await expect(page.locator('.nq-dex-grid')).toBeVisible();
+  const dexCard = page.locator('.nq-dex-grid .nq-opt').first();
+  const dexCardBox = await dexCard.boundingBox();
+  const dexArtBox = await dexCard.locator('.nq-menu-icon').boundingBox();
+  expect(dexCardBox).not.toBeNull();
+  expect(dexArtBox).not.toBeNull();
+  expect(dexCardBox!.width).toBeGreaterThanOrEqual(140);
+  expect(dexArtBox!.height).toBeGreaterThanOrEqual(48);
+  await dexRegions.getByRole('button', { name: /東北/ }).click();
+  await expect(dexRegions.getByRole('button', { name: /東北/ })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'とくさん' }).click();
+  await expect(page.getByRole('button', { name: /もどる/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /とじる/ })).toBeVisible();
+  await page.getByRole('button', { name: /もどる/ }).click();
+  await expect(menuHome).toBeVisible();
+  await menuHome.getByRole('button', { name: /もちもの・へんせい/ }).click();
+  await expect(page.locator('.nq-bag-grid .nq-bag-cell')).toHaveCount(9);
+  const heroCell = page.getByRole('button', { name: 'テスト' });
+  const bagWindow = page.locator('.nq-wmap-box');
+  const openWidth = await bagWindow.evaluate((el) => el.getBoundingClientRect().width);
+  await expect(page.locator('.nq-party-info')).toHaveCount(0);
+  await heroCell.click();
+  await expect(page.locator('.nq-party-info')).toBeVisible();
+  await expectEightStatsFit(page);
+  await page.setViewportSize({ width: 960, height: 540 });
+  await expectEightStatsFit(page);
+  await page.screenshot({ path: testInfo.outputPath('bag-stat-labels.png') });
+  await page.setViewportSize({ width: 640, height: 540 });
+  await heroCell.click();
+  await expect(page.locator('.nq-party-info')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /とじる/ })).toBeVisible();
+  await expect.poll(() => bagWindow.evaluate((el) => el.getBoundingClientRect().width)).toBe(openWidth);
+  await page.screenshot({ path: testInfo.outputPath('bag-details-closed.png') });
+  await heroCell.click();
+  await expect(page.locator('.nq-party-info')).toBeVisible();
+  const storedWeapon = page.locator('.nq-bag-reserve-tile').filter({ hasText: 'れんしゅうの ぼう' });
+  await storedWeapon.click();
+  await storedWeapon.dragTo(page.locator('.nq-bag-empty[data-drop-slot="weapon"]'));
+  const starterWeapon = page.getByRole('button', { name: 'れんしゅうの ぼう' });
+  await expect(starterWeapon).toBeVisible();
+  await page.locator('.nq-bag-empty').first().click();
+  await expect(starterWeapon).toHaveCSS('grid-column-start', '1');
+  await page.screenshot({ path: testInfo.outputPath('bag-moved.png') });
+  await page.getByRole('button', { name: /とじる/ }).click();
+  await expect(menuHome).toBeVisible();
   await page.getByRole('button', { name: /とじる/ }).click();
 
   await page.reload();
   await expect(page.getByRole('menuitem', { name: 'つづきから' })).toBeVisible({ timeout: 20_000 });
   await page.getByRole('menuitem', { name: 'つづきから' }).click();
-  await expect(page.getByRole('button', { name: /スロット 3 テスト/ })).toBeVisible();
-  await page.getByRole('button', { name: /スロット 3 テスト/ }).click();
+  await expect(page.getByRole('button', { name: /スロット 3 Lv/ })).toBeVisible();
+  await page.getByRole('button', { name: /スロット 3 Lv/ }).click();
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 20_000 });
 });

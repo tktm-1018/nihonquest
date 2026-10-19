@@ -16,6 +16,55 @@
   pointer-events: none;
   z-index: 10;
 }
+
+/* タッチ端末の横画面だけに出す、景色を隠しにくい低濃度の移動スティック。 */
+.nq-virtual-stick {
+  position: fixed;
+  left: max(24px, env(safe-area-inset-left));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 12;
+  display: none;
+  width: 144px;
+  height: 144px;
+  border: 4px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background: rgba(10, 11, 26, 0.08);
+  opacity: 0.42;
+  pointer-events: auto;
+  touch-action: none;
+}
+.nq-virtual-stick.is-active {
+  opacity: 0.68;
+}
+.nq-virtual-stick-cross,
+.nq-virtual-stick-cross::before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 88px;
+  height: 4px;
+  content: '';
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.16);
+}
+.nq-virtual-stick-cross::before {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.nq-virtual-stick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .nq-virtual-stick {
+    display: block;
+  }
+}
 .nq-fhud-loc {
   display: flex;
   flex-direction: column;
@@ -24,15 +73,6 @@
   padding: 4px 12px 12px;
   font-size: 24px;
   line-height: 36px;
-  transition: opacity 0.2s steps(4);
-}
-/* 歩いている あいだは 左上の 窓を かくす（止まると 出る。地図を 広く 見せる） */
-.nq-fhud-away {
-  opacity: 0;
-}
-.nq-fhud-away,
-.nq-fhud-away * {
-  pointer-events: none !important;
 }
 /* 場所の名前・種類・スタンプ。地図（144px）の幅で折り返して、窓を地図の幅に そろえる（右に黒い すきまを作らない） */
 .nq-fhud-row {
@@ -99,32 +139,100 @@
   box-shadow: 0 0 0 2px #fff;
   animation: nq-blink 0.6s steps(2) infinite;
 }
+.nq-mini-open {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2px 4px;
+  background: rgba(11, 13, 22, 0.88);
+  color: #f6e7c1;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+}
 
 /* ───── ひらいた地図（いったことの ある ばしょへワープ）。枠は にほんちずと同じ ───── */
 /* 県のまわりの地方の地図は、枠の外へはみださない */
 .nq-amap-view {
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
 }
-.nq-amap-legend {
-  font-size: 12px;
+.nq-amap-pannable {
+  cursor: grab;
+}
+.nq-amap-pannable:active {
+  cursor: grabbing;
+}
+.nq-amap-view .nq-wmap-canvas {
+  transform-origin: center;
+  transition: transform 0.12s steps(3);
+}
+.nq-wmap-left {
+  position: relative;
+}
+.nq-amap-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 44px;
+  padding: 2px 4px;
+  color: var(--nq-white);
+  background: var(--nq-night);
+  border: 2px solid var(--nq-slate);
+}
+.nq-amap-zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.nq-amap-tools .nq-wmap-arrow {
+  width: 44px;
+  height: 44px;
+  border-width: 2px;
+  font-size: 24px;
+}
+.nq-amap-tools .nq-wmap-arrow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.nq-amap-zoom-value {
+  min-width: 44px;
+  text-align: center;
+  font-size: 16px;
+}
+.nq-amap-reset {
+  min-height: 44px;
+  padding: 0 8px;
+  border-width: 2px;
+  font-size: 16px;
+}
+.nq-wmap-view.nq-amap-view {
+  height: 352px;
+}
+.nq-amap-pan-hint {
+  position: absolute;
+  z-index: 6;
+  left: 12px;
+  bottom: 8px;
+  padding: 2px 6px;
+  font-size: 16px;
   line-height: 24px;
-  color: var(--nq-silver);
-  white-space: nowrap;
+  color: var(--nq-white);
+  background: rgba(11, 13, 22, 0.82);
+  pointer-events: none;
 }
 /* ひらいた地図の 見出しの右：にほんちず（ほかの県へ）を ひらく */
 .nq-amap-world {
   flex: none;
   gap: 4px;
-  min-height: 40px;
+  min-height: 48px;
   padding: 0 8px;
   font-size: 24px;
   white-space: nowrap;
-}
-/* 県のまわりの地方の地図（行ったことのある県は緑、未踏の県は灰色）。県のフィールドの地形の下に のばして かさねる */
-.nq-wmap-canvas .nq-amap-region {
-  inset: auto;
-  width: auto;
-  height: auto;
 }
 /* 見出しと「とじる」は 1 行のまま（右の列がせまいと語の途中で折り返していた） */
 .nq-wmap-title {
@@ -173,19 +281,45 @@
   flex: none;
 }
 .nq-amap-empty {
+  display: grid;
+  flex: 1;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
   margin: 0;
+  padding: 24px;
+  text-align: center;
   /* 分かち書きのすきまで折り返す（「ま／ちや」のように語の途中で切らない） */
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-height: 36px;
   color: var(--nq-cloud);
 }
+.nq-amap-empty p {
+  max-width: 300px;
+  margin: 0;
+}
+.nq-amap-empty-icon {
+  display: grid;
+  width: 88px;
+  height: 88px;
+  place-items: center;
+  border: 4px dashed var(--nq-slate);
+  color: var(--nq-silver);
+  background: rgba(38, 55, 89, 0.35);
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+.nq-amap-empty-icon .nq-picon {
+  width: 48px;
+  height: 48px;
+}
 .nq-fhud-title {
   color: var(--nq-yellow);
   white-space: nowrap;
 }
 .nq-fhud-sub {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--nq-cloud);
 }
 .nq-fhud-stamp {
@@ -200,12 +334,12 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  min-height: 40px;
+  min-height: 48px;
   padding: 0 8px;
   font-size: 24px;
   cursor: pointer;
   pointer-events: auto;
-  opacity: 0.85;
+  opacity: 1;
 }
 .nq-fhud-btn .nq-picon {
   width: 24px;
@@ -245,12 +379,12 @@
   width: 100%;
 }
 .nq-party-lv {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--nq-yellow);
 }
 .nq-party-tag {
   padding: 0 6px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 24px;
   color: #1a1428;
   background: var(--nq-yellow);
@@ -331,7 +465,7 @@
 }
 .nq-party-stats small {
   margin-right: 4px;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--nq-cloud);
 }
 /* 「必殺技[ひっさつわざ]」の見出し。12px にふりがなを付けると字がばらけるので 24px で */
@@ -360,8 +494,8 @@
 }
 .nq-party-blurb {
   margin: 0;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--nq-cloud);
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -394,17 +528,17 @@
 }
 /* ひかえの仲間（出撃チームに入っていない）は うすく */
 .nq-party-reserve {
-  opacity: 0.6;
+  opacity: 0.75;
 }
 .nq-party-count {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--nq-yellow);
 }
 /* しゅつげきの わくの 番号（1〜3。主人公と ひかえは 空き） */
 .nq-party-no {
-  width: 12px;
+  width: 20px;
   flex: none;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   color: var(--nq-cloud);
 }
@@ -421,16 +555,16 @@
 /* 「ひかえ」の 見出し */
 .nq-party-sep {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 20px;
   color: var(--nq-cloud);
 }
 .nq-party-none {
   padding-left: 32px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 24px;
   color: var(--nq-cloud);
-  opacity: 0.6;
+  opacity: 0.8;
 }
 .nq-party-hint {
   margin: 0;
@@ -455,7 +589,7 @@
 .nq-town-right {
   margin-left: auto;
   padding-left: 8px;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--nq-yellow);
   white-space: nowrap;
 }
@@ -492,6 +626,127 @@
   line-height: 32px;
   word-break: keep-all;
   overflow-wrap: anywhere;
+}
+
+/* ───── 床屋：主人公を見ながら、5部位だけを横に選ぶ ───── */
+.nq-barber {
+  display: grid;
+  width: 912px;
+  height: 516px;
+  padding: 12px 16px;
+  grid-template-rows: 48px minmax(0, 1fr) 52px;
+  gap: 8px;
+}
+.nq-barber-head,
+.nq-barber-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nq-barber-head .nq-back {
+  margin-left: auto;
+}
+.nq-barber-main {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 16px;
+}
+.nq-barber-preview {
+  display: flex;
+  min-width: 0;
+  padding: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  border: 4px solid #31273f;
+  background: repeating-conic-gradient(#171b2d 0 25%, #202943 0 50%) 0 / 24px 24px;
+}
+.nq-barber-preview > img {
+  width: 128px;
+  height: 160px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.nq-barber-preview p {
+  margin: 0;
+  color: var(--nq-cloud);
+  font-size: 16px;
+  text-align: center;
+}
+.nq-barber-name {
+  color: var(--nq-yellow);
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+}
+.nq-barber-controls {
+  display: grid;
+  min-width: 0;
+  align-content: center;
+  gap: 6px;
+}
+.nq-barber-controls fieldset {
+  display: grid;
+  min-width: 0;
+  min-height: 54px;
+  margin: 0;
+  padding: 4px 8px;
+  grid-template-columns: 84px minmax(0, 1fr);
+  align-items: center;
+  border: 3px solid var(--nq-slate);
+}
+.nq-barber-controls legend {
+  display: contents;
+  color: var(--nq-cream);
+  font-size: 24px;
+}
+.nq-barber-options {
+  display: flex;
+  min-width: 0;
+  justify-content: center;
+  gap: 4px;
+}
+.nq-barber-choice {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 3px solid var(--nq-slate);
+  background: #18203a;
+  cursor: pointer;
+}
+.nq-barber-choice > img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.nq-barber-choice > span {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  color: #1a1428;
+  background: var(--nq-yellow);
+  font-size: 12px;
+}
+.nq-barber-choice[aria-pressed='true'] {
+  border-color: var(--nq-yellow);
+}
+.nq-barber-choice.nq-focus,
+.nq-barber-choice:focus-visible {
+  outline: 3px solid var(--nq-white);
+  outline-offset: 1px;
+}
+.nq-barber-foot .nq-wmap-keys {
+  flex: 1;
+}
+.nq-barber-apply {
+  min-width: 220px;
+  min-height: 48px;
 }
 
 /* ───── 場所の名前（移動したとき、画面のまん中に） ───── */
@@ -546,6 +801,9 @@
   z-index: 60;
   background: rgba(0, 0, 0, 0.35);
   cursor: pointer;
+  padding: 0;
+  color: inherit;
+  border: 0;
 }
 .nq-cutin-band {
   width: 100%;
@@ -682,6 +940,63 @@
   height: 408px;
   background: #3d8ef0;
   border: 4px solid #000;
+}
+.nq-japan-heading {
+  justify-content: center;
+}
+.nq-japan-view canvas {
+  width: 400px;
+  height: 400px;
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+.nq-japan-info > p {
+  margin: 0;
+}
+.nq-japan-region-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 8px;
+  overflow-y: auto;
+}
+.nq-japan-region-list .nq-opt {
+  min-height: 34px;
+  padding: 0 8px;
+  overflow: hidden;
+  font-size: 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.nq-japan-region-list .nq-opt rt {
+  font-size: 9px;
+}
+.nq-japan-detail-buttons {
+  display: flex;
+  gap: 6px;
+}
+.nq-japan-detail-buttons .nq-wmap-go {
+  min-width: 0;
+  padding-inline: 8px;
+  font-size: 15px;
+}
+.nq-japan-foot {
+  align-items: stretch;
+  flex-direction: column;
+  gap: 4px;
+}
+.nq-japan-foot .nq-japan-detail-buttons {
+  width: 100%;
+}
+.nq-japan-foot .nq-japan-detail-buttons .nq-wmap-go {
+  flex: 1;
+}
+.nq-japan-foot .nq-wmap-keys {
+  font-size: 14px;
+  line-height: 20px;
+}
+.nq-wmap-national-back {
+  flex: none;
 }
 .nq-wmap-canvas {
   position: relative;
@@ -837,8 +1152,20 @@
 .nq-wmap-go {
   flex: none;
 }
+.nq-wmap-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 8px;
+  color: var(--nq-cloud);
+  font-size: 16px;
+  line-height: 20px;
+}
 .nq-wmap-go:disabled {
-  color: var(--nq-slate);
+  color: #b7c3de;
+  border-color: #59657d;
+  background: #1a2235;
   cursor: default;
 }
 .nq-wmap-locked {
@@ -882,10 +1209,151 @@
   color: var(--nq-yellow);
 }
 .nq-wmap-keys {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 24px;
   color: var(--nq-cloud);
   /* 「（もっている：0／こ）」のように ことばの途中で切らない */
   word-break: keep-all;
   overflow-wrap: anywhere;
+}
+
+/* 岩手・むすびの社。勾玉を先に見せ、相棒を「メニュー項目」ではなく出会いとして選ばせる。 */
+.nq-story-choice {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 8, 18, 0.78);
+}
+.nq-story-choice-panel {
+  width: min(880px, calc(100% - 32px));
+  padding: 18px 22px;
+  text-align: center;
+}
+.nq-story-choice-panel h2,
+.nq-story-choice-panel p {
+  margin: 0 0 10px;
+}
+.nq-musubi-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.nq-musubi-card {
+  position: relative;
+  min-height: 224px;
+  display: grid;
+  grid-template-rows: 72px 88px auto auto;
+  place-items: center;
+  padding: 8px;
+  color: var(--nq-cloud);
+  background: #151b32;
+  border: 4px solid var(--nq-slate);
+}
+.nq-musubi-card:hover,
+.nq-musubi-selected {
+  border-color: var(--nq-yellow);
+  background: #252c49;
+  transform: translateY(-3px);
+}
+.nq-musubi-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.nq-musubi-card strong {
+  font-size: 22px;
+}
+.nq-musubi-card small {
+  color: var(--nq-silver);
+}
+.nq-musubi-orb {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border: 5px solid #1a1428;
+  border-radius: 55% 48% 55% 45%;
+  background: #df554f;
+  box-shadow:
+    inset -8px -8px 0 rgba(68, 22, 34, 0.35),
+    inset 8px 8px 0 rgba(255, 255, 255, 0.35);
+  transform: rotate(-30deg);
+}
+.nq-musubi-orb::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  bottom: 1px;
+  width: 24px;
+  height: 24px;
+  border: 5px solid #1a1428;
+  border-radius: 50%;
+  background: #151b32;
+}
+.nq-musubi-orb i {
+  position: absolute;
+  top: 14px;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff3c4;
+  box-shadow: 0 0 10px #fff3c4;
+}
+.nq-musubi-mizu .nq-musubi-orb {
+  background: #4d8fdd;
+}
+.nq-musubi-mori .nq-musubi-orb {
+  background: #55a45d;
+}
+.nq-musubi-detail {
+  min-height: 52px;
+  margin: 12px 0;
+  padding: 8px 12px;
+  color: var(--nq-cloud);
+  background: #0a0d18;
+  border: 3px solid var(--nq-slate);
+  text-align: left;
+}
+.nq-story-choice-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+@media (max-width: 700px) {
+  .nq-story-choice-panel {
+    padding: 10px;
+  }
+  .nq-musubi-list {
+    gap: 6px;
+  }
+  .nq-musubi-card {
+    min-height: 180px;
+    grid-template-rows: 54px 64px auto auto;
+    padding: 4px;
+  }
+  .nq-musubi-orb {
+    width: 42px;
+    height: 42px;
+  }
+  .nq-musubi-orb::after {
+    width: 18px;
+    height: 18px;
+  }
+  .nq-musubi-card img {
+    width: 60px;
+    height: 60px;
+  }
+  .nq-musubi-card strong {
+    font-size: 16px;
+  }
+}
+.nq-wmap-canvas .nq-amap-region-context {
+  inset: auto;
+  width: auto;
+  height: auto;
+  opacity: 0.92;
+  image-rendering: pixelated;
 }

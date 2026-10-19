@@ -1,14 +1,29 @@
 import type { ContentIndex } from '../../core/content/loader';
-import type { Item } from '../../core/content/schemas';
+import type { Item, Monster, Motif } from '../../core/content/schemas';
 import { canUse, EQUIP_SLOTS, equipSetProgress, isEquip } from '../../core/progression/inventory';
+import { monsterSize } from '../../core/progression/bag';
+import { specialtyTreasureBonus } from '../../core/progression/specialty';
 import type { GameState } from '../../core/state/schema';
 import type { QuestionBank } from '../../questions/engine';
-import type { MenuEntry, MenuTab } from '../../shared/menuModel';
+import type { MenuEntry, MenuHomeKey, MenuTab } from '../../shared/menuModel';
 import { t } from '../../ui/i18n';
-import { itemIconUrl } from '../art/itemIcons';
+import { itemIconUrl } from '../../rendering/itemIcons';
+import { stripRuby } from '../../ui/ruby';
+import { monsterCatalog, specialtyCatalog } from './catalogs';
+import { dexRegionOf } from './geography';
 
-type HeroStats = { hp: number; mp: number; atk: number; def: number; spd: number; wis: number };
+type HeroStats = {
+  hp: number;
+  mp: number;
+  scienceAtk: number;
+  humanitiesAtk: number;
+  scienceDef: number;
+  humanitiesDef: number;
+  spd: number;
+  wis: number;
+};
 type MenuView = { entries: MenuEntry[]; summary?: string; empty: string };
+type HeroLook = GameState['player']['appearance'];
 
 /** セット そうびの 行。そろったら 効果と「なぜ この県か」の ひとことを 出す（GDD §4.6） */
 function setLines(content: ContentIndex, gs: GameState, item: Item): string[] {
@@ -20,8 +35,52 @@ function setLines(content: ContentIndex, gs: GameState, item: Item): string[] {
     : [t('field.equipSetProgress', { name: set.name, have, total })];
 }
 
+const MOTIF_KIND_KEY: Record<Motif['kind'], string> = {
+  landmark: 'field.motifLandmark',
+  food: 'field.motifFood',
+  craft: 'field.motifCraft',
+  nature: 'field.motifNature',
+  festival: 'field.motifFestival',
+  history: 'field.motifHistory',
+};
+
+export const motifKindLabelKey = (kind: Motif['kind']): string => MOTIF_KIND_KEY[kind];
+
+const STAT_LABELS: Readonly<Record<string, string>> = {
+  hp: 'field.statHp',
+  mp: 'field.statMp',
+  scienceAtk: 'field.statScienceAtk',
+  humanitiesAtk: 'field.statHumanitiesAtk',
+  scienceDef: 'field.statScienceDef',
+  humanitiesDef: 'field.statHumanitiesDef',
+  spd: 'field.statSpd',
+  wis: 'field.statWis',
+};
+
+export function itemStatText(item: Item): string {
+  return Object.entries(item.stats ?? {})
+    .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]))
+    .map(([key, value]) => `${STAT_LABELS[key] ? t(STAT_LABELS[key]) : key.toUpperCase()}+${value}`)
+    .join('　');
+}
+
+export function itemKindLabel(item: Item): string {
+  if (item.kind === 'consumable') return t('field.itemKindTool');
+  if (item.kind === 'material') return t('field.itemKindMaterial');
+  if (item.kind === 'key') return t('field.itemKindKey');
+  return t('field.itemKindEquip', { slot: t(`slots.${item.kind}`) });
+}
+
+export const LOOK_PARTS: readonly { part: keyof HeroLook; key: string }[] = [
+  { part: 'hair', key: 'lookHair' },
+  { part: 'skin', key: 'lookSkin' },
+  { part: 'cloth', key: 'lookCloth' },
+  { part: 'hairStyle', key: 'lookHairStyle' },
+  { part: 'eyes', key: 'lookEyes' },
+];
+
 export function menuTabs(mistakeCount: number): {
-  key: MenuTab;
+  key: MenuHomeKey;
   label: string;
   icon: string;
   count?: string;
@@ -35,11 +94,8 @@ export function menuTabs(mistakeCount: number): {
       icon: 'cmd-scan',
       count: String(mistakeCount),
     },
-    { key: 'monsters', label: t('field.tabMonsters'), group: t('field.dexGroup'), icon: 'boss' },
-    { key: 'specialties', label: t('field.tabSpecialties'), group: t('field.dexGroup'), icon: 'star' },
-    { key: 'bag', label: t('field.tabBag'), icon: 'role-shop' },
-    { key: 'equip', label: t('field.tabEquip'), icon: 'role-smith' },
-    { key: 'look', label: t('field.tabLook'), icon: 'hero' },
+    { key: 'monsters', label: t('field.dexGroup'), icon: 'boss' },
+    { key: 'party', label: t('field.bagTitle'), icon: 'cmd-item' },
   ];
 }
 
@@ -140,11 +196,150 @@ export function equipmentMenu(
     summary: t('field.equipStats', {
       hp: gs.player.hp,
       max: stats.hp,
-      atk: stats.atk,
-      def: stats.def,
+      mp: gs.player.mp,
+      maxMp: stats.mp,
+      scienceAtk: stats.scienceAtk,
+      humanitiesAtk: stats.humanitiesAtk,
+      scienceDef: stats.scienceDef,
+      humanitiesDef: stats.humanitiesDef,
       spd: stats.spd,
       wis: stats.wis,
     }),
     empty: t('field.dexEmpty'),
   };
+}
+
+export interface MenuViewInput {
+  content: ContentIndex;
+  game: GameState;
+  tab: MenuTab;
+  stats: HeroStats;
+  revealAll: boolean;
+  bank?: QuestionBank;
+  heroArt: (look: HeroLook) => string;
+  monsterArt: (monster: Monster) => string;
+}
+
+/** 床屋で選べる見た目。選択中は無料表示、変更候補は料金と所持金で可否を示す。 */
+export function barberRows(
+  game: GameState,
+  heroArt: (look: HeroLook) => string,
+  price: number,
+): Array<MenuEntry & { action: { label: string; ok: boolean } | null }> {
+  const appearance = game.player.appearance;
+  return LOOK_PARTS.flatMap(({ part, key }) =>
+    t(`field.${key}Names`)
+      .split(',')
+      .map((name, index): MenuEntry & { action: { label: string; ok: boolean } | null } => {
+        const look = { ...appearance, [part]: index };
+        const selected = appearance[part] === index;
+        const affordable = game.player.gold >= price;
+        const art = heroArt(look);
+        return {
+          key: `look:${part}:${index}`,
+          name: t('field.lookName', { part: t(`field.${key}`), name }),
+          icon: art,
+          art,
+          known: true,
+          tag: selected ? t('field.lookNow') : undefined,
+          right: selected ? undefined : t('field.townPrice', { n: price }),
+          sub: t('field.lookSub', { part: t(`field.${key}`) }),
+          lines: selected ? [t('field.barberCurrent')] : [t('field.barberPrice', { n: price })],
+          action: selected ? null : { label: t('field.barberChange', { n: price }), ok: affordable },
+        };
+      }),
+  );
+}
+
+/** Scene状態を参照せず、フィールドメニューの表示モデルを組み立てる。 */
+export function buildMenuView(input: MenuViewInput): MenuView {
+  const { content, game, tab, stats } = input;
+  const unknown = t('field.dexUnknown');
+  const areaName = (id: string) => content.areas.get(id)?.name ?? unknown;
+
+  if (tab === 'roadmap') return { entries: [], empty: '' };
+  if (tab === 'mistakes') return mistakeMenu(content, game, input.bank);
+
+  if (tab === 'monsters') {
+    const owned = new Set(game.party.owned.map((entry) => entry.monsterId));
+    const monsters = monsterCatalog(content, game, input.revealAll);
+    const entries = monsters.map(({ m, known }, index): MenuEntry => {
+      const art = input.monsterArt(m);
+      const area = t('field.dexArea', { area: areaName(m.area) });
+      const region = dexRegionOf(m.area);
+      return {
+        key: m.id,
+        name: known ? m.name : unknown,
+        group: region.id,
+        groupLabel: t(region.nameKey),
+        icon: art,
+        art,
+        bagSize: monsterSize(m.id, content.monsters),
+        known,
+        right: t('field.dexNo', { n: String(index + 1).padStart(3, '0') }),
+        detailIndex: `${index + 1}/${monsters.length}`,
+        tag: owned.has(m.id) ? t('field.dexOwned') : undefined,
+        sub: known ? t(`elements.${m.element}`) : undefined,
+        lines: known
+          ? [
+              area,
+              m.weakness
+                ? t('field.dexWeak', { el: t(`elements.${m.weakness}`) })
+                : t('battle.weaknessUnknown'),
+            ]
+          : [area, t('field.dexNotSeen')],
+        blurb: known ? m.dexBlurb : undefined,
+        action: null,
+      };
+    });
+    return { entries, empty: t('field.dexEmpty') };
+  }
+
+  if (tab === 'specialties') {
+    const specialties = specialtyCatalog(content, game, input.revealAll);
+    const treasure = specialtyTreasureBonus(game, content.areas, content.items);
+    const percent = (rate: number) => Math.round(rate * 1000) / 10;
+    const entries = specialties.map(({ area, motif, itemId, item, known }, index): MenuEntry => {
+      const region = dexRegionOf(area.id);
+      const areaTreasure = treasure.byArea.get(area.id)!;
+      return {
+        key: itemId,
+        name: known ? motif.name : unknown,
+        group: region.id,
+        groupLabel: t(region.nameKey),
+        icon: item ? itemIconUrl(item) : undefined,
+        known,
+        right: stripRuby(area.name, 'kana'),
+        detailIndex: `${index + 1}/${specialties.length}`,
+        sub: t(motifKindLabelKey(motif.kind)),
+        lines: known
+          ? [
+              t('field.dexFrom', { area: area.name }),
+              t('field.specialtyAreaBonus', {
+                n: areaTreasure.found,
+                total: areaTreasure.total,
+                p: percent(areaTreasure.rate),
+              }),
+              ...(item?.use?.heal ? [t('field.bagHeal', { n: item.use.heal })] : []),
+              t('field.townHave', { n: game.inventory[itemId] ?? 0 }),
+            ]
+          : [t('field.dexFrom', { area: area.name }), t('field.dexNotFound')],
+        blurb: known ? motif.blurb : undefined,
+        action: null,
+      };
+    });
+    return {
+      entries,
+      summary: t('field.specialtyBonusSummary', {
+        p: percent(treasure.rate),
+        n: treasure.found,
+        total: treasure.total,
+      }),
+      empty: t('field.dexEmpty'),
+    };
+  }
+
+  if (tab === 'bag') return bagMenu(content, game, stats, itemStatText, itemKindLabel);
+
+  return equipmentMenu(content, game, stats, itemStatText);
 }

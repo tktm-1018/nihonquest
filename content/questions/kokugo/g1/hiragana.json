@@ -6,7 +6,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「りんご」の「り」は、ひらがなで何画ですか？",
+      "prompt": "「りんご」の「り」は、ひらがなで何画[なんかく]ですか？",
       "choices": [
         {
           "id": "a",
@@ -28,7 +28,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "「り」は2画で書きます。"
+    "explanation": "「り」は 2画[かく]で書[か]きます。"
   },
   {
     "id": "kokugo.g1.hiragana.0004",
@@ -45,7 +45,7 @@
         },
         {
           "id": "b",
-          "text": "ごはんを食べる。"
+          "text": "ごはんを 食[た]べる。"
         },
         {
           "id": "c",
@@ -59,7 +59,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "動作の対象を表すときは「を」を使います。"
+    "explanation": "動作[どうさ]の対象[たいしょう]を表[あらわ]すときは「を」を使[つか]います。"
   },
   {
     "id": "kokugo.g1.hiragana.0006",
@@ -68,7 +68,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「きって（切手）」を正しく書いたものはどれ？",
+      "prompt": "「きって（切手[きって]）」を正[ただ]しく書[か]いたものはどれ？",
       "choices": [
         {
           "id": "a",
@@ -90,7 +90,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "つまる音は小さい「っ」を使って「きって」と書きます。"
+    "explanation": "つまる音[おと]は小[ちい]さい「っ」を使[つか]って「きって」と書[か]きます。"
   },
   {
     "id": "kokugo.g1.hiragana.0007",
@@ -121,7 +121,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "だくてん（゛）をつけると「か」は「が」になります。"
+    "explanation": "濁点[だくてん]（゛）をつけると「か」は「が」になります。"
   },
   {
     "id": "kokugo.g1.hiragana.0008",
@@ -152,7 +152,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "丸い記号（゜）は「半濁点（はんだくてん）」といいます。"
+    "explanation": "丸[まる]い記号[きごう]（゜）は「半濁点[はんだくてん]」といいます。"
   },
   {
     "id": "kokugo.g1.hiragana.0010",
@@ -183,7 +183,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "「ねえ」とのばす音は、ひらがなでは「え」を添えて「おねえさん」と書きます。"
+    "explanation": "「ねえ」とのばす音[おと]は、ひらがなでは「え」を添[そ]えて「おねえさん」と書[か]きます。"
   },
   {
     "id": "kokugo.g1.hiragana.0013",
@@ -214,7 +214,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "「わ・ね・れ」は形がにています。むきや結びに気をつけます。"
+    "explanation": "「わ・ね・れ」は形[かたち]がにています。向[む]きや結[むす]びに気[き]をつけます。"
   },
   {
     "id": "kokugo.g1.hiragana.0015",
@@ -245,7 +245,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "つまる音は小さい「っ」を使って「がっこう」と書きます。"
+    "explanation": "つまる音[おと]は小[ちい]さい「っ」を使[つか]って「がっこう」と書[か]きます。"
   },
   {
     "id": "kokugo.g1.hiragana.0016",
@@ -276,7 +276,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "ねじれる音は小さい「ょ」を使って「きょう」と書きます。"
+    "explanation": "「きょ」の音[おと]は、小[ちい]さい「ょ」を使[つか]って書[か]きます。"
   },
   {
     "id": "kokugo.g1.hiragana.0018",

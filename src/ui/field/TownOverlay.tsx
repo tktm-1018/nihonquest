@@ -7,7 +7,9 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../i18n';
 import { PixelIcon } from '../PixelIcon';
 import { RubyLabel } from '../RubyLabel';
+import { displayText } from '../ruby';
 import { playSfx } from '../sfx';
+import { useModalFocus } from '../useModalFocus';
 import './field.css';
 
 export interface TownRow {
@@ -65,6 +67,16 @@ export function TownOverlay({
     ),
   );
   const row = rows[sel];
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const selectedControl = icon === 'role-barber' ? '.nq-barber-choice.nq-focus' : '.nq-town-list .nq-focus';
+  useModalFocus(dialogRef, selectedControl);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      dialogRef.current?.querySelector<HTMLElement>(selectedControl)?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [sel, selectedControl]);
 
   const pick = (k: number) => {
     if (k === sel || !rows[k]) return;
@@ -83,12 +95,18 @@ export function TownOverlay({
   live.current = { pick, act, onClose, sel, n: rows.length };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const inControl =
+        e.target instanceof HTMLElement &&
+        e.target.closest('button, input, select, textarea, [contenteditable="true"]');
+      if (inControl && (e.key === 'Enter' || e.key === ' ')) return;
       const L = live.current;
       switch (e.key) {
         case 'ArrowUp':
+        case 'ArrowLeft':
           if (L.n) L.pick((L.sel - 1 + L.n) % L.n);
           break;
         case 'ArrowDown':
+        case 'ArrowRight':
           if (L.n) L.pick((L.sel + 1) % L.n);
           break;
         case 'Enter':
@@ -111,8 +129,98 @@ export function TownOverlay({
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  if (icon === 'role-barber') {
+    const groups = Object.values(
+      rows.reduce<Record<string, TownRow[]>>((all, option) => {
+        const part = option.key.split(':')[1] ?? option.key;
+        (all[part] ??= []).push(option);
+        return all;
+      }, {}),
+    );
+    return (
+      <div
+        ref={dialogRef}
+        class="nq-wmap"
+        role="dialog"
+        aria-modal="true"
+        aria-label={displayText(title)}
+        onClick={onClose}
+      >
+        <div class="nq-win nq-barber" onClick={(e) => e.stopPropagation()}>
+          <header class="nq-barber-head">
+            <span class="nq-wmap-title">
+              <PixelIcon name={icon} scale={3} />
+              <RubyLabel text={title} />
+            </span>
+            <span class="nq-town-gold">{t('field.townGold', { n: gold })}</span>
+            <button type="button" class="nq-back" onClick={onClose}>
+              × {t('ui.close')}
+            </button>
+          </header>
+          <div class="nq-barber-main">
+            <div class="nq-barber-preview">
+              {row?.icon && <img src={row.icon} alt={t('newGame.lookPreview')} />}
+              {row && <RubyLabel text={row.name} class="nq-barber-name" />}
+              {row?.lines.map((line, index) => (
+                <RubyLabel key={index} text={line} as="p" />
+              ))}
+            </div>
+            <div class="nq-barber-controls">
+              {groups.map((options) => (
+                <fieldset key={options[0]!.key.split(':')[1]}>
+                  <legend>{options[0]!.name.split('：')[0]}</legend>
+                  <div class="nq-barber-options">
+                    {options.map((option) => {
+                      const index = rows.indexOf(option);
+                      return (
+                        <button
+                          key={option.key}
+                          type="button"
+                          class={`nq-barber-choice ${index === sel ? 'nq-focus' : ''}`}
+                          aria-label={displayText(option.name)}
+                          aria-pressed={!!option.tag}
+                          aria-current={index === sel ? 'true' : undefined}
+                          onPointerEnter={() => pick(index)}
+                          onClick={() => (index === sel ? act() : pick(index))}
+                        >
+                          {option.icon && <img src={option.icon} alt="" />}
+                          {option.tag && <span>✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              ))}
+            </div>
+          </div>
+          <footer class="nq-barber-foot">
+            {message && <RubyLabel text={message} class="nq-party-msg" />}
+            <RubyLabel class="nq-wmap-keys" text={keys} />
+            {row?.action && (
+              <button
+                type="button"
+                class={`nq-opt nq-barber-apply ${row.action.ok ? 'nq-party-evolve-ok' : ''}`}
+                disabled={!row.action.ok}
+                onClick={act}
+              >
+                <RubyLabel text={row.action.label} />
+              </button>
+            )}
+          </footer>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div class="nq-wmap" onClick={onClose}>
+    <div
+      ref={dialogRef}
+      class="nq-wmap"
+      role="dialog"
+      aria-modal="true"
+      aria-label={displayText(title)}
+      onClick={onClose}
+    >
       <div class="nq-win nq-wmap-box" onClick={(e) => e.stopPropagation()}>
         <div class="nq-wmap-left">
           <div class="nq-wmap-region">
@@ -129,8 +237,9 @@ export function TownOverlay({
                   <button
                     type="button"
                     class={`nq-opt ${k === sel ? 'nq-focus' : ''} ${x.dim ? 'nq-town-dim' : ''}`}
+                    aria-current={k === sel ? 'true' : undefined}
                     onPointerEnter={() => pick(k)}
-                    onClick={() => pick(k)}
+                    onClick={() => (k === sel ? act() : pick(k))}
                   >
                     <span class="nq-amap-cur">{k === sel && <span class="nq-heart">♥</span>}</span>
                     {x.icon && <img class="nq-item-icon nq-town-icon" src={x.icon} alt="" />}

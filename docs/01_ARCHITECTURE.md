@@ -184,7 +184,11 @@ export interface QuestionQuery {
 - 人間が問題ファイルを確認したら、担当者・確認日・出典ID・ファイルの SHA-256 を `reviews` に記録する。
 - 承認済みファイルの内容が変わると `pnpm validate:content` が失敗する。変更内容を再確認してからハッシュと確認日を更新する。
 - 統計、制度、地名など変化し得る事実は、台帳の `changingFactsRequireCurrentSource` に従い、確認時点で最新の一次資料を使う。
-- 未承認ファイル数は検証時に警告として表示する。未承認を「確認済み」とみなしてはならない。
+- 未承認ファイル数は検証時に情報として表示する。未承認を「確認済み」とみなしてはならない。
+- 未承認数は通常の `validate:content` では情報として表示し、ビルド不具合の警告と混ぜない。
+  人による承認をリリース条件にする場合は `pnpm audit:academic-review:strict` を使う。
+- `imageKey` / `spriteKey` に対応する外部 PNG は任意の差し替え素材である。ゲーム内生成絵のない対象は
+  描画テストでエラーにし、外部 PNG がないこと自体は欠損警告にしない。
 
 ### 3.4 Question Playground（両チームの共通デバッグ画面）
 
@@ -258,3 +262,6 @@ interface Skill {
 1. `docs/` を更新 → 2. Antigravity にステップ単位のプロンプト（`02_ANTIGRAVITY_PROMPTS.md`）→ 3. Implementation Plan を **人間がレビュー**（三分割が崩れていないか、`content/` にコードが混ざっていないか）→ 4. 実装 → 5. `pnpm test && pnpm validate:content && pnpm build` が通る → 6. Walkthrough（Antigravity が生成する動作説明）を確認 → 7. コミット。
 - ブランチ：`main`（常に動く）／`feat/<step>`。Antigravity には feat ブランチで作業させる。
 - コミットは小さく。1ステップ＝1PR 相当。
+# 文理戦闘契約（v10）
+
+能力値の正は `src/core/content/schemas.ts` の8能力契約、成長は `{ base, every5, every10 }` です。文理ペア選択とポケモン型基礎式は `src/core/battle/damage.ts`、行動順は `src/core/battle/initiative.ts` に分離します。Sceneは計算せず、BattleEventをエンジンが返した順に再生します。旧セーブの6能力は `src/core/state/migrations.ts` で一度だけv10へ変換します。

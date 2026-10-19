@@ -7,20 +7,46 @@
   "element": "kaze",
   "weakness": "tsuchi",
   "baseStats": {
-    "hp": 44,
-    "mp": 12,
-    "atk": 12,
-    "def": 7,
-    "spd": 11,
-    "wis": 9
+    "hp": 26.4,
+    "mp": 7.2,
+    "spd": 7.9,
+    "wis": 5.4,
+    "scienceAtk": 7.5,
+    "humanitiesAtk": 7.5,
+    "scienceDef": 4.7,
+    "humanitiesDef": 4.7
   },
   "growth": {
-    "hp": 5,
-    "mp": 1,
-    "atk": 1.2,
-    "def": 1.1,
-    "spd": 0.8,
-    "wis": 0.8
+    "base": {
+      "hp": 2.3,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.4,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-abc-call"
@@ -39,5 +65,5 @@
     "to": "nara-matcha-arashi",
     "item": "nara-chasen-no-ho"
   },
-  "dexBlurb": "高山茶筌[たかやまちゃせん]の モンスター。生駒市[いこまし]の 高山[たかやま]は、むかしから 茶筌[ちゃせん]作[づく]りが さかんな 町[まち]。"
+  "dexBlurb": "高山茶筌[たかやまちゃせん]の マナビモノ。生駒市[いこまし]の 高山[たかやま]は、むかしから 茶筌[ちゃせん]作[づく]りが さかんな 町[まち]。"
 }

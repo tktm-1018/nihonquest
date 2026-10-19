@@ -103,6 +103,8 @@
 }
 ```
 
+`recruitItem` がある敵は、そのアイテムを戦闘バッグに入れて「さそう」と 1 こ消費して確実に仲間になる。
+
 属性 `element`：`hino / mizu / mori / tsuchi / kaze / hikari / yami`。ボスは `"isBoss": true` と `"bossPhases": [{ "hpBelow": 0.5, "skills": [...], "spriteKey": "..." }]` を追加。
 
 ### 2.4 アイテム（`content/items/aomori-ringo-no-yoroi.json`）
@@ -378,3 +380,6 @@
 ## 5. 単元コード（`unit`）の付け方
 
 `<subject>.g<学年>.<単元のローマ字>`。例：`sansu.g1.tashizan`、`sansu.g2.kuku`、`kokugo.g2.kanji`、`rika.g4.mizu-no-sugata`、`shakai.g4.todofuken`、`eigo.g3.fruits`、`seikatsu.g1.kisetsu`。一覧は `content/units.json` に集約し、新しい単元を作るときはそこに 1 行追加（名前・学年・教科）。習熟度はこの単位で記録される。
+# 文理能力と成長
+
+`baseStats` と装備の `stats` は `hp`, `mp`, `scienceAtk`, `humanitiesAtk`, `scienceDef`, `humanitiesDef`, `spd`, `wis` を使用します。モンスターの `growth` は同じ8項目を持つ `base`, `every5`, `every10` の3段階です。ダメージ技の `attackClass` は `science`, `humanities`, `balanced` のいずれかを明示します。生活科は `balanced` です。旧 `atk` / `def` は新規コンテンツで使用しません。

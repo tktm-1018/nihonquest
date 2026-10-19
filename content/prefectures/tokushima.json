@@ -181,6 +181,124 @@
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "tokushima-naruto",
+      "table": [
+        {
+          "monsterId": "tokushima-kintokin",
+          "weight": 55
+        },
+        {
+          "monsterId": "tokushima-sudachibi",
+          "weight": 45
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "yoshinogawa-miyoshi",
+      "table": [
+        {
+          "monsterId": "tokushima-kazura-musasabi",
+          "weight": 60
+        },
+        {
+          "monsterId": "tokushima-kintokin",
+          "weight": 25
+        },
+        {
+          "monsterId": "tokushima-sudachibi",
+          "weight": 15
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "anan-kaifu",
+      "table": [
+        {
+          "monsterId": "tokushima-hamagamen",
+          "weight": 60
+        },
+        {
+          "monsterId": "tokushima-kazura-musasabi",
+          "weight": 20
+        },
+        {
+          "monsterId": "tokushima-kintokin",
+          "weight": 10
+        },
+        {
+          "monsterId": "tokushima-sudachibi",
+          "weight": 10
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "tokushima-naruto",
+      "name": "徳島[とくしま]・鳴門[なると]エリア",
+      "motifs": [
+        "naruto-uzushio",
+        "awa-odori",
+        "aizome",
+        "naruto-kintoki"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "tokushima-oo-kintoki",
+        "level": 43
+      }
+    },
+    {
+      "id": "yoshinogawa-miyoshi",
+      "name": "吉野川[よしのがわ]・三好[みよし]エリア",
+      "motifs": [
+        "iya-kazurabashi",
+        "tsurugisan",
+        "udatsu"
+      ],
+      "boss": {
+        "monsterId": "tokushima-sorawatari",
+        "level": 43
+      }
+    },
+    {
+      "id": "anan-kaifu",
+      "name": "阿南[あなん]・海部[かいふ]エリア",
+      "motifs": [
+        "hiwasa-umigame",
+        "sudachi"
+      ],
+      "boss": {
+        "monsterId": "tokushima-oogamedon",
+        "level": 43
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "tokushima-naruto",
+        "yoshinogawa-miyoshi"
+      ],
+      "openedBy": "tokushima-naruto"
+    },
+    {
+      "between": [
+        "tokushima-naruto",
+        "anan-kaifu"
+      ],
+      "openedBy": "yoshinogawa-miyoshi"
     }
   ],
   "boss": "tokushima-boss-awaodori-ou",
@@ -200,6 +318,10 @@
       "once": true,
       "cutinImageKey": "motif.tokushima.naruto-uzushio",
       "dialogue": [
+        {
+          "speaker": "シオリ",
+          "text": "町[まち]を 元気[げんき]にする 祭[まつ]りでも、全員[ぜんいん]へ 同[おな]じ 参加[さんか]を 強[つよ]いるのは ちがう。選[えら]べる 関[かか]わりかたを 考[かんが]えよう。"
+        },
         {
           "speaker": "鳴門[なると]の ガイドさん",
           "text": "橋[はし]の 上[うえ]から 見[み]ると、大[おお]きな うずが ぐるぐる まわって いるよ。海[うみ]の ふしぎを しらべよう！"
@@ -239,6 +361,10 @@
         }
       ],
       "afterDialogue": [
+        {
+          "speaker": "ミチル",
+          "text": "踊[おど]る 人[ひと]、鳴[な]らす 人[ひと]、見[み]る 人[ひと]、休[やす]む 人[ひと]。選[えら]べるから みんなの 祭[まつ]りに なるんだね。"
+        },
         {
           "speaker": "鳴門[なると]の ガイドさん",
           "text": "よく しらべたね！ うず潮[しお]は、潮[しお]の 満[み]ちひきが 大[おお]きい 日[ひ]に とくに よく 見[み]られるんだ。"

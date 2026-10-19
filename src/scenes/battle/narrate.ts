@@ -91,7 +91,14 @@ export function narrate(e: BattleEvent, ctx: NarrateCtx, prev?: BattleEvent): st
           : t('battle.skillLockEndMessage'),
       ];
     case 'itemUsed':
-      return [t('battle.itemUsed', { name: ctx.nameOf(e.targetId), item: ctx.itemName(e.itemId) })];
+      return [
+        t(e.side === 'enemy' ? 'battle.musubiUsed' : 'battle.itemUsed', {
+          name: e.side === 'enemy' ? ctx.enemyName : ctx.nameOf(e.targetId),
+          item: ctx.itemName(e.itemId),
+        }),
+      ];
+    case 'recruitGift':
+      return [t('battle.recruitGift', { name: ctx.enemyName, item: ctx.itemName(e.itemId) })];
     case 'swap':
       return e.auto
         ? [t('battle.swapAuto', { to: ctx.nameOf(e.to) })]

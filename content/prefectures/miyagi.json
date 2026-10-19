@@ -108,10 +108,6 @@
         {
           "monsterId": "miyagi-tanyakki",
           "weight": 12
-        },
-        {
-          "monsterId": "miyagi-momippi",
-          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -150,10 +146,6 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 45
-        },
-        {
-          "monsterId": "miyagi-momippi",
-          "weight": 25
         }
       ],
       "stepsPerCheck": 12,
@@ -169,14 +161,6 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 30
-        },
-        {
-          "monsterId": "miyagi-momippi",
-          "weight": 25
-        },
-        {
-          "monsterId": "miyagi-matsukojima",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -192,18 +176,6 @@
         {
           "monsterId": "miyagi-shiratorin",
           "weight": 25
-        },
-        {
-          "monsterId": "miyagi-samecchi",
-          "weight": 20
-        },
-        {
-          "monsterId": "miyagi-matsukojima",
-          "weight": 15
-        },
-        {
-          "monsterId": "miyagi-kakikko",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -219,18 +191,6 @@
         {
           "monsterId": "miyagi-sasakama-uo",
           "weight": 25
-        },
-        {
-          "monsterId": "miyagi-matsukojima",
-          "weight": 20
-        },
-        {
-          "monsterId": "miyagi-kakikko",
-          "weight": 20
-        },
-        {
-          "monsterId": "miyagi-samecchi",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -250,18 +210,191 @@
         {
           "monsterId": "miyagi-zundamaru",
           "weight": 20
-        },
-        {
-          "monsterId": "miyagi-momippi",
-          "weight": 15
-        },
-        {
-          "monsterId": "miyagi-samecchi",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "sendai-aoba",
+      "table": [
+        {
+          "monsterId": "miyagi-zundamaru",
+          "weight": 55
+        },
+        {
+          "monsterId": "miyagi-tanyakki",
+          "weight": 45
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "matsushima-ishinomaki",
+      "table": [
+        {
+          "monsterId": "miyagi-sasakama-uo",
+          "weight": 39
+        },
+        {
+          "monsterId": "miyagi-zundamaru",
+          "weight": 25
+        },
+        {
+          "monsterId": "miyagi-tanyakki",
+          "weight": 20
+        },
+        {
+          "monsterId": "miyagi-kakikko",
+          "weight": 8
+        },
+        {
+          "monsterId": "miyagi-matsukojima",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "izunuma-kesennuma",
+      "table": [
+        {
+          "monsterId": "miyagi-shiratorin",
+          "weight": 42
+        },
+        {
+          "monsterId": "miyagi-sasakama-uo",
+          "weight": 25
+        },
+        {
+          "monsterId": "miyagi-zundamaru",
+          "weight": 15
+        },
+        {
+          "monsterId": "miyagi-tanyakki",
+          "weight": 10
+        },
+        {
+          "monsterId": "miyagi-samecchi",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "naruko-osaki",
+      "table": [
+        {
+          "monsterId": "miyagi-kokeshina",
+          "weight": 42
+        },
+        {
+          "monsterId": "miyagi-shiratorin",
+          "weight": 20
+        },
+        {
+          "monsterId": "miyagi-sasakama-uo",
+          "weight": 15
+        },
+        {
+          "monsterId": "miyagi-zundamaru",
+          "weight": 10
+        },
+        {
+          "monsterId": "miyagi-tanyakki",
+          "weight": 5
+        },
+        {
+          "monsterId": "miyagi-momippi",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "sendai-aoba",
+      "name": "仙台[せんだい]・青葉[あおば]エリア",
+      "motifs": [
+        "gyutan",
+        "sendai-tanabata",
+        "sendai-jo",
+        "zunda"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "miyagi-zundagon",
+        "level": 16
+      }
+    },
+    {
+      "id": "matsushima-ishinomaki",
+      "name": "松島[まつしま]・石巻[いしのまき]エリア",
+      "motifs": [
+        "matsushima",
+        "sasakama",
+        "miyagi-kaki"
+      ],
+      "boss": {
+        "monsterId": "miyagi-sasakama-bushi",
+        "level": 16
+      }
+    },
+    {
+      "id": "izunuma-kesennuma",
+      "name": "伊豆沼[いずぬま]・気仙沼[けせんぬま]エリア",
+      "motifs": [
+        "izunuma",
+        "kesennuma"
+      ],
+      "boss": {
+        "monsterId": "miyagi-oohakucho",
+        "level": 16
+      }
+    },
+    {
+      "id": "naruko-osaki",
+      "name": "鳴子[なるこ]・大崎[おおさき]エリア",
+      "motifs": [
+        "naruko-kyo",
+        "naruko-kokeshi"
+      ],
+      "boss": {
+        "monsterId": "miyagi-kokeshi-hime",
+        "level": 16
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "sendai-aoba",
+        "matsushima-ishinomaki"
+      ],
+      "openedBy": "sendai-aoba"
+    },
+    {
+      "between": [
+        "matsushima-ishinomaki",
+        "izunuma-kesennuma"
+      ],
+      "openedBy": "matsushima-ishinomaki"
+    },
+    {
+      "between": [
+        "izunuma-kesennuma",
+        "naruko-osaki"
+      ],
+      "openedBy": "izunuma-kesennuma"
     }
   ],
   "boss": "miyagi-boss-mikazuki-shogun",
@@ -283,7 +416,11 @@
       "dialogue": [
         {
           "speaker": "松島[まつしま]の 船頭[せんどう]さん",
-          "text": "ようこそ 松島[まつしま]へ！ 島[しま]めぐりの ふねから もんだいを だすよ！"
+          "text": "島[しま]の 名前[なまえ]と 航路[こうろ]を わすれて、ふねを 出[だ]せないんだ。対岸[たいがん]へ とどけたい 荷物[にもつ]が あるのに……。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "見[み]えている 島[しま]を よく たしかめよう。知[し]っていることを 使[つか]えば、安全[あんぜん]な 道[みち]を えらべるよ。"
         }
       ],
       "question": {
@@ -322,7 +459,11 @@
       "afterDialogue": [
         {
           "speaker": "松島[まつしま]の 船頭[せんどう]さん",
-          "text": "ありがとう！ また ふねに のりに きてね。"
+          "text": "航路[こうろ]が わかったぞ！ これで 荷物[にもつ]も 人[ひと]も むこう岸[ぎし]へ とどけられる。ありがとう！"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "知識[ちしき]が くらしの 道[みち]に なったね。……結晶[けっしょう]だけを 急[いそ]いでいたら、この ふねは 動[うご]かなかった。"
         }
       ]
     }
@@ -349,6 +490,17 @@
         "dialogue": [
           {
             "text": "伊達政宗[だてまさむね]が きずいた 城下町[じょうかまち]へ ようこそ！"
+          }
+        ]
+      },
+      {
+        "id": "npc-miyagi-haru",
+        "name": "見聞帳[けんぶんちょう]の シオリ",
+        "spriteKey": "char.npc-aomori-dex",
+        "role": "talk",
+        "dialogue": [
+          {
+            "text": "知識[ちしき]で ふねの 道[みち]が もどった。見聞帳[けんぶんちょう]にも、島[しま]の 名前[なまえ]だけじゃなく、だれへ 何[なに]を とどけたか 書[か]こう。"
           }
         ]
       }

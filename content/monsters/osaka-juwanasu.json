@@ -7,22 +7,50 @@
   "element": "mizu",
   "weakness": "mori",
   "baseStats": {
-    "hp": 52,
-    "mp": 12,
-    "atk": 11,
-    "def": 10,
-    "spd": 8,
-    "wis": 8
+    "hp": 31.2,
+    "mp": 7.2,
+    "spd": 5.7,
+    "wis": 4.8,
+    "scienceAtk": 6.9,
+    "humanitiesAtk": 6.9,
+    "scienceDef": 6.7,
+    "humanitiesDef": 6.7
   },
   "growth": {
-    "hp": 5.2,
-    "mp": 1,
-    "atk": 1.2,
-    "def": 1,
-    "spd": 0.9,
-    "wis": 0.8
+    "base": {
+      "hp": 2.4,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.4,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-shizuku"],
+  "skills": [
+    "sk-shizuku"
+  ],
   "drops": [
     {
       "itemId": "osaka-mizunasu-no-nukazuke",
@@ -37,5 +65,5 @@
     "to": "osaka-juwanasu-zamurai",
     "item": "osaka-mizunasu-no-nukazuke"
   },
-  "dexBlurb": "水[みず]を たっぷり ふくんだ 水[みず]なすの モンスター。泉州[せんしゅう]の 水[みず]なすは、生[なま]のまま 食[た]べられるほど やわらかい。"
+  "dexBlurb": "水[みず]を たっぷり ふくんだ 水[みず]なすの マナビモノ。泉州[せんしゅう]の 水[みず]なすは、生[なま]のまま 食[た]べられるほど やわらかい。"
 }

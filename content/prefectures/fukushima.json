@@ -115,14 +115,6 @@
         {
           "monsterId": "fukushima-chijiremen",
           "weight": 12
-        },
-        {
-          "monsterId": "fukushima-nomakko",
-          "weight": 18
-        },
-        {
-          "monsterId": "fukushima-kayabukin",
-          "weight": 12
         }
       ],
       "stepsPerCheck": 12,
@@ -138,10 +130,6 @@
         {
           "monsterId": "fukushima-akabekon",
           "weight": 30
-        },
-        {
-          "monsterId": "fukushima-kayabukin",
-          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -157,10 +145,6 @@
         {
           "monsterId": "fukushima-koboshi",
           "weight": 45
-        },
-        {
-          "monsterId": "fukushima-kayabukin",
-          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -176,52 +160,6 @@
         {
           "monsterId": "fukushima-koboshi",
           "weight": 50
-        },
-        {
-          "monsterId": "fukushima-nomakko",
-          "weight": 12
-        },
-        {
-          "monsterId": "fukushima-kayabukin",
-          "weight": 15
-        }
-      ],
-      "stepsPerCheck": 12,
-      "rate": 0.25
-    },
-    {
-      "zone": "beach",
-      "table": [
-        {
-          "monsterId": "fukushima-tomoshibin",
-          "weight": 55
-        },
-        {
-          "monsterId": "fukushima-swappi",
-          "weight": 20
-        },
-        {
-          "monsterId": "fukushima-chijiremen",
-          "weight": 25
-        }
-      ],
-      "stepsPerCheck": 12,
-      "rate": 0.25
-    },
-    {
-      "zone": "shore",
-      "table": [
-        {
-          "monsterId": "fukushima-swappi",
-          "weight": 60
-        },
-        {
-          "monsterId": "fukushima-tomoshibin",
-          "weight": 20
-        },
-        {
-          "monsterId": "fukushima-akabekon",
-          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -245,26 +183,188 @@
         {
           "monsterId": "fukushima-chijiremen",
           "weight": 12
-        },
-        {
-          "monsterId": "fukushima-swappi",
-          "weight": 10
-        },
-        {
-          "monsterId": "fukushima-nomakko",
-          "weight": 12
-        },
-        {
-          "monsterId": "fukushima-tomoshibin",
-          "weight": 10
-        },
-        {
-          "monsterId": "fukushima-kayabukin",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "nakadori",
+      "table": [
+        {
+          "monsterId": "fukushima-momorin",
+          "weight": 60
+        },
+        {
+          "monsterId": "fukushima-koboshi",
+          "weight": 40
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "inawashiro-urabandai",
+      "table": [
+        {
+          "monsterId": "fukushima-akabekon",
+          "weight": 42
+        },
+        {
+          "monsterId": "fukushima-momorin",
+          "weight": 25
+        },
+        {
+          "monsterId": "fukushima-koboshi",
+          "weight": 25
+        },
+        {
+          "monsterId": "fukushima-swappi",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "aizu-kitakata",
+      "table": [
+        {
+          "monsterId": "fukushima-chijiremen",
+          "weight": 37
+        },
+        {
+          "monsterId": "fukushima-akabekon",
+          "weight": 30
+        },
+        {
+          "monsterId": "fukushima-koboshi",
+          "weight": 15
+        },
+        {
+          "monsterId": "fukushima-momorin",
+          "weight": 10
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "hamadori",
+      "table": [
+        {
+          "monsterId": "fukushima-koboshi",
+          "weight": 24
+        },
+        {
+          "monsterId": "fukushima-momorin",
+          "weight": 25
+        },
+        {
+          "monsterId": "fukushima-akabekon",
+          "weight": 20
+        },
+        {
+          "monsterId": "fukushima-chijiremen",
+          "weight": 15
+        },
+        {
+          "monsterId": "fukushima-nomakko",
+          "weight": 8
+        },
+        {
+          "monsterId": "fukushima-tomoshibin",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "nakadori",
+      "name": "中通[なかどお]りエリア",
+      "motifs": [
+        "momo",
+        "shirakawa-daruma",
+        "miharu-takizakura"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "fukushima-akatsuki-momo",
+        "level": 19
+      }
+    },
+    {
+      "id": "inawashiro-urabandai",
+      "name": "猪苗代[いなわしろ]・裏磐梯[うらばんだい]エリア",
+      "motifs": [
+        "inawashiroko",
+        "goshikinuma"
+      ],
+      "boss": {
+        "monsterId": "fukushima-akabeko-don",
+        "level": 19
+      }
+    },
+    {
+      "id": "aizu-kitakata",
+      "name": "会津[あいづ]・喜多方[きたかた]エリア",
+      "motifs": [
+        "tsurugajo",
+        "akabeko",
+        "ouchijuku",
+        "okiagari-koboshi",
+        "kitakata-ramen"
+      ],
+      "boss": {
+        "monsterId": "fukushima-kura-donburi",
+        "level": 19
+      }
+    },
+    {
+      "id": "hamadori",
+      "name": "浜通[はまどお]りエリア",
+      "motifs": [
+        "shioyasaki",
+        "soma-nomaoi"
+      ],
+      "boss": {
+        "monsterId": "fukushima-yaoki-koboshi",
+        "level": 19
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "nakadori",
+        "inawashiro-urabandai"
+      ],
+      "openedBy": "nakadori"
+    },
+    {
+      "between": [
+        "inawashiro-urabandai",
+        "aizu-kitakata"
+      ],
+      "openedBy": "inawashiro-urabandai"
+    },
+    {
+      "between": [
+        "nakadori",
+        "hamadori"
+      ],
+      "openedBy": "aizu-kitakata"
     }
   ],
   "boss": "fukushima-boss-tsurugajo-no-nushi",
@@ -286,7 +386,11 @@
       "dialogue": [
         {
           "speaker": "会津[あいづ]の おさむらいさん",
-          "text": "ここは 鶴ヶ城[つるがじょう]じゃ。れきしの もんだいに ちょうせんするかな？"
+          "text": "城[しろ]に のこした 記録[きろく]が とじられてしまった。かなしい 出来事[できごと]も あるが、消[け]せば 同[おな]じ あやまちから 人[ひと]を 守[まも]れぬ。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "過去[かこ]を だれかを せめる 道具[どうぐ]にせず、これからの 判断[はんだん]に 使[つか]う。そのために たしかめよう。"
         }
       ],
       "question": {
@@ -325,7 +429,11 @@
       "afterDialogue": [
         {
           "speaker": "会津[あいづ]の おさむらいさん",
-          "text": "みごとじゃ！ また いつでも 来[く]るがよい。"
+          "text": "記録[きろく]が ひらいた。よいことも、つらいことも、次[つぎ]の 人[ひと]を 守[まも]る ことばとして のこそう。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "六[むっ]つの 土地[とち]の 知識[ちしき]が つながりはじめた。しるしが そろえば、冬[ふゆ]の 結界[けっかい]へ とどくはず。"
         }
       ]
     }
@@ -352,6 +460,17 @@
         "dialogue": [
           {
             "text": "赤[あか]べこは、わるいことから まもってくれる お守[まも]りとして 大切[たいせつ]に されてきたんだよ。"
+          }
+        ]
+      },
+      {
+        "id": "npc-fukushima-haru",
+        "name": "見聞帳[けんぶんちょう]の シオリ",
+        "spriteKey": "char.npc-aomori-dex",
+        "role": "talk",
+        "dialogue": [
+          {
+            "text": "かなしい 記録[きろく]も、だれかを せめるためじゃなく、次[つぎ]の 人[ひと]を 守[まも]るために 書[か]く。東北[とうほく]の ページを ぜんぶ つなごう。"
           }
         ]
       }

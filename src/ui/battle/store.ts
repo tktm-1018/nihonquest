@@ -90,6 +90,8 @@ export interface ItemOption {
   blurb: string;
   /** どうぐの アイコン（data URL） */
   icon: string;
+  disabled: boolean;
+  reason?: string;
 }
 
 export interface SwapOption {
@@ -159,6 +161,8 @@ export interface ResultView {
   needNext: number;
   /** 勝利後の仲間化オファー（はい/いいえ） */
   recruitName?: string;
+  recruitArt?: string;
+  recruitPhase?: boolean;
   goldLost: number;
   /** れんぞく せいかいの ボーナス（けいけんち・おかねの 倍率）と いちばん 長かった コンボ */
   bonus: number;
@@ -166,6 +170,8 @@ export interface ResultView {
 }
 
 export interface HudState {
+  /** 敵との遭遇演出中。下部のコマンド・味方情報は演出が終わるまで出さない。 */
+  intro: boolean;
   enemy: EnemyView | null;
   /** いまの ターン（1 から）。ターン制の 目じるし */
   turn: number | null;
@@ -188,7 +194,6 @@ export interface HudState {
   /** 問題の あいだに うけた こうげきの 回数（ふえるたびに 帯を ゆらして 赤く 光る） */
   shake: number;
   result: ResultView | null;
-  muted: boolean;
 }
 
 export type UiAction =
@@ -199,10 +204,10 @@ export type UiAction =
   | { t: 'back' }
   | { t: 'advance'; messageId: number }
   | { t: 'recruitAnswer'; yes: boolean }
-  | { t: 'resultClose' }
-  | { t: 'toggleSound' };
+  | { t: 'resultClose' };
 
 export const initialHudState = (): HudState => ({
+  intro: true,
   enemy: null,
   turn: null,
   allies: [],
@@ -222,7 +227,6 @@ export const initialHudState = (): HudState => ({
   stripPops: [],
   shake: 0,
   result: null,
-  muted: false,
 });
 
 export class HudStore {

@@ -7,22 +7,50 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 50,
-    "mp": 12,
-    "atk": 16,
-    "def": 7,
-    "spd": 11,
-    "wis": 7
+    "hp": 30,
+    "mp": 7.2,
+    "spd": 7.9,
+    "wis": 4.2,
+    "scienceAtk": 10,
+    "humanitiesAtk": 10,
+    "scienceDef": 4.7,
+    "humanitiesDef": 4.7
   },
   "growth": {
-    "hp": 4.8,
-    "mp": 1,
-    "atk": 1.5,
-    "def": 0.8,
-    "spd": 1.1,
-    "wis": 0.7
+    "base": {
+      "hp": 2.2,
+      "mp": 0.3,
+      "spd": 0.5,
+      "wis": 0.3,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.2,
+      "humanitiesDef": 0.2
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-hinoko"],
+  "skills": [
+    "sk-hinoko"
+  ],
   "drops": [
     {
       "itemId": "kochi-tairyo-hata",
@@ -37,5 +65,5 @@
     "to": "kochi-homura-katsuo",
     "item": "kochi-tairyo-hata"
   },
-  "dexBlurb": "わらの 火[ひ]で あぶられた かつおの モンスター。かつおの たたきは、わらを もやした 強[つよ]い 火[ひ]で まわりだけ さっと あぶって 作[つく]る。"
+  "dexBlurb": "わらの 火[ひ]で あぶられた かつおの マナビモノ。かつおの たたきは、わらを もやした 強[つよ]い 火[ひ]で まわりだけ さっと あぶって 作[つく]る。"
 }

@@ -173,6 +173,125 @@
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "kofu-katsunuma",
+      "table": [
+        {
+          "monsterId": "yamanashi-budoon",
+          "weight": 55
+        },
+        {
+          "monsterId": "yamanashi-houtoun",
+          "weight": 45
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "hokuto-minami-alps",
+      "table": [
+        {
+          "monsterId": "yamanashi-suzurin",
+          "weight": 60
+        },
+        {
+          "monsterId": "yamanashi-budoon",
+          "weight": 25
+        },
+        {
+          "monsterId": "yamanashi-houtoun",
+          "weight": 15
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "fuji-gunai",
+      "table": [
+        {
+          "monsterId": "yamanashi-momorin",
+          "weight": 55
+        },
+        {
+          "monsterId": "yamanashi-houtoun",
+          "weight": 20
+        },
+        {
+          "monsterId": "yamanashi-budoon",
+          "weight": 15
+        },
+        {
+          "monsterId": "yamanashi-suzurin",
+          "weight": 10
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "kofu-katsunuma",
+      "name": "甲府[こうふ]・勝沼[かつぬま]エリア",
+      "motifs": [
+        "shosenkyo",
+        "budou",
+        "momo",
+        "houtou"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "yamanashi-tawawa-budou",
+        "level": 30
+      }
+    },
+    {
+      "id": "hokuto-minami-alps",
+      "name": "北杜[ほくと]・南[みなみ]アルプスエリア",
+      "motifs": [
+        "kitadake",
+        "yatsugatake",
+        "amahata-suzuri"
+      ],
+      "boss": {
+        "monsterId": "yamanashi-suzuri-tatsujin",
+        "level": 30
+      }
+    },
+    {
+      "id": "fuji-gunai",
+      "name": "富士[ふじ]・郡内[ぐんない]エリア",
+      "motifs": [
+        "fujigoko",
+        "oshino-hakkai",
+        "saruhashi"
+      ],
+      "boss": {
+        "monsterId": "yamanashi-hakuto-hime",
+        "level": 30
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "kofu-katsunuma",
+        "hokuto-minami-alps"
+      ],
+      "openedBy": "kofu-katsunuma"
+    },
+    {
+      "between": [
+        "kofu-katsunuma",
+        "fuji-gunai"
+      ],
+      "openedBy": "hokuto-minami-alps"
     }
   ],
   "boss": "yamanashi-boss-suisho-ryu",
@@ -195,6 +314,10 @@
         {
           "speaker": "忍野八海[おしのはっかい]の ガイドさん",
           "text": "ここの 池[いけ]の 水[みず]は、富士山[ふじさん]に ふった 雪[ゆき]や 雨[あめ]が、長[なが]い 時間[じかん]を かけて わき出[で]た ものだよ。水[みず]の ふしぎを しらべよう！"
+        },
+        {
+          "speaker": "見聞帳[けんぶんちょう]の シオリ",
+          "text": "池[いけ]だけを 見[み]ると、水[みず]は ここで 生[う]まれたように 見[み]える。でも 富士山[ふじさん]から 地下[ちか]へ 続[つづ]く 時間[じかん]も 地図[ちず]へ 描[えが]こう。"
         }
       ],
       "question": {
@@ -234,6 +357,10 @@
         {
           "speaker": "忍野八海[おしのはっかい]の ガイドさん",
           "text": "よく しらべたね！ すきとおった 池[いけ]の そこまで 見[み]えるでしょう。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "目[め]に 見[み]える 池[いけ]と、見[み]えない 地下水[ちかすい]の 道[みち]。両方[りょうほう]を 重[かさ]ねると、水[みず]の 旅[たび]が 見[み]えてくるね。"
         }
       ]
     }

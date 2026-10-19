@@ -3,9 +3,12 @@
  * ロジックは持たない。Overworld シーンが props を渡して render する。
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { t } from '../i18n';
 import { PixelIcon } from '../PixelIcon';
 import { RubyLabel } from '../RubyLabel';
-import { RegionMiniMap, type RegionMiniView } from './AreaMap';
+import { displayText } from '../ruby';
+import { RegionMiniMap, type RegionMiniView } from './RegionMiniMap';
+import { VirtualStick, type VirtualStickDirection } from './VirtualStick';
 import './field.css';
 
 export interface FieldHudProps {
@@ -17,16 +20,12 @@ export interface FieldHudProps {
   map: RegionMiniView | null;
   mapLabel: string;
   onAreaMap: () => void;
-  /** チーム編成（なかま）の画面をひらく */
-  partyLabel: string;
-  onParty: () => void;
   /** メニュー（ずかん・どうぐ・そうび）を ひらく */
   menuLabel: string;
   onMenu: () => void;
+  onMove: (direction: VirtualStickDirection | null) => void;
   /** 開発者モード（ぜんぶの 場所へ ワープ）。開発サーバーか ?dev のときだけ ボタンを出す */
   dev?: { label: string; on: boolean; onToggle: () => void };
-  /** 止まっている（左上の 窓を 出す）。歩いている あいだは かくして、地図を 広く 見せる */
-  idle?: boolean;
 }
 
 export function FieldHud({
@@ -37,16 +36,15 @@ export function FieldHud({
   map,
   mapLabel,
   onAreaMap,
-  partyLabel,
-  onParty,
   menuLabel,
   onMenu,
+  onMove,
   dev,
-  idle = true,
 }: FieldHudProps) {
   return (
     <div class="nq-fhud">
-      <div class={`nq-win nq-fhud-loc ${idle ? '' : 'nq-fhud-away'}`}>
+      <VirtualStick label={t('field.moveStick')} onDirection={onMove} />
+      <div class="nq-win nq-fhud-loc">
         <div class="nq-fhud-row">
           <RubyLabel text={title} class="nq-fhud-title" />
           <RubyLabel text={sub} class="nq-fhud-sub" />
@@ -71,13 +69,9 @@ export function FieldHud({
             {dev.label}
           </button>
         )}
-        <button type="button" class="nq-win nq-fhud-btn" onClick={onMenu}>
+        <button type="button" class="nq-win nq-fhud-btn" aria-keyshortcuts="I" onClick={onMenu}>
           <PixelIcon name="role-shop" scale={3} />
           {menuLabel}
-        </button>
-        <button type="button" class="nq-win nq-fhud-btn" onClick={onParty}>
-          <PixelIcon name="cmd-item" scale={3} />
-          {partyLabel}
         </button>
         {/* にほんちずは 左上の地図（ひらいた地図の「にほんちず」ボタン）から */}
       </div>
@@ -102,7 +96,13 @@ export function AreaTitle({ name, sub, onDone }: { name: string; sub: string; on
     return () => clearTimeout(id);
   }, []);
   return (
-    <div class="nq-atitle" aria-live="polite">
+    <div
+      class="nq-atitle"
+      role="status"
+      aria-label={`${displayText(name)} ${displayText(sub)}`}
+      aria-live="polite"
+      aria-atomic="true"
+    >
       <div class="nq-win nq-atitle-box">
         <RubyLabel text={name} class="nq-atitle-name" />
         <RubyLabel text={sub} class="nq-atitle-sub" />
@@ -127,12 +127,20 @@ export interface LandmarkCutinProps {
 export function LandmarkCutin({ title, name, kind, kindLabel, image, icon, onDone }: LandmarkCutinProps) {
   const [imgOk, setImgOk] = useState(!!image);
   const done = useOnce(onDone);
+  const announcement = [title, name, kindLabel].map(displayText).join(' ');
   useEffect(() => {
     const id = setTimeout(done, 2200);
     return () => clearTimeout(id);
   }, []);
   return (
-    <div class="nq-cutin" onClick={done}>
+    <button
+      type="button"
+      class="nq-cutin"
+      aria-label={`${announcement} ${t('ui.dismissCutin')}`}
+      aria-live="polite"
+      aria-atomic="true"
+      onClick={done}
+    >
       <div class="nq-cutin-band">
         <div class="nq-win nq-cutin-card">
           <div class="nq-cutin-pic">
@@ -152,6 +160,6 @@ export function LandmarkCutin({ title, name, kind, kindLabel, image, icon, onDon
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

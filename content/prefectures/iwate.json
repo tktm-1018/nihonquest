@@ -107,14 +107,6 @@
         {
           "monsterId": "iwate-tono-kappa",
           "weight": 45
-        },
-        {
-          "monsterId": "iwate-reimenbo",
-          "weight": 15
-        },
-        {
-          "monsterId": "iwate-undaman",
-          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -133,10 +125,6 @@
         },
         {
           "monsterId": "iwate-iwa-kamoshika",
-          "weight": 20
-        },
-        {
-          "monsterId": "iwate-reimenbo",
           "weight": 20
         }
       ],
@@ -157,10 +145,6 @@
         {
           "monsterId": "iwate-tono-kappa",
           "weight": 25
-        },
-        {
-          "monsterId": "iwate-yukipocchi",
-          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -176,10 +160,6 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 30
-        },
-        {
-          "monsterId": "iwate-yukipocchi",
-          "weight": 25
         }
       ],
       "stepsPerCheck": 12,
@@ -198,10 +178,6 @@
         },
         {
           "monsterId": "iwate-wakamekko",
-          "weight": 25
-        },
-        {
-          "monsterId": "iwate-shirahamaru",
           "weight": 25
         }
       ],
@@ -222,10 +198,6 @@
         {
           "monsterId": "iwate-wakamekko",
           "weight": 20
-        },
-        {
-          "monsterId": "iwate-shirahamaru",
-          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -241,14 +213,192 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 40
-        },
-        {
-          "monsterId": "iwate-undaman",
-          "weight": 20
         }
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "morioka-hachimantai",
+      "table": [
+        {
+          "monsterId": "iwate-iwa-kamoshika",
+          "weight": 39
+        },
+        {
+          "monsterId": "iwate-wankosobat",
+          "weight": 45
+        },
+        {
+          "monsterId": "iwate-reimenbo",
+          "weight": 8
+        },
+        {
+          "monsterId": "iwate-yukipocchi",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "ryusendo-kitasanriku",
+      "table": [
+        {
+          "monsterId": "iwate-ryusen-uo",
+          "weight": 55
+        },
+        {
+          "monsterId": "iwate-iwa-kamoshika",
+          "weight": 25
+        },
+        {
+          "monsterId": "iwate-wankosobat",
+          "weight": 20
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "miyako-tono",
+      "table": [
+        {
+          "monsterId": "iwate-tono-kappa",
+          "weight": 42
+        },
+        {
+          "monsterId": "iwate-ryusen-uo",
+          "weight": 25
+        },
+        {
+          "monsterId": "iwate-iwa-kamoshika",
+          "weight": 15
+        },
+        {
+          "monsterId": "iwate-wankosobat",
+          "weight": 10
+        },
+        {
+          "monsterId": "iwate-shirahamaru",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "hiraizumi-sanriku",
+      "table": [
+        {
+          "monsterId": "iwate-wakamekko",
+          "weight": 42
+        },
+        {
+          "monsterId": "iwate-tono-kappa",
+          "weight": 20
+        },
+        {
+          "monsterId": "iwate-ryusen-uo",
+          "weight": 15
+        },
+        {
+          "monsterId": "iwate-iwa-kamoshika",
+          "weight": 10
+        },
+        {
+          "monsterId": "iwate-wankosobat",
+          "weight": 5
+        },
+        {
+          "monsterId": "iwate-undaman",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "morioka-hachimantai",
+      "name": "盛岡[もりおか]・八幡平[はちまんたい]エリア",
+      "motifs": [
+        "iwate-san",
+        "hachimantai",
+        "morioka-reimen",
+        "wanko"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "iwate-hayate-kamoshika",
+        "level": 15
+      }
+    },
+    {
+      "id": "ryusendo-kitasanriku",
+      "name": "龍泉洞[りゅうせんどう]・北三陸[きたさんりく]エリア",
+      "motifs": [
+        "ryusendo",
+        "kitayamazaki"
+      ],
+      "boss": {
+        "monsterId": "iwate-dragon-blue",
+        "level": 15
+      }
+    },
+    {
+      "id": "miyako-tono",
+      "name": "宮古[みやこ]・遠野[とおの]エリア",
+      "motifs": [
+        "jodogahama",
+        "tono"
+      ],
+      "boss": {
+        "monsterId": "iwate-oo-kappa",
+        "level": 15
+      }
+    },
+    {
+      "id": "hiraizumi-sanriku",
+      "name": "平泉[ひらいずみ]・三陸南部[さんりくなんぶ]エリア",
+      "motifs": [
+        "chusonji",
+        "nanbu-tekki",
+        "geibikei",
+        "sanriku-wakame"
+      ],
+      "boss": {
+        "monsterId": "iwate-wakame-ryu",
+        "level": 15
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "morioka-hachimantai",
+        "ryusendo-kitasanriku"
+      ],
+      "openedBy": "morioka-hachimantai"
+    },
+    {
+      "between": [
+        "ryusendo-kitasanriku",
+        "miyako-tono"
+      ],
+      "openedBy": "ryusendo-kitasanriku"
+    },
+    {
+      "between": [
+        "miyako-tono",
+        "hiraizumi-sanriku"
+      ],
+      "openedBy": "miyako-tono"
     }
   ],
   "boss": "iwate-boss-konjiki-no-tora",
@@ -270,7 +420,11 @@
       "dialogue": [
         {
           "speaker": "金色堂[こんじきどう]の あんないにん",
-          "text": "ようこそ 中尊寺金色堂[ちゅうそんじこんじきどう]へ！ むかしの ことを しっているかな？"
+          "text": "石碑[せきひ]の ことばが ばらばらになって、ここで 何[なに]が あったのか みんなの 話[はなし]が つながらないんだ。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "ひとつの ことばだけで 決[き]めつけず、前[まえ]と 後[あと]を たしかめよう。知識[ちしき]の ならびを 取[と]りもどせるはず。"
         }
       ],
       "question": {
@@ -309,7 +463,11 @@
       "afterDialogue": [
         {
           "speaker": "金色堂[こんじきどう]の あんないにん",
-          "text": "よく がんばったね。また おいで。"
+          "text": "ことばが つながった！ ひとつの 出来事[できごと]も、見[み]る 人[ひと]によって ちがう 話[はなし]が のこるんだね。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "おぼえるだけじゃなく、くらべることで 見[み]えることも ある。これも 土地[とち]へ 返[かえ]すべき 知識[ちしき]なんだ。"
         }
       ]
     }
@@ -336,6 +494,28 @@
         "dialogue": [
           {
             "text": "南部鉄器[なんぶてっき]の 鉄[てつ]びんは じょうぶで 長[なが]もちするぞ。"
+          }
+        ]
+      },
+      {
+        "id": "npc-iwate-haru",
+        "name": "見聞帳[けんぶんちょう]の シオリ",
+        "spriteKey": "char.npc-aomori-dex",
+        "role": "talk",
+        "dialogue": [
+          {
+            "text": "石碑[せきひ]の ことばは もどっても、読[よ]む 人[ひと]で 感[かん]じかたが ちがうんだね。ちがう 話[はなし]も、けさずに 書[か]いておくよ。"
+          }
+        ]
+      },
+      {
+        "id": "npc-iwate-musubi",
+        "name": "むすびの 社[やしろ]の 守[も]り人[びと]",
+        "spriteKey": "char.npc-iwate-musubi",
+        "role": "talk",
+        "dialogue": [
+          {
+            "text": "青森[あおもり]を ひとりで こえた 旅人[たびびと]よ。三[みっ]つの むすび玉[だま]が、きみを 待[ま]っていた。"
           }
         ]
       }

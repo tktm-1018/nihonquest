@@ -7,7 +7,7 @@
     "unit": "eigo.g4.alphabet-weather",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "大文字の R と同じ文字の小文字はどれ？",
+      "prompt": "大文字[おおもじ]の R と同[おな]じ文字[もじ]の小文字[こもじ]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -29,7 +29,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "R の小文字は r です。"
+    "explanation": "R の小文字[こもじ]は r です。"
   },
   {
     "id": "eigo.g4.alphabet-weather.0002",
@@ -39,7 +39,7 @@
     "unit": "eigo.g4.alphabet-weather",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "小文字の e と同じ文字の大文字はどれ？",
+      "prompt": "小文字[こもじ]の e と同[おな]じ文字[もじ]の大文字[おおもじ]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -61,7 +61,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "e の大文字は E です。"
+    "explanation": "e の大文字[おおもじ]は E です。"
   },
   {
     "id": "eigo.g4.alphabet-weather.0003",
@@ -71,7 +71,7 @@
     "unit": "eigo.g4.alphabet-weather",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「晴れです。」を表す英語はどれ？",
+      "prompt": "「晴[は]れです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -93,7 +93,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "sunny は「晴れた」という意味です。"
+    "explanation": "sunny は「晴[は]れた」という意味[いみ]です。"
   },
   {
     "id": "eigo.g4.alphabet-weather.0004",
@@ -103,7 +103,7 @@
     "unit": "eigo.g4.alphabet-weather",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「天気はどうですか。」を表す英語はどれ？",
+      "prompt": "「天気[てんき]はどうですか。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -125,7 +125,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "天気をたずねるときは How is the weather? と言います。"
+    "explanation": "天気[てんき]をたずねるときは How is the weather? と言[い]います。"
   },
   {
     "id": "eigo.g4.alphabet-weather.0005",
@@ -135,7 +135,7 @@
     "unit": "eigo.g4.alphabet-weather",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "雨の日を表す英語はどれ？",
+      "prompt": "雨[あめ]の日[ひ]を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -157,7 +157,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "rainy は「雨の」という意味です。"
+    "explanation": "rainy は「雨[あめ]の」という意味[いみ]です。"
   },
   {
     "id": "eigo.g4.days-time.0001",
@@ -167,7 +167,7 @@
     "unit": "eigo.g4.days-time",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「火曜日」は英語でどれ？",
+      "prompt": "「火曜日[かようび]」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -189,7 +189,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "Tuesday は火曜日です。"
+    "explanation": "Tuesday は火曜日[かようび]です。"
   },
   {
     "id": "eigo.g4.days-time.0002",
@@ -199,7 +199,7 @@
     "unit": "eigo.g4.days-time",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「土曜日」は英語でどれ？",
+      "prompt": "「土曜日[どようび]」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -221,7 +221,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "Saturday は土曜日です。"
+    "explanation": "Saturday は土曜日[どようび]です。"
   },
   {
     "id": "eigo.g4.days-time.0003",
@@ -231,7 +231,7 @@
     "unit": "eigo.g4.days-time",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「何曜日ですか。」を表す英語はどれ？",
+      "prompt": "「何曜日[なんようび]ですか。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -253,7 +253,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "曜日をたずねるときは What day is it? と言います。"
+    "explanation": "曜日[ようび]をたずねるときは What day is it? と言[い]います。"
   },
   {
     "id": "eigo.g4.days-time.0004",
@@ -263,7 +263,7 @@
     "unit": "eigo.g4.days-time",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「何時ですか。」を表す英語はどれ？",
+      "prompt": "「何時[なんじ]ですか。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -285,7 +285,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "時刻をたずねるときは What time is it? と言います。"
+    "explanation": "時刻[じこく]をたずねるときは What time is it? と言[い]います。"
   },
   {
     "id": "eigo.g4.days-time.0005",
@@ -295,29 +295,29 @@
     "unit": "eigo.g4.days-time",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "It's five twenty. は何時何分？",
+      "prompt": "It's five twenty. は何時何分[なんじなんぷん]？",
       "choices": [
         {
           "id": "a",
-          "text": "5時2分"
+          "text": "5時[じ]2分[ふん]"
         },
         {
           "id": "b",
-          "text": "5時12分"
+          "text": "5時[じ]12分[ふん]"
         },
         {
           "id": "c",
-          "text": "5時20分"
+          "text": "5時[じ]20分[ぷん]"
         },
         {
           "id": "d",
-          "text": "5時50分"
+          "text": "5時[じ]50分[ぷん]"
         }
       ],
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "five twenty は5時20分です。"
+    "explanation": "five twenty は5時[じ]20分[ぷん]です。"
   },
   {
     "id": "eigo.g4.school-life.0001",
@@ -327,7 +327,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「えんぴつ」は英語でどれ？",
+      "prompt": "「えんぴつ」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -359,7 +359,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「はさみ」は英語でどれ？",
+      "prompt": "「はさみ」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -391,7 +391,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしはのりを持っています。」を表す英語はどれ？",
+      "prompt": "「わたしはのりを持[も]っています。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -413,7 +413,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "持っているものを伝えるときは I have ... を使います。"
+    "explanation": "持[も]っているものを伝[つた]えるときは I have ... を使[つか]います。"
   },
   {
     "id": "eigo.g4.school-life.0004",
@@ -423,7 +423,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしは定規がほしいです。」を表す英語はどれ？",
+      "prompt": "「わたしは定規[じょうぎ]がほしいです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -445,7 +445,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "ほしいものを伝えるときは I want ... を使います。"
+    "explanation": "ほしいものを伝[つた]えるときは I want ... を使[つか]います。"
   },
   {
     "id": "eigo.g4.school-life.0005",
@@ -455,7 +455,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「これは体育館です。」の（ ）に入る英語はどれ？ / This is the ( ).",
+      "prompt": "「これは体育館[たいいくかん]です。」の（ ）に入[はい]る英語[えいご]はどれ？ / This is the ( ).",
       "choices": [
         {
           "id": "a",
@@ -477,7 +477,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "gym は「体育館」です。"
+    "explanation": "gym は「体育館[たいいくかん]」です。"
   },
   {
     "id": "eigo.g4.school-life.0006",
@@ -487,7 +487,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「右に曲がってください。」を表す英語はどれ？",
+      "prompt": "「右[みぎ]に曲[ま]がってください。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -509,7 +509,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "right は「右」、Turn right. は「右に曲がってください」です。"
+    "explanation": "right は「右[みぎ]」、Turn right. は「右[みぎ]に曲[ま]がってください」です。"
   },
   {
     "id": "eigo.g4.school-life.0007",
@@ -519,7 +519,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「朝食を食べる」は英語でどれ？",
+      "prompt": "「朝食[ちょうしょく]を食[た]べる」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -541,7 +541,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "eat breakfast は「朝食を食べる」です。"
+    "explanation": "eat breakfast は「朝食[ちょうしょく]を食[た]べる」です。"
   },
   {
     "id": "eigo.g4.school-life.0008",
@@ -551,7 +551,7 @@
     "unit": "eigo.g4.school-life",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「学校に行く」は英語でどれ？",
+      "prompt": "「学校[がっこう]に行[い]く」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -573,6 +573,6 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "go to school は「学校に行く」です。"
+    "explanation": "go to school は「学校[がっこう]に行[い]く」です。"
   }
 ]

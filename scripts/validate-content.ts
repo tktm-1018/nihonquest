@@ -22,6 +22,24 @@ execSync('pnpm gen:manifest', { cwd: ROOT, stdio: 'inherit' });
 const read: FileReader = async (rel) => JSON.parse(readFileSync(CONTENT + rel, 'utf8'));
 const errors: string[] = [];
 const warnings: string[] = [];
+const information: string[] = [];
+const assetFields = new Set(['image', 'promptImage', 'audio', 'promptAudio']);
+
+interface AssetReference {
+  path: string;
+  optional: boolean;
+}
+
+function referencedAssets(value: unknown): AssetReference[] {
+  if (!value || typeof value !== 'object') return [];
+  const record = value as Record<string, unknown>;
+  return Object.entries(record).flatMap(([key, child]) => {
+    if (!assetFields.has(key) || typeof child !== 'string') return referencedAssets(child);
+    const optional =
+      key === 'audio' || key === 'promptAudio' || (key === 'image' && typeof record.picture === 'string');
+    return [{ path: child, optional }];
+  });
+}
 
 const content = await loadContent(read, {
   onDuplicate: (id, file) => errors.push(`${file}: id "${id}" が重複しています`),
@@ -35,6 +53,7 @@ if (content) {
 
   // 問題 JSON
   const seen = new Map<string, string>();
+  let optionalQuestionAssetsMissing = 0;
   for (const file of content.questionFiles) {
     const raw = JSON.parse(readFileSync(CONTENT + file, 'utf8'));
     if (!Array.isArray(raw)) {
@@ -60,12 +79,23 @@ if (content) {
         return;
       }
       const p = r.schema.safeParse(payload);
-      if (!p.success)
+      if (!p.success) {
         errors.push(
           `${file}[${i}] (${id}): payload が ${type} のスキーマに合いません: ${p.error.issues.map((x) => `${x.path.join('.')}: ${x.message}`).join('; ')}`,
         );
+        return;
+      }
+      for (const asset of referencedAssets(p.data)) {
+        if (existsSync(`${ROOT}assets/${asset.path}`)) continue;
+        if (asset.optional) optionalQuestionAssetsMissing += 1;
+        else errors.push(`${file}[${i}] (${id}): assets/${asset.path} がありません`);
+      }
     });
   }
+  if (optionalQuestionAssetsMissing > 0)
+    information.push(
+      `問題の任意アセット: ${optionalQuestionAssetsMissing} 件は未配置（読み上げ・生成絵へフォールバック）`,
+    );
 
   // 人間が承認した教材とその根拠を固定する。承認後の無審査変更はエラーにする。
   const ledgerPath = `${CONTENT}quality/academic-reviews.json`;
@@ -108,13 +138,15 @@ if (content) {
     }
     const pending = productionFiles.size - approved.size;
     if (pending > 0)
-      warnings.push(
-        `学術レビュー待ち: ${pending}/${productionFiles.size} 問題ファイル（承認済み ${approved.size}）`,
+      information.push(
+        `学術レビュー: ${pending}/${productionFiles.size} 問題ファイルが人による承認待ち（承認済み ${approved.size}）。` +
+          ' pnpm audit:academic-review で確認順を更新できます',
       );
   }
 
-  // 画像キー（docs/03 §1 の命名規則）→ ファイル存在チェック（warning）。
-  // mon/item は必ず決定的なプロシージャル画像へフォールバックするため、静的PNGは必須ではない。
+  // imageKey / spriteKey は絵の識別子であり、外部 PNG の必須パスではない。
+  // 現在は mon/item/motif/char/face の全系統に決定的なゲーム内描画があり、
+  // 外部 PNG は将来差し替えるための任意オーバーライドとして扱う。
   const keyToPath = (key: string): string | null => {
     const [prefix, ...rest] = key.split('.');
     const id = rest.join('.');
@@ -145,16 +177,25 @@ if (content) {
       if (n.face) keys.add(n.face);
     }
   }
+  let optionalImageOverridesMissing = 0;
   for (const k of keys) {
     const p = keyToPath(k);
-    if (p && !existsSync(ROOT + p)) warnings.push(`画像がまだありません: ${k} → ${p}`);
+    if (p && !existsSync(ROOT + p)) optionalImageOverridesMissing += 1;
   }
+  if (optionalImageOverridesMissing > 0)
+    information.push(
+      `任意の外部画像差し替え: ${optionalImageOverridesMissing} 件は未配置（ゲーム内生成絵があるため欠損ではありません）`,
+    );
 
   console.log(
     `content: ${content.areas.size} areas / ${content.monsters.size} monsters / ${content.items.size} items / ${content.skills.size} skills / questions in ${content.questionFiles.length} files`,
   );
 }
 
+if (information.length) {
+  console.log('\nℹ information:');
+  for (const item of information) console.log('  ' + item);
+}
 if (warnings.length) {
   console.log(`\n⚠ warnings (${warnings.length}):`);
   for (const w of warnings.slice(0, 40)) console.log('  ' + w);

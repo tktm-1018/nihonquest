@@ -7,22 +7,50 @@
   "element": "kaze",
   "weakness": "tsuchi",
   "baseStats": {
-    "hp": 44,
-    "mp": 12,
-    "atk": 13,
-    "def": 7,
-    "spd": 14,
-    "wis": 9
+    "hp": 26.4,
+    "mp": 7.2,
+    "spd": 10,
+    "wis": 5.4,
+    "scienceAtk": 8.1,
+    "humanitiesAtk": 8.1,
+    "scienceDef": 4.7,
+    "humanitiesDef": 4.7
   },
   "growth": {
-    "hp": 4.4,
-    "mp": 1,
-    "atk": 1.3,
-    "def": 0.8,
-    "spd": 1.3,
-    "wis": 0.8
+    "base": {
+      "hp": 1.9,
+      "mp": 0.3,
+      "spd": 0.6,
+      "wis": 0.4,
+      "scienceAtk": 0.5,
+      "humanitiesAtk": 0.5,
+      "scienceDef": 0.2,
+      "humanitiesDef": 0.2
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-abc-call"],
+  "skills": [
+    "sk-abc-call"
+  ],
   "drops": [
     {
       "itemId": "kochi-kamihoshi-ita",
@@ -37,5 +65,5 @@
     "to": "kochi-oowashigami",
     "item": "kochi-kamihoshi-ita"
   },
-  "dexBlurb": "1まいの 土佐和紙[とさわし]が おれて、ワシに なった モンスター。土佐和紙[とさわし]には、とても うすくて じょうぶな 紙[かみ]も ある。"
+  "dexBlurb": "1まいの 土佐和紙[とさわし]が おれて、ワシに なった マナビモノ。土佐和紙[とさわし]には、とても うすくて じょうぶな 紙[かみ]も ある。"
 }

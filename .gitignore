@@ -5,10 +5,14 @@ coverage
 playwright-report
 test-results
 .cache
+graphify-out
 content/manifest.json
 content/content-bundle.json
 content/questions-bundle.json
+content/questions-g*-bundle.json
 raw/**
 !raw/.gitkeep
 .DS_Store
 *.log
+.vercel
+.env*

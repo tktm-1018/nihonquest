@@ -7,20 +7,46 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 348,
-    "mp": 48,
-    "atk": 20,
-    "def": 13,
-    "spd": 10,
-    "wis": 11
+    "hp": 208.8,
+    "mp": 28.8,
+    "spd": 7.1,
+    "wis": 6.6,
+    "scienceAtk": 12.5,
+    "humanitiesAtk": 12.5,
+    "scienceDef": 8.7,
+    "humanitiesDef": 8.7
   },
   "growth": {
-    "hp": 13.2,
-    "mp": 2.2,
-    "atk": 2.1,
-    "def": 1.4,
-    "spd": 1.0,
-    "wis": 1.2
+    "base": {
+      "hp": 7.2,
+      "mp": 1,
+      "spd": 0.4,
+      "wis": 0.6,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 0.6,
+      "humanitiesDef": 0.6
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-hono-no-mai",
@@ -41,7 +67,7 @@
   "gold": 360,
   "spriteKey": "mon.aomori-lastboss-tsugaru-tamenobu",
   "dexBlurb": "津軽[つがる]を ひとつに まとめた 戦国[せんごく]武将[ぶしょう]（1550〜1608年[ねん]）。弘前[ひろさき]の 町[まち]と お城[しろ]の もとを つくった。",
-  "fieldLine": "わしは 津軽為信[つがるためのぶ]。この 津軽[つがる]の 国[くに]を まもる 殿[との]じゃ！ かかって まいれ！",
+  "fieldLine": "わしは 津軽為信[つがるためのぶ]。名[な]を 取[と]りもどしただけで、土地[とち]を 知[し]ったと いえるか。そなたの 歩[あゆ]みを ためそう！",
   "isBoss": true,
   "bossPhases": [
     {

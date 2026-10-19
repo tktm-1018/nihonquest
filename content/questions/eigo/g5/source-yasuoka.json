@@ -7,7 +7,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「あなたの名前のつづりはどう書きますか？」と聞く英語はどれ？",
+      "prompt": "「あなたの名前[なまえ]のつづりはどう書[か]きますか？」と聞[き]く英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -29,7 +29,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "つづりを聞くときは How do you spell it? と言います。"
+    "explanation": "つづりを聞[き]くときは How do you spell it? と言[い]います。"
   },
   {
     "id": "eigo.g5.communication.0002",
@@ -39,7 +39,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「あなたの誕生日はいつですか？」とたずねる英語はどれ？",
+      "prompt": "「あなたの誕生日[たんじょうび]はいつですか？」とたずねる英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -61,7 +61,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "時期を聞く疑問詞 When を使います。"
+    "explanation": "時期[じき]を聞[き]く疑問詞[ぎもんし] When を使[つか]います。"
   },
   {
     "id": "eigo.g5.communication.0003",
@@ -71,7 +71,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしは理科を勉強したいです。」の（ ）に入る英語はどれ？ / I want to study ( ).",
+      "prompt": "「わたしは理科[りか]を勉強[べんきょう]したいです。」の（ ）に入[はい]る英語[えいご]はどれ？ / I want to study ( ).",
       "choices": [
         {
           "id": "a",
@@ -93,7 +93,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "理科は science です。"
+    "explanation": "理科[りか]は science です。"
   },
   {
     "id": "eigo.g5.communication.0004",
@@ -103,7 +103,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「あなたは何になりたいですか？」と聞く英語はどれ？",
+      "prompt": "「あなたは何[なに]になりたいですか？」と聞[き]く英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -125,7 +125,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "want to be で「〜になりたい」という意味です。"
+    "explanation": "want to be で「〜になりたい」という意味[いみ]です。"
   },
   {
     "id": "eigo.g5.communication.0005",
@@ -135,7 +135,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「あなたは何時に起きますか？」とたずねる英語はどれ？",
+      "prompt": "「あなたは何時[なんじ]に起[お]きますか？」とたずねる英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -157,7 +157,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "日課の時刻をたずねるときは What time を使います。"
+    "explanation": "日課[にっか]の時刻[じこく]をたずねるときは What time を使[つか]います。"
   },
   {
     "id": "eigo.g5.communication.0006",
@@ -167,7 +167,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「彼は速く走ることができます。」を表す英語はどれ？",
+      "prompt": "「彼[かれ]は速[はや]く走[はし]ることができます。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -189,7 +189,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "「彼」は He、できることは can で表します。"
+    "explanation": "「彼[かれ]」は He、できることは can で表[あらわ]します。"
   },
   {
     "id": "eigo.g5.communication.0007",
@@ -199,7 +199,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「郵便局はどこですか？」とたずねる英語はどれ？",
+      "prompt": "「郵便局[ゆうびんきょく]はどこですか？」とたずねる英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -221,7 +221,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "場所をたずねる疑問詞 Where を使います。"
+    "explanation": "場所[ばしょ]をたずねる疑問詞[ぎもんし] Where を使[つか]います。"
   },
   {
     "id": "eigo.g5.communication.0008",
@@ -231,7 +231,7 @@
     "unit": "eigo.g5.communication",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "店で「何になさいますか？」とていねいに聞く英語はどれ？",
+      "prompt": "店[みせ]で「何[なに]になさいますか？」とていねいに聞[き]く英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -253,6 +253,6 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "What would you like? は店などで使うていねいな表現です。"
+    "explanation": "What would you like? は店[みせ]などで使[つか]うていねいな表現[ひょうげん]です。"
   }
 ]

@@ -13,6 +13,11 @@ export const EQUIP_SLOTS: readonly EquipSlot[] = equipKinds;
 export const isEquip = (it: Item): it is Item & { kind: EquipSlot } =>
   (EQUIP_SLOTS as readonly string[]).includes(it.kind);
 
+const canReturnToInventory = (gs: GameState, id: string): boolean => {
+  const count = gs.inventory[id] ?? 0;
+  return Number.isSafeInteger(count) && count >= 0 && count < Number.MAX_SAFE_INTEGER;
+};
+
 /** セット そうびの そろいぐあい（GDD §4.6）。効果の計算は battle/factory の applyEquipment が もつ */
 export function equipSetProgress(
   set: EquipSet,
@@ -50,10 +55,13 @@ export function useItem(
 /** そうびする（バッグから 1 つ へる。前の そうびは バッグへ）。そうびでない・もっていないなら null */
 export function equipItem(prev: GameState, it: Item, now = Date.now()): GameState | null {
   if (!isEquip(it) || (prev.inventory[it.id] ?? 0) <= 0) return null;
+  const old = prev.player.equipment[it.kind];
+  if (old && old !== it.id && !canReturnToInventory(prev, old)) return null;
   const gs = structuredClone(prev);
-  const old = gs.player.equipment[it.kind];
-  if (old) gs.inventory[old] = (gs.inventory[old] ?? 0) + 1;
-  gs.inventory[it.id] = (gs.inventory[it.id] ?? 0) - 1;
+  if (old !== it.id) {
+    if (old) gs.inventory[old] = (gs.inventory[old] ?? 0) + 1;
+    gs.inventory[it.id] = (gs.inventory[it.id] ?? 0) - 1;
+  }
   gs.player.equipment[it.kind] = it.id;
   if (!gs.dex.items.includes(it.id)) gs.dex.items.push(it.id);
   gs.updatedAt = now;
@@ -63,7 +71,7 @@ export function equipItem(prev: GameState, it: Item, now = Date.now()): GameStat
 /** そうびを はずして バッグに もどす。何も つけていなければ null */
 export function unequip(prev: GameState, slot: EquipSlot, now = Date.now()): GameState | null {
   const id = prev.player.equipment[slot];
-  if (!id) return null;
+  if (!id || !canReturnToInventory(prev, id)) return null;
   const gs = structuredClone(prev);
   delete gs.player.equipment[slot];
   delete gs.party.bagPlacements[`eq:${slot}`];

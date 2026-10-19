@@ -4,11 +4,13 @@
  */
 import { questionBaseSchema, type QuestionBase } from '../contracts';
 import { getRenderer } from '../renderers/registry';
+import { questionHasAnswerContext } from './questionQuality';
 
 export type QuestionFileReader = (relPath: string) => Promise<unknown>;
 
 export interface BankLoadReport {
   loaded: number;
+  omitted: number;
   skipped: { file: string; index: number; reason: string }[];
 }
 
@@ -22,7 +24,7 @@ export class QuestionBank {
     opts: { includeSamples?: boolean } = {},
   ): Promise<{ bank: QuestionBank; report: BankLoadReport }> {
     const bank = new QuestionBank();
-    const report: BankLoadReport = { loaded: 0, skipped: [] };
+    const report: BankLoadReport = { loaded: 0, omitted: 0, skipped: [] };
     const targets = files.filter((file) => opts.includeSamples || !file.startsWith('questions/_samples/'));
     // 問題ファイルは互いに独立している。順番に待つと旧版移行後の数十ファイルぶん
     // 起動時間が伸びるため、読み込みだけ並列化し、登録順は manifest 順に保つ。
@@ -50,22 +52,34 @@ export class QuestionBank {
         report.skipped.push({ file, index: -1, reason: '配列ではありません' });
         continue;
       }
-      raw.forEach((q: unknown, index: number) => {
+      for (let index = 0; index < raw.length; index += 1) {
+        const q = raw[index];
         const base = questionBaseSchema.safeParse(q);
-        if (!base.success)
-          return report.skipped.push({ file, index, reason: base.error.issues[0]?.message ?? 'invalid' });
-        const r = getRenderer(base.data.type);
-        if (!r) return report.skipped.push({ file, index, reason: `未登録タイプ ${base.data.type}` });
-        const p = r.schema.safeParse(base.data.payload);
-        if (!p.success)
-          return report.skipped.push({
-            file,
-            index,
-            reason: `payload: ${p.error.issues[0]?.message ?? 'invalid'}`,
-          });
-        bank.add({ ...base.data, payload: p.data } as QuestionBase);
-        report.loaded++;
-      });
+        if (!base.success) {
+          report.skipped.push({ file, index, reason: base.error.issues[0]?.message ?? 'invalid' });
+        } else {
+          const r = getRenderer(base.data.type);
+          if (!r) {
+            report.skipped.push({ file, index, reason: `未登録タイプ ${base.data.type}` });
+          } else {
+            const p = r.schema.safeParse(base.data.payload);
+            if (!p.success) {
+              report.skipped.push({
+                file,
+                index,
+                reason: `payload: ${p.error.issues[0]?.message ?? 'invalid'}`,
+              });
+            } else {
+              const question = { ...base.data, payload: p.data } as QuestionBase;
+              if (!questionHasAnswerContext(question)) report.omitted++;
+              else {
+                bank.add(question);
+                report.loaded++;
+              }
+            }
+          }
+        }
+      }
     }
     if (targets.length > 0 && bank.size === 0)
       throw new Error(`問題を1問も読み込めませんでした（${report.skipped.length}件を除外）`);

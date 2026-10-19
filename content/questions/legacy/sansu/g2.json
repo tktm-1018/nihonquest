@@ -38,7 +38,8 @@
       "template": "カレーと こたえた 人は、なん人 いますか。 {{INPUT}} 人",
       "suffix": "人",
       "promptImage": "questions/legacy/e5a87f0aa11f2a32.png"
-    }
+    },
+    "explanation": "あつめたカードを しゅるいごとに ならべると、カレーのカードは 6まい あります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-1.0efdcce0ec27",
@@ -96,7 +97,8 @@
       "template": "やきそばと こたえた 人は、なん人 いますか。 {{INPUT}} 人",
       "suffix": "人",
       "promptImage": "questions/legacy/e5a87f0aa11f2a32.png"
-    }
+    },
+    "explanation": "あつめたカードを しゅるいごとに ならべると、やきそばのカードは 3まい あります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-1.2b01dbbab681",
@@ -297,7 +299,8 @@
       "template": "スパゲティと こたえた 人は、なん人 いますか。 {{INPUT}} 人",
       "suffix": "人",
       "promptImage": "questions/legacy/e5a87f0aa11f2a32.png"
-    }
+    },
+    "explanation": "あつめたカードを しゅるいごとに ならべると、スパゲティのカードは 4まい あります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-10.00534c612a9e",
@@ -755,7 +758,8 @@
       ],
       "answer": "c1",
       "shuffle": true
-    }
+    },
+    "explanation": "たす順番[じゅんばん]を入[い]れ替[か]えても、同[おな]じ数[かず]をたしているので答[こた]えは変[か]わりません。"
   },
   {
     "id": "legacy.sansu.g2.math-2-11.8f908457fec8",
@@ -892,15 +896,15 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "長方形を、正しくあらわした ことばを えらぼう。",
+      "prompt": "長方形[ちょうほうけい]を、正しくあらわした ことばを えらぼう。",
       "choices": [
         {
           "id": "c1",
-          "text": "すべてのかどが 直角になった四角形"
+          "text": "すべてのかどが 直角[ちょっかく]になった四角形[しかくけい]"
         },
         {
           "id": "c2",
-          "text": "すべての辺の長さが 同じ四角形"
+          "text": "すべての辺の長さが 同じ四角形[しかくけい]"
         },
         {
           "id": "c3",
@@ -908,14 +912,14 @@
         },
         {
           "id": "c4",
-          "text": "すべてのかどが直角で 辺の長さもおなじ四角形"
+          "text": "すべてのかどが直角[ちょっかく]で 辺の長さもおなじ四角形[しかくけい]"
         }
       ],
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/18c6ec5fecde3366.png"
     },
-    "explanation": "長方形は、「すべてのかどが 直角になった四角形」のこと。下の図のような形だ。"
+    "explanation": "長方形[ちょうほうけい]は、「すべてのかどが 直角[ちょっかく]になった四角形[しかくけい]」のこと。下の図のような形だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.10932d31cfc7",
@@ -929,7 +933,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "つぎの中から、三角形でないものを えらぼう。",
+      "prompt": "つぎの中から、三角形[さんかくけい]でないものを えらぼう。",
       "choices": [
         {
           "id": "c1",
@@ -948,7 +952,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/cab4b7714daf750a.png"
     },
-    "explanation": "三角形は、「３本の直線でかこまれている形」のこと。①は、直線が つながってない ところが あるね。"
+    "explanation": "三角形[さんかくけい]は、「３本の直線でかこまれている形」のこと。①は、直線が つながってない ところが あるね。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.10ef66404599",
@@ -962,15 +966,15 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "下の図のような 四角形を、何というでしょう。すべての辺のながさは、同じとします。",
+      "prompt": "下の図のような 四角形[しかくけい]を、何というでしょう。すべての辺のながさは、同じとします。",
       "choices": [
         {
           "id": "c1",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c2",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c3",
@@ -985,7 +989,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/90a1d71c51f9de99.png"
     },
-    "explanation": "すべてのかどが 直角で、辺の長さもおなじ四角形を、正方形という。"
+    "explanation": "すべてのかどが 直角[ちょっかく]で、辺の長さもおなじ四角形[しかくけい]を、正方形[せいほうけい]という。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.329284c7c26e",
@@ -999,7 +1003,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "四角形を、正しくあらわした ことばを えらぼう。",
+      "prompt": "四角形[しかくけい]を、正しくあらわした ことばを えらぼう。",
       "choices": [
         {
           "id": "c1",
@@ -1022,7 +1026,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/701a61ac1d303796.png"
     },
-    "explanation": "四角形は、「4本の直線で かこまれている形」のこと。下の図のような形だ。"
+    "explanation": "四角形[しかくけい]は、「4本の直線で かこまれている形」のこと。下の図のような形だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.36dfc2e04461",
@@ -1036,7 +1040,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "つぎの中から、四角形でないものを えらぼう。",
+      "prompt": "つぎの中から、四角形[しかくけい]でないものを えらぼう。",
       "choices": [
         {
           "id": "c1",
@@ -1055,7 +1059,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/8c76782079cc985b.png"
     },
-    "explanation": "四角形は、「４本の直線でかこまれている形」のこと。③は、線がまがっている ところがあるね。"
+    "explanation": "四角形[しかくけい]は、「４本の直線でかこまれている形」のこと。③は、線がまがっている ところがあるね。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.3c28766a1c49",
@@ -1069,7 +1073,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "つぎの中から、正方形 になっているものを えらびましょう。",
+      "prompt": "つぎの中から、正方形[せいほうけい] になっているものを えらびましょう。",
       "choices": [
         {
           "id": "c1",
@@ -1091,7 +1095,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "正方形は、「すべてのかどが 直角で 辺の長さもおなじ四角形」のこと。おり紙は、辺のながさが同じだね。"
+    "explanation": "正方形[せいほうけい]は、「すべてのかどが 直角[ちょっかく]で 辺の長さもおなじ四角形[しかくけい]」のこと。おり紙は、辺のながさが同じだね。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.42ad9dba7ed9",
@@ -1109,7 +1113,7 @@
       "choices": [
         {
           "id": "c1",
-          "text": "直角"
+          "text": "直角[ちょっかく]"
         },
         {
           "id": "c2",
@@ -1127,7 +1131,8 @@
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/c54c0b0b6ce2ff14.png"
-    }
+    },
+    "explanation": "四角[しかく]い紙[かみ]のかどのように、ぴったり重[かさ]なるかどを直角[ちょっかく]といいます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.43d4514f24ce",
@@ -1141,7 +1146,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "三角形や四角形の かどの点を 何というでしょう。",
+      "prompt": "三角形[さんかくけい]や四角形[しかくけい]の かどの点を 何というでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -1163,7 +1168,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "三角形や四角形の かどの点を 「ちょう点」という。"
+    "explanation": "三角形[さんかくけい]や四角形[しかくけい]の かどの点を 「ちょう点」という。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.70ddbe8b8632",
@@ -1177,7 +1182,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "下の図のような 三角形を、何というでしょう。",
+      "prompt": "下の図のような 三角形[さんかくけい]を、何というでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -1185,7 +1190,7 @@
         },
         {
           "id": "c2",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c3",
@@ -1193,14 +1198,14 @@
         },
         {
           "id": "c4",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         }
       ],
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/20914c6ba3ed062f.png"
     },
-    "explanation": "直角がはいった 三角形を、直角三角形というよ。"
+    "explanation": "直角[ちょっかく]がはいった 三角形[さんかくけい]を、直角三角形というよ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.7e899aa0668d",
@@ -1218,11 +1223,11 @@
       "choices": [
         {
           "id": "c1",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c2",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c3",
@@ -1233,7 +1238,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/f598824b1210fef3.png"
     },
-    "explanation": "おり紙は おるまえは、正方形になっている。おったあとも、直角がある三角形になるので、こたえは、直角三角形。"
+    "explanation": "おり紙は おるまえは、正方形[せいほうけい]になっている。おったあとも、直角[ちょっかく]がある三角形[さんかくけい]になるので、こたえは、直角三角形。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.81a325da04bc",
@@ -1247,7 +1252,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "つぎの中から、正方形を えらびましょう。",
+      "prompt": "つぎの中から、正方形[せいほうけい]を えらびましょう。",
       "choices": [
         {
           "id": "c1",
@@ -1266,7 +1271,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/221053f2f8f6e898.png"
     },
-    "explanation": "①は、すべてのかどが 直角で 辺の長さもおなじなので、正方形だ。"
+    "explanation": "①は、すべてのかどが 直角[ちょっかく]で 辺の長さもおなじなので、正方形[せいほうけい]だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.849261b573ec",
@@ -1299,7 +1304,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/71caef4ab9360ec8.png"
     },
-    "explanation": "②には、直角があるね。"
+    "explanation": "②には、直角[ちょっかく]があるね。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.918935d2509f",
@@ -1317,22 +1322,22 @@
       "choices": [
         {
           "id": "c1",
-          "text": "四角形 と 四角形"
+          "text": "四角形[しかくけい] と 四角形[しかくけい]"
         },
         {
           "id": "c2",
-          "text": "三角形 と 四角形"
+          "text": "三角形[さんかくけい] と 四角形[しかくけい]"
         },
         {
           "id": "c3",
-          "text": "三角形 と 三角形"
+          "text": "三角形[さんかくけい] と 三角形[さんかくけい]"
         }
       ],
       "answer": "c3",
       "shuffle": true,
       "promptImage": "questions/legacy/2c40aa2d336c859b.png"
     },
-    "explanation": "図の線できったとき、それぞれの図形は、３つの直線でかこまれた 三角形になる。直角がはいっているので、直角三角形にもなっているぞ。"
+    "explanation": "図の線できったとき、それぞれの図形[ずけい]は、３つの直線でかこまれた 三角形[さんかくけい]になる。直角[ちょっかく]がはいっているので、直角三角形にもなっているぞ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.91c402fc10d3",
@@ -1346,7 +1351,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "つぎの中から、長方形を えらびましょう。",
+      "prompt": "つぎの中から、長方形[ちょうほうけい]を えらびましょう。",
       "choices": [
         {
           "id": "c1",
@@ -1365,7 +1370,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/23ee93db80c541c9.png"
     },
-    "explanation": "③は、すべてのかどが 直角になっているので、長方形だ。"
+    "explanation": "③は、すべてのかどが 直角[ちょっかく]になっているので、長方形[ちょうほうけい]だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.927fada1eb15",
@@ -1379,15 +1384,15 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "下の図のような 四角形を、何というでしょう。",
+      "prompt": "下の図のような 四角形[しかくけい]を、何というでしょう。",
       "choices": [
         {
           "id": "c1",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c2",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c3",
@@ -1402,7 +1407,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/ccc7cb9faba10e4a.png"
     },
-    "explanation": "すべてのかどが、直角になった四角形を、長方形という。"
+    "explanation": "すべてのかどが、直角[ちょっかく]になった四角形[しかくけい]を、長方形[ちょうほうけい]という。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.a62de1e0a80e",
@@ -1416,7 +1421,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "三角形や四角形の まわりの直線を 何というでしょう。",
+      "prompt": "三角形[さんかくけい]や四角形[しかくけい]の まわりの直線を 何というでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -1438,7 +1443,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "三角形や四角形の まわりの直線を 「辺」という。"
+    "explanation": "三角形[さんかくけい]や四角形[しかくけい]の まわりの直線を 「辺」という。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.aaf25c1fd60c",
@@ -1456,22 +1461,22 @@
       "choices": [
         {
           "id": "c1",
-          "text": "四角形 と 四角形"
+          "text": "四角形[しかくけい] と 四角形[しかくけい]"
         },
         {
           "id": "c2",
-          "text": "三角形 と 四角形"
+          "text": "三角形[さんかくけい] と 四角形[しかくけい]"
         },
         {
           "id": "c3",
-          "text": "三角形 と 三角形"
+          "text": "三角形[さんかくけい] と 三角形[さんかくけい]"
         }
       ],
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/e85916da9cb0c861.png"
     },
-    "explanation": "図の線できったとき、それぞれの図形は、４つの直線でかこまれた 四角形になる。"
+    "explanation": "図の線できったとき、それぞれの図形[ずけい]は、４つの直線でかこまれた 四角形[しかくけい]になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.ac5143d7cabc",
@@ -1485,7 +1490,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "三角形を、正しくあらわした ことばを えらぼう。",
+      "prompt": "三角形[さんかくけい]を、正しくあらわした ことばを えらぼう。",
       "choices": [
         {
           "id": "c1",
@@ -1508,7 +1513,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/e9fd4c95ae63bf9d.png"
     },
-    "explanation": "三角形は、「3本の直線でかこまれている形」のこと。下の図のような形だ。"
+    "explanation": "三角形[さんかくけい]は、「3本の直線でかこまれている形」のこと。下の図のような形だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.cd064b86f196",
@@ -1526,11 +1531,11 @@
       "choices": [
         {
           "id": "c1",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c2",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c3",
@@ -1541,7 +1546,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/892610abe66780e0.png"
     },
-    "explanation": "おり紙は おるまえは、正方形になっている。おったあとも、直角がある四角形になるので、こたえは、長方形。"
+    "explanation": "おり紙は おるまえは、正方形[せいほうけい]になっている。おったあとも、直角[ちょっかく]がある四角形[しかくけい]になるので、こたえは、長方形[ちょうほうけい]。"
   },
   {
     "id": "legacy.sansu.g2.math-2-12.f602ff155dc0",
@@ -1555,15 +1560,15 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "正方形を、正しくあらわしたことばを えらぼう。",
+      "prompt": "正方形[せいほうけい]を、正しくあらわしたことばを えらぼう。",
       "choices": [
         {
           "id": "c1",
-          "text": "すべてのかどが 直角になった四角形"
+          "text": "すべてのかどが 直角[ちょっかく]になった四角形[しかくけい]"
         },
         {
           "id": "c2",
-          "text": "すべての辺の長さが 同じ四角形"
+          "text": "すべての辺の長さが 同じ四角形[しかくけい]"
         },
         {
           "id": "c3",
@@ -1571,14 +1576,14 @@
         },
         {
           "id": "c4",
-          "text": "すべてのかどが直角で 辺の長さもおなじ四角形"
+          "text": "すべてのかどが直角[ちょっかく]で 辺の長さもおなじ四角形[しかくけい]"
         }
       ],
       "answer": "c4",
       "shuffle": true,
       "promptImage": "questions/legacy/dac079d233ebcb82.png"
     },
-    "explanation": "正方形は、「すべてのかどが 直角で 辺の長さもおなじ四角形」のこと。下の図のような形だ。"
+    "explanation": "正方形[せいほうけい]は、「すべてのかどが 直角[ちょっかく]で 辺の長さもおなじ四角形[しかくけい]」のこと。下の図のような形だ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.0ec3d2d900b1",
@@ -1592,7 +1597,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：４のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：４のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "24",
         "28",
@@ -1600,7 +1605,8 @@
         "36"
       ],
       "template": "4×6 = {{INPUT}} 4×7 = {{INPUT}} 4×8 = {{INPUT}} 4×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "4の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが4ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.19eeb2d42e58",
@@ -1650,7 +1656,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：２のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：２のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "2",
         "4",
@@ -1659,7 +1665,8 @@
         "10"
       ],
       "template": "2×1 = {{INPUT}} 2×2 = {{INPUT}} 2×3 = {{INPUT}} 2×4 = {{INPUT}} 2×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "2の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが2ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.496965847170",
@@ -1673,7 +1680,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：２のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：２のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "12",
         "14",
@@ -1753,7 +1760,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：６のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：６のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "36",
         "42",
@@ -1761,7 +1768,8 @@
         "54"
       ],
       "template": "6×6 = {{INPUT}} 6×7 = {{INPUT}} 6×8 = {{INPUT}} 6×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "6の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが6ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.706faa161f48",
@@ -1775,7 +1783,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：３のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：３のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "3",
         "6",
@@ -1784,7 +1792,8 @@
         "15"
       ],
       "template": "3×1 = {{INPUT}} 3×2 = {{INPUT}} 3×3 = {{INPUT}} 3×4 = {{INPUT}} 3×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "3の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが3ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.736b78ee1c6c",
@@ -1798,7 +1807,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：９のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：９のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "9",
         "18",
@@ -1807,7 +1816,8 @@
         "45"
       ],
       "template": "9×1 = {{INPUT}} 9×2 = {{INPUT}} 9×3 = {{INPUT}} 9×4 = {{INPUT}} 9×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "9の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが9ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.7592a6f07dd1",
@@ -1821,7 +1831,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：７のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：７のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "7",
         "14",
@@ -1830,7 +1840,8 @@
         "35"
       ],
       "template": "7×1 = {{INPUT}} 7×2 = {{INPUT}} 7×3 = {{INPUT}} 7×4 = {{INPUT}} 7×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "7の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが7ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.77955bc84149",
@@ -1844,7 +1855,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：７のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：７のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "42",
         "49",
@@ -1852,7 +1863,8 @@
         "63"
       ],
       "template": "7×6 = {{INPUT}} 7×7 = {{INPUT}} 7×8 = {{INPUT}} 7×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "7の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが7ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.79d79fc372bb",
@@ -1866,7 +1878,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：８のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：８のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "8",
         "16",
@@ -1875,7 +1887,8 @@
         "40"
       ],
       "template": "8×1 = {{INPUT}} 8×2 = {{INPUT}} 8×3 = {{INPUT}} 8×4 = {{INPUT}} 8×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "8の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが8ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.805f3df9f146",
@@ -1980,7 +1993,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：３のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：３のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "18",
         "21",
@@ -1988,7 +2001,8 @@
         "27"
       ],
       "template": "3×6 = {{INPUT}} 3×7 = {{INPUT}} 3×8 = {{INPUT}} 3×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "3の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが3ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.969f97b4124e",
@@ -2002,7 +2016,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：５のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：５のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "5",
         "10",
@@ -2011,7 +2025,8 @@
         "25"
       ],
       "template": "5×1 = {{INPUT}} 5×2 = {{INPUT}} 5×3 = {{INPUT}} 5×4 = {{INPUT}} 5×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "5の段[だん]は、答[こた]えの一[いち]の位[くらい]が5、0、5、0と交互[こうご]になります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.96d0d8aa3547",
@@ -2025,7 +2040,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：４のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：４のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "4",
         "8",
@@ -2034,7 +2049,8 @@
         "20"
       ],
       "template": "4×1 = {{INPUT}} 4×2 = {{INPUT}} 4×3 = {{INPUT}} 4×4 = {{INPUT}} 4×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "4の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが4ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.9b32cfc00744",
@@ -2103,7 +2119,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：５のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：５のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "30",
         "35",
@@ -2111,7 +2127,8 @@
         "45"
       ],
       "template": "5×6 = {{INPUT}} 5×7 = {{INPUT}} 5×8 = {{INPUT}} 5×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "5の段[だん]は、答[こた]えの一[いち]の位[くらい]が5、0、5、0と交互[こうご]になります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.ad9aae9a2cc6",
@@ -2125,7 +2142,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：８のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：８のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "48",
         "56",
@@ -2133,7 +2150,8 @@
         "72"
       ],
       "template": "8×6 = {{INPUT}} 8×7 = {{INPUT}} 8×8 = {{INPUT}} 8×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "8の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが8ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.ba347e9d2c6f",
@@ -2147,7 +2165,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：９のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：９のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "54",
         "63",
@@ -2155,7 +2173,8 @@
         "81"
       ],
       "template": "9×6 = {{INPUT}} 9×7 = {{INPUT}} 9×8 = {{INPUT}} 9×9 = {{INPUT}}"
-    }
+    },
+    "explanation": "9の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが9ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-13.d10c9d1d64a3",
@@ -2207,7 +2226,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九：６のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
+      "prompt": "九九[くく]：６のだんにこたえよう。そのあと、くりかえし、よんでみよう。",
       "answers": [
         "6",
         "12",
@@ -2216,7 +2235,8 @@
         "30"
       ],
       "template": "6×1 = {{INPUT}} 6×2 = {{INPUT}} 6×3 = {{INPUT}} 6×4 = {{INPUT}} 6×5 = {{INPUT}}"
-    }
+    },
+    "explanation": "6の段[だん]は、かける数[かず]が1ふえるごとに、答[こた]えが6ずつふえます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.2091ba8ff60c",
@@ -2235,7 +2255,7 @@
         "60"
       ]
     },
-    "explanation": "九九にでてくる 5×9=45 より、かけるかずは、3 大きくなっているので 5×3=15 だけ、こたえを ふやせばいい。 45+15=60"
+    "explanation": "九九[くく]にでてくる 5×9=45 より、かけるかずは、3 大きくなっているので 5×3=15 だけ、こたえを ふやせばいい。 45+15=60"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.296573ffa550",
@@ -2249,7 +2269,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、エにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、エにあてはまる かずをこたえよう。",
       "answers": [
         "56"
       ],
@@ -2338,7 +2358,7 @@
         "40"
       ]
     },
-    "explanation": "九九にでてくる 4×9=36 より、かけるかずは、1 大きくなっているので 4×1=4 だけ、こたえを ふやせばいい。 36+4=40"
+    "explanation": "九九[くく]にでてくる 4×9=36 より、かけるかずは、1 大きくなっているので 4×1=4 だけ、こたえを ふやせばいい。 36+4=40"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.522221c43bd2",
@@ -2352,7 +2372,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、アにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、アにあてはまる かずをこたえよう。",
       "answers": [
         "12"
       ],
@@ -2377,7 +2397,7 @@
         "88"
       ]
     },
-    "explanation": "九九にでてくる 9×8=72 より、かけられるかずは、2 大きくなっているので 2×8=16 だけ、こたえを ふやせばいい。 72+16=88"
+    "explanation": "九九[くく]にでてくる 9×8=72 より、かけられるかずは、2 大きくなっているので 2×8=16 だけ、こたえを ふやせばいい。 72+16=88"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.895fa3d06807",
@@ -2396,7 +2416,7 @@
         "126"
       ]
     },
-    "explanation": "九九にでてくる 9×9=81 より、かけられるかずは、5 大きくなっているので 5×9=45 だけ、こたえを ふやせばいい。 81+45=126"
+    "explanation": "九九[くく]にでてくる 9×9=81 より、かけられるかずは、5 大きくなっているので 5×9=45 だけ、こたえを ふやせばいい。 81+45=126"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.9e4eeae84e8e",
@@ -2410,7 +2430,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、オにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、オにあてはまる かずをこたえよう。",
       "answers": [
         "56"
       ],
@@ -2430,7 +2450,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、カにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、カにあてはまる かずをこたえよう。",
       "answers": [
         "81"
       ],
@@ -2455,7 +2475,7 @@
         "72"
       ]
     },
-    "explanation": "九九にでてくる 6×9=54 より、かけるかずは、3 大きくなっているので 6×3=18 だけ、こたえを ふやせばいい。 54+18=72"
+    "explanation": "九九[くく]にでてくる 6×9=54 より、かけるかずは、3 大きくなっているので 6×3=18 だけ、こたえを ふやせばいい。 54+18=72"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.ce6ed987e2c6",
@@ -2469,7 +2489,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、ウにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、ウにあてはまる かずをこたえよう。",
       "answers": [
         "10"
       ],
@@ -2494,7 +2514,7 @@
         "39"
       ]
     },
-    "explanation": "九九にでてくる 3×9=27 より、かけるかずは、4 大きくなっているので 3×4=12 だけ、こたえを ふやせばいい。 27+12=39"
+    "explanation": "九九[くく]にでてくる 3×9=27 より、かけるかずは、4 大きくなっているので 3×4=12 だけ、こたえを ふやせばいい。 27+12=39"
   },
   {
     "id": "legacy.sansu.g2.math-2-14.e537be5776c9",
@@ -2508,7 +2528,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "九九のひょうについて、イにあてはまる かずをこたえよう。",
+      "prompt": "九九[くく]のひょうについて、イにあてはまる かずをこたえよう。",
       "answers": [
         "24"
       ],
@@ -2831,7 +2851,8 @@
       ],
       "answer": "c1",
       "shuffle": true
-    }
+    },
+    "explanation": "千[せん]の位[くらい]から順[じゅん]に読[よ]むと、3926は「三千九百二十六[さんぜんきゅうひゃくにじゅうろく]」です。"
   },
   {
     "id": "legacy.sansu.g2.math-2-16.3962c42d18d9",
@@ -2923,7 +2944,8 @@
       "answers": [
         "2851"
       ]
-    }
+    },
+    "explanation": "2000＋800＋50＋1＝2851です。千[せん]・百[ひゃく]・十[じゅう]・一[いち]の位[くらい]を順[じゅん]に考[かんが]えます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-16.64f14e36da63",
@@ -3043,7 +3065,8 @@
       "answers": [
         "4379"
       ]
-    }
+    },
+    "explanation": "4000＋300＋70＋9＝4379です。千[せん]・百[ひゃく]・十[じゅう]・一[いち]の位[くらい]を順[じゅん]に考[かんが]えます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-16.adcb3cbe433b",
@@ -3224,7 +3247,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "１つの正方形を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
+      "prompt": "１つの正方形[せいほうけい]を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -3247,7 +3270,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/150f50fd3ebc0270.png"
     },
-    "explanation": "１つの正方形を ３つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{3} になる。"
+    "explanation": "１つの正方形[せいほうけい]を ３つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{3} になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-17.28d58316a19a",
@@ -3298,7 +3321,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "１つの正方形を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
+      "prompt": "１つの正方形[せいほうけい]を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -3321,7 +3344,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/31000de29c717f9d.png"
     },
-    "explanation": "１つの正方形を ２つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{2} になる。"
+    "explanation": "１つの正方形[せいほうけい]を ２つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{2} になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-17.544275171ee9",
@@ -3335,7 +3358,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "１つの正方形を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
+      "prompt": "１つの正方形[せいほうけい]を、つぎのように 分けます。色が ついたところを 分数で あらわすと、何分の１になるでしょう。",
       "choices": [
         {
           "id": "c1",
@@ -3358,7 +3381,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/d9c74c70f0990f6a.png"
     },
-    "explanation": "１つの正方形を ４つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{4} になる。"
+    "explanation": "１つの正方形[せいほうけい]を ４つに 分けたうちの １つ分 なので、答えは \\dfrac{1}{4} になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-17.56b737970858",
@@ -3763,7 +3786,8 @@
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/e01092184ac521a3.png"
-    }
+    },
+    "explanation": "はこの平[たい]らな部分[ぶぶん]を面[めん]といいます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.0b5521f885aa",
@@ -3795,7 +3819,8 @@
       "answer": "c2",
       "shuffle": true,
       "promptImage": "questions/legacy/8fb1d13af78f16b5.png"
-    }
+    },
+    "explanation": "二[ふた]つの面[めん]が出会[であ]う、まっすぐな線[せん]の部分[ぶぶん]を辺[へん]といいます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.10ca147cab6a",
@@ -3813,15 +3838,15 @@
       "choices": [
         {
           "id": "c1",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c2",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c3",
-          "text": "三角形"
+          "text": "三角形[さんかくけい]"
         },
         {
           "id": "c4",
@@ -3832,7 +3857,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/9e2ff05e5b6071d1.png"
     },
-    "explanation": "正方形は、角が ぜんぶ 直角で、へんの 長さが ぜんぶ おなじ 四角形。"
+    "explanation": "正方形[せいほうけい]は、角が ぜんぶ 直角[ちょっかく]で、へんの 長さが ぜんぶ おなじ 四角形[しかくけい]。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.11185d7c3d8f",
@@ -3860,7 +3885,8 @@
       "answer": "c2",
       "shuffle": true,
       "promptImage": "questions/legacy/15e7c657c809ba53.png"
-    }
+    },
+    "explanation": "①のはこを辺[へん]にそって切[き]り開[ひら]くと、六[むっ]つの面[めん]がつながったイの形[かたち]になります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.15345bd2561f",
@@ -3892,7 +3918,8 @@
       "answer": "c3",
       "shuffle": true,
       "promptImage": "questions/legacy/8aa379c7e771015f.png"
-    }
+    },
+    "explanation": "辺[へん]が集[あつ]まる角[かど]の点[てん]を、頂点[ちょうてん]といいます。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.4fb31424dc0e",
@@ -3979,7 +4006,8 @@
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/15e7c657c809ba53.png"
-    }
+    },
+    "explanation": "②のはこを辺[へん]にそって切[き]り開[ひら]くと、六[むっ]つの面[めん]がつながったアの形[かたち]になります。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.7155a7b84537",
@@ -4137,15 +4165,15 @@
       "choices": [
         {
           "id": "c1",
-          "text": "長方形"
+          "text": "長方形[ちょうほうけい]"
         },
         {
           "id": "c2",
-          "text": "正方形"
+          "text": "正方形[せいほうけい]"
         },
         {
           "id": "c3",
-          "text": "三角形"
+          "text": "三角形[さんかくけい]"
         },
         {
           "id": "c4",
@@ -4156,7 +4184,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/2274b006b972fbec.png"
     },
-    "explanation": "長方形は、角が ぜんぶ 直角の 四角形。"
+    "explanation": "長方形[ちょうほうけい]は、角が ぜんぶ 直角[ちょっかく]の 四角形[しかくけい]。"
   },
   {
     "id": "legacy.sansu.g2.math-2-18.e03b30288c24",
@@ -5534,7 +5562,7 @@
       ],
       "template": "{{INPUT}}時{{INPUT}}分"
     },
-    "explanation": "「４５分後」なので、「分」のながいはりを ４５すすむと、「時間」のみじかいはりが １すすんで、４時３０分になる。"
+    "explanation": "３時[じ]４５分[ふん]から１５分[ふん]すすむと４時[じ]。そこから、さらに３０分[ぷん]すすむので、４時[じ]３０分[ぷん]になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-5.4a71d5b0e8de",
@@ -5792,7 +5820,7 @@
       "template": "{{INPUT}}時{{INPUT}}分",
       "promptImage": "questions/legacy/454fc9bd73743995.png"
     },
-    "explanation": "「３０分後」なので、「分」のながいはりを ３０、「時間」のみじかいはりを １すすめて、４時１５分になる。"
+    "explanation": "３時[じ]４５分[ふん]から１５分[ふん]すすむと４時[じ]。のこりの１５分[ふん]をすすむので、４時[じ]１５分[ふん]になる。"
   },
   {
     "id": "legacy.sansu.g2.math-2-5.dc0838b681eb",
@@ -5835,7 +5863,7 @@
       "suffix": "時間",
       "promptImage": "questions/legacy/2beb0bf8cf2c8050.png"
     },
-    "explanation": "午前８時から、午後２時分までで、６時間 すすめたらいいので、６時間だね。"
+    "explanation": "午前[ごぜん]８時[じ]から正午[しょうご]までが４時間[じかん]、正午[しょうご]から午後[ごご]２時[じ]までが２時間[じかん]。あわせて６時間[じかん]だね。"
   },
   {
     "id": "legacy.sansu.g2.math-2-5.f691d0ea5f27",
@@ -5911,7 +5939,8 @@
       "answer": "c1",
       "shuffle": true,
       "promptImage": "questions/legacy/1945cd296ba5ad09.png"
-    }
+    },
+    "explanation": "ものさしの 大[おお]きな めもり 1つ分[ぶん]は、1cmです。"
   },
   {
     "id": "legacy.sansu.g2.math-2-6.2f703d3a8754",
@@ -6051,15 +6080,15 @@
       "choices": [
         {
           "id": "c1",
-          "text": "c m"
+          "text": "cm"
         },
         {
           "id": "c2",
-          "text": "m m"
+          "text": "mm"
         },
         {
           "id": "c3",
-          "text": "s m"
+          "text": "mL"
         },
         {
           "id": "c4",
@@ -6151,15 +6180,15 @@
       "choices": [
         {
           "id": "c1",
-          "text": "c m"
+          "text": "cm"
         },
         {
           "id": "c2",
-          "text": "m m"
+          "text": "mm"
         },
         {
           "id": "c3",
-          "text": "s m"
+          "text": "mL"
         },
         {
           "id": "c4",
@@ -6169,7 +6198,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "センチメートルは、「c m」とあらわす。ミリメートルは、「m m」だね。"
+    "explanation": "センチメートルは「cm」、ミリメートルは「mm」と表[あらわ]すよ。"
   },
   {
     "id": "legacy.sansu.g2.math-2-6.d5ed5472e2c6",

@@ -1,9 +1,9 @@
 /**
  * バトルの型（ターン制。GDD §4）。
- * 1 ターン ＝ 主人公 → オトモ（前に 立つ 仲間）→ てき の じゅんで 1 回ずつ 動く。
+ * 1 ターン ＝ 優先度 → すばやさ → シード付き同速抽選の順で 1 回ずつ動く。
  * 仕様のデータモデルとの対応：
  *  - PlayerState     … 主人公の Combatant（ally.hero：hp / maxHp = stats.hp / mp / maxMp = stats.mp / stats）＋ BattleState.player。
- *                      stats の名前は content とそろえて atk = attack・def = defense・spd = speed・wis = intelligence
+ *                      stats はHP/MP・文理攻防・すばやさ・かしこさの8能力。
  *  - EnemyUnit       … BattleState.enemy（element・weakness・skipTurns）
  *  - Companion       … BattleState.companion（出撃中の仲間モンスター＝オトモ）
  *  - SkillDefinition … content の Skill（subject・costGauge・power・targetType・effect = effectType・flavor = description）
@@ -39,6 +39,8 @@ export interface Combatant {
   actionsPerTurn: number;
   /** 属性わざ倍率（セット装備ボーナス）。key = element */
   elementBoost?: Partial<Record<Element, number>>;
+  /** 装備で軽減できる属性。 */
+  elementResists?: Element[];
 }
 
 /** 敵ユニット */
@@ -92,9 +94,9 @@ export type Command =
   | { kind: 'attack' }
   /** 必殺技（effect が scan なら しらべる）。actorId を わたすと オトモが 使う（省略時は 主人公） */
   | { kind: 'skill'; skillId: string; result: ActionResult; actorId?: string }
-  | { kind: 'item'; itemId: string }
+  | { kind: 'item'; itemId: string; result?: ActionResult; timeLimitScale?: number }
   | { kind: 'swap'; monsterIndex: number }
-  | { kind: 'recruit'; result: ActionResult }
+  | { kind: 'recruit'; result: ActionResult; itemId?: string }
   | { kind: 'flee' }
   /** 主人公が たおれて いる ときなど、主人公は 動かずに ターンを すすめる */
   | { kind: 'wait' };
@@ -169,7 +171,8 @@ export type BattleEvent =
   | { t: 'skillLock'; skillId: string; remain: number }
   /** 教科ゲージが たりなくて 打てない（ターンは すすまない） */
   | { t: 'gaugeShort'; subject: Subject; need: number; have: number }
-  | { t: 'itemUsed'; itemId: string; targetId: string }
+  | { t: 'itemUsed'; itemId: string; targetId: string; side?: Side }
+  | { t: 'recruitGift'; itemId: string; targetId: string }
   /** auto = オトモが たおれて、次の 仲間が 自動で 前に 出た */
   | { t: 'swap'; from: string; to: string; auto?: boolean }
   | { t: 'recruitAttempt'; targetId: string; success: boolean; chance: number }

@@ -7,7 +7,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「こんにちは。」を表す英語はどれ？",
+      "prompt": "「こんにちは。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -39,7 +39,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「さようなら。」を表す英語はどれ？",
+      "prompt": "「さようなら。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -61,7 +61,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "Goodbye. は「さようなら。」という別れのあいさつです。"
+    "explanation": "Goodbye. は「さようなら。」という別[わか]れのあいさつです。"
   },
   {
     "id": "eigo.g3.greetings.0003",
@@ -71,7 +71,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "How are you? の意味はどれ？",
+      "prompt": "How are you? の意味[いみ]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -79,21 +79,21 @@
         },
         {
           "id": "b",
-          "text": "これは何ですか。"
+          "text": "これは何[なん]ですか。"
         },
         {
           "id": "c",
-          "text": "調子はどうですか。"
+          "text": "調子[ちょうし]はどうですか。"
         },
         {
           "id": "d",
-          "text": "どこの出身ですか。"
+          "text": "どこの出身[しゅっしん]ですか。"
         }
       ],
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "How are you? は相手の調子をたずねる表現です。"
+    "explanation": "How are you? は相手[あいて]の調子[ちょうし]をたずねる表現[ひょうげん]です。"
   },
   {
     "id": "eigo.g3.greetings.0004",
@@ -103,7 +103,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしはおなかがすいています。」を表す英語はどれ？",
+      "prompt": "「わたしはおなかがすいています。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -125,7 +125,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "hungry は「おなかがすいた」という意味です。"
+    "explanation": "hungry は「おなかがすいた」という意味[いみ]です。"
   },
   {
     "id": "eigo.g3.greetings.0005",
@@ -135,7 +135,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしはアメリカ出身です。」を表す英語はどれ？",
+      "prompt": "「わたしはアメリカ出身[しゅっしん]です。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -157,7 +157,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "I'm from ... で「わたしは〜出身です。」と伝えます。"
+    "explanation": "I'm from ... で「わたしは〜出身[しゅっしん]です。」と伝[つた]えます。"
   },
   {
     "id": "eigo.g3.greetings.0006",
@@ -167,7 +167,7 @@
     "unit": "eigo.g3.greetings",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「あなたはだれですか。」を表す英語はどれ？",
+      "prompt": "「あなたはだれですか。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -189,7 +189,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "Who are you? は「あなたはだれですか。」という意味です。"
+    "explanation": "Who are you? は「あなたはだれですか。」という意味[いみ]です。"
   },
   {
     "id": "eigo.g3.numbers.0001",
@@ -199,7 +199,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 11 は英語でどれ？",
+      "prompt": "数字[すうじ]の 11 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -231,7 +231,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 12 は英語でどれ？",
+      "prompt": "数字[すうじ]の 12 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -263,7 +263,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 13 は英語でどれ？",
+      "prompt": "数字[すうじ]の 13 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -295,7 +295,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 15 は英語でどれ？",
+      "prompt": "数字[すうじ]の 15 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -327,7 +327,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 18 は英語でどれ？",
+      "prompt": "数字[すうじ]の 18 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -359,7 +359,7 @@
     "unit": "eigo.g3.numbers",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "数字の 20 は英語でどれ？",
+      "prompt": "数字[すうじ]の 20 は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -391,7 +391,7 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしは緑色が好きです。」を表す英語はどれ？",
+      "prompt": "「わたしは緑色[みどりいろ]が好[す]きです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -413,7 +413,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "I like ... で「わたしは〜が好きです。」と伝えます。"
+    "explanation": "I like ... で「わたしは〜が好[す]きです。」と伝[つた]えます。"
   },
   {
     "id": "eigo.g3.likes-things.0002",
@@ -423,7 +423,7 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「わたしは野球が好きではありません。」を表す英語はどれ？",
+      "prompt": "「わたしは野球[やきゅう]が好[す]きではありません。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -445,7 +445,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "I don't like ... で「わたしは〜が好きではありません。」と伝えます。"
+    "explanation": "I don't like ... で「わたしは〜が好[す]きではありません。」と伝[つた]えます。"
   },
   {
     "id": "eigo.g3.likes-things.0003",
@@ -455,11 +455,11 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "What's this? の意味はどれ？",
+      "prompt": "What's this? の意味[いみ]はどれ？",
       "choices": [
         {
           "id": "a",
-          "text": "これは何ですか。"
+          "text": "これは何[なん]ですか。"
         },
         {
           "id": "b",
@@ -467,7 +467,7 @@
         },
         {
           "id": "c",
-          "text": "何色ですか。"
+          "text": "何色[なにいろ]ですか。"
         },
         {
           "id": "d",
@@ -477,7 +477,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "What's this? は「これは何ですか。」という意味です。"
+    "explanation": "What's this? は「これは何[なん]ですか。」という意味[いみ]です。"
   },
   {
     "id": "eigo.g3.likes-things.0004",
@@ -487,7 +487,7 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「これはバナナです。」を表す英語はどれ？",
+      "prompt": "「これはバナナです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -509,7 +509,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "It's a banana. で「これはバナナです。」と答えます。"
+    "explanation": "It's a banana. で「これはバナナです。」と答[こた]えます。"
   },
   {
     "id": "eigo.g3.likes-things.0005",
@@ -519,7 +519,7 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「ぞう」は英語でどれ？",
+      "prompt": "「ぞう」は英語[えいご]でどれ？",
       "choices": [
         {
           "id": "a",
@@ -551,7 +551,7 @@
     "unit": "eigo.g3.likes-things",
     "tags": ["source:yasuoka-pdf", "review:pending-human"],
     "payload": {
-      "prompt": "「ぼくはトラです。」を表す英語はどれ？",
+      "prompt": "「ぼくはトラです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -573,6 +573,6 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "自分が何者か伝えるときは I'm a ... を使います。"
+    "explanation": "自分[じぶん]が何者[なにもの]か伝[つた]えるときは I'm a ... を使[つか]います。"
   }
 ]

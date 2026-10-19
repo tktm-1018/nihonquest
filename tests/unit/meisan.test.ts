@@ -2,15 +2,16 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { partyFromGameState } from '../../src/core/battle/setup';
+import { bagContext, putEquip } from '../../src/core/progression/bag';
 import { equipItem } from '../../src/core/progression/inventory';
 import { giveMeisan, isMeisanGear, meisanEarned } from '../../src/core/progression/meisan';
 import { motifStamp } from '../../src/core/progression/route';
 import { createNewGame } from '../../src/core/state/newGame';
-import { battleFrames, heroCostumeIds, heroKey, heroLook, walkFrames } from '../../src/scenes/art/characters';
-import { COSTUME_ART, HERO_FRAME } from '../../src/scenes/art/costumes';
-import { NQ48 } from '../../src/scenes/art/palette';
+import { battleFrames, heroCostumeIds, heroKey, heroLook, walkFrames } from '../../src/rendering/characters';
+import { COSTUME_ART, HERO_FRAME } from '../../src/rendering/costumes';
+import { NQ48 } from '../../src/rendering/palette';
 
-const fresh = () => createNewGame({ name: 'テスト', grade: 3, starterMonsterId: 'aomori-nebutan' }, 1000);
+const fresh = () => createNewGame({ name: 'テスト', grade: 3 }, 1000);
 const MELON = 'hokkaido-meisan-yubari-melon';
 
 /** にほんちずの ★（public/worldmap.json と 同じ 数え方） */
@@ -21,6 +22,12 @@ const stampsOf = (id: string) => world.regions.flatMap((r) => r.areas).find((a) 
 const allStamps = (id: string) => stampsOf(id).map((m) => motifStamp(id, m));
 
 describe('めいさんひんの そうび', () => {
+  it('id の 県と areaOrigin が ちがう そうびは めいさんひんとして あつかわない', async () => {
+    const c = await content();
+    const melon = c.items.get(MELON)!;
+    expect(isMeisanGear({ ...melon, areaOrigin: 'aomori' })).toBe(false);
+  });
+
   it('県ごとの そうびで、強さ（stats）と 着たときの 絵（COSTUME_ART）が ある', async () => {
     const c = await content();
     const gear = [...c.items.values()].filter(isMeisanGear);
@@ -59,13 +66,17 @@ describe('めいさんひんの そうび', () => {
   it('頭・体・足・くつを いっしょに そうびでき、HP も ぼうぎょも あがる', async () => {
     const c = await content();
     let gs = fresh();
+    gs.progress.islandsCleared = ['tohoku'];
     const base = partyFromGameState(gs, c).hero.stats;
     const ids = [MELON, 'aomori-meisan-ringo', 'akita-meisan-magewappa', 'iwate-meisan-nanbu-tekki'];
-    for (const id of ids) gs = equipItem(giveMeisan(gs, c.items.get(id)!), c.items.get(id)!)!;
+    for (const id of ids) {
+      gs = giveMeisan(gs, c.items.get(id)!);
+      gs = putEquip(gs, c.items.get(id)!, bagContext(gs, c)).state;
+    }
     const up = partyFromGameState(gs, c).hero.stats;
-    const sum = (k: 'hp' | 'def') => ids.reduce((a, id) => a + (c.items.get(id)!.stats?.[k] ?? 0), 0);
-    expect(up.hp - base.hp).toBe(sum('hp'));
-    expect(up.def - base.def).toBe(sum('def'));
+    const sum = (k: 'hp' | 'scienceDef') => ids.reduce((a, id) => a + (c.items.get(id)!.stats?.[k] ?? 0), 0);
+    expect(up.hp).toBe(Math.round(base.hp + sum('hp')));
+    expect(up.scienceDef).toBe(Math.round(base.scienceDef + sum('scienceDef')));
     // 絵は 足 → くつ → 体 → 頭 の じゅんに かさねる
     expect(heroCostumeIds(gs.player.equipment)).toEqual([
       'akita-meisan-magewappa',
@@ -88,17 +99,17 @@ describe('めいさんひんの そうび', () => {
 describe('めいさんひんの そうびの 絵', () => {
   const ap = { hair: 0, skin: 0, cloth: 0 };
   const palette = new Set<string>(NQ48);
+  const plain = [...walkFrames(heroLook(ap), true), ...battleFrames(heroLook(ap))];
   for (const id of Object.keys(COSTUME_ART)) {
     it(`${id}：色は NQ-48 だけ・着ると 絵が かわる・いつもの 絵から はみ出さない 大きさ`, () => {
       const eq = { [COSTUME_ART[id]!.slot]: id };
-      const plain = [...walkFrames(heroLook(ap), true), ...battleFrames(heroLook(ap))];
       const worn = [...walkFrames(heroLook(ap, eq), true), ...battleFrames(heroLook(ap, eq))];
       for (const f of worn) {
         expect(f).toHaveLength(HERO_FRAME.h);
-        for (const row of f) {
-          expect(row).toHaveLength(HERO_FRAME.w);
-          for (const c of row) if (c) expect(palette.has(c), c).toBe(true);
-        }
+        expect(f.every((row) => row.length === HERO_FRAME.w)).toBe(true);
+        expect([
+          ...new Set(f.flat().filter((color): color is string => !!color && !palette.has(color))),
+        ]).toEqual([]);
       }
       // どの コマも いつもの 絵と ちがう（見て わかるほど：10 ドット いじょう）
       worn.forEach((f, k) => {

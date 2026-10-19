@@ -21,6 +21,7 @@ import {
 import { createRng } from '../../src/core/rng';
 import type { Skill } from '../../src/core/content/schemas';
 import type { ActionResult, BattleState, Combatant, Command } from '../../src/core/battle/types';
+import { battleItemAvailability, buildItemOptions } from '../../src/scenes/battle/hudViews';
 
 let D: BattleDeps;
 beforeAll(async () => {
@@ -45,7 +46,16 @@ async function setup(
     {
       name: 'ハル',
       level: opts.level ?? 5,
-      baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
+      baseStats: {
+        hp: 40,
+        mp: 10,
+        scienceAtk: 8,
+        humanitiesAtk: 8,
+        scienceDef: 6,
+        humanitiesDef: 6,
+        spd: 7,
+        wis: 5,
+      },
       growth: { hp: 6, mp: 2, atk: 1.5, def: 1.2, spd: 1.0, wis: 1.0 },
       skills: opts.skills ?? ['sk-tashizan-giri', 'sk-shiraberu', 'sk-kanji-barrier'],
       equipment: {},
@@ -98,15 +108,15 @@ const testSkill = (over: Partial<Skill>): Skill => ({
 });
 
 describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × ElementMultiplier）', () => {
-  it('score の表：1.0 = CRITICAL ×2.0 / 0.5〜0.99 = GREAT ×1.2 / 0.01〜0.49 = GOOD ×0.8 / 0 = MISS ×0.5', () => {
-    expect(D.settings.scoreMultipliers).toEqual({ perfect: 2, good: 1.2, weak: 0.8, miss: 0.5 });
+  it('score の表：1.0 = CRITICAL ×2.0 / 0.5〜0.99 = GREAT ×1.2 / 0.01〜0.49 = GOOD ×0.8 / 0 = MISS ×0.55', () => {
+    expect(D.settings.scoreMultipliers).toEqual({ perfect: 2, good: 1.2, weak: 0.8, miss: 0.55 });
     const table: [number, string, number][] = [
       [1, 'perfect', 2],
       [0.99, 'good', 1.2],
       [0.5, 'good', 1.2],
       [0.49, 'weak', 0.8],
       [0.01, 'weak', 0.8],
-      [0, 'miss', 0.5],
+      [0, 'miss', 0.55],
     ];
     for (const [score, band, mult] of table) {
       expect(scoreBand(score)).toBe(band);
@@ -114,11 +124,11 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
     }
   });
 
-  it('式どおり：こうげき × いりょく ÷ ぼうぎょ × 係数 × できばえ（かしこさ で 必殺技の いりょく アップ）', async () => {
+  it('ポケモン型基礎式へ教材倍率と乱数を掛け、かしこさも必殺技へ反映する', async () => {
     const { state } = await setup();
     const sk = D.skills.get('sk-tashizan-giri')!; // power 120 / むぞくせい
-    const attacker = { ...state.ally.hero, stats: { ...state.ally.hero.stats, atk: 10, wis: 5 } };
-    const defender = { ...state.enemy, stats: { ...state.enemy.stats, def: 5 } };
+    const attacker = { ...state.ally.hero, stats: { ...state.ally.hero.stats, scienceAtk: 10, wis: 5 } };
+    const defender = { ...state.enemy, stats: { ...state.enemy.stats, scienceDef: 5 } };
     const d = computeDamage({
       attacker,
       defender,
@@ -130,8 +140,7 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
       elements: D.elements,
       rng: createRng('x'),
     });
-    const base = ((10 * 1.2 * 1.05) / 5) * D.settings.damageScale;
-    expect(d.amount).toBe(Math.round(base * 2));
+    expect(d.amount).toBe(45);
     expect(d.band).toBe('perfect');
   });
 
@@ -233,30 +242,7 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
   });
 });
 
-describe('主人公専用技「カタカナしばり」', () => {
-  it('初回だけゲージを使い、3ターン同じ技に固定したあと解除される', async () => {
-    const { state } = await setup({ skills: ['sk-katakana-shibari'] });
-    let current = tough({
-      ...state,
-      player: { ...state.player, subjectGauges: { ...state.player.subjectGauges, kokugo: 100 } },
-    });
-
-    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
-    expect(current.player.subjectGauges.kokugo).toBeGreaterThanOrEqual(0);
-    expect(current.player.skillLock).toEqual({ skillId: 'sk-katakana-shibari', turns: 2 });
-
-    const rejected = act(current, { kind: 'attack' }, D).state;
-    expect(rejected.turn).toBe(current.turn);
-    expect(rejected.player.skillLock?.turns).toBe(2);
-
-    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
-    expect(current.player.skillLock?.turns).toBe(1);
-    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
-    expect(current.player.skillLock).toBeNull();
-  });
-});
-
-describe('ターンの すすみかた（主人公 → オトモ → てき）', () => {
+describe('ターンの すすみかた（優先度 → すばやさ → 同速抽選）', () => {
   it('はじめは ターン 1 で、主人公は すぐ 動ける', async () => {
     const { state } = await setup();
     expect(state.turn).toBe(1);
@@ -279,15 +265,58 @@ describe('ターンの すすみかた（主人公 → オトモ → てき）',
     expect(actors).toEqual(['hero', 'enemy']);
   });
 
+  it('敵先攻・味方先攻とも、actイベントを計算した行動順で返す', async () => {
+    const { state } = await setup({ withMonster: true });
+    const ordered = (heroSpeed: number, companionSpeed: number, enemySpeed: number) => {
+      const battle = tough(state);
+      battle.ally.hero.stats.spd = heroSpeed;
+      battle.ally.monsters[0]!.stats.spd = companionSpeed;
+      battle.enemy.stats.spd = enemySpeed;
+      return act(battle, { kind: 'attack' }, D)
+        .events.filter((event) => event.t === 'act')
+        .map((event) => (event.t === 'act' ? event.actorId : ''));
+    };
+
+    expect(ordered(10, 20, 30)).toEqual(['enemy', 'pal', 'hero']);
+    expect(ordered(30, 20, 10)).toEqual(['hero', 'pal', 'enemy']);
+  });
+
   it('敵は 1 ターンに 1 回だけ 動く（ボスの フェーズでも ふえない）', async () => {
     const { state } = await setup({ level: 40, enemyId: 'iwate-boss-konjiki-no-tora', enemyLevel: 5 });
     const half: BattleState = {
       ...tough(state),
+      ally: {
+        ...state.ally,
+        hero: {
+          ...tough(state).ally.hero,
+          stats: { ...state.ally.hero.stats, scienceAtk: 1, humanitiesAtk: 1, spd: 999 },
+        },
+      },
       enemy: { ...toughen(state.enemy), hp: Math.floor(state.enemy.stats.hp * 0.45) },
     };
     const r = act(half, { kind: 'attack' }, D);
     expect(r.events.some((e) => e.t === 'bossPhase')).toBe(true);
     expect(r.events.filter((e) => e.t === 'act' && e.side === 'enemy')).toHaveLength(1);
+  });
+
+  it('ボスを倒した一撃では、撃破後のフェーズ移行を発生させない', async () => {
+    const { state } = await setup({ level: 40, enemyId: 'iwate-boss-konjiki-no-tora', enemyLevel: 5 });
+    const almostDown: BattleState = { ...state, enemy: { ...state.enemy, hp: 1 } };
+
+    const r = act(almostDown, { kind: 'attack' }, D);
+
+    expect(r.state.outcome).toBe('victory');
+    expect(r.events.some((event) => event.t === 'bossPhase')).toBe(false);
+  });
+
+  it('敵を倒したときは敵のKOだけを返し、味方KOを先に発行しない', async () => {
+    const { state } = await setup();
+    const almostDown: BattleState = { ...state, enemy: { ...state.enemy, hp: 1 } };
+    const result = act(almostDown, { kind: 'attack' }, D);
+    expect(result.state.outcome).toBe('victory');
+    expect(result.events.filter((event) => event.t === 'ko')).toEqual([
+      { t: 'ko', side: 'enemy', targetId: state.enemy.id },
+    ]);
   });
 
   it('コマンドが 成立しなければ ターンは すすまない（ゲージが たりない）', async () => {
@@ -526,6 +555,17 @@ describe('必殺技の 効果', () => {
     expect(heal(0)).toBeGreaterThan(0);
   });
 
+  it('かいふく技は最大HPを超えた満額ではなく、実際に回復した量を知らせる', async () => {
+    const def = withSkills([testSkill({ id: 'sk-test-heal-actual', effect: 'heal', power: 0 })]);
+    const { state } = await setup({ skills: ['sk-test-heal-actual'], def });
+    state.ally.hero.hp = state.ally.hero.stats.hp - 1;
+
+    const r = act(state, { kind: 'skill', skillId: 'sk-test-heal-actual', result: R(1) }, def);
+    const healed = r.events.find((event) => event.t === 'heal' && event.side === 'ally');
+
+    expect(healed && healed.t === 'heal' ? healed.amount : 0).toBe(1);
+  });
+
   it('まもり（party）：主人公と オトモの ぼうぎょが 上がり、settings.turns.buffTurns ターンで きれる', async () => {
     const { state } = await setup({ withMonster: true });
     const r = act(tough(state), { kind: 'skill', skillId: 'sk-kanji-barrier', result: R(1) }, D);
@@ -569,6 +609,19 @@ describe('必殺技の 効果', () => {
 });
 
 describe('コマンド', () => {
+  it.each([
+    ['通常敵', 'aomori-ringoron'],
+    ['中ボス', 'aomori-midboss-nebuta-taisho'],
+    ['県ボス', 'aomori-boss-tsugaru-no-nushi'],
+  ])('%sでもperfect・average・missの必殺技で戦闘が進む', async (_label, enemyId) => {
+    for (const score of [1, 0.65, 0]) {
+      const { state } = await setup({ enemyId, enemyLevel: 5, seed: `${enemyId}:${score}` });
+      const result = act(tough(state), { kind: 'skill', skillId: 'sk-tashizan-giri', result: R(score) }, D);
+      expect(result.events.some((event) => event.t === 'damage' && event.side === 'enemy')).toBe(true);
+      expect(result.state.turn).toBe(2);
+    }
+  });
+
   it('たたかう は問題なしで必ず成立する', async () => {
     const { state } = await setup();
     const { state: next, events } = act(state, { kind: 'attack' }, D);
@@ -595,6 +648,37 @@ describe('コマンド', () => {
     expect(r.state.ally.items['aomori-ringo']).toBe(1);
   });
 
+  it('回復どうぐは実際に回復した量を知らせる', async () => {
+    const { state } = await setup();
+    state.ally.hero.hp = state.ally.hero.stats.hp - 1;
+
+    const r = act(state, { kind: 'item', itemId: 'aomori-ringo' }, D);
+    const healed = r.events.find((event) => event.t === 'heal' && event.side === 'ally');
+
+    expect(healed && healed.t === 'heal' ? healed.amount : 0).toBe(1);
+  });
+
+  it('HP・MPが満タンなら回復どうぐを表示・消費せず、ターンも進めない', async () => {
+    const { state, c } = await setup();
+
+    expect(buildItemOptions(state, c)).toEqual([]);
+    const r = act(state, { kind: 'item', itemId: 'aomori-ringo' }, D);
+    expect(r.state.ally.items['aomori-ringo']).toBe(2);
+    expect(r.state.turn).toBe(1);
+    expect(r.events).toEqual([]);
+  });
+
+  it('むすび玉は通常敵に表示し、ボス戦では理由つきで無効にする', async () => {
+    const { state, c } = await setup();
+    const item = c.items.get('common-musubi-dama')!;
+    expect(battleItemAvailability(state, item, c).disabled).toBe(false);
+    state.isBossBattle = true;
+    expect(battleItemAvailability(state, item, c)).toMatchObject({
+      disabled: true,
+      reason: expect.any(String),
+    });
+  });
+
   it('いれかえ で オトモが かわる', async () => {
     const c = await content();
     const { state } = await setup({ withMonster: true });
@@ -618,9 +702,86 @@ describe('コマンド', () => {
     expect(next.outcome).toBe('victory');
     expect(v && v.t === 'victory' && v.xp).toBeGreaterThan(0);
   });
+
+  it('コンボ倍率を含む勝利報酬は安全整数を超えない', async () => {
+    const monster = D.monsters.get('aomori-ringoron')!;
+    const def: BattleDeps = {
+      ...D,
+      monsters: new Map([
+        ...D.monsters,
+        [monster.id, { ...monster, xp: Number.MAX_SAFE_INTEGER, gold: Number.MAX_SAFE_INTEGER }],
+      ]),
+    };
+    const { state } = await setup({ level: 30, def });
+    state.enemy.hp = 1;
+    state.player.maxCombo = 1;
+
+    const r = act(state, { kind: 'attack' }, def);
+    const victory = r.events.find((event) => event.t === 'victory');
+
+    expect(victory && victory.t === 'victory' ? victory.xp : 0).toBe(Number.MAX_SAFE_INTEGER);
+    expect(victory && victory.t === 'victory' ? victory.gold : 0).toBe(Number.MAX_SAFE_INTEGER);
+  });
 });
 
 describe('仲間化（GDD §4.6）', () => {
+  it('むすび玉は解答後に1こ消費し、成否を判定する', async () => {
+    const { state } = await setup({ seed: 'musubi-dama' });
+    state.ally.items['common-musubi-dama'] = 2;
+    state.enemy.hp = Math.max(1, Math.floor(state.enemy.stats.hp * 0.1));
+
+    const result = act(
+      state,
+      {
+        kind: 'item',
+        itemId: 'common-musubi-dama',
+        result: R(1),
+        timeLimitScale: 1,
+      },
+      D,
+    );
+
+    expect(result.state.ally.items['common-musubi-dama']).toBe(1);
+    expect(result.events.some((event) => event.t === 'recruitAttempt')).toBe(true);
+  });
+
+  it('むすび玉はボスや未解答では消費しない', async () => {
+    const { state } = await setup({ seed: 'musubi-dama-unavailable' });
+    state.ally.items['common-musubi-dama'] = 1;
+    state.isBossBattle = true;
+    const boss = act(
+      state,
+      { kind: 'item', itemId: 'common-musubi-dama', result: R(1), timeLimitScale: 1 },
+      D,
+    );
+    expect(boss.state.ally.items['common-musubi-dama']).toBe(1);
+
+    state.isBossBattle = false;
+    const unanswered = act(state, { kind: 'item', itemId: 'common-musubi-dama' }, D);
+    expect(unanswered.state.ally.items['common-musubi-dama']).toBe(1);
+  });
+
+  it('指定された特産品をあげると 1こ消費して必ず仲間になる', async () => {
+    const { state } = await setup({ seed: 'recruit-gift' });
+    const result = act(state, { kind: 'recruit', result: R(0), itemId: 'aomori-ringo' }, D);
+
+    expect(result.state.outcome).toBe('recruited');
+    expect(result.state.ally.items['aomori-ringo']).toBe(1);
+    expect(result.events).toContainEqual({
+      t: 'recruitGift',
+      targetId: state.enemy.id,
+      itemId: 'aomori-ringo',
+    });
+  });
+
+  it('指定と違うどうぐは仲間化に使わず消費しない', async () => {
+    const { state } = await setup({ seed: 'wrong-recruit-gift' });
+    const result = act(state, { kind: 'recruit', result: R(0), itemId: 'not-the-gift' }, D);
+
+    expect(result.state.ally.items['aomori-ringo']).toBe(2);
+    expect(result.events.some((event) => event.t === 'recruitGift')).toBe(false);
+  });
+
   it('HP が高いうちは 0%', () => {
     expect(recruitChance({ isBoss: false } as never, 0.5, 0.9, 1, D.settings)).toBe(0);
   });
@@ -682,14 +843,98 @@ describe('装備とセットボーナス', () => {
     const spec = {
       name: 'ハル',
       level: 5,
-      baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
+      baseStats: {
+        hp: 40,
+        mp: 10,
+        scienceAtk: 8,
+        humanitiesAtk: 8,
+        scienceDef: 6,
+        humanitiesDef: 6,
+        spd: 7,
+        wis: 5,
+      },
       growth: { hp: 6, mp: 2, atk: 1.5, def: 1.2, spd: 1, wis: 1 },
       skills: [],
       equipment: {},
     };
     const bare = makeHero(spec, c.items, c.sets);
     const armed = makeHero({ ...spec, equipment: { chest: 'aomori-ringo-no-yoroi' } }, c.items, c.sets);
-    expect(armed.stats.def).toBeGreaterThan(bare.stats.def);
+    expect(armed.stats.scienceDef).toBeGreaterThan(bare.stats.scienceDef);
+  });
+
+  it('壊れたセーブ由来のスロット違い装備は能力へ反映しない', async () => {
+    const c = await content();
+    const spec = {
+      name: 'ハル',
+      level: 5,
+      baseStats: {
+        hp: 40,
+        mp: 10,
+        scienceAtk: 8,
+        humanitiesAtk: 8,
+        scienceDef: 6,
+        humanitiesDef: 6,
+        spd: 7,
+        wis: 5,
+      },
+      growth: { hp: 6, mp: 2, atk: 1.5, def: 1.2, spd: 1, wis: 1 },
+      skills: [],
+      equipment: {},
+    };
+    const bare = makeHero(spec, c.items, c.sets);
+    const mismatched = makeHero({ ...spec, equipment: { weapon: 'aomori-ringo-no-yoroi' } }, c.items, c.sets);
+
+    expect(mismatched.stats).toEqual(bare.stats);
+    expect(mismatched.elementResists).toEqual([]);
+  });
+
+  it('属性武器は主人公の通常攻撃に属性を付与する', async () => {
+    const c = await content();
+    const hero = makeHero(
+      {
+        name: 'ハル',
+        level: 1,
+        baseStats: {
+          hp: 40,
+          mp: 10,
+          scienceAtk: 8,
+          humanitiesAtk: 8,
+          scienceDef: 6,
+          humanitiesDef: 6,
+          spd: 7,
+          wis: 5,
+        },
+        growth: { hp: 0, mp: 0, atk: 0, def: 0, spd: 0, wis: 0 },
+        skills: [],
+        equipment: { weapon: 'aomori-maguro-zutsuki' },
+      },
+      c.items,
+      c.sets,
+    );
+    expect(hero.element).toBe('mizu');
+  });
+
+  it('属性防具は同じ属性のダメージを軽減する', async () => {
+    const c = await content();
+    const { state } = await setup();
+    const armor = c.items.get('aomori-nebuta-no-kabuto')!;
+    const defended = {
+      ...state.ally.hero,
+      elementResists: [armor.element!],
+    };
+    const attacker = { ...state.enemy, element: armor.element! };
+    const baseInput = {
+      attacker,
+      skill: null,
+      score: null,
+      combo: 0,
+      canCrit: false,
+      settings: c.settings,
+      elements: c.elements,
+    };
+    const normal = computeDamage({ ...baseInput, defender: state.ally.hero, rng: createRng('normal') });
+    const resisted = computeDamage({ ...baseInput, defender: defended, rng: createRng('resisted') });
+    expect(resisted.amount).toBeLessThan(normal.amount);
   });
 
   it('5点そろうとセットボーナス（属性倍率）がつく', async () => {
@@ -706,7 +951,16 @@ describe('装備とセットボーナス', () => {
       {
         name: 'ハル',
         level: 5,
-        baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
+        baseStats: {
+          hp: 40,
+          mp: 10,
+          scienceAtk: 8,
+          humanitiesAtk: 8,
+          scienceDef: 6,
+          humanitiesDef: 6,
+          spd: 7,
+          wis: 5,
+        },
         growth: { hp: 6, mp: 2, atk: 1.5, def: 1.2, spd: 1, wis: 1 },
         skills: [],
         equipment,
@@ -739,5 +993,28 @@ describe('敗北', () => {
     const r = act(down, { kind: 'wait' }, D);
     expect(r.events.some((e) => e.t === 'act' && e.actorId === 'pal' && e.auto)).toBe(true);
     expect(r.state.turn).toBe(2);
+  });
+});
+
+describe('主人公専用技「カタカナしばり」', () => {
+  it('初回だけゲージを使い、3ターン同じ技に固定したあと解除される', async () => {
+    const { state } = await setup({ skills: ['sk-katakana-shibari'] });
+    let current = tough({
+      ...state,
+      player: { ...state.player, subjectGauges: { ...state.player.subjectGauges, kokugo: 100 } },
+    });
+
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.subjectGauges.kokugo).toBeGreaterThanOrEqual(0);
+    expect(current.player.skillLock).toEqual({ skillId: 'sk-katakana-shibari', turns: 2 });
+
+    const rejected = act(current, { kind: 'attack' }, D).state;
+    expect(rejected.turn).toBe(current.turn);
+    expect(rejected.player.skillLock?.turns).toBe(2);
+
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.skillLock?.turns).toBe(1);
+    current = act(current, { kind: 'skill', skillId: 'sk-katakana-shibari', result: R(1) }, D).state;
+    expect(current.player.skillLock).toBeNull();
   });
 });
