@@ -143,7 +143,8 @@ test('バトル：コマンドと主人公情報はポケモン風の独立し�
     page.locator('.nq-ally-hero .nq-sgauge').boundingBox(),
     page.locator('.nq-party').boundingBox(),
     page.locator('.nq-ally-hero .nq-bar-hp').boundingBox(),
-    page.locator('.nq-ally-hero .nq-sg-bar').boundingBox(),
+    // 初期技が算数・国語の 2 つなので、ゲージも 2 本ならぶ
+    page.locator('.nq-ally-hero .nq-sg-bar').first().boundingBox(),
   ]);
 
   expect(rail).not.toBeNull();
@@ -166,8 +167,9 @@ test('バトル：コマンドと主人公情報はポケモン風の独立し�
   expect(party!.x).toBeGreaterThan(commandSlot!.x + commandSlot!.width);
   expect(gauge!.y).toBeGreaterThan(heroHp!.y);
   expect(gauge!.x).toBeGreaterThanOrEqual(heroHp!.x);
-  expect(heroGauge!.width).toBeCloseTo(heroHp!.width, 0);
-  await expect(page.locator('.nq-ally-hero .nq-sg-value')).toHaveText('0/100');
+  expect(heroGauge!.width).toBeLessThanOrEqual(heroHp!.width);
+  expect(gauge!.width).toBeCloseTo(heroHp!.width, 0);
+  await expect(page.locator('.nq-ally-hero .nq-sg-value')).toHaveText(['0/100', '0/100']);
 
   // 技一覧を開いても、右下の主人公枠は動かず、舞台を覆い過ぎない高さに保つ。
   await page.locator('.nq-cmd[data-cmd="skill"]').click();
