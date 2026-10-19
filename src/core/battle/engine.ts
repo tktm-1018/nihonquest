@@ -8,7 +8,12 @@
  */
 import type { ElementTable, Item, Monster, Settings, Skill } from '../content/schemas';
 import { createRng, type Rng } from '../rng';
+import { addProgressValue } from '../../shared/safeInteger';
 import { comboBonus, computeDamage, fleeChance, recruitChance, scoreBand, scoreMultiplier } from './damage';
+import { commandPriority, initiativeOrder } from './initiative';
+import { useMusubiDama } from './musubiDama';
+import { clampBattleValue, cloneBattleValue, emptyGauges } from './utils';
+import { advanceSkillLock, isContinuingLock, lockRejects } from './skillLock';
 import type {
   BattleEvent,
   BattleState,
@@ -18,7 +23,6 @@ import type {
   EnemyUnit,
   Party,
   Side,
-  SubjectGauges,
   TargetType,
 } from './types';
 
@@ -34,7 +38,6 @@ export interface StepOutput {
   state: BattleState;
   events: BattleEvent[];
 }
-
 /** バトルで 使える 必殺技と、それを 使う 味方 */
 export interface BattleSkill {
   skill: Skill;
@@ -45,7 +48,6 @@ export interface BattleSkill {
 }
 
 export const SUBJECTS = ['kokugo', 'sansu', 'rika', 'shakai', 'seikatsu', 'eigo'] as const;
-
 /** かいふく わざ：最大 HP × この割合 × いりょく倍率 */
 const HEAL_RATIO = 0.25;
 /** ぼうぎょ アップ・ダウン：1 ± この割合 × いりょく倍率 */
@@ -55,28 +57,11 @@ const ENEMY_HEAL_RATIO = 0.25;
 /** 敵の「みを まもる」の ぼうぎょ倍率と つづく ターン数 */
 const ENEMY_GUARD_MULT = 1.5;
 const ENEMY_GUARD_TURNS = 1;
-
-function clone<T>(x: T): T {
-  return structuredClone(x);
-}
-
-function clamp(x: number, lo: number, hi: number): number {
-  return Math.min(hi, Math.max(lo, x));
-}
-
-export function emptyGauges(): SubjectGauges {
-  return { kokugo: 0, sansu: 0, rika: 0, shakai: 0, seikatsu: 0, eigo: 0 };
-}
+export { emptyGauges } from './utils';
 
 /** 必殺技の 対象。targetType を 省略したら effect から（かいふく・まもりは 自分、ほかは 敵） */
 export function skillTarget(sk: Pick<Skill, 'targetType' | 'effect'>): TargetType {
   return sk.targetType ?? (sk.effect === 'heal' || sk.effect === 'buff' ? 'self' : 'singleEnemy');
-}
-
-/** その 必殺技を いま 打てるか（教科ゲージが costGauge 以上） */
-export function canAfford(s: BattleState, sk: Pick<Skill, 'id' | 'subject' | 'costGauge'>): boolean {
-  if (s.player.skillLock?.skillId === sk.id) return true;
-  return s.player.subjectGauges[sk.subject] >= sk.costGauge;
 }
 
 /** 主人公が いま コマンドを 出せるか（ターン制：たたかいが つづいて いて たおれて いなければ いつでも） */
@@ -152,11 +137,11 @@ export function createBattle(
   },
   def: BattleDeps,
 ): BattleState {
-  const ally = clone(opts.ally);
+  const ally = cloneBattleValue(opts.ally);
   const alive = ally.monsters.findIndex((m) => m.hp > 0);
   if ((ally.monsters[ally.activeMonsterIndex]?.hp ?? 0) <= 0 && alive >= 0) ally.activeMonsterIndex = alive;
 
-  const enemy: EnemyUnit = { ...clone(opts.enemy), skipTurns: 0 };
+  const enemy: EnemyUnit = { ...cloneBattleValue(opts.enemy), skipTurns: 0 };
 
   return {
     turn: 1,
@@ -255,8 +240,8 @@ function hit(
     scoreBand: d.band,
     comboMult: d.comboMult,
   });
-  if (byAlly) checkBossPhase(s.enemy, def, ev);
-  else if (o.defender.hp <= 0) allyDown(s, o.defender, def, ev);
+  if (byAlly && o.defender.hp > 0) checkBossPhase(s.enemy, def, ev);
+  else if (!byAlly && o.defender.hp <= 0) allyDown(s, o.defender, def, ev);
 }
 
 function finishIfOver(s: BattleState, def: BattleDeps, rng: Rng, ev: BattleEvent[]): void {
@@ -271,8 +256,8 @@ function finishIfOver(s: BattleState, def: BattleDeps, rng: Rng, ev: BattleEvent
     s.outcome = 'victory';
     ev.push({
       t: 'victory',
-      xp: Math.round((m?.xp ?? 0) * bonus),
-      gold: Math.round((m?.gold ?? 0) * bonus),
+      xp: addProgressValue(0, Math.round((m?.xp ?? 0) * bonus)),
+      gold: addProgressValue(0, Math.round((m?.gold ?? 0) * bonus)),
       drops,
       recruitOffer,
       bonus,
@@ -295,10 +280,10 @@ function enemyAction(s: BattleState, def: BattleDeps, rng: Rng, ev: BattleEvent[
   const healSkill = skills.find((sk) => sk.effect === 'heal');
   if (e.hp / e.stats.hp <= 0.3 && healSkill && e.mp >= healSkill.mp) {
     e.mp -= healSkill.mp;
-    const amount = Math.round(e.stats.hp * ENEMY_HEAL_RATIO);
-    e.hp = Math.min(e.stats.hp, e.hp + amount);
+    const before = e.hp;
+    e.hp = Math.min(e.stats.hp, e.hp + Math.round(e.stats.hp * ENEMY_HEAL_RATIO));
     ev.push({ t: 'act', side: 'enemy', actorId: e.id, command: 'skill', skillId: healSkill.id });
-    ev.push({ t: 'heal', side: 'enemy', targetId: e.id, amount });
+    ev.push({ t: 'heal', side: 'enemy', targetId: e.id, amount: e.hp - before });
     return;
   }
   const usable = skills.filter((sk) => sk.effect === 'damage' && e.mp >= sk.mp);
@@ -370,6 +355,14 @@ function weakestAlly(s: BattleState): Combatant {
   return front !== s.ally.hero && r(front) < r(s.ally.hero) ? front : s.ally.hero;
 }
 
+/** 戦闘の自動対象に、回復どうぐの効果が実際にあるか。 */
+export function canUseBattleItem(s: BattleState, item: Item): boolean {
+  if (item.kind !== 'consumable' || !item.use) return false;
+  if (item.use.recruit) return true;
+  const target = weakestAlly(s);
+  return (!!item.use.heal && target.hp < target.stats.hp) || (!!item.use.mp && target.mp < target.stats.mp);
+}
+
 /** こたえた 教科の ゲージを ためる（オトモの 教科なら たまりやすい） */
 function chargeGauge(s: BattleState, sk: Skill, score: number, def: BattleDeps, ev: BattleEvent[]): void {
   const g = def.settings.subjectGauge;
@@ -411,7 +404,7 @@ function useSkill(
   const actor = actorId === hero.id ? hero : s.ally.monsters.find((m) => m.id === actorId)!;
   const p = s.player;
   const st = def.settings;
-  const continuingLock = p.skillLock?.skillId === sk.id;
+  const continuingLock = isContinuingLock(s, sk);
 
   const have = p.subjectGauges[sk.subject];
   if (!continuingLock && have < sk.costGauge) {
@@ -423,7 +416,7 @@ function useSkill(
     ev.push({ t: 'gaugeUse', subject: sk.subject, amount: sk.costGauge, value: p.subjectGauges[sk.subject] });
   }
 
-  const score = clamp(Number.isFinite(command.result.score) ? command.result.score : 0, 0, 1);
+  const score = clampBattleValue(Number.isFinite(command.result.score) ? command.result.score : 0, 0, 1);
   const band = scoreBand(score);
   const mult = scoreMultiplier(score, st);
   // コンボ（Streak）：GREAT 以上なら +1、GOOD・MISS なら 0 に もどる
@@ -446,9 +439,9 @@ function useSkill(
       break;
     case 'heal':
       for (const c of allyTargets(s, sk, actor)) {
-        const amount = Math.max(1, Math.round(c.stats.hp * HEAL_RATIO * mult));
-        c.hp = Math.min(c.stats.hp, c.hp + amount);
-        ev.push({ t: 'heal', side: 'ally', targetId: c.id, amount });
+        const before = c.hp;
+        c.hp = Math.min(c.stats.hp, c.hp + Math.max(1, Math.round(c.stats.hp * HEAL_RATIO * mult)));
+        ev.push({ t: 'heal', side: 'ally', targetId: c.id, amount: c.hp - before });
       }
       break;
     case 'buff': {
@@ -483,11 +476,7 @@ function useSkill(
       break;
     }
   }
-  if (sk.selfLockTurns) {
-    const remain = continuingLock ? Math.max(0, (p.skillLock?.turns ?? 1) - 1) : sk.selfLockTurns - 1;
-    p.skillLock = remain > 0 ? { skillId: sk.id, turns: remain } : null;
-    ev.push({ t: 'skillLock', skillId: sk.id, remain });
-  }
+  advanceSkillLock(s, sk, continuingLock, ev);
   chargeGauge(s, sk, score, def, ev);
   return true;
 }
@@ -501,14 +490,6 @@ function heroCommand(
   ev: BattleEvent[],
 ): boolean {
   const hero = s.ally.hero;
-  const lock = s.player.skillLock;
-  if (
-    lock &&
-    (command.kind !== 'skill' ||
-      command.skillId !== lock.skillId ||
-      (command.actorId !== undefined && command.actorId !== hero.id))
-  )
-    return false;
   switch (command.kind) {
     case 'wait':
       // 主人公は 動かない（たおれて いる ときなど）。オトモと てきは 動く
@@ -524,12 +505,15 @@ function heroCommand(
       const it = def.items.get(command.itemId);
       const n = s.ally.items[command.itemId] ?? 0;
       if (!it || n <= 0) return false;
+      if (it.use?.recruit) return useMusubiDama(s, it, def.monsters.get(s.enemy.refId), command, rng, ev);
+      if (!canUseBattleItem(s, it)) return false;
       s.ally.items[command.itemId] = n - 1;
       const target = weakestAlly(s);
       ev.push({ t: 'itemUsed', itemId: it.id, targetId: target.id });
       if (it.use?.heal) {
+        const before = target.hp;
         target.hp = Math.min(target.stats.hp, target.hp + it.use.heal);
-        ev.push({ t: 'heal', side: 'ally', targetId: target.id, amount: it.use.heal });
+        ev.push({ t: 'heal', side: 'ally', targetId: target.id, amount: target.hp - before });
       }
       if (it.use?.mp) target.mp = Math.min(target.stats.mp, target.mp + it.use.mp);
       return true;
@@ -545,6 +529,12 @@ function heroCommand(
     }
     case 'recruit': {
       const m = def.monsters.get(s.enemy.refId);
+      const gift = m?.recruitItem;
+      const usedGift = Boolean(gift && command.itemId === gift && (s.ally.items[gift] ?? 0) > 0);
+      if (usedGift && gift) {
+        s.ally.items[gift]!--;
+        ev.push({ t: 'recruitGift', targetId: s.enemy.id, itemId: gift });
+      }
       const chance = recruitChance(
         s.enemy,
         m?.recruitRate ?? 0,
@@ -552,8 +542,8 @@ function heroCommand(
         command.result.score,
         def.settings,
       );
-      const success = chance > 0 && rng.chance(chance);
-      ev.push({ t: 'recruitAttempt', targetId: s.enemy.id, success, chance });
+      const success = usedGift || (chance > 0 && rng.chance(chance));
+      ev.push({ t: 'recruitAttempt', targetId: s.enemy.id, success, chance: usedGift ? 1 : chance });
       if (success) {
         s.outcome = 'recruited';
         ev.push({ t: 'recruited', monsterId: s.enemy.refId });
@@ -578,29 +568,61 @@ function heroCommand(
   }
 }
 
-/**
- * 1 ターンを すすめる：主人公の コマンド → オトモ → てき。
- * コマンドが 成立しなかった ときは ターンが すすまず、events だけ（gaugeShort など）を かえす
- */
+function invalidCommandEvents(s: BattleState, command: Command, def: BattleDeps): BattleEvent[] | null {
+  if (lockRejects(s, command)) return [];
+  if (command.kind === 'skill') {
+    const entry = battleSkills(s, def).find(
+      (candidate) =>
+        candidate.skill.id === command.skillId && candidate.actorId === (command.actorId ?? s.ally.hero.id),
+    );
+    if (!entry) throw new Error(`skill "${command.skillId}" は いま つかえません`);
+    const have = s.player.subjectGauges[entry.skill.subject];
+    if (!isContinuingLock(s, entry.skill) && have < entry.skill.costGauge)
+      return [{ t: 'gaugeShort', subject: entry.skill.subject, need: entry.skill.costGauge, have }];
+  }
+  if (command.kind === 'item') {
+    const item = def.items.get(command.itemId);
+    if (!item || (s.ally.items[command.itemId] ?? 0) <= 0 || !canUseBattleItem(s, item)) return [];
+  }
+  if (command.kind === 'swap') {
+    const target = s.ally.monsters[command.monsterIndex];
+    if (!target || target.hp <= 0 || command.monsterIndex === s.ally.activeMonsterIndex) return [];
+  }
+  if (command.kind === 'flee' && s.isBossBattle && !s.canFleeBoss)
+    return [{ t: 'fleeAttempt', success: false, chance: 0 }];
+  return null;
+}
+
+/** 1ターンを優先度→素早さ→シード付き同速抽選の順で解決する。 */
 export function act(prev: BattleState, command: Command, def: BattleDeps): StepOutput {
-  const s = clone(prev);
+  const s = cloneBattleValue(prev);
   const ev: BattleEvent[] = [];
   // たおれた 主人公は コマンドを 出せない（wait なら ターンだけ すすむ）
   if (s.outcome !== 'ongoing' || (s.ally.hero.hp <= 0 && command.kind !== 'wait')) return done(s, null, ev);
   const rng = rngFor(s);
 
-  ev.push({ t: 'turnStart', turn: s.turn });
-  const used = heroCommand(s, command, def, rng, ev);
-  finishIfOver(s, def, rng, ev);
-  if (!used) {
-    // ターンは すすまない（turnStart は 出したままに しない）
-    const idx = ev.findIndex((e) => e.t === 'turnStart');
-    if (idx >= 0) ev.splice(idx, 1);
-    return done(s, rng, ev);
-  }
+  const invalid = invalidCommandEvents(s, command, def);
+  if (invalid) return done(s, rng, invalid);
 
-  if (s.outcome === 'ongoing') companionAction(s, def, rng, ev);
-  if (s.outcome === 'ongoing') enemyTurn(s, def, rng, ev);
+  ev.push({ t: 'turnStart', turn: s.turn });
+  const companion = s.ally.monsters[s.ally.activeMonsterIndex];
+  const order = initiativeOrder(
+    [
+      { actor: 'hero', speed: s.ally.hero.stats.spd, priority: commandPriority(command) },
+      ...(companion && companion.hp > 0
+        ? ([{ actor: 'companion', speed: companion.stats.spd, priority: 0 }] as const)
+        : []),
+      { actor: 'enemy', speed: s.enemy.stats.spd, priority: 0 },
+    ],
+    rng,
+  );
+  for (const actor of order) {
+    if (s.outcome !== 'ongoing') break;
+    if (actor === 'hero') heroCommand(s, command, def, rng, ev);
+    else if (actor === 'companion') companionAction(s, def, rng, ev);
+    else enemyTurn(s, def, rng, ev);
+    finishIfOver(s, def, rng, ev);
+  }
   if (s.outcome === 'ongoing') {
     for (const c of [s.ally.hero, ...s.ally.monsters, s.enemy]) decayBuffs(c);
     s.turn += 1;

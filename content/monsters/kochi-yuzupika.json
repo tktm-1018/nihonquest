@@ -7,22 +7,51 @@
   "element": "hikari",
   "weakness": "yami",
   "baseStats": {
-    "hp": 53,
-    "mp": 15,
-    "atk": 12,
-    "def": 9,
-    "spd": 9,
-    "wis": 10
+    "hp": 31.8,
+    "mp": 9,
+    "spd": 6.4,
+    "wis": 6,
+    "scienceAtk": 7.5,
+    "humanitiesAtk": 7.5,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 5,
-    "mp": 1.2,
-    "atk": 1.2,
-    "def": 1,
-    "spd": 0.9,
-    "wis": 1
+    "base": {
+      "hp": 2.3,
+      "mp": 0.4,
+      "spd": 0.3,
+      "wis": 0.5,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-kana-barrier", "sk-kazoe-giri"],
+  "skills": [
+    "sk-kana-barrier",
+    "sk-kazoe-giri"
+  ],
   "drops": [
     {
       "itemId": "kochi-yuzu-no-hana",
@@ -37,5 +66,5 @@
     "to": "kochi-kagayaki-yuzu",
     "item": "kochi-yuzu-no-hana"
   },
-  "dexBlurb": "ゆずの モンスター。でこぼこの かわが 山[やま]の 光[ひかり]を あつめて、まわりを ぱっと 明[あか]るく する。高知県[こうちけん]は ゆずの 生産量[せいさんりょう]が 日本[にほん]で いちばん。"
+  "dexBlurb": "ゆずの マナビモノ。でこぼこの かわが 山[やま]の 光[ひかり]を あつめて、まわりを ぱっと 明[あか]るく する。高知県[こうちけん]は ゆずの 生産量[せいさんりょう]が 日本[にほん]で いちばん。"
 }

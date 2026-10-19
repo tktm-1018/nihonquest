@@ -7,36 +7,66 @@
   "element": "tsuchi",
   "weakness": "kaze",
   "baseStats": {
-    "hp": 112,
-    "mp": 18,
-    "atk": 11,
-    "def": 9,
-    "spd": 6,
-    "wis": 7
+    "hp": 67.2,
+    "mp": 10.8,
+    "spd": 4.3,
+    "wis": 4.2,
+    "scienceAtk": 6.9,
+    "humanitiesAtk": 6.9,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 8,
-    "mp": 2,
-    "atk": 1.2,
-    "def": 1,
-    "spd": 0.6,
-    "wis": 0.6
+    "base": {
+      "hp": 4.1,
+      "mp": 0.9,
+      "spd": 0.1,
+      "wis": 0.3,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-tsuchi-kabe", "sk-tashizan-giri"],
-  "drops": [
+  "skills": [
+    "sk-tsuchi-kabe",
+    "sk-tashizan-giri"
   ],
+  "drops": [],
   "recruitRate": 0,
   "xp": 65,
   "gold": 76,
   "spriteKey": "mon.kanagawa-midboss-kurotamagon",
-  "dexBlurb": "大涌谷[おおわくだに]の 黒[くろ]たまごの 大[おお]きな モンスター。温泉[おんせん]の 池[いけ]で ゆでた たまごは、からが 黒[くろ]く なる。",
+  "dexBlurb": "大涌谷[おおわくだに]の 黒[くろ]たまごの 大[おお]きな マナビモノ。温泉[おんせん]の 池[いけ]で ゆでた たまごは、からが 黒[くろ]く なる。",
   "fieldLine": "シュー……。この 谷[たに]を とおりたければ、わしを わってみろ！",
   "isBoss": true,
   "bossPhases": [
     {
       "hpBelow": 0.5,
       "element": "hino",
-      "skills": ["sk-hono-no-mai"],
+      "skills": [
+        "sk-hono-no-mai"
+      ],
       "line": "ボコボコ……！ 地面[じめん]の 熱[ねつ]が あふれだす！"
     }
   ]

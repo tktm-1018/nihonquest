@@ -7,22 +7,50 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 48,
-    "mp": 11,
-    "atk": 16,
-    "def": 9,
-    "spd": 8,
-    "wis": 7
+    "hp": 28.8,
+    "mp": 6.6,
+    "spd": 5.7,
+    "wis": 4.2,
+    "scienceAtk": 10,
+    "humanitiesAtk": 10,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 4.6,
-    "mp": 1,
-    "atk": 1.5,
-    "def": 0.9,
-    "spd": 0.9,
-    "wis": 0.7
+    "base": {
+      "hp": 2,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.3,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.3,
+      "humanitiesDef": 0.3
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-hinoko"],
+  "skills": [
+    "sk-hinoko"
+  ],
   "drops": [
     {
       "itemId": "okayama-akamatsu-no-maki",
@@ -37,5 +65,5 @@
     "to": "okayama-bizen-ootsubo",
     "item": "okayama-akamatsu-no-maki"
   },
-  "dexBlurb": "備前焼[びぜんやき]の つぼの モンスター。備前焼[びぜんやき]は うわぐすりを 使[つか]わず、かまの 火[ひ]と 灰[はい]で しぜんな もようが つく。"
+  "dexBlurb": "備前焼[びぜんやき]の つぼの マナビモノ。備前焼[びぜんやき]は うわぐすりを 使[つか]わず、かまの 火[ひ]と 灰[はい]で しぜんな もようが つく。"
 }

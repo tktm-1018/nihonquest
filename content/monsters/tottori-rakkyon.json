@@ -7,20 +7,46 @@
   "element": "tsuchi",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 47,
-    "mp": 12,
-    "atk": 13,
-    "def": 11,
-    "spd": 7,
-    "wis": 8
+    "hp": 28.2,
+    "mp": 7.2,
+    "spd": 5,
+    "wis": 4.8,
+    "scienceAtk": 8.1,
+    "humanitiesAtk": 8.1,
+    "scienceDef": 7.3,
+    "humanitiesDef": 7.3
   },
   "growth": {
-    "hp": 4.8,
-    "mp": 1,
-    "atk": 1.4,
-    "def": 1.2,
-    "spd": 0.8,
-    "wis": 0.7
+    "base": {
+      "hp": 2.2,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.3,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.5,
+      "humanitiesDef": 0.5
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-suna-kabe",
@@ -40,5 +66,5 @@
     "to": "tottori-rakkyo-musha",
     "item": "tottori-rakkyo-no-tane"
   },
-  "dexBlurb": "砂丘[さきゅう]らっきょうの モンスター。秋[あき]に なると、砂[すな]の 畑[はたけ]いちめんに むらさきの 花[はな]が さく。"
+  "dexBlurb": "砂丘[さきゅう]らっきょうの マナビモノ。秋[あき]に なると、砂[すな]の 畑[はたけ]いちめんに むらさきの 花[はな]が さく。"
 }

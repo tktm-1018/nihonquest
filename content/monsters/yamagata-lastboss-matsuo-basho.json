@@ -7,20 +7,46 @@
   "element": "mori",
   "weakness": "hino",
   "baseStats": {
-    "hp": 324,
-    "mp": 53,
-    "atk": 16,
-    "def": 13,
-    "spd": 12,
-    "wis": 18
+    "hp": 194.4,
+    "mp": 31.8,
+    "spd": 8.6,
+    "wis": 10.8,
+    "scienceAtk": 10,
+    "humanitiesAtk": 10,
+    "scienceDef": 8.7,
+    "humanitiesDef": 8.7
   },
   "growth": {
-    "hp": 12.1,
-    "mp": 2.6,
-    "atk": 1.7,
-    "def": 1.4,
-    "spd": 1.2,
-    "wis": 1.9
+    "base": {
+      "hp": 6.5,
+      "mp": 1.3,
+      "spd": 0.6,
+      "wis": 1,
+      "scienceAtk": 0.8,
+      "humanitiesAtk": 0.8,
+      "scienceDef": 0.6,
+      "humanitiesDef": 0.6
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-happa-arashi",
@@ -41,7 +67,7 @@
   "gold": 360,
   "spriteKey": "mon.yamagata-lastboss-matsuo-basho",
   "dexBlurb": "江戸[えど]時代[じだい]の 俳人[はいじん]（1644〜1694年[ねん]）。『おくのほそ道[みち]』の 旅[たび]で 山寺[やまでら]を たずね、『閑[しず]かさや 岩[いわ]に しみ入[い]る 蝉[せみ]の 声[こえ]』と よんだ。",
-  "fieldLine": "わしは 旅[たび]の 俳人[はいじん]、松尾芭蕉[まつおばしょう]。山寺[やまでら]の しずけさの 中[なか]で、ひと しょうぶ と いこう。",
+  "fieldLine": "わしは 旅[たび]の 俳人[はいじん]、松尾芭蕉[まつおばしょう]。おぼえた ことばではなく、そなたが 見[み]つけた 景色[けしき]を 見[み]せてみよ。",
   "isBoss": true,
   "bossPhases": [
     {

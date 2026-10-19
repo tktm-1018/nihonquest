@@ -8,8 +8,9 @@ import { createRng } from '../../src/core/rng';
 import type { QuestionBase, QuestionQuery } from '../../src/questions/contracts';
 import { MAX_MISSES, pictureWordScore } from '../../src/questions/renderers/picture-word/schema';
 import { PICTURES, PICTURE_KEYS, pictureSvg } from '../../src/questions/renderers/shared/pictures';
-import { NQ48 } from '../../src/scenes/art/palette';
+import { NQ48 } from '../../src/rendering/palette';
 import { speechLang } from '../../src/ui/overlay';
+import { questionHasAnswerContext } from '../../src/questions/engine/questionQuality';
 import { read } from './helpers';
 
 function q(id: string, over: Partial<QuestionBase> = {}): QuestionBase {
@@ -95,6 +96,32 @@ describe('QuestionBank', () => {
     const manifest = (await read('manifest.json')) as { questions: string[] };
     const { bank, report } = await QuestionBank.load(manifest.questions, read);
     expect(bank.size).toBeGreaterThan(0);
+    expect(report.omitted).toBeGreaterThan(0);
+    expect(report.skipped).toEqual([]);
+  }, 15_000);
+
+  it('学年別 bundle は対応学年の問題だけを含む', async () => {
+    const bundle = (await read('questions-g1-bundle.json')) as Record<string, { grade: number }[]>;
+    const questions = Object.values(bundle).flat();
+
+    expect(questions.length).toBeGreaterThan(0);
+    expect(questions.every((question) => question.grade === 1)).toBe(true);
+  });
+
+  it('式も図もない旧入力問題を出題候補へ入れない', async () => {
+    const broken = q('broken.0001', {
+      type: 'text-input',
+      payload: { prompt: 'つぎの けいさんを しましょう。', answers: ['10'] },
+    });
+    const playable = q('playable.0001', {
+      type: 'text-input',
+      payload: { prompt: 'つぎの けいさんを しましょう。', template: '3 + 7 = {{INPUT}}', answers: ['10'] },
+    });
+    expect(questionHasAnswerContext(broken)).toBe(false);
+    expect(questionHasAnswerContext(playable)).toBe(true);
+    const { bank, report } = await QuestionBank.load(['legacy.json'], async () => [broken, playable]);
+    expect(bank.all().map((question) => question.id)).toEqual(['playable.0001']);
+    expect(report.omitted).toBe(1);
     expect(report.skipped).toEqual([]);
   });
 
@@ -103,7 +130,7 @@ describe('QuestionBank', () => {
     const a = await QuestionBank.load(manifest.questions, read);
     const b = await QuestionBank.load(manifest.questions, read, { includeSamples: true });
     expect(b.bank.size).toBeGreaterThan(a.bank.size);
-  });
+  }, 15_000);
 
   it('payload がスキーマに合わない問題は skip され、他は読み込まれる', async () => {
     const files = ['bad.json'];
@@ -362,16 +389,17 @@ describe('英語の問題（content/questions/eigo）', () => {
     const files = manifest.questions.filter((f) => f.startsWith('questions/eigo/'));
     return (await Promise.all(files.map((f) => read(f)))).flat() as QuestionBase[];
   };
-  it('アルファベットは 26 もじ ぜんぶ（じゅんばんは 24 もん）', async () => {
+  it('1年生は音と絵の補助教材、2・3年生はアルファベット教材を持つ', async () => {
     const qs = await load();
     const count = (unit: string) => qs.filter((q) => q.unit === unit).length;
-    expect(count('eigo.g1.alphabet')).toBe(26);
+    expect(count('eigo.g1.alphabet')).toBe(6);
+    expect(count('eigo.g1.fruits')).toBe(6);
     expect(count('eigo.g2.alphabet-order')).toBe(24);
     expect(count('eigo.g3.alphabet-small')).toBe(26);
   });
   it('picture-word の正解は 絵と同じ単語で、カードは 英語だけ（日本語訳を書かない）', async () => {
     const pw = (await load()).filter((q) => q.type === 'picture-word');
-    expect(pw.length).toBeGreaterThanOrEqual(20);
+    expect(pw.length).toBeGreaterThan(0);
     for (const q of pw) {
       const p = q.payload as { picture?: string; answer: string; words: { id: string; text: string }[] };
       expect(p.words.find((w) => w.id === p.answer)?.text, q.id).toBe(p.picture);

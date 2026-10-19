@@ -6,12 +6,14 @@
  * 操作：↑↓←→ えらぶ / Z・Enter いれる・だす / X・Esc とじる。
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { Element, Stats } from '../../core/content/schemas';
+import type { Element, Item, Stats } from '../../core/content/schemas';
 import { ElementChip } from '../chips';
 import { t } from '../i18n';
 import { PixelIcon } from '../PixelIcon';
 import { RubyLabel } from '../RubyLabel';
+import { displayText, stripRuby } from '../ruby';
 import { playSfx } from '../sfx';
+import { useModalFocus } from '../useModalFocus';
 import type { BagCell } from './bagLayout';
 import './field.css';
 import './bag.css';
@@ -19,7 +21,9 @@ import './bag.css';
 export interface BagThing {
   /** 'hero' / 'mon:<uid>' / 'eq:<部位>'（バッグの そうび）/ 'inv:<itemId>'（あずけている そうび） */
   key: string;
-  kind: 'hero' | 'monster' | 'equip';
+  kind: 'hero' | 'monster' | 'equip' | 'item';
+  /** 装備なら、主人公のまわりの決められた装備位置。 */
+  equipSlot?: Item['kind'];
   /** 名前（RubyText） */
   name: string;
   /** マス・リストの 小さな 絵（data URL） */
@@ -45,6 +49,7 @@ export interface BagThing {
   lines?: string[];
   skills?: { name: string; gauge: number; scan: boolean }[];
   blurb?: string;
+  action?: 'pack';
   /** しんかできる仲間なら、しんか先と条件。room＝バッグに 入りきるか（extra マス ふえる） */
   evolve?: {
     toName: string;
@@ -66,6 +71,7 @@ export interface BagOverlayProps {
   cells: BagCell[];
   cols: number;
   rows: number;
+  dropSlots: Partial<Record<Item['kind'], { x: number; y: number }>>;
   used: number;
   capacity: number;
   /** マスより 多く 入っている（マスが できる前の セーブ） */
@@ -87,8 +93,11 @@ export interface BagOverlayProps {
 
 const STATS: [keyof Stats, string][] = [
   ['hp', 'field.statHp'],
-  ['atk', 'field.statAtk'],
-  ['def', 'field.statDef'],
+  ['mp', 'field.statMp'],
+  ['scienceAtk', 'field.statScienceAtk'],
+  ['humanitiesAtk', 'field.statHumanitiesAtk'],
+  ['scienceDef', 'field.statScienceDef'],
+  ['humanitiesDef', 'field.statHumanitiesDef'],
   ['spd', 'field.statSpd'],
   ['wis', 'field.statWis'],
 ];
@@ -122,6 +131,7 @@ export function BagOverlay({
   cells,
   cols,
   rows,
+  dropSlots,
   used,
   capacity,
   over,
@@ -144,19 +154,38 @@ export function BagOverlay({
       order.findIndex((x) => x.key === key),
     );
   const [sel, setSel] = useState(() => indexOf(focusKey));
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [dragKey, setDragKey] = useState<string | null>(null);
   const sig = order.map((x) => x.key).join(',');
   useEffect(() => setSel(indexOf(focusKey)), [focusKey, sig]);
   const m = order[Math.min(sel, order.length - 1)]!;
   const boxRef = useRef<HTMLDivElement>(null);
+  useModalFocus(boxRef, '[data-bag-key].nq-focus');
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      boxRef.current?.querySelector<HTMLElement>('[data-bag-key].nq-focus')?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [m.key]);
 
   const pick = (k: number) => {
     if (k === sel || !order[k]) return;
     playSfx('move');
     setSel(k);
+    setDetailsOpen(true);
     const el = boxRef.current?.querySelector(`[data-bag-key="${CSS.escape(order[k]!.key)}"]`);
     el?.scrollIntoView({ block: 'nearest' });
   };
-  const pickKey = (key: string) => pick(indexOf(key));
+  const activateKey = (key: string) => {
+    const next = indexOf(key);
+    if (next === sel) {
+      playSfx('back');
+      setDetailsOpen((open) => !open);
+      return;
+    }
+    pick(next);
+  };
   const toggle = () => {
     if (m.kind === 'hero') {
       playSfx('miss');
@@ -185,6 +214,19 @@ export function BagOverlay({
   live.current = { pick, toggle, onClose, sel, n: order.length };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const isConfirm = e.key === 'Enter' || e.key === ' ';
+      const selectedItem = e.target instanceof HTMLElement && e.target.closest<HTMLElement>('[data-bag-key]');
+      if (isConfirm && selectedItem) {
+        e.preventDefault();
+        selectedItem.click();
+        return;
+      }
+      if (
+        isConfirm &&
+        e.target instanceof HTMLElement &&
+        e.target.closest('button, input, select, textarea, [contenteditable="true"]')
+      )
+        return;
       const L = live.current;
       switch (e.key) {
         case 'ArrowUp':
@@ -222,11 +264,16 @@ export function BagOverlay({
         type="button"
         data-bag-key={x.key}
         class={`nq-opt ${x.key === m.key ? 'nq-focus' : ''}`}
-        onPointerEnter={() => pickKey(x.key)}
-        onClick={() => pickKey(x.key)}
+        draggable={x.kind === 'equip' || (x.kind === 'item' && x.inBag)}
+        onDragStart={(e) => {
+          e.dataTransfer?.setData('text/plain', x.key);
+          setDragKey(x.key);
+        }}
+        onDragEnd={() => setDragKey(null)}
+        onClick={() => activateKey(x.key)}
       >
         <span class="nq-amap-cur">{heart(x)}</span>
-        {x.kind === 'equip' ? (
+        {x.kind === 'equip' || x.kind === 'item' ? (
           <img class="nq-item-icon nq-town-icon" src={x.icon ?? ''} alt="" />
         ) : (
           <PixelIcon name={x.kind === 'hero' ? 'hero' : `el-${x.element ?? 'none'}`} scale={2} />
@@ -248,26 +295,69 @@ export function BagOverlay({
       </button>
     </li>
   );
+  const reserveTile = (x: BagThing) => (
+    <li key={x.key}>
+      <button
+        type="button"
+        data-bag-key={x.key}
+        class={`nq-bag-reserve-tile ${x.key === m.key ? 'nq-focus' : ''}`}
+        draggable={x.kind === 'equip'}
+        aria-pressed={x.key === m.key && detailsOpen}
+        onDragStart={(e) => {
+          e.dataTransfer?.setData('text/plain', x.key);
+          setDragKey(x.key);
+        }}
+        onDragEnd={() => setDragKey(null)}
+        onClick={() => activateKey(x.key)}
+      >
+        <span class="nq-bag-reserve-pic">
+          <Pic x={x} size={3} />
+          {x.key === m.key && <span class="nq-heart nq-bag-reserve-heart">♥</span>}
+        </span>
+        <RubyLabel text={x.name} class="nq-bag-reserve-name" />
+        {x.count !== undefined && x.count > 1 && <span class="nq-bag-reserve-count">×{x.count}</span>}
+      </button>
+    </li>
+  );
 
   const monsInBag = inBag.some((x) => x.kind === 'monster');
+  const itemsInBag = inBag.filter((x) => x.kind === 'item');
+  const draggedThing = dragKey ? byKey.get(dragKey) : undefined;
+  const canReturnItem =
+    !!draggedThing?.inBag && (draggedThing.kind === 'item' || draggedThing.kind === 'equip');
+  const returnItem = () => {
+    if (!canReturnItem || !dragKey) return;
+    onToggle(dragKey);
+    setDragKey(null);
+  };
   return (
     <div class="nq-wmap" onClick={onClose}>
-      <div class="nq-win nq-wmap-box" ref={boxRef} onClick={(e) => e.stopPropagation()}>
+      <div
+        class={`nq-win nq-wmap-box ${detailsOpen ? '' : 'nq-bag-details-closed'}`}
+        ref={boxRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('field.bagTitle')}
+        tabindex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div class="nq-wmap-left nq-bag-left">
           <div class="nq-wmap-region">
             <span class="nq-wmap-title">
               <PixelIcon name="cmd-item" scale={3} />
               {t('field.bagTitle')}
             </span>
-            <span class="nq-bag-countbox">
-              <span class={`nq-bag-count ${over ? 'nq-bag-over' : ''}`}>
-                {t('field.bagSlots', { used, max: capacity })}
-              </span>
-            </span>
           </div>
+          <p
+            class={`nq-bag-capacity ${over ? 'nq-bag-capacity-warning' : ''}`}
+            role={over ? 'alert' : 'status'}
+          >
+            <span>{t('field.bagCapacity', { used, capacity })}</span>
+            {over && <strong>{t('field.bagLayoutInvalid')}</strong>}
+          </p>
           <div
             class="nq-bag-grid"
-            role="list"
+            role="group"
             aria-label={t('field.bagTitle')}
             style={{
               gridTemplateColumns: `repeat(${cols}, 76px)`,
@@ -275,39 +365,56 @@ export function BagOverlay({
             }}
           >
             {cells.map((c, i) => {
-              if (c.kind === 'empty')
+              if (c.kind === 'empty') {
+                const slot = Object.entries(dropSlots).find(
+                  ([, pos]) => pos?.x === c.x && pos.y === c.y,
+                )?.[0];
+                const dragged = dragKey ? byKey.get(dragKey) : undefined;
+                const canDrop =
+                  !dragged || dragged.inBag || (dragged.equipSlot === slot && dragged.kind === 'equip');
                 return (
                   <div
                     key={`e${i}`}
-                    class="nq-bag-cell nq-bag-empty"
+                    class={`nq-bag-cell nq-bag-empty ${dragKey && canDrop ? 'nq-bag-drop-ok' : ''}`}
+                    data-drop-slot={slot}
                     style={{ gridColumn: c.x + 1, gridRow: c.y + 1 }}
                     aria-label={t('field.bagEmptyCell')}
                     onClick={() => {
                       if (m.kind !== 'hero' && m.inBag) onMove(m.key, c.x, c.y);
                     }}
-                    onDragOver={(e) => e.preventDefault()}
+                    onDragOver={(e) => {
+                      if (canDrop) e.preventDefault();
+                    }}
                     onDrop={(e) => {
                       e.preventDefault();
                       const key = e.dataTransfer?.getData('text/plain');
-                      if (key) onMove(key, c.x, c.y);
+                      if (!key) return;
+                      const thing = byKey.get(key);
+                      if (!thing || (!thing.inBag && thing.equipSlot !== slot)) return;
+                      if (thing.inBag) onMove(key, c.x, c.y);
+                      else onToggle(key);
+                      setDragKey(null);
                     }}
                   />
                 );
+              }
               const x = byKey.get(c.key);
               if (!x) return null;
               return (
                 <button
                   key={x.key}
                   type="button"
-                  role="listitem"
                   data-bag-key={x.key}
                   class={`nq-bag-cell nq-bag-item nq-bag-${x.kind} ${x.key === m.key ? 'nq-focus' : ''}`}
                   style={{ gridColumn: `${c.x + 1} / span ${c.w}`, gridRow: `${c.y + 1} / span ${c.h}` }}
                   draggable={x.kind !== 'hero'}
-                  onDragStart={(e) => e.dataTransfer?.setData('text/plain', x.key)}
-                  aria-label={x.name.replace(/\[[^\]]*\]/g, '')}
-                  onPointerEnter={() => pickKey(x.key)}
-                  onClick={() => pickKey(x.key)}
+                  onDragStart={(e) => {
+                    e.dataTransfer?.setData('text/plain', x.key);
+                    setDragKey(x.key);
+                  }}
+                  onDragEnd={() => setDragKey(null)}
+                  aria-label={displayText(x.name)}
+                  onClick={() => activateKey(x.key)}
                 >
                   <Pic x={x} size={2} />
                   {x.key === m.key && <span class="nq-heart nq-bag-heart">♥</span>}
@@ -317,82 +424,112 @@ export function BagOverlay({
               );
             })}
           </div>
-          <p class="nq-party-sep nq-bag-sep">{t('field.bagOutside')}</p>
-          <ul class="nq-party-list nq-bag-outside">
-            {outside.length ? (
-              outside.map(listRow)
-            ) : (
-              <li class="nq-party-none">{t('field.bagOutsideNone')}</li>
-            )}
-          </ul>
+          {!!itemsInBag.length && (
+            <>
+              <p class="nq-party-sep nq-bag-sep">{t('field.bagBattleItems')}</p>
+              <ul class="nq-party-list nq-bag-packed">{itemsInBag.map(listRow)}</ul>
+            </>
+          )}
         </div>
 
-        <div class="nq-wmap-right">
+        <div class="nq-wmap-right nq-bag-right">
           <div class="nq-wmap-head">
             {message ? <RubyLabel text={message} class="nq-party-msg" /> : <span />}
             <button type="button" class="nq-back" onClick={onClose}>
               × {t('ui.close')}
             </button>
           </div>
-          <div class="nq-wmap-info nq-party-info">
-            <div class="nq-party-head">
-              <div class={`nq-party-art ${flashKey === m.key ? 'nq-party-evolved' : ''}`}>
-                <Pic x={m} size={6} />
-              </div>
-              <div class="nq-party-who">
-                <RubyLabel text={m.name} class="nq-party-name" />
-                <span class="nq-party-sub">
-                  {m.level !== undefined && (
-                    <>
-                      {t('battle.lv')}
-                      {m.level}
-                    </>
-                  )}
-                  {m.kind === 'monster' && m.element && <ElementChip el={m.element} />}
-                  {m.sub && <RubyLabel text={m.sub} />}
-                  {m.cost > 0 && (
-                    <span class="nq-bag-costline">
-                      <Pips n={m.cost} />
-                      {t('field.bagCost', { n: m.cost })}
-                    </span>
-                  )}
-                </span>
-              </div>
-            </div>
-            {m.stats && (
-              <div class="nq-party-stats">
-                {STATS.map(([k, key]) => (
-                  <span key={k}>
-                    <small>{t(key)}</small>
-                    {Math.round(m.stats![k])}
+          <section class="nq-bag-reserve" aria-label={t('field.bagOutside')}>
+            <p
+              class={`nq-party-sep nq-bag-sep ${canReturnItem ? 'nq-bag-return-ok' : ''}`}
+              onDragOver={(e) => {
+                if (canReturnItem) e.preventDefault();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                returnItem();
+              }}
+            >
+              {t('field.bagOutside')}
+            </p>
+            <ul
+              class={`nq-bag-reserve-grid ${canReturnItem ? 'nq-bag-return-ok' : ''}`}
+              onDragOver={(e) => {
+                if (canReturnItem) e.preventDefault();
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                returnItem();
+              }}
+            >
+              {outside.length ? (
+                outside.map(reserveTile)
+              ) : (
+                <li class="nq-party-none">{t('field.bagOutsideNone')}</li>
+              )}
+            </ul>
+          </section>
+          {detailsOpen && (
+            <div class="nq-wmap-info nq-party-info">
+              <div class="nq-party-head">
+                <div class={`nq-party-art ${flashKey === m.key ? 'nq-party-evolved' : ''}`}>
+                  <Pic x={m} size={6} />
+                </div>
+                <div class="nq-party-who">
+                  <RubyLabel text={m.name} class="nq-party-name" />
+                  <span class="nq-party-sub">
+                    {m.level !== undefined && (
+                      <>
+                        {t('battle.lv')}
+                        {m.level}
+                      </>
+                    )}
+                    {m.kind === 'monster' && m.element && <ElementChip el={m.element} />}
+                    {m.sub && <RubyLabel text={m.sub} />}
+                    {m.cost > 0 && (
+                      <span class="nq-bag-costline">
+                        <Pips n={m.cost} />
+                        {t('field.bagCost', { n: m.cost })}
+                      </span>
+                    )}
                   </span>
-                ))}
+                </div>
               </div>
-            )}
-            {m.lines?.map((l, i) => (
-              <RubyLabel key={i} text={l} class="nq-bag-line" as="p" />
-            ))}
-            {!!m.skills?.length && (
-              <>
-                <p class="nq-party-label">
-                  <RubyLabel text={t('cmd.skill')} />
-                </p>
-                <ul class="nq-party-skills">
-                  {m.skills.map((s, i) => (
-                    <li key={i}>
-                      <RubyLabel text={s.name} />
-                      <span class="nq-party-star">{s.scan ? '' : '★'.repeat(s.gauge)}</span>
-                    </li>
+              {m.stats && (
+                <div class="nq-party-stats">
+                  {STATS.map(([k, key]) => (
+                    <span key={k}>
+                      <small>{stripRuby(t(key))}</small>
+                      {Math.round(m.stats![k])}
+                    </span>
                   ))}
-                </ul>
-              </>
-            )}
-            {m.kind === 'hero' && !monsInBag && (
-              <RubyLabel text={t('field.bagNoMonster')} class="nq-party-hint" as="p" />
-            )}
-            {m.blurb && <RubyLabel text={m.blurb} class="nq-party-blurb" as="p" />}
-          </div>
-          {m.kind !== 'hero' && (
+                </div>
+              )}
+              {m.lines?.map((l, i) => (
+                <RubyLabel key={i} text={l} class="nq-bag-line" as="p" />
+              ))}
+              {!!m.skills?.length && (
+                <>
+                  <p class="nq-party-label">
+                    <RubyLabel text={t('cmd.skill')} />
+                  </p>
+                  <ul class="nq-party-skills">
+                    {m.skills.map((s, i) => (
+                      <li key={i}>
+                        <RubyLabel text={s.name} />
+                        <span class="nq-party-star">{s.scan ? '' : '★'.repeat(s.gauge)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {m.kind === 'hero' && !monsInBag && (
+                <RubyLabel text={t('field.bagNoMonster')} class="nq-party-hint" as="p" />
+              )}
+              {m.blurb && <RubyLabel text={m.blurb} class="nq-party-blurb" as="p" />}
+            </div>
+          )}
+          {detailsOpen && m.kind !== 'hero' && (m.kind !== 'item' || m.action) && (
             <div class="nq-wmap-foot nq-party-foot">
               <button type="button" class="nq-opt nq-wmap-go" onClick={toggle}>
                 <PixelIcon name="cmd-item" scale={3} />
@@ -423,11 +560,11 @@ export function BagOverlay({
               )}
             </div>
           )}
-          <RubyLabel
-            class="nq-wmap-keys"
-            text={
-              m.evolve
-                ? m.evolve.ok && !m.evolve.room
+          {detailsOpen && m.evolve && (
+            <RubyLabel
+              class="nq-wmap-keys"
+              text={
+                m.evolve.ok && !m.evolve.room
                   ? t('field.bagEvolveNoRoom', { n: m.evolve.extra })
                   : t(m.evolve.ok ? 'field.partyEvolveNeed' : 'field.partyEvolveNo', {
                       item: m.evolve.itemName,
@@ -435,9 +572,9 @@ export function BagOverlay({
                       need: m.evolve.need,
                       n: m.evolve.have,
                     })
-                : t('field.bagKeys')
-            }
-          />
+              }
+            />
+          )}
         </div>
       </div>
     </div>

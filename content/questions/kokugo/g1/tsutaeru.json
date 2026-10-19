@@ -21,20 +21,19 @@
   },
   {
     "id": "kokugo.g1.tsutaeru.0002",
-    "type": "choice",
+    "type": "sort-order",
     "subject": "kokugo",
     "grade": 1,
     "unit": "kokugo.g1.tsutaeru",
     "payload": {
-      "prompt": "『たねを まく・みずを あげる・めが でる』の よい じゅんばんは どれ？",
-      "choices": [
-        { "id": "a", "text": "めが でる→たねを まく→みずを あげる" },
-        { "id": "b", "text": "たねを まく→みずを あげる→めが でる" },
-        { "id": "c", "text": "みずを あげる→めが でる→たねを まく" },
-        { "id": "d", "text": "めが でる→みずを あげる→たねを まく" }
+      "prompt": "できごとが おきる じゅんに ならべよう。",
+      "direction": "horizontal",
+      "cards": [
+        { "id": "seed", "text": "たねを まく" },
+        { "id": "water", "text": "みずを あげる" },
+        { "id": "sprout", "text": "めが でる" }
       ],
-      "answer": "b",
-      "shuffle": true
+      "answer": ["seed", "water", "sprout"]
     },
     "explanation": "したことが おきた じゅんに ならべます。"
   },

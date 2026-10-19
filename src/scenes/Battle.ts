@@ -1,50 +1,21 @@
-/**
- * バトル画面（GDD §4・§8 / docs/02 Step 6）。サイドビュー：敵が左、主人公と相棒が右（SFC 風 RPG）。
- * ターン制バトル：
- *  - 1 ターンに 主人公 → オトモ（前に 立つ 仲間）→ てき が 1 回ずつ 動く。時間では すすまない
- *  - 主人公が コマンドを えらぶ → core の act() が 1 ターンぶんを 解決 → 返ってきた BattleEvent[] を 順に 再生
- *  - コマンドが 成立しない とき（教科ゲージが たりない など）は ターンが すすまず、えらび直せる
- *  - 主人公が たおれて いる ターンは えらべないので、wait で オトモ → てき だけ すすめる
- *  - 絵と演出（背景・スプライト・揺れ・パーティクル・カメラ）は Phaser、文字・コマンド・問題は DOM オーバーレイ（BattleHud）
- *  - 計算は src/core/battle の act() に任せる（シーンは 演出だけ）
- *  - わざ → ask() → QuestionResult.score だけを Command に渡す（問題タイプは知らない。かかった 時間は シーンが はかる）
- * 1 ドット = 4px（背景 240×135 と同じ倍率）。人物 16×24、モンスター 32 / 40 / 48 / 56（docs/06）。
- * Overworld から `scene.launch('Battle', data)` で重ねて起動し、終わると 'battle:end' を投げて自分を止める。
- */
+/** ターン制バトルの Scene。計算は core、文字と操作は DOM、Scene は演出と進行を担当する。 */
 import Phaser from 'phaser';
 import { h, render } from 'preact';
 import type { ContentIndex } from '../core/content/loader';
 import type { Element, Monster, Skill } from '../core/content/schemas';
 import { comboBonus } from '../core/battle/damage';
-import {
-  act,
-  battleSkills,
-  canAfford,
-  createBattle,
-  isHeroReady,
-  makeCompanion,
-  type BattleDeps,
-  type BattleSkill,
-} from '../core/battle/engine';
+import { act, battleSkills, createBattle, isHeroReady, type BattleDeps } from '../core/battle/engine';
 import { makeMonster } from '../core/battle/factory';
 import { partyFromGameState } from '../core/battle/setup';
 import type { ActionResult, BattleEvent, BattleState, Command } from '../core/battle/types';
-import {
-  applyBattleResult,
-  heroLevel,
-  levelForXp,
-  xpToNextLevel,
-  type AppliedBattle,
-  type BattleSummary,
-} from '../core/progression/battleResult';
-import { bagCapacity, bagContext, evolutionStage, stowNewMonster } from '../core/progression/bag';
-import { specialtyIndex, withSpecialtyDrops } from '../core/progression/specialty';
+import { applyBattleResult } from '../core/progression/battleResult';
+import { evolutionStage } from '../core/progression/bag';
+import { settleBattleBag, type BattleSettlement } from '../core/progression/battleSettlement';
+import { withSpecialtyDrops } from '../core/progression/specialty';
 import { createRng, freshSeed } from '../core/rng';
 import type { GameState } from '../core/state/schema';
 import { scoreBand, type QuestionQuery } from '../questions/contracts';
-import { battleQuestionQuery } from './battle/questionQuery';
-import { tweenPromise } from './battle/tweenPromise';
-import { ask, filterCandidates, MasteryStore, NoQuestionError, type QuestionBank } from '../questions/engine';
+import { filterCandidates, MasteryStore, type QuestionBank } from '../questions/engine';
 import { BattleHud } from '../ui/battle/BattleHud';
 import {
   HudStore,
@@ -62,19 +33,19 @@ import {
 } from '../ui/battle/store';
 import { t, tOpt } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
-import { displayText } from '../ui/ruby';
-import { isSfxMuted, playSfx, setSfxMuted, setSfxVolume } from '../ui/sfx';
-import { BATTLE_POSE, battleSheet, HERO_H, HERO_W, heroKey, heroLook } from './art/characters';
-import { itemIconGrid, itemIconUrl } from './art/itemIcons';
-import { designedMonsterArt } from './art/monsters';
-import { addImage, addSheet } from './art/sheet';
+import { playSfx, prepareBattleSfx } from '../ui/sfx';
+import { BATTLE_POSE, battleSheet, HERO_H, HERO_W, heroKey, heroLook } from '../rendering/characters';
+import { itemIconGrid, itemIconUrl } from '../rendering/itemIcons';
+import { designedMonsterArt } from '../rendering/monsters';
+import { addImage, addSheet } from '../rendering/sheet';
 import { Motions, type EnemyStyle, type MotifFx, type SwingKind } from './battle/motions';
-import { toCanvas } from './art/grid';
-import { motifArtGrid } from './art/motifArt';
-import { skillLook } from './battle/skillLook';
-import { narrate, normalizeEvents, type NarrateCtx } from './battle/narrate';
+import { toCanvas } from '../rendering/grid';
+import { motifArtGrid } from '../rendering/motifArt';
+import { skillLook } from '../rendering/battle/skillLook';
+import { normalizeEvents, type NarrateCtx } from './battle/narrate';
+import { playBattleEvents } from './battle/eventPlayback';
+import { specialtyRewardViews } from './battle/specialtyRewards';
 import {
-  BACKDROP_SCALE,
   ELEMENT_FX,
   MONSTER_SIZE,
   backdropArt,
@@ -83,73 +54,37 @@ import {
   shadowArt,
   slashSheet,
   type BackdropKind,
-} from './battle/pixelArt';
-import type { EncounterZone } from '../core/battle/setup';
-import type { Ground } from '../core/world/ground';
-import { buildAskEnv } from './shared/askEnv';
-import { buildAllyViews, buildEnemyView, buildGaugeViews } from './battle/hudViews';
-import { buildSkillOptions, lockedCommandOptions, skillLockBanner } from './battle/skillLockPresentation';
-export interface BattleSceneData {
-  enemyId: string;
-  level: number;
-  zone: EncounterZone;
-  /** フィールドの 地面（すなはま・もり …）。バトルの 背景が かわる */
-  ground?: Ground;
-  /** 中ボス・県ボス・地方ボス戦（にげられない）。省略時はモンスター定義の isBoss */
-  isBoss?: boolean;
-  /** 開発者モード：ボス戦でも にげられる（ふつうの モンスターとは そもそも 出会わない） */
-  devMode?: boolean;
-}
-
-export interface BattleEndPayload {
-  outcome: BattleSummary['outcome'];
-  goldLost: number;
-}
-
-type Intent =
-  | { kind: 'attack' }
-  | { kind: 'flee' }
-  | { kind: 'recruit' }
-  | { kind: 'skill'; entry: BattleSkill }
-  | { kind: 'item'; itemId: string }
-  | { kind: 'swap'; index: number };
-
-/** intro = 登場 / command = コマンドを えらぶ（時間が すすむ）/ question = 問題を とく（時間が すすむ）/ over = 決着 */
-type Phase = 'intro' | 'command' | 'question' | 'over';
-
-type MenuAction = Extract<UiAction, { t: 'command' | 'skill' | 'item' | 'swap' | 'back' }>;
-
+} from '../rendering/battle/pixelArt';
+import {
+  buildAllyViews,
+  buildCommandOptions,
+  buildEnemyView,
+  buildGaugeViews,
+  buildItemOptions,
+  buildSkillOptions,
+  buildSwapOptions,
+} from './battle/hudViews';
+import { skillLockBanner } from './battle/skillLockPresentation';
+import type { BattleEndPayload, BattleSceneData } from './battle/contracts';
+import { battleSummary, defeatResultView, victoryResultView } from './battle/resultView';
+import { questionQueryForSkill, recruitQuestionQuery } from './battle/questionQueries';
+import { prepareMusubiDamaCommand } from './battle/musubiDamaFlow';
+import { runBattleQuestion } from './battle/questionFlow';
+import { BattleHudFlow } from './battle/hudFlow';
+import { hasStoryCompanion } from '../core/progression/storyCompanion';
+import { monsterDisplaySize, monsterMenuArtUrl } from '../rendering/menuArt';
+import { BATTLE_SCALE as S, battleLayout, type BattleLayout, OFF_RIGHT, READY_STEP } from './battle/layout';
+import { createBattleClouds, createBattleWinds, moveBattleClouds, moveBattleWinds } from './battle/clouds';
+import { attachBattleBgm, finishBattleBgm } from './battle/bgm';
+import {
+  BAND_TEXT,
+  combatantName,
+  type BattleSkill,
+  type Intent,
+  type MenuAction,
+  type Phase,
+} from './battle/sceneModel';
 type Sprite = Phaser.GameObjects.Image;
-
-const S = BACKDROP_SCALE;
-/** 足もとの位置（画面 px）。背景の道の帯（ドット 82〜97 → 328〜388px）の上に立つ */
-const ENEMY_X = 250;
-const ENEMY_Y = 380;
-/** ボスの絵の高さの上限（足もと ENEMY_Y から上の窓の下 140px まで） */
-const BOSS_MAX_H = ENEMY_Y - 140;
-const HERO_X = 690;
-const HERO_Y = 388;
-const PAL_X = 820;
-const PAL_Y = 356;
-/** 動けるとき（コマンドゲージが たまって いる）、一歩前に出る */
-const READY_STEP = 24;
-/** 画面の外（味方が右から歩いて入ってくる／にげる） */
-const OFF_RIGHT = 1080;
-
-const BAND_TEXT = {
-  perfect: 'battle.bandPerfect',
-  good: 'battle.bandGood',
-  weak: 'battle.bandWeak',
-  miss: 'battle.bandMiss',
-} as const;
-
-/** セリフを先に出してから動く（「ハルの こうげき！」→ 走って斬る）イベント */
-const TALK_FIRST = new Set<BattleEvent['t']>(['act', 'swap', 'recruitAttempt']);
-/** たたかいの ようすの 文を 読む 時間 */
-const LOG_BASE_MS = 350;
-const LOG_CHAR_MS = 30;
-const LOG_MAX_MS = 1300;
-
 export class BattleScene extends Phaser.Scene {
   private content!: ContentIndex;
   private bank!: QuestionBank;
@@ -163,14 +98,8 @@ export class BattleScene extends Phaser.Scene {
 
   // ↓ シーンのインスタンスは使い回されるので、1 戦ごとに init() で作り直す
   private hud = new HudStore();
+  private hudFlow!: BattleHudFlow;
   private hudRoot: HTMLDivElement | null = null;
-  private msgId = 0;
-  private bannerId = 0;
-  private popupId = 0;
-  private stripId = 0;
-  private gainId = 0;
-  private msgWaiters = new Map<number, () => void>();
-  private actionWaiter: ((a: UiAction) => void) | null = null;
   private enemySprite!: Sprite;
   private heroSprite!: Sprite;
   private palSprite: Sprite | null = null;
@@ -178,7 +107,10 @@ export class BattleScene extends Phaser.Scene {
   /** 敵の絵の倍率。ボス戦だけ一回り大きく（scaleOf） */
   private enemyScale: number = S;
   private enemyDef!: Monster;
+  private layout!: BattleLayout;
   private shadows = new Map<Sprite, Phaser.GameObjects.Image>();
+  private clouds: Phaser.GameObjects.Image[] = [];
+  private winds: Phaser.GameObjects.Image[] = [];
   private bobs = new Map<Sprite, Phaser.Tweens.Tween>();
   private perfectBySubject: Record<string, number> = {};
   private lastElement: Element = 'none';
@@ -208,24 +140,26 @@ export class BattleScene extends Phaser.Scene {
   private cmdCursor = 0;
   /** シーンが おわった あと（もう さわらない） */
   private stopped = false;
+  /** 例外後の終了処理を一度だけ行う。 */
+  private recovering = false;
 
   constructor() {
     super('Battle');
   }
 
   init(data: BattleSceneData): void {
-    this.opts = data;
+    this.opts = { ...data, presentation: data.presentation ?? 'depth' };
     this.hud = new HudStore();
+    this.hudFlow = new BattleHudFlow(
+      this.hud,
+      (ms) => this.wait(ms),
+      (ms, done) => void this.time.delayedCall(ms, done),
+    );
     this.hudRoot = null;
-    this.msgId = 0;
-    this.bannerId = 0;
-    this.popupId = 0;
-    this.stripId = 0;
-    this.gainId = 0;
-    this.msgWaiters = new Map();
-    this.actionWaiter = null;
     this.palSprite = null;
     this.shadows = new Map();
+    this.clouds = [];
+    this.winds = [];
     this.bobs = new Map();
     this.perfectBySubject = {};
     this.lastElement = 'none';
@@ -242,6 +176,7 @@ export class BattleScene extends Phaser.Scene {
     this.stepped = false;
     this.cmdCursor = 0;
     this.stopped = false;
+    this.recovering = false;
   }
 
   create(): void {
@@ -256,6 +191,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     this.enemyDef = def;
+    this.layout = battleLayout(this.opts.presentation);
     const c = this.content;
     this.deps = {
       settings: c.settings,
@@ -266,7 +202,7 @@ export class BattleScene extends Phaser.Scene {
       monsters: withSpecialtyDrops(c.monsters, c.areas, c.items, c.settings.specialtyDropRate),
     };
     this.mastery = new MasteryStore(this.gs.learning.mastery);
-    setSfxVolume(this.gs.settings.seVolume);
+    void prepareBattleSfx(this.gs.settings.seVolume);
 
     const isBoss = this.opts.isBoss ?? def.isBoss;
     this.state = createBattle(
@@ -280,6 +216,7 @@ export class BattleScene extends Phaser.Scene {
       },
       this.deps,
     );
+    if (this.opts.forceRecruitOffer) this.state.enemy.hp = 1;
 
     this.cameras.main.setBackgroundColor('#000000');
     this.fx = new Motions(this, (x, y, tint, texture, count, gravityY) =>
@@ -290,19 +227,20 @@ export class BattleScene extends Phaser.Scene {
     // タブを ほかに して いる あいだは Phaser の フェードや タイマーが とまるので、もどったら 立て直す
     document.addEventListener('visibilitychange', this.onVisible);
     window.addEventListener('focus', this.onVisible);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.teardown());
+    attachBattleBgm(this, isBoss, () => this.teardown());
     void this.run().catch((e: unknown) => {
-      console.error('[battle] 進行中にエラー', e);
-      void this.leave('fled', 0);
+      void this.recoverFromError('進行中', e);
     });
   }
 
-  override update(): void {
+  override update(_time: number, delta: number): void {
     // 足もとのかげは、走ったり跳んだりしても地面にとどまる
     for (const [sp, sh] of this.shadows) {
       sh.x = sp.x;
       sh.setVisible(sp.active && sp.alpha > 0.05);
     }
+    moveBattleClouds(this.clouds, this.scale.width, delta);
+    moveBattleWinds(this.winds, this.scale.width, delta);
   }
 
   // ───────────────────────── 舞台づくり ─────────────────────────
@@ -319,6 +257,8 @@ export class BattleScene extends Phaser.Scene {
     const bgKey = `bt.bg.${kind}`;
     addImage(this.textures, bgKey, backdropArt(kind));
     this.add.image(0, 0, bgKey).setOrigin(0).setScale(S).setDepth(0);
+    this.clouds = createBattleClouds(this, kind);
+    this.winds = createBattleWinds(this, kind);
     for (const p of ['px', 'star', 'heart'] as const) addImage(this.textures, `bt.fx.${p}`, particleArt(p));
     addSheet(this.textures, 'bt.fx.slash', slashSheet(), 32, 32);
 
@@ -327,42 +267,46 @@ export class BattleScene extends Phaser.Scene {
     this.enemyScale = this.scaleOf(this.enemySize, isBoss);
     const eKey = this.monsterTexture(def, this.state.enemy.element, this.enemySize, isBoss);
     this.enemySprite = this.add
-      .image(ENEMY_X, ENEMY_Y, eKey)
+      .image(this.layout.enemy.x, this.layout.enemy.y, eKey)
       .setOrigin(0.5, 1)
       .setScale(this.enemyScale)
       .setDepth(10);
-    this.addShadow(this.enemySprite, ENEMY_Y, Math.round((this.enemySize * 0.7 * this.enemyScale) / S));
+    this.addShadow(
+      this.enemySprite,
+      this.layout.enemy.y,
+      Math.round((this.enemySize * 0.7 * this.enemyScale) / S),
+    );
 
     const ap = this.gs.player.appearance;
     const eq = this.gs.player.equipment;
     const hk = heroKey(ap, eq, true);
     addSheet(this.textures, hk, battleSheet(heroLook(ap, eq)), HERO_W, HERO_H);
     this.heroSprite = this.add
-      .image(HERO_X, HERO_Y, hk, BATTLE_POSE.idle)
+      .image(this.layout.hero.x, this.layout.hero.y, hk, BATTLE_POSE.idle)
       .setOrigin(0.5, 1)
-      .setScale(S)
+      .setScale(this.layout.hero.scale)
       .setDepth(12);
-    this.addShadow(this.heroSprite, HERO_Y, 12);
-    this.palSprite = this.makePartnerSprite(PAL_X);
+    this.addShadow(this.heroSprite, this.layout.hero.y, 12);
+    this.palSprite = this.makePartnerSprite(this.layout.partner.x);
   }
 
   /**
    * モンスターの絵の大きさ：地方ボス 56 / 中ボス 40 / 県ボス 48 / 通常 32。
-   * 地方ボスは world の島の bossId に なっている モンスター（北海道のように 県 id と 地方 id が
-   * 同じ ところが あるので、area では 見分けない）
+   * 地方ボスは area が「県には無い 地方の id」の モンスター（北海道のように 県 id と 地方 id が
+   * 同じ ところが あるので、県に ある id は 県あつかい）
    */
   private sizeOf(def: Monster, isBoss: boolean): number {
-    if (this.content.world.islands.some((i) => i.bossId === def.id)) return MONSTER_SIZE.islandBoss;
-    if ([...this.content.areas.values()].some((a) => a.midBoss === def.id)) return MONSTER_SIZE.midBoss;
-    return isBoss ? MONSTER_SIZE.boss : MONSTER_SIZE.normal;
+    const size = monsterDisplaySize(def, this.content);
+    return size === MONSTER_SIZE.normal && isBoss ? MONSTER_SIZE.boss : size;
   }
 
   /**
    * 敵の絵の倍率。ボス戦だけ一回り大きく（×4 → ×5。1 ドット = 5px の整数倍なのでにじまない）。
-   * 上の「てき」「なかま」の窓にかからないよう、高さ BOSS_MAX_H をこえるなら ×4 のまま（地方ボス 56 は ×4 で 224px）
+   * 上の窓にかからないよう、レイアウトごとの上限をこえるボスは拡大しない。
    */
   private scaleOf(size: number, isBoss: boolean): number {
-    return isBoss && size * (S + 1) <= BOSS_MAX_H ? S + 1 : S;
+    const base = Math.max(2, S + this.layout.enemy.scaleStep);
+    return isBoss && size * (base + 1) <= this.layout.bossMaxHeight ? base + 1 : base;
   }
 
   /**
@@ -384,12 +328,12 @@ export class BattleScene extends Phaser.Scene {
     const def = m && this.content.monsters.get(m.refId);
     if (!m || !def) return null;
     const sp = this.add
-      .image(x, PAL_Y, this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false))
+      .image(x, this.layout.partner.y, this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false))
       .setOrigin(0.5, 1)
-      .setScale(S)
+      .setScale(this.layout.partner.scale)
       .setDepth(11)
       .setAlpha(m.hp > 0 ? 1 : 0.35);
-    this.addShadow(sp, PAL_Y, 22);
+    this.addShadow(sp, this.layout.partner.y, 22);
     return sp;
   }
 
@@ -417,8 +361,8 @@ export class BattleScene extends Phaser.Scene {
       ease: 'Stepped',
       easeParams: [1],
     });
-    this.idleBob(this.heroSprite, HERO_Y);
-    if (this.palSprite) this.idleBob(this.palSprite, PAL_Y);
+    this.idleBob(this.heroSprite, this.layout.hero.y);
+    if (this.palSprite) this.idleBob(this.palSprite, this.layout.partner.y);
   }
 
   /** 待機中は 1 ドットだけ上下（コマ送り） */
@@ -451,9 +395,8 @@ export class BattleScene extends Phaser.Scene {
     const layer = document.getElementById('ui-layer');
     if (!layer) return;
     this.hudRoot = document.createElement('div');
-    this.hudRoot.className = 'nq-battle-root';
+    this.hudRoot.className = `nq-battle-root nq-battle-root-${this.opts.presentation}`;
     layer.appendChild(this.hudRoot);
-    this.hud.set({ muted: isSfxMuted() });
     this.hud.onAction = (a) => this.onUi(a);
     render(h(BattleHud, { store: this.hud }), this.hudRoot);
   }
@@ -464,8 +407,7 @@ export class BattleScene extends Phaser.Scene {
     window.removeEventListener('focus', this.onVisible);
     this.abort?.abort();
     this.hud.onAction = null;
-    this.msgWaiters.clear();
-    this.actionWaiter = null;
+    this.hudFlow.dispose();
     this.overResolve = null;
     if (this.hudRoot) {
       render(null, this.hudRoot);
@@ -475,45 +417,24 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private onUi(a: UiAction): void {
-    if (a.t === 'advance') {
-      const done = this.msgWaiters.get(a.messageId);
-      if (done) {
-        this.msgWaiters.delete(a.messageId);
-        done();
-      }
-      return;
-    }
-    if (a.t === 'toggleSound') {
-      setSfxMuted(!isSfxMuted());
-      this.hud.set({ muted: isSfxMuted() });
-      return;
-    }
     if (a.t === 'command' || a.t === 'skill' || a.t === 'item' || a.t === 'swap' || a.t === 'back') {
       if (this.phase === 'command' && !this.busy) this.onMenu(a);
       return;
     }
-    this.actionWaiter?.(a);
+    this.hudFlow.receive(a);
   }
 
   private waitFor(pred: (a: UiAction) => boolean): Promise<UiAction> {
-    return new Promise((resolve) => {
-      this.actionWaiter = (a) => {
-        if (!pred(a)) return;
-        this.actionWaiter = null;
-        resolve(a);
-      };
-    });
+    return this.hudFlow.waitFor(pred);
   }
 
   private say(text: string, mode: 'auto' | 'wait' = 'auto'): Promise<void> {
-    const id = ++this.msgId;
-    this.hud.set({ message: { id, text, mode }, menu: 'none' });
-    return new Promise((resolve) => this.msgWaiters.set(id, resolve));
+    return this.hudFlow.say(text, mode);
   }
 
   /** たたかいの ようす（待たない。次の 文が きたら 入れかわる） */
   private log(text: string): void {
-    this.hud.set({ message: { id: ++this.msgId, text, mode: 'log' } });
+    this.hudFlow.log(text);
   }
 
   private async showBanner(
@@ -523,25 +444,16 @@ export class BattleScene extends Phaser.Scene {
     subject?: string,
     ms = 1000,
   ): Promise<void> {
-    const id = ++this.bannerId;
-    this.hud.set({ banner: { id, kind, text, sub, subject } });
-    await this.wait(ms);
-    if (this.hud.get().banner?.id === id) this.hud.set({ banner: null });
+    await this.hudFlow.showBanner(kind, text, sub, subject, ms);
   }
 
   private popup(x: number, y: number, text: string, kind: PopupView['kind']): void {
-    const id = ++this.popupId;
-    this.hud.set((s) => ({ popups: [...s.popups, { id, x, y, text, kind }] }));
-    this.time.delayedCall(1300, () => this.hud.set((s) => ({ popups: s.popups.filter((p) => p.id !== id) })));
+    this.hudFlow.popup(x, y, text, kind);
   }
 
   /** 問題の 枠の 見出しの 帯に「-12」など */
   private stripPop(text: string, kind: StripPopView['kind']): void {
-    const id = ++this.stripId;
-    this.hud.set((s) => ({ stripPops: [...s.stripPops.slice(-2), { id, text, kind }] }));
-    this.time.delayedCall(1200, () =>
-      this.hud.set((s) => ({ stripPops: s.stripPops.filter((p) => p.id !== id) })),
-    );
+    this.hudFlow.stripPop(text, kind);
   }
 
   // ───────────────────────── 表示用の状態 ─────────────────────────
@@ -564,7 +476,7 @@ export class BattleScene extends Phaser.Scene {
     this.hud.set((s) => ({
       gauges: s.gauges.map((g) =>
         g.subject === subject
-          ? { ...g, value, gain: gain ? { id: ++this.gainId, amount: gain } : g.gain }
+          ? { ...g, value, gain: gain ? { id: this.hudFlow.nextGainId(), amount: gain } : g.gain }
           : g,
       ),
     }));
@@ -594,13 +506,14 @@ export class BattleScene extends Phaser.Scene {
     this.hud.set((s) => ({ enemy: s.enemy ? { ...s.enemy, ...patch } : s.enemy }));
   }
 
-  private isUnique(sk: Skill): boolean {
-    return Object.values(this.content.settings.subjectGauge.uniqueSkills).includes(sk.id);
-  }
-
   /** 問題の 問い合わせ。教科の 固有スキルは プレイヤーの 学年（と ひとつ下）から。無ければ だんだん ひろげる */
   private queryFor(sk: Skill): QuestionQuery {
-    return battleQuestionQuery(sk, this.isUnique(sk), this.gs.learning.grade, this.bank);
+    return questionQueryForSkill({
+      skill: sk,
+      grade: this.gs.learning.grade,
+      uniqueSkillIds: Object.values(this.content.settings.subjectGauge.uniqueSkills),
+      hasCandidate: (query) => filterCandidates(this.bank, query).length > 0,
+    });
   }
 
   private hasQuestion(sk: Skill): boolean {
@@ -609,78 +522,54 @@ export class BattleScene extends Phaser.Scene {
 
   private canRecruit(): boolean {
     const s = this.state;
+    const hasGift = Boolean(this.recruitGiftId());
     return (
+      hasStoryCompanion(this.gs) &&
       !s.isBossBattle &&
       this.enemyDef.recruitRate > 0 &&
       s.enemy.hp > 0 &&
-      s.enemy.hp / s.enemy.stats.hp <= this.content.settings.recruitHpThreshold
+      (hasGift || s.enemy.hp / s.enemy.stats.hp <= this.content.settings.recruitHpThreshold)
     );
   }
 
+  private recruitGiftId(): string | undefined {
+    const gift = this.enemyDef.recruitItem;
+    return gift && (this.state.ally.items[gift] ?? 0) > 0 ? gift : undefined;
+  }
+
   private itemOptions(): ItemOption[] {
-    return Object.entries(this.state.ally.items).flatMap(([id, n]) => {
-      const it = this.content.items.get(id);
-      if (!it || n <= 0 || it.kind !== 'consumable' || !it.use) return [];
-      return [{ id, name: it.name, count: n, blurb: it.blurb, icon: itemIconUrl(it) }];
-    });
+    return buildItemOptions(this.state, this.content);
   }
 
   private swapOptions(): SwapOption[] {
-    const a = this.state.ally;
-    return a.monsters.map((m, i) => ({
-      index: i,
-      name: m.name,
-      level: m.level,
-      hp: m.hp,
-      maxHp: m.stats.hp,
-      element: m.element,
-      passive: makeCompanion(m, this.deps)?.passiveSkill?.subject,
-      disabled: i === a.activeMonsterIndex || m.hp <= 0,
-      active: i === a.activeMonsterIndex,
-    }));
+    return buildSwapOptions(this.state, this.deps);
   }
 
-  /** 必殺技一覧。教科ゲージ不足や「しばり」中の選択可否も表示モデルへ反映する。 */
+  /** 必殺技の一覧（主人公・オトモの わざ・教科の 固有スキル）。教科ゲージが たりない 必殺技は 打てない */
   private skillOptions(): SkillOption[] {
-    const s = this.state;
-    return buildSkillOptions(battleSkills(s, this.deps), s, {
-      nameOf: (id) => this.nameOf(id),
+    return buildSkillOptions({
+      state: this.state,
+      deps: this.deps,
       queryFor: (skill) => this.queryFor(skill),
       hasQuestion: (skill) => this.hasQuestion(skill),
-      canAfford: (skill) => canAfford(s, skill),
-      lockedReason: t('battle.skillLockedOther'),
-      preparingReason: t('battle.preparing'),
+      nameOf: (id) => this.nameOf(id),
+      preparingLabel: t('battle.preparing'),
+      lockedLabel: t('battle.skillLockedOther'),
     });
   }
 
   private commandOptions(): CommandOption[] {
-    const s = this.state;
-    const skills = battleSkills(s, this.deps);
-    const locked = lockedCommandOptions(!!s.player.skillLock);
-    if (locked) return locked;
-    // ゲージを 使う 必殺技が 打てるように なったら、必殺技の コマンドを 光らせる
-    const special = skills.some(
-      ({ skill: sk }) => sk.costGauge > 0 && canAfford(s, sk) && this.hasQuestion(sk),
-    );
-    const list: CommandOption[] = [
-      { kind: 'attack', disabled: false },
-      { kind: 'skill', disabled: skills.length === 0, glow: special },
-      { kind: 'item', disabled: this.itemOptions().length === 0 },
-      {
-        kind: 'swap',
-        disabled: !s.ally.monsters.some((m, i) => i !== s.ally.activeMonsterIndex && m.hp > 0),
-      },
-      { kind: 'flee', disabled: false },
-    ];
-    if (this.canRecruit()) list.push({ kind: 'recruit', disabled: false, glow: true });
-    return list;
+    return buildCommandOptions({
+      state: this.state,
+      deps: this.deps,
+      hasQuestion: (skill) => this.hasQuestion(skill),
+      itemCount: this.itemOptions().length,
+      canRecruit: this.canRecruit(),
+    });
   }
 
   private nameOf(id: string): string {
-    const s = this.state;
-    if (id === s.ally.hero.id) return s.ally.hero.name;
-    if (id === s.enemy.id) return s.enemy.name;
-    return s.ally.monsters.find((m) => m.id === id)?.name ?? id;
+    return combatantName(this.state, id);
   }
 
   private narrateCtx(): NarrateCtx {
@@ -700,6 +589,7 @@ export class BattleScene extends Phaser.Scene {
 
   private async run(): Promise<void> {
     await this.intro();
+    this.hud.set({ intro: false });
     if (this.state.outcome === 'ongoing') {
       this.phase = 'command';
       this.syncViews();
@@ -720,8 +610,8 @@ export class BattleScene extends Phaser.Scene {
     // まえの フェードが のこって いる ことが ある（タブを ほかに して いた とき）ので、まず 消す
     this.cameras.main.resetFX();
     this.cameras.main.fadeIn(350, 0, 0, 0);
-    const allies: [Sprite, number][] = [[this.heroSprite, HERO_X]];
-    if (this.palSprite) allies.push([this.palSprite, PAL_X]);
+    const allies: [Sprite, number][] = [[this.heroSprite, this.layout.hero.x]];
+    if (this.palSprite) allies.push([this.palSprite, this.layout.partner.x]);
     allies.forEach(([sp], i) => (sp.x = OFF_RIGHT + i * 120));
     this.enemySprite.setAlpha(0);
     await this.wait(250);
@@ -820,7 +710,7 @@ export class BattleScene extends Phaser.Scene {
       this.state = state;
       await this.enqueue(events);
     } catch (e) {
-      console.error('[battle] ターンの すすめかたで エラー', e);
+      await this.recoverFromError('ターンの すすめかた', e);
     } finally {
       this.busy = false;
       this.showCommands();
@@ -837,13 +727,15 @@ export class BattleScene extends Phaser.Scene {
     this.setStep(ready);
     this.hud.set({ actorId: ready ? hero.id : null, commands: this.commandOptions() });
     if (this.playing > 0) return;
+    const giftId = this.recruitGiftId();
+    const recruitHint = giftId
+      ? t('battle.recruitGiftHint', { item: this.content.items.get(giftId)?.name ?? giftId })
+      : t('battle.recruitHint');
     const text = ready
-      ? t('battle.whatWillDo', { name: hero.name }) +
-        (this.canRecruit() ? `\n${t('battle.recruitHint')}` : '')
+      ? t('battle.whatWillDo', { name: hero.name }) + (this.canRecruit() ? `\n${recruitHint}` : '')
       : null;
     const cur = this.hud.get().message;
-    if (text && !(cur?.mode === 'prompt' && cur.text === text))
-      this.hud.set({ message: { id: ++this.msgId, text, mode: 'prompt' } });
+    if (text && !(cur?.mode === 'prompt' && cur.text === text)) this.hudFlow.prompt(text);
   }
 
   /** 動ける ときは 主人公が 一歩 前に 出る（SFC の RPG のように） */
@@ -854,7 +746,7 @@ export class BattleScene extends Phaser.Scene {
     if (!sp?.active) return;
     this.tweens.add({
       targets: sp,
-      x: on ? HERO_X - READY_STEP : HERO_X,
+      x: on ? this.layout.hero.x - READY_STEP : this.layout.hero.x,
       duration: 120,
       ease: 'Stepped',
       easeParams: [3],
@@ -866,9 +758,15 @@ export class BattleScene extends Phaser.Scene {
       case 'command':
         this.cmdCursor = this.hud.get().cursor;
         if (a.kind === 'skill') this.hud.set({ menu: 'skills', cursor: 0, skills: this.skillOptions() });
-        else if (a.kind === 'item') this.hud.set({ menu: 'items', cursor: 0, items: this.itemOptions() });
-        else if (a.kind === 'swap') this.hud.set({ menu: 'swap', cursor: 0, swaps: this.swapOptions() });
-        else void this.runIntent({ kind: a.kind });
+        else if (a.kind === 'item') {
+          const items = this.itemOptions();
+          if (items.length === 0) this.hudFlow.prompt(t('battle.noItems'));
+          else this.hud.set({ menu: 'items', cursor: 0, items });
+        } else if (a.kind === 'swap') {
+          const swaps = this.swapOptions();
+          if (!swaps.some((option) => !option.disabled)) this.hudFlow.prompt(t('battle.noPartner'));
+          else this.hud.set({ menu: 'swap', cursor: 0, swaps });
+        } else void this.runIntent({ kind: a.kind });
         return;
       case 'skill': {
         const entry = battleSkills(this.state, this.deps).find((b) => `${b.actorId}:${b.skill.id}` === a.key);
@@ -894,7 +792,7 @@ export class BattleScene extends Phaser.Scene {
     try {
       await this.execute(intent);
     } catch (e) {
-      console.error('[battle] 行動中に エラー', e);
+      await this.recoverFromError('行動中', e);
     } finally {
       this.busy = false;
       this.showCommands();
@@ -915,16 +813,35 @@ export class BattleScene extends Phaser.Scene {
       case 'flee':
         cmd = { kind: 'flee' };
         break;
-      case 'item':
-        cmd = { kind: 'item', itemId: intent.itemId };
+      case 'item': {
+        const item = this.content.items.get(intent.itemId);
+        if (!item?.use?.recruit) {
+          cmd = { kind: 'item', itemId: intent.itemId };
+          break;
+        }
+        const prepared = await prepareMusubiDamaCommand(
+          item,
+          this.state.ally.hero.skills,
+          this.content.skills,
+          this.gs.learning.grade,
+          this.enemyDef.area,
+          this.gs.settings.timeLimitScale,
+          t('battle.musubiQuestionHint'),
+          (query) => filterCandidates(this.bank, query).length > 0,
+          (query, title, subject, hint) => this.runQuestion(query, title, subject, hint),
+        );
+        if (!prepared || this.state.outcome !== 'ongoing') return;
+        cmd = prepared;
         break;
+      }
       case 'swap':
         cmd = { kind: 'swap', monsterIndex: intent.index };
         break;
       case 'recruit': {
-        const result = await this.askRecruit();
+        const itemId = this.recruitGiftId();
+        const result = itemId ? { score: 1, timeMs: 0, attempts: 0 } : await this.askRecruit();
         if (this.state.outcome !== 'ongoing') return;
-        cmd = { kind: 'recruit', result };
+        cmd = { kind: 'recruit', result, itemId };
         break;
       }
       case 'skill': {
@@ -965,35 +882,12 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private async play(events: BattleEvent[]): Promise<void> {
-    const ctx = this.narrateCtx();
-    for (let i = 0; i < events.length; i++) {
-      const e = events[i]!;
-      // オトモの自動行動は毎ターン発生するため、文字送りを重ねず動きとダメージ表示だけにする。
-      // 低性能端末でログ描画が戦闘進行を塞ぐことも防ぐ。
-      const lines = e.t === 'act' && e.auto ? [] : narrate(e, ctx, events[i - 1]);
-      const talk = async () => {
-        if (!lines.length) return;
-        // 決着・ボスの セリフは 読んでから すすむ
-        if (e.t === 'defeat' || e.t === 'bossPhase') {
-          for (const line of lines)
-            await this.say(line, e.t === 'defeat' || line.startsWith('「') ? 'wait' : 'auto');
-          return;
-        }
-        // ほかは ようすの 文（待たない。2 行ずつ、少しだけ 読む 時間を とる）
-        for (let j = 0; j < lines.length; j += 2) {
-          const text = lines.slice(j, j + 2).join('\n');
-          this.log(text);
-          await this.wait(Math.min(LOG_MAX_MS, LOG_BASE_MS + displayText(text).length * LOG_CHAR_MS));
-        }
-      };
-      // 次の イベント（ダメージ・回復・まもり）を わたして、必殺技の 動きを ほんとうの あいてに 向ける
-      const next = events[i + 1];
-      if (TALK_FIRST.has(e.t)) await Promise.all([talk(), this.animate(e, next)]);
-      else {
-        await this.animate(e, next);
-        await talk();
-      }
-    }
+    await playBattleEvents(events, this.narrateCtx(), {
+      log: (text) => this.log(text),
+      say: (text, mode) => this.say(text, mode),
+      wait: (ms) => this.wait(ms),
+      animate: (event, next) => this.animate(event, next),
+    });
   }
 
   // ───────────────────────── 問題 ─────────────────────────
@@ -1008,39 +902,41 @@ export class BattleScene extends Phaser.Scene {
     subject: string,
     hint: string,
   ): Promise<ActionResult> {
-    const host = document.createElement('div');
-    host.className = 'nq-bq-slot';
-    const abort = new AbortController();
-    this.abort = abort;
     this.phase = 'question';
-    this.hud.set({
-      menu: 'none',
-      message: null,
-      stripPops: [],
-      shake: 0,
-      question: { host, skillName: title, subject, hint },
-    });
-    const env = buildAskEnv({
-      host,
-      gs: this.gs,
-      content: this.content,
-      bank: this.bank,
-      mastery: this.mastery,
-      rng: this.qRng,
-      speak: this.speak,
-      reason: 'battle',
-    });
-    const t0 = this.time.now;
+    this.syncGame();
     try {
-      const r = await ask(env, query, abort.signal);
-      return { score: r.score, timeMs: Math.round(this.time.now - t0), attempts: 1 };
-    } catch (e) {
-      if (e instanceof NoQuestionError) return { score: 0, timeMs: 0, attempts: 0 };
-      throw e;
+      return await runBattleQuestion({
+        query,
+        title,
+        subject,
+        hint,
+        game: this.gs,
+        content: this.content,
+        bank: this.bank,
+        mastery: this.mastery,
+        rng: this.qRng,
+        speak: this.speak,
+        now: () => this.time.now,
+        getGame: () => this.syncGame(),
+        port: {
+          show: ({ host, skillName, subject: questionSubject, hint: questionHint, abort }) => {
+            this.abort = abort;
+            this.hud.set({
+              menu: 'none',
+              message: null,
+              stripPops: [],
+              shake: 0,
+              question: { host, skillName, subject: questionSubject, hint: questionHint },
+            });
+          },
+          hide: () => {
+            this.abort = null;
+            this.hud.set({ question: null, stripPops: [] });
+          },
+        },
+      });
     } finally {
-      this.abort = null;
       this.phase = 'command';
-      this.hud.set({ question: null, stripPops: [] });
       this.syncViews();
     }
   }
@@ -1059,7 +955,7 @@ export class BattleScene extends Phaser.Scene {
       .find((x): x is Skill => !!x && this.hasQuestion(x));
     if (!sk) return { score: 0, timeMs: 0, attempts: 0 };
     return this.runQuestion(
-      { subject: sk.subject, gradeRange: sk.gradeRange, tags: [`prefecture:${this.enemyDef.area}`] },
+      recruitQuestionQuery(sk, this.enemyDef.area),
       t('cmd.recruit'),
       sk.subject,
       t('battle.recruitQuestionHint'),
@@ -1101,21 +997,16 @@ export class BattleScene extends Phaser.Scene {
           void this.fx.guardRing(this.anchorOf(e.actorId), 0x80c6ff);
           await this.flash(sp, 0x80c6ff, 2);
         } else if (e.command === 'skill') {
-          const tier = this.tierOf(def);
-          // 未進化のオトモが毎ターン使う自動技は、重い必殺技演出を重ねず体当たりで表す。
-          // ダメージ・属性・教科ゲージの計算は engine の skill のまま変えない。
-          if (e.auto && e.side === 'ally' && tier === 1) await this.partnerTackle(sp);
-          else
-            await this.skillMotion(
-              heroTurn ? s.ally.hero.id : e.actorId,
-              e.side === 'enemy',
-              heroTurn ? this.heroSprite : sp,
-              sk?.gauge ?? 1,
-              targetId,
-              sk,
-              tier,
-              this.lastMotif,
-            );
+          await this.skillMotion(
+            heroTurn ? s.ally.hero.id : e.actorId,
+            e.side === 'enemy',
+            heroTurn ? this.heroSprite : sp,
+            sk?.gauge ?? 1,
+            targetId,
+            sk,
+            this.tierOf(def),
+            this.lastMotif,
+          );
         } else if (e.command === 'scan') {
           playSfx('scan');
           const a = this.anchorOf(s.enemy.id);
@@ -1236,11 +1127,14 @@ export class BattleScene extends Phaser.Scene {
         return;
       case 'skillLock': {
         playSfx(e.remain > 0 ? 'buff' : 'select');
-        const lockBanner = skillLockBanner(e.remain, t);
-        await this.showBanner('skill', lockBanner.title, lockBanner.detail, 'kokugo', 800);
+        const banner = skillLockBanner(e.remain, t);
+        await this.showBanner('skill', banner.title, banner.detail, 'kokugo', 800);
         return;
       }
       case 'itemUsed':
+        playSfx('select');
+        return;
+      case 'recruitGift':
         playSfx('select');
         return;
       case 'swap': {
@@ -1253,8 +1147,8 @@ export class BattleScene extends Phaser.Scene {
         this.palSprite = this.makePartnerSprite(OFF_RIGHT);
         this.syncViews();
         if (this.palSprite) {
-          await this.walk(this.palSprite, PAL_X, 360);
-          this.idleBob(this.palSprite, PAL_Y);
+          await this.walk(this.palSprite, this.layout.partner.x, 360);
+          this.idleBob(this.palSprite, this.layout.partner.y);
         }
         return;
       }
@@ -1271,7 +1165,7 @@ export class BattleScene extends Phaser.Scene {
         this.burst(a.x, a.y, 0xff8fb1, 'bt.fx.heart', 18, -120);
         await this.tweenP({
           targets: this.enemySprite,
-          y: ENEMY_Y - 26,
+          y: this.layout.enemy.y - 26,
           duration: 160,
           yoyo: true,
           repeat: 1,
@@ -1312,7 +1206,7 @@ export class BattleScene extends Phaser.Scene {
           const sp = this.spriteOf(e.targetId);
           if (!sp) return;
           const hero = sp === this.heroSprite;
-          this.stopBob(sp, hero ? HERO_Y : PAL_Y);
+          this.stopBob(sp, hero ? this.layout.hero.y : this.layout.partner.y);
           if (hero) sp.setFrame(BATTLE_POSE.hurt);
           sp.setTint(0x6b6f80);
           await this.tweenP({ targets: sp, alpha: hero ? 0.7 : 0.3, y: sp.y + 2 * S, duration: 320 });
@@ -1340,7 +1234,7 @@ export class BattleScene extends Phaser.Scene {
         this.victory = e;
         return;
       case 'defeat':
-        playSfx('defeat');
+        finishBattleBgm('defeat');
         this.cameras.main.fadeOut(900, 0, 0, 0);
         await this.wait(900);
         return;
@@ -1352,11 +1246,16 @@ export class BattleScene extends Phaser.Scene {
   /** 主人公の「たたかう」：敵の前まで走って斬り、元の位置へとびのく */
   private async heroSlash(): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, ENEMY_X + 136, 260);
+    await this.walk(sp, this.layout.enemy.x + 136, 260);
     sp.setFrame(BATTLE_POSE.attack);
     playSfx('slash');
     const fx = this.add
-      .sprite(ENEMY_X, ENEMY_Y - (this.enemySize * this.enemyScale) / 2, 'bt.fx.slash', 0)
+      .sprite(
+        this.layout.enemy.x,
+        this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
+        'bt.fx.slash',
+        0,
+      )
       .setScale(S)
       .setDepth(25)
       .setTint(ELEMENT_FX[this.lastElement]);
@@ -1366,20 +1265,25 @@ export class BattleScene extends Phaser.Scene {
     }
     fx.destroy();
     // もどるのはダメージの演出と同時（待たない）
-    void this.walk(sp, HERO_X, 260).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, HERO_Y);
+    void this.walk(sp, this.layout.hero.x, 260).then(() => {
+      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
     });
   }
 
   /** 主人公の「たたかう」（2 回に 1 回）：敵の 前で 高く とびあがって、上から 切りおろす */
   private async heroJumpSlash(): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, ENEMY_X + 190, 220);
+    await this.walk(sp, this.layout.enemy.x + 190, 220);
     sp.setFrame(BATTLE_POSE.attack);
-    await this.fx.hopTo(sp, ENEMY_X + 128, HERO_Y, 22 * S, 260);
+    await this.fx.hopTo(sp, this.layout.enemy.x + 128, this.layout.hero.y, 22 * S, 260);
     playSfx('slash');
     const fx = this.add
-      .sprite(ENEMY_X, ENEMY_Y - (this.enemySize * this.enemyScale) / 2, 'bt.fx.slash', 0)
+      .sprite(
+        this.layout.enemy.x,
+        this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
+        'bt.fx.slash',
+        0,
+      )
       .setScale(S)
       .setDepth(25)
       .setFlipY(true)
@@ -1389,8 +1293,8 @@ export class BattleScene extends Phaser.Scene {
       await this.wait(60);
     }
     fx.destroy();
-    void this.walk(sp, HERO_X, 300).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, HERO_Y);
+    void this.walk(sp, this.layout.hero.x, 300).then(() => {
+      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
     });
   }
 
@@ -1405,15 +1309,18 @@ export class BattleScene extends Phaser.Scene {
   /** 主人公の 二連切り・つき・回転切り：敵の 前まで 走って（つきは ふみこんで）斬る。もどるのは ダメージの演出と同時 */
   private async heroSwing(kind: SwingKind): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, ENEMY_X + (kind === 'thrust' ? 200 : 136), kind === 'thrust' ? 200 : 260);
+    await this.walk(sp, this.layout.enemy.x + (kind === 'thrust' ? 200 : 136), kind === 'thrust' ? 200 : 260);
     sp.setFrame(BATTLE_POSE.attack);
-    if (kind === 'thrust') await this.fx.hopTo(sp, ENEMY_X + 150, HERO_Y, 2 * S, 100);
+    if (kind === 'thrust') await this.fx.hopTo(sp, this.layout.enemy.x + 150, this.layout.hero.y, 2 * S, 100);
     playSfx('slash');
     if (kind === 'cross') this.time.delayedCall(150, () => playSfx('slash'));
-    const at = { x: ENEMY_X, y: ENEMY_Y - (this.enemySize * this.enemyScale) / 2 };
+    const at = {
+      x: this.layout.enemy.x,
+      y: this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
+    };
     await this.fx.swing(kind, at, ELEMENT_FX[this.lastElement]);
-    void this.walk(sp, HERO_X, 280).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, HERO_Y);
+    void this.walk(sp, this.layout.hero.x, 280).then(() => {
+      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
     });
   }
 
@@ -1424,10 +1331,10 @@ export class BattleScene extends Phaser.Scene {
 
   /** 仲間の「たたかう」：ぴょんと はねて 敵へ たいあたり。もどるのは ダメージの演出と同時 */
   private async partnerTackle(sp: Sprite): Promise<void> {
-    this.stopBob(sp, PAL_Y);
-    await this.fx.hopTo(sp, ENEMY_X + 200, PAL_Y, 16 * S, 260);
-    void this.fx.hopTo(sp, PAL_X, PAL_Y, 8 * S, 260).then(() => {
-      if (sp.active) this.idleBob(sp, PAL_Y);
+    this.stopBob(sp, this.layout.partner.y);
+    await this.fx.hopTo(sp, this.layout.enemy.x + 200, this.layout.partner.y, 16 * S, 260);
+    void this.fx.hopTo(sp, this.layout.partner.x, this.layout.partner.y, 8 * S, 260).then(() => {
+      if (sp.active) this.idleBob(sp, this.layout.partner.y);
     });
   }
 
@@ -1440,7 +1347,7 @@ export class BattleScene extends Phaser.Scene {
     const k = this.enemyAttacks++;
     if (this.state.isBossBattle && k % 2 === 1) {
       this.lastEnemyStyle = 'quake';
-      await this.fx.stomp(sp, 40 * S, ENEMY_Y);
+      await this.fx.stomp(sp, 40 * S, this.layout.enemy.y);
     } else if (k % 3 === 1) {
       this.lastEnemyStyle = 'bash';
       await this.fx.dash(sp, 30 * S);
@@ -1508,7 +1415,7 @@ export class BattleScene extends Phaser.Scene {
     // はでさ：しんか前の モンスター（tier 1）は ぶたい なし・字の 演出 なし、1 かい しんか（tier 2）は うすい ぶたい
     const mid = tier >= 2;
     const full = tier >= 3;
-    const baseY = hero ? HERO_Y : PAL_Y;
+    const baseY = hero ? this.layout.hero.y : this.layout.partner.y;
     const from = this.anchorOf(actorId);
     const toId = targetId ?? (enemySide ? this.state.ally.hero.id : this.state.enemy.id);
     const self = toId === actorId || !attack;
@@ -1559,7 +1466,7 @@ export class BattleScene extends Phaser.Scene {
   /** 歩く（主人公は右足・左足のコマ、モンスターはぴょこぴょこ跳ねる） */
   private async walk(sp: Sprite, x: number, ms: number): Promise<void> {
     const hero = sp === this.heroSprite;
-    const baseY = hero ? HERO_Y : PAL_Y;
+    const baseY = hero ? this.layout.hero.y : this.layout.partner.y;
     this.stopBob(sp, baseY);
     let k = 0;
     const timer = this.time.addEvent({
@@ -1645,7 +1552,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private tweenP(cfg: Phaser.Types.Tweens.TweenBuilderConfig): Promise<void> {
-    return tweenPromise(this.tweens, cfg);
+    return new Promise((resolve) => this.tweens.add({ ...cfg, onComplete: () => resolve() }));
   }
 
   /**
@@ -1686,84 +1593,96 @@ export class BattleScene extends Phaser.Scene {
   /** 勝ったとき：主人公はばんざいして 2 回ジャンプ、相棒もぴょんぴょん */
   private async victoryPose(): Promise<void> {
     const hero = this.heroSprite;
-    this.stopBob(hero, HERO_Y);
+    this.stopBob(hero, this.layout.hero.y);
     hero.setFrame(BATTLE_POSE.victory);
     const pal = this.palSprite?.active && this.palSprite.alpha > 0.5 ? this.palSprite : null;
-    if (pal) this.stopBob(pal, PAL_Y);
+    if (pal) this.stopBob(pal, this.layout.partner.y);
     for (let i = 0; i < 2; i++)
       await Promise.all([
-        this.tweenP({ targets: hero, y: HERO_Y - 6 * S, duration: 140, yoyo: true, ease: 'Quad.easeOut' }),
+        this.tweenP({
+          targets: hero,
+          y: this.layout.hero.y - 6 * S,
+          duration: 140,
+          yoyo: true,
+          ease: 'Quad.easeOut',
+        }),
         pal
-          ? this.tweenP({ targets: pal, y: PAL_Y - 4 * S, duration: 140, yoyo: true, ease: 'Quad.easeOut' })
+          ? this.tweenP({
+              targets: pal,
+              y: this.layout.partner.y - 4 * S,
+              duration: 140,
+              yoyo: true,
+              ease: 'Quad.easeOut',
+            })
           : Promise.resolve(),
       ]);
   }
 
   // ───────────────────────── 終了 ─────────────────────────
 
+  /** 途中まで進んだ状態で操作へ戻さず、安全にフィールドへ退避する。 */
+  private async recoverFromError(context: string, error: unknown): Promise<void> {
+    console.error(`[battle] ${context}で エラー`, error);
+    if (this.recovering || this.stopped) return;
+    this.recovering = true;
+    this.phase = 'over';
+    this.busy = true;
+    this.abort?.abort();
+    this.hud.set({ result: null, message: null, menu: 'none', question: null, turn: null });
+    try {
+      await this.leave('fled', 0);
+    } catch (leaveError) {
+      console.error('[battle] エラーから戻れませんでした', leaveError);
+      if (!this.stopped) {
+        this.scene.stop();
+        this.game.events.emit('battle:end', { outcome: 'fled', goldLost: 0 } satisfies BattleEndPayload);
+      }
+    }
+  }
+
   private async finish(): Promise<void> {
+    this.syncGame();
     const s = this.state;
-    const outcome = s.outcome as BattleSummary['outcome'];
-    const v = this.victory;
-    const summary: BattleSummary = {
-      outcome,
-      enemyRefId: s.enemy.refId,
-      enemyLevel: s.enemy.level,
-      heroHp: s.ally.hero.hp,
-      heroMp: s.ally.hero.mp,
-      heroMaxHp: s.ally.hero.stats.hp,
-      heroMaxMp: s.ally.hero.stats.mp,
-      // けいけんち・おかねは れんぞく せいかいの ボーナス込み（エンジンの victory）
-      xp: v?.xp ?? 0,
-      gold: v?.gold ?? 0,
-      drops: v?.drops ?? [],
-      items: { ...s.ally.items },
-      recruitAccepted: false,
-      perfectBySubject: this.perfectBySubject,
-    };
+    const v = this.opts.forceRecruitOffer
+      ? this.victory && { ...this.victory, recruitOffer: true }
+      : this.gs.party.owned.length === 0 && this.victory
+        ? { ...this.victory, recruitOffer: false }
+        : this.victory;
+    const summary = battleSummary(s, v, this.perfectBySubject);
+    const outcome = summary.outcome;
+    finishBattleBgm(outcome);
 
     if (outcome === 'victory') {
-      playSfx('victory');
       await this.victoryPose();
       // 特産品を落としたら、名前の帯 → 「とくさんひん『〇〇』を てに いれた！」→ 特産品の説明（宝箱の特産品と同じ説明）
-      const specialties = specialtyIndex(this.content.areas, this.content.items);
-      for (const id of new Set(summary.drops)) {
-        const sp = specialties.get(id);
-        if (!sp) continue;
+      for (const reward of specialtyRewardViews(this.syncGame(), summary.drops, this.content)) {
         playSfx('discover');
-        await this.showBanner('skill', sp.item.name, t('field.specialtyFound'), undefined, 1300);
-        await this.say(t('battle.specialtyGet', { item: sp.item.name }), 'wait');
-        await this.say(sp.motif.blurb, 'wait');
+        await this.showBanner('skill', reward.name, t('field.specialtyFound'), undefined, 1300);
+        await this.say(t('battle.specialtyGet', { item: reward.name }), 'wait');
+        await this.say(reward.blurb, 'wait');
+        if (reward.powerText) await this.say(reward.powerText, 'wait');
+        if (reward.completeText) await this.say(reward.completeText, 'wait');
       }
-      const table = this.content.xp.hero;
-      const { xp } = this.gs.player;
-      const from = xpToNextLevel(table, heroLevel(this.gs, table), xp);
-      const toLevel = Math.max(this.gs.player.level, levelForXp(table, xp + summary.xp));
-      const to = xpToNextLevel(table, toLevel, xp + summary.xp);
-      const counts = new Map<string, number>();
-      for (const id of summary.drops) counts.set(id, (counts.get(id) ?? 0) + 1);
+      const result = victoryResultView(
+        summary,
+        v,
+        s.enemy.name,
+        this.syncGame(),
+        this.content,
+        itemIconUrl,
+        monsterMenuArtUrl(this.enemyDef),
+        this.opts.forceRecruitOffer,
+      );
       this.hud.set({
         menu: 'none',
         message: null,
         cursor: 0,
-        result: {
-          kind: 'victory',
-          xp: summary.xp,
-          gold: summary.gold,
-          drops: [...counts].map(([id, count]) => {
-            const it = this.content.items.get(id);
-            return { name: it?.name ?? id, count, icon: it ? itemIconUrl(it) : undefined };
-          }),
-          xpFrom: from.ratio,
-          xpTo: to.ratio,
-          needNext: to.need,
-          recruitName: v?.recruitOffer ? s.enemy.name : undefined,
-          goldLost: 0,
-          bonus: v?.bonus ?? 1,
-          maxCombo: v?.maxCombo ?? 0,
-        },
+        result: { ...result, recruitName: undefined, recruitArt: undefined },
       });
-      if (v?.recruitOffer) {
+      await this.waitFor((x) => x.t === 'resultClose');
+      if (result.recruitName) {
+        playSfx('discover');
+        this.hud.set({ cursor: 0, result: { ...result, recruitPhase: true } });
         const a = await this.waitFor((x) => x.t === 'recruitAnswer');
         summary.recruitAccepted = a.t === 'recruitAnswer' && a.yes;
         if (summary.recruitAccepted) {
@@ -1771,59 +1690,51 @@ export class BattleScene extends Phaser.Scene {
           this.hud.set({ result: null });
           await this.say(t('battle.recruitSuccess', { name: s.enemy.name }), 'wait');
         }
-      } else await this.waitFor((x) => x.t === 'resultClose');
+      }
     } else if (outcome === 'defeat') {
-      const { goldLost } = applyBattleResult(this.gs, summary, this.content.settings);
+      const { goldLost } = applyBattleResult(this.syncGame(), summary, this.content.settings);
       this.hud.set({
         menu: 'none',
         message: null,
-        result: {
-          kind: 'defeat',
-          xp: 0,
-          gold: 0,
-          drops: [],
-          xpFrom: 0,
-          xpTo: 0,
-          needNext: 0,
-          goldLost,
-          bonus: 1,
-          maxCombo: 0,
-        },
+        result: defeatResultView(goldLost),
       });
       await this.waitFor((x) => x.t === 'resultClose');
     }
 
-    const applied = applyBattleResult(this.gs, summary, this.content.settings);
-    this.registry.set('game', await this.settleBag(applied));
+    const previous = this.syncGame();
+    const applied = applyBattleResult(previous, summary, this.content.settings);
+    const settled = settleBattleBag(previous, applied, this.content);
+    this.gs = settled.state;
+    this.registry.set('game', settled.state);
+    await this.announceSettlement(settled);
     await this.leave(outcome, applied.goldLost);
   }
 
-  /**
-   * バトルの あとの バッグ：レベルが 上がった・マスが ふえた を しらせる。
-   * 仲間に なった モンスターは マスが あいていれば バッグへ、たりなければ あずけて しらせる
-   */
-  private async settleBag(applied: AppliedBattle): Promise<AppliedBattle['state']> {
-    const table = this.content.xp.hero;
-    const cfg = this.content.settings.bag;
+  /** バトル後の成長と、仲間のバッグ格納・預かりを知らせる。 */
+  private async announceSettlement(settled: BattleSettlement): Promise<void> {
     const say = async (text: string) => {
       this.hud.set({ result: null });
       await this.say(text, 'wait');
     };
-    let gs = applied.state;
-    const before = heroLevel(this.gs, table);
-    const after = heroLevel(gs, table);
-    if (after > before) {
+    if (settled.level.after > settled.level.before) {
       playSfx('discover');
-      await say(t('battle.levelUp', { name: gs.player.name, lv: after }));
-      const cap = bagCapacity(after, cfg);
-      if (cap > bagCapacity(before, cfg)) await say(t('battle.bagGrew', { n: cap }));
+      await say(t('battle.levelUp', { name: settled.state.player.name, lv: settled.level.after }));
+      if (settled.level.bagGrew) await say(t('battle.bagGrew', { n: settled.level.bagCapacity }));
     }
-    if (applied.newMonsterUid) {
-      const stow = stowNewMonster(gs, applied.newMonsterUid, bagContext(gs, this.content));
-      gs = stow.state;
-      if (!stow.inBag) await say(t('battle.recruitStored', { name: this.state.enemy.name }));
+    for (const levelUp of settled.monsterLevelUps) {
+      const owned = settled.state.party.owned.find((monster) => monster.uid === levelUp.uid);
+      const name = owned
+        ? (this.content.monsters.get(owned.monsterId)?.name ?? owned.monsterId)
+        : levelUp.uid;
+      await say(t('battle.monsterLevelUp', { name, lv: levelUp.after }));
     }
-    return gs;
+    if (settled.recruitStored) await say(t('battle.recruitStored', { name: this.state.enemy.name }));
+  }
+
+  /** 長い戦闘中にタイマーなどが更新した最新の GameState を取り込む。 */
+  private syncGame(): GameState {
+    this.gs = (this.registry.get('game') as GameState | undefined) ?? this.gs;
+    return this.gs;
   }
 
   private async leave(outcome: BattleEndPayload['outcome'], goldLost: number): Promise<void> {

@@ -1,15 +1,49 @@
 /**
  * ダメージ計算。GDD §4.3 の「問題の出来 → わざの威力」がここに集約される。
- *   BaseDamage  = こうげき × いりょく ÷ ぼうぎょ × damageScale（必殺技は かしこさ で いりょく アップ）
+ *   BaseDamage  = floor(floor((floor(2L/5)+2) × power × A / D) / 50) + 2
  *   ComboBonus  = 1 + comboCount × perCombo（最大 +maxBonus）
- *   FinalDamage = BaseDamage × ScoreMultiplier × ComboBonus × ElementMultiplier（× かいしん）
+ *   FinalDamage = BaseDamage × ScoreMultiplier × ComboBonus × ElementMultiplier × 85〜100%（× かいしん）
  * 純粋関数のみ。Phaser・DOM・GameState を知らない。
  */
-import type { Element, ElementTable, Settings, Skill } from '../content/schemas';
+import type { Element, ElementTable, Settings, Skill, Stats } from '../content/schemas';
 import type { Rng } from '../rng';
 import type { Combatant, ScoreBandName } from './types';
 
 export type ScoreBand = ScoreBandName;
+export type AttackClass = 'science' | 'humanities' | 'balanced';
+
+export function selectAcademicStats(
+  attacker: Stats,
+  defender: Stats,
+  attackClass: AttackClass,
+): { attack: number; defense: number } {
+  const legacyAttacker = attacker as Stats & { atk?: number };
+  const legacyDefender = defender as Stats & { def?: number };
+  const scienceAtk = attacker.scienceAtk ?? legacyAttacker.atk ?? 0;
+  const humanitiesAtk = attacker.humanitiesAtk ?? legacyAttacker.atk ?? 0;
+  const scienceDef = defender.scienceDef ?? legacyDefender.def ?? 0;
+  const humanitiesDef = defender.humanitiesDef ?? legacyDefender.def ?? 0;
+  if (attackClass === 'science') return { attack: scienceAtk, defense: scienceDef };
+  if (attackClass === 'humanities') return { attack: humanitiesAtk, defense: humanitiesDef };
+  return {
+    attack: Math.floor((scienceAtk + humanitiesAtk) / 2),
+    defense: Math.floor((scienceDef + humanitiesDef) / 2),
+  };
+}
+
+export function pokemonLikeBaseDamage(level: number, power: number, attack: number, defense: number): number {
+  const levelFactor = Math.floor((2 * level) / 5) + 2;
+  const scaled = Math.floor((levelFactor * power * attack) / Math.max(1, defense));
+  return Math.floor(scaled / 50) + 2;
+}
+
+export function attackClassFor(skill: Skill | null): AttackClass {
+  if (!skill) return 'balanced';
+  if (skill.attackClass) return skill.attackClass;
+  if (skill.subject === 'sansu' || skill.subject === 'rika') return 'science';
+  if (skill.subject === 'seikatsu') return 'balanced';
+  return 'humanities';
+}
 
 /** 1.0 = CRITICAL / 0.5〜0.99 = GREAT / 0.01〜0.49 = GOOD / 0 = MISS */
 export function scoreBand(score: number): ScoreBand {
@@ -70,13 +104,11 @@ export interface DamageOutput {
 
 export function computeDamage(input: DamageInput): DamageOutput {
   const { attacker, defender, skill, score, settings, elements, rng } = input;
-  const atk = attacker.stats.atk * (attacker.buffs.atk?.mult ?? 1);
-  const def = Math.max(1, defender.stats.def * (defender.buffs.def?.mult ?? 1));
-
-  // いりょく 100 = 1 ばい。かしこさ（intelligence）は「勉強したぶん強くなる」軸（GDD §4.2）。わざのときだけ効く
-  const power = (skill ? skill.power : 100) / 100;
-  const wisMult = skill ? 1 + attacker.stats.wis * 0.01 : 1;
-  const base = ((atk * power * wisMult) / def) * settings.damageScale;
+  const pair = selectAcademicStats(attacker.stats, defender.stats, attackClassFor(skill));
+  const wisdomAttack = skill ? Math.floor(attacker.stats.wis / 5) : 0;
+  const atk = Math.max(1, Math.floor((pair.attack + wisdomAttack) * (attacker.buffs.atk?.mult ?? 1)));
+  const def = Math.max(1, Math.floor(pair.defense * (defender.buffs.def?.mult ?? 1)));
+  const base = pokemonLikeBaseDamage(attacker.level, skill?.power ?? 100, atk, def);
 
   const element: Element = skill ? skill.element : attacker.element;
   const band = score === null ? null : scoreBand(score);
@@ -88,13 +120,17 @@ export function computeDamage(input: DamageInput): DamageOutput {
     defender.weaknessRevealed && defender.weakness !== undefined && defender.weakness === element;
   const weakMult = weaknessHit ? settings.weaknessMultiplier : 1;
   const setBoost = attacker.elementBoost?.[element] ?? 1;
+  const resistance = defender.elementResists?.includes(element) ? settings.equipmentElementResistance : 1;
 
   const critical = input.canCrit && rng.chance(critChance(input.combo, settings));
   const critMult = critical ? settings.combo.critMultiplier : 1;
+  const randomMult = rng.int(85, 100) / 100;
 
   const amount = Math.max(
     1,
-    Math.round(base * scoreMult * comboMult * elementMult * weakMult * setBoost * critMult),
+    Math.floor(
+      base * scoreMult * comboMult * elementMult * weakMult * setBoost * resistance * critMult * randomMult,
+    ),
   );
   return { amount, critical, elementMult, weaknessHit, band, scoreMult, comboMult };
 }

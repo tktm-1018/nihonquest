@@ -1,10 +1,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { EVENT_SPOTS, LANDMARK_SPOTS, type LonLat } from '../../scripts/data/geo';
 import { TOWN_THEMES } from '../../scripts/data/towns';
+import { project, type Proj } from '../../scripts/terrain/raster';
 
 /**
  * scaffold:maps が作ったマップが「遊べる」ことを機械的に確かめる。
- *  - maps/ と public/maps/（ゲームが読む方）が同じ
+ *  - maps/ を唯一のマップソースとして検証する
  *  - 遷移先のマップとスポーン地点が存在する
  *  - スタート地点から、そのマップの物体すべてに歩いて（または同じマップの中の船で）行ける
  *  - content の events が使う物体が、マップにちゃんと置かれている
@@ -22,14 +24,36 @@ interface TiledMap {
   width: number;
   height: number;
   layers: { name: string; data?: number[]; objects?: Obj[] }[];
+  properties?: { name: string; value: unknown }[];
+}
+
+interface RegionGrid {
+  ids: string[];
+  rows: string[];
+}
+
+interface RegionArea {
+  id: string;
+  regions: { id: string; motifs: string[]; start?: boolean; boss?: unknown }[];
+  regionGates: { between: [string, string]; openedBy: string }[];
+  events?: { motifId?: string; trigger?: { map: string; objectName: string } }[];
+}
+
+interface TerrainMap {
+  width: number;
+  height: number;
+  rows: string[];
+  panels: { bbox: [number, number, number, number]; proj: Proj }[];
 }
 
 const MAPS = new URL('../../maps/', import.meta.url);
-const PUBLIC_MAPS = new URL('../../public/maps/', import.meta.url);
 const PREFECTURES = new URL('../../content/prefectures/', import.meta.url);
 const WORLD_MAP = new URL('../../public/worldmap.json', import.meta.url);
 const WORLD = new URL('../../content/world/japan.json', import.meta.url);
 const ITEMS = new URL('../../content/items/', import.meta.url);
+const TERRAIN = JSON.parse(
+  readFileSync(new URL('../../scripts/data/terrain.json', import.meta.url), 'utf8'),
+) as { maps: Record<string, TerrainMap> };
 
 const jsonFiles = (dir: URL) => readdirSync(dir).filter((f) => f.endsWith('.json'));
 const maps = new Map<string, TiledMap>(
@@ -43,8 +67,15 @@ const objectsOf = (m: TiledMap) => m.layers.find((l) => l.name === 'objects')?.o
 const prop = (o: Obj, name: string) => o.properties?.find((p) => p.name === name)?.value;
 const tileIndex = (m: TiledMap, o: Obj) => Math.floor(o.y / 16) * m.width + Math.floor(o.x / 16);
 
+const neighbors = (m: TiledMap, i: number): number[] => {
+  const x = i % m.width;
+  return [x > 0 ? i - 1 : -1, x < m.width - 1 ? i + 1 : -1, i - m.width, i + m.width].filter(
+    (j) => j >= 0 && j < m.width * m.height,
+  );
+};
+
 /** 'spawn' から4方向に歩いて届くマス。遷移のマスには乗れるが、その先へは歩けない（乗った瞬間に移動するため） */
-function reachable(key: string, m: TiledMap): Set<number> {
+function reachable(key: string, m: TiledMap, extraBlocked: ReadonlySet<number> = new Set()): Set<number> {
   const col = m.layers.find((l) => l.name === 'collision')?.data ?? [];
   const objs = objectsOf(m);
   const transitions = new Map(objs.filter((o) => o.type === 'transition').map((o) => [tileIndex(m, o), o]));
@@ -68,9 +99,8 @@ function reachable(key: string, m: TiledMap): Set<number> {
       }
       continue;
     }
-    const x = i % m.width;
-    for (const j of [x > 0 ? i - 1 : -1, x < m.width - 1 ? i + 1 : -1, i - m.width, i + m.width]) {
-      if (j < 0 || j >= m.width * m.height || seen.has(j) || col[j] === 3) continue;
+    for (const j of neighbors(m, i)) {
+      if (seen.has(j) || col[j] === 3 || extraBlocked.has(j)) continue;
       seen.add(j);
       queue.push(j);
     }
@@ -78,14 +108,32 @@ function reachable(key: string, m: TiledMap): Set<number> {
   return seen;
 }
 
-describe('マップ', () => {
-  it('maps/ と public/maps/ の中身が同じ', () => {
-    expect(jsonFiles(PUBLIC_MAPS).sort()).toEqual(jsonFiles(MAPS).sort());
-    for (const f of jsonFiles(MAPS)) {
-      expect(readFileSync(new URL(f, PUBLIC_MAPS), 'utf8'), f).toBe(readFileSync(new URL(f, MAPS), 'utf8'));
-    }
-  });
+function regionGridOf(m: TiledMap): RegionGrid | null {
+  const raw = m.properties?.find((property) => property.name === 'regions')?.value;
+  if (typeof raw !== 'string') return null;
+  try {
+    const grid = JSON.parse(raw) as Partial<RegionGrid>;
+    return Array.isArray(grid.ids) && Array.isArray(grid.rows)
+      ? { ids: grid.ids as string[], rows: grid.rows as string[] }
+      : null;
+  } catch {
+    return null;
+  }
+}
 
+function regionAt(m: TiledMap, grid: RegionGrid, i: number): string | null {
+  const cell = grid.rows[Math.floor(i / m.width)]?.[i % m.width];
+  return cell && cell !== '.' ? (grid.ids[cell.charCodeAt(0) - 97] ?? null) : null;
+}
+
+function projectedTile(terrain: TerrainMap, [lon, lat]: LonLat): [number, number] {
+  const panel =
+    terrain.panels.find(({ bbox }) => lon >= bbox[0] && lon <= bbox[2] && lat >= bbox[1] && lat <= bbox[3]) ??
+    terrain.panels.at(-1)!;
+  return project(panel.proj, [lon, lat]);
+}
+
+describe('マップ', () => {
   it.each([...maps.keys()])('%s: 遷移先があり、すべての物体に歩いて行ける', (key) => {
     const m = maps.get(key)!;
     const objs = objectsOf(m);
@@ -143,6 +191,52 @@ describe('マップ', () => {
     }
   });
 
+  it('県外の陸地は陸として描き、県境は通れず、実際の海や湖だけを水面として描く', () => {
+    let neighboringLandTiles = 0;
+    let waterTiles = 0;
+    const renderingErrors: string[] = [];
+    const collisionErrors: string[] = [];
+    for (const [key, terrain] of Object.entries(TERRAIN.maps)) {
+      if (!key.endsWith('-field')) continue;
+      const map = maps.get(key)!;
+      const background = map.layers.find((layer) => layer.name === 'background')?.data ?? [];
+      const collision = map.layers.find((layer) => layer.name === 'collision')?.data ?? [];
+      expect(terrain.rows, `${key}: 地形の高さ`).toHaveLength(terrain.height);
+      for (const [y, row] of terrain.rows.entries()) {
+        expect(row, `${key}: 地形 ${y} 行目の幅`).toHaveLength(terrain.width);
+        for (const [x, cell] of [...row].entries()) {
+          const index = y * terrain.width + x;
+          if (cell === 'x') {
+            neighboringLandTiles++;
+            if (background[index] !== 1) renderingErrors.push(`${key}: 県外の陸 (${x}, ${y})`);
+            if (collision[index] !== 3) collisionErrors.push(`${key}: 県境 (${x}, ${y})`);
+          }
+          if (cell === '.' || cell === '~') {
+            waterTiles++;
+            if (background[index] !== 3) renderingErrors.push(`${key}: 水面 (${x}, ${y})`);
+            if (collision[index] !== 3) collisionErrors.push(`${key}: 水面 (${x}, ${y})`);
+          }
+        }
+      }
+    }
+    expect(renderingErrors).toEqual([]);
+    expect(collisionErrors).toEqual([]);
+    expect(neighboringLandTiles).toBeGreaterThan(0);
+    expect(waterTiles).toBeGreaterThan(0);
+  });
+
+  it('ゲーム開始地点の近くにボスを置かない', () => {
+    const aomori = maps.get('aomori-field')!;
+    const objects = objectsOf(aomori);
+    const spawn = objects.find((o) => o.type === 'spawn' && o.name === 'spawn')!;
+    const sx = Math.floor(spawn.x / 16);
+    const sy = Math.floor(spawn.y / 16);
+    for (const boss of objects.filter((o) => o.type === 'midboss' || o.type === 'regionBoss')) {
+      const distance = Math.abs(Math.floor(boss.x / 16) - sx) + Math.abs(Math.floor(boss.y / 16) - sy);
+      expect(distance, `${boss.name} が開始地点に近すぎる`).toBeGreaterThanOrEqual(16);
+    }
+  });
+
   it('裏ステージ（secret）の ある 県は、フィールドに 入口が あり、<県>-secret の おくに ラスボスが いる', () => {
     for (const f of jsonFiles(PREFECTURES)) {
       const area = JSON.parse(readFileSync(new URL(f, PREFECTURES), 'utf8')) as {
@@ -183,6 +277,223 @@ describe('マップ', () => {
   });
 });
 
+describe('全国の地域進行マップ', () => {
+  const world = JSON.parse(readFileSync(WORLD, 'utf8')) as { islands: { id: string; areas: string[] }[] };
+  const areaIds = world.islands.flatMap((island) => island.areas);
+
+  it.each(areaIds)('%s: 地域・関所・地域ボスが実データどおり配置され、順番に全地域へ行ける', (id) => {
+    const area = JSON.parse(readFileSync(new URL(`${id}.json`, PREFECTURES), 'utf8')) as RegionArea;
+    const map = maps.get(`${id}-field`)!;
+    const grid = regionGridOf(map);
+    expect(map, `${id}-field`).toBeDefined();
+    expect(grid, `${id}: regions プロパティ`).not.toBeNull();
+    if (!map || !grid) return;
+
+    const regionIds = area.regions.map((region) => region.id);
+    expect(grid.ids, `${id}: regions.ids`).toEqual(regionIds);
+    expect(new Set(grid.ids).size, `${id}: regions.ids の重複`).toBe(grid.ids.length);
+    expect(grid.rows, `${id}: regions.rows の高さ`).toHaveLength(map.height);
+    for (const [y, row] of grid.rows.entries()) {
+      expect(row, `${id}: regions.rows[${y}] の幅`).toHaveLength(map.width);
+      for (const cell of row) {
+        const index = cell.charCodeAt(0) - 97;
+        expect(cell === '.' || (index >= 0 && index < grid.ids.length), `${id}: regions の文字 ${cell}`).toBe(
+          true,
+        );
+      }
+    }
+    if (id !== 'aomori')
+      for (const regionId of regionIds) {
+        const collision = map.layers.find((layer) => layer.name === 'collision')?.data ?? [];
+        const cells = new Set<number>();
+        for (let i = 0; i < map.width * map.height; i++)
+          if (regionAt(map, grid, i) === regionId && collision[i] !== 3) cells.add(i);
+        expect(cells.size, `${id}: ${regionId} の歩けるマス`).toBeGreaterThan(0);
+        const first = cells.values().next().value as number;
+        const connected = new Set([first]);
+        const queue = [first];
+        for (let head = 0; head < queue.length; head++)
+          for (const next of neighbors(map, queue[head]!))
+            if (cells.has(next) && !connected.has(next)) {
+              connected.add(next);
+              queue.push(next);
+            }
+        expect(connected.size, `${id}: ${regionId} の歩けるマスは4近傍で1連結`).toBe(cells.size);
+      }
+
+    const startRegions = area.regions.filter((region) => region.start);
+    expect(startRegions, `${id}: start 地域`).toHaveLength(1);
+    const toDungeon = objectsOf(map).find((object) => object.name === 'to_dungeon');
+    expect(toDungeon, `${id}: to_dungeon`).toBeDefined();
+    if (id !== 'aomori')
+      expect(prop(toDungeon!, 'lock'), `${id}: 全地域ボス撃破前のダンジョン封鎖`).toBe('regionBosses');
+    for (const name of ['spawn', 'to_town', 'from_town']) {
+      const object = objectsOf(map).find((candidate) => candidate.name === name);
+      expect(object, `${id}: ${name}`).toBeDefined();
+      expect(regionAt(map, grid, tileIndex(map, object!)), `${id}: ${name} の地域`).toBe(startRegions[0]?.id);
+    }
+
+    const bosses = objectsOf(map).filter((object) => object.type === 'regionBoss');
+    expect(bosses.map((boss) => String(prop(boss, 'region'))).sort(), `${id}: regionBoss`).toEqual(
+      area.regions
+        .filter((region) => region.boss)
+        .map((region) => region.id)
+        .sort(),
+    );
+    for (const boss of bosses) {
+      const regionId = String(prop(boss, 'region'));
+      expect(regionAt(map, grid, tileIndex(map, boss)), `${id}: ${boss.name} の地域`).toBe(regionId);
+    }
+
+    if (id !== 'aomori') {
+      const regionByMotif = new Map(
+        area.regions.flatMap((region) => region.motifs.map((motifId) => [motifId, region.id] as const)),
+      );
+      for (const object of objectsOf(map).filter(
+        (candidate) => candidate.type === 'landmark' || candidate.type === 'specialty',
+      )) {
+        const motifId = String(prop(object, 'motifId'));
+        const declaredRegion = regionByMotif.get(motifId);
+        expect(declaredRegion, `${id}: ${object.name} の motifId ${motifId}`).toBeDefined();
+        expect(regionAt(map, grid, tileIndex(map, object)), `${id}: ${object.name} の実配置地域`).toBe(
+          declaredRegion,
+        );
+      }
+      for (const event of area.events ?? []) {
+        if (!event.motifId || event.trigger?.map !== `${id}-field`) continue;
+        const declaredRegion = regionByMotif.get(event.motifId);
+        const object = objectsOf(map).find((candidate) => candidate.name === event.trigger?.objectName);
+        expect(object, `${id}: event ${event.trigger.objectName}`).toBeDefined();
+        expect(
+          regionAt(map, grid, tileIndex(map, object!)),
+          `${id}: ${event.trigger.objectName} の実配置地域`,
+        ).toBe(declaredRegion);
+      }
+
+      const terrain = TERRAIN.maps[`${id}-field`]!;
+      const collision = map.layers.find((layer) => layer.name === 'collision')?.data ?? [];
+      for (const object of objectsOf(map).filter((candidate) =>
+        ['event', 'landmark', 'specialty'].includes(candidate.type),
+      )) {
+        const coordinate =
+          object.type === 'event'
+            ? EVENT_SPOTS[object.name]
+            : LANDMARK_SPOTS[id]?.[String(prop(object, 'motifId'))];
+        if (!coordinate) continue;
+        const [targetX, targetY] = projectedTile(terrain, coordinate);
+        const distance = (i: number) =>
+          Math.hypot((i % map.width) + 0.5 - targetX, Math.floor(i / map.width) + 0.5 - targetY);
+        let nearest = Infinity;
+        for (let i = 0; i < map.width * map.height; i++)
+          if (collision[i] !== 3 && regionAt(map, grid, i)) nearest = Math.min(nearest, distance(i));
+        const actual = distance(tileIndex(map, object));
+        expect(
+          actual,
+          `${id}: ${object.name} は実座標の最寄り歩行マスから ${Math.max(0, actual - nearest).toFixed(1)} マス移動`,
+        ).toBeLessThanOrEqual(nearest + 4);
+      }
+      const enclave = maps.get(`${id}-enclave`);
+      if (enclave) {
+        const enclaveRegions = new Set(
+          objectsOf(enclave)
+            .filter((object) => object.type === 'landmark' || object.type === 'specialty')
+            .map((object) => regionByMotif.get(String(prop(object, 'motifId'))))
+            .filter((regionId): regionId is string => Boolean(regionId)),
+        );
+        for (const event of area.events ?? []) {
+          if (!event.motifId || event.trigger?.map !== `${id}-enclave`) continue;
+          const eventRegion = regionByMotif.get(event.motifId);
+          if (eventRegion) enclaveRegions.add(eventRegion);
+        }
+        expect(enclaveRegions.size, `${id}: 離島 motif の地域`).toBeLessThanOrEqual(1);
+        if (enclaveRegions.size) {
+          const port = objectsOf(map).find((object) => object.name === `to_${id}-enclave`);
+          expect(port, `${id}: 離島への港`).toBeDefined();
+          expect(regionAt(map, grid, tileIndex(map, port!)), `${id}: 離島への港の地域`).toBe(
+            [...enclaveRegions][0],
+          );
+        }
+      }
+    }
+
+    const gates = objectsOf(map).filter((object) => object.type === 'regionGate');
+    expect(gates, `${id}: regionGate の数`).toHaveLength(area.regionGates.length);
+    for (const gate of area.regionGates) {
+      const between = gate.between.join(',');
+      const object = gates.find((candidate) => prop(candidate, 'between') === between);
+      expect(object, `${id}: ${between} の関所`).toBeDefined();
+      if (!object) continue;
+      expect(prop(object, 'openedBy'), `${id}: ${between} の openedBy`).toBe(gate.openedBy);
+      const at = tileIndex(map, object);
+      const actualSides = new Set(
+        [at, ...neighbors(map, at)].map((i) => regionAt(map, grid, i)).filter(Boolean),
+      );
+      for (const regionId of gate.between)
+        expect(actualSides.has(regionId), `${id}: ${between} の関所が ${regionId} に接している`).toBe(true);
+    }
+
+    if (id !== 'aomori') {
+      const bossByRegion = new Map(bosses.map((boss) => [String(prop(boss, 'region')), boss]));
+      for (let defeatedCount = 0; defeatedCount < regionIds.length; defeatedCount++) {
+        const defeated = new Set(regionIds.slice(0, defeatedCount));
+        const blocked = new Set(
+          gates
+            .filter((gate) => !defeated.has(String(prop(gate, 'openedBy'))))
+            .map((gate) => tileIndex(map, gate)),
+        );
+        for (const boss of bosses)
+          if (!defeated.has(String(prop(boss, 'region')))) blocked.add(tileIndex(map, boss));
+        const seen = reachable(`${id}-field`, map, blocked);
+        const reachedRegions = regionIds.filter((regionId) => {
+          for (const tile of seen) if (regionAt(map, grid, tile) === regionId) return true;
+          return false;
+        });
+        expect(reachedRegions, `${id}: 先頭${defeatedCount}地域のboss撃破後に到達できる地域`).toEqual(
+          regionIds.slice(0, defeatedCount + 1),
+        );
+
+        for (let index = defeatedCount; index < regionIds.length; index++) {
+          const regionId = regionIds[index]!;
+          const boss = bossByRegion.get(regionId)!;
+          const canEngage = neighbors(map, tileIndex(map, boss)).some((tile) => seen.has(tile));
+          expect(canEngage, `${id}: ${regionId} のbossへ挑める段階`).toBe(index === defeatedCount);
+        }
+      }
+    } else {
+      const defeated = new Set<string>();
+      const visited = new Set<string>();
+      for (let round = 0; round <= area.regions.length; round++) {
+        const blocked = new Set(
+          gates
+            .filter((gate) => !defeated.has(String(prop(gate, 'openedBy'))))
+            .map((gate) => tileIndex(map, gate)),
+        );
+        for (const boss of bosses)
+          if (!defeated.has(String(prop(boss, 'region')))) blocked.add(tileIndex(map, boss));
+        const seen = reachable(`${id}-field`, map, blocked);
+        for (const i of seen) {
+          const regionId = regionAt(map, grid, i);
+          if (regionId) visited.add(regionId);
+        }
+        const next = bosses.filter(
+          (boss) =>
+            !defeated.has(String(prop(boss, 'region'))) &&
+            neighbors(map, tileIndex(map, boss)).some((i) => seen.has(i)),
+        );
+        if (!next.length) break;
+        for (const boss of next) defeated.add(String(prop(boss, 'region')));
+      }
+      expect([...visited].sort(), `${id}: 到達できる地域`).toEqual([...regionIds].sort());
+      expect([...defeated].sort(), `${id}: 順番に戦える地域ボス`).toEqual(
+        area.regions
+          .filter((region) => region.boss)
+          .map((region) => region.id)
+          .sort(),
+      );
+    }
+  });
+});
+
 describe('町とダンジョン', () => {
   const layer = (m: TiledMap, name: string) => m.layers.find((l) => l.name === name)?.data ?? [];
 
@@ -198,6 +509,18 @@ describe('町とダンジョン', () => {
       expect(bg.includes(21), `${key} のとびら`).toBe(true);
       expect(layer(m, 'decor').filter((t) => t > 0).length, `${key} のかざり`).toBeGreaterThan(50);
       expect(objectsOf(m).filter((o) => o.type === 'npc').length, `${key} の人`).toBeGreaterThanOrEqual(6);
+    }
+  });
+
+  it('47都道府県すべての町に歩いて行ける床屋がいる', () => {
+    const towns = [...maps].filter(([key]) => key.endsWith('-town'));
+    expect(towns).toHaveLength(47);
+    for (const [key, map] of towns) {
+      const barber = objectsOf(map).find(
+        (object) => object.type === 'npc' && prop(object, 'role') === 'barber',
+      );
+      expect(barber, `${key} の床屋`).toBeDefined();
+      expect(reachable(key, map).has(tileIndex(map, barber!)), `${key} の床屋に行ける`).toBe(true);
     }
   });
 
@@ -321,7 +644,7 @@ describe('宝箱の 中身', () => {
     const items = new Set(
       readdirSync(new URL('../../content/items/', import.meta.url)).map((f) => f.replace(/\.json$/, '')),
     );
-    const dir = new URL('../../public/maps/', import.meta.url);
+    const dir = MAPS;
     const bad: string[] = [];
     for (const f of readdirSync(dir).filter((f) => f.endsWith('.json'))) {
       const m = JSON.parse(readFileSync(new URL(f, dir), 'utf8')) as { layers: { objects?: Obj[] }[] };

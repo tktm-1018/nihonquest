@@ -188,6 +188,125 @@
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "tsu-hokusei",
+      "table": [
+        {
+          "monsterId": "mie-donabee",
+          "weight": 55
+        },
+        {
+          "monsterId": "mie-kuwanaguri",
+          "weight": 45
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "iga-nabari",
+      "table": [
+        {
+          "monsterId": "mie-iganin",
+          "weight": 60
+        },
+        {
+          "monsterId": "mie-donabee",
+          "weight": 25
+        },
+        {
+          "monsterId": "mie-kuwanaguri",
+          "weight": 15
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "ise-shima-kumano",
+      "table": [
+        {
+          "monsterId": "mie-akoyan",
+          "weight": 55
+        },
+        {
+          "monsterId": "mie-iganin",
+          "weight": 20
+        },
+        {
+          "monsterId": "mie-donabee",
+          "weight": 15
+        },
+        {
+          "monsterId": "mie-kuwanaguri",
+          "weight": 10
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "tsu-hokusei",
+      "name": "津[つ]・北勢[ほくせい]エリア",
+      "motifs": [
+        "gozaishodake",
+        "matsusakaushi",
+        "bankoyaki",
+        "kuwana-hamaguri"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "mie-gutsugutsu-don",
+        "level": 33
+      }
+    },
+    {
+      "id": "iga-nabari",
+      "name": "伊賀[いが]・名張[なばり]エリア",
+      "motifs": [
+        "iga-ninja",
+        "akame-48taki"
+      ],
+      "boss": {
+        "monsterId": "mie-iga-jonin",
+        "level": 33
+      }
+    },
+    {
+      "id": "ise-shima-kumano",
+      "name": "伊勢[いせ]・志摩[しま]・熊野[くまの]エリア",
+      "motifs": [
+        "ise-jingu",
+        "onigajo",
+        "ago-shinju",
+        "iseebi"
+      ],
+      "boss": {
+        "monsterId": "mie-shinju-hime",
+        "level": 33
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "tsu-hokusei",
+        "iga-nabari"
+      ],
+      "openedBy": "tsu-hokusei"
+    },
+    {
+      "between": [
+        "iga-nabari",
+        "ise-shima-kumano"
+      ],
+      "openedBy": "iga-nabari"
     }
   ],
   "boss": "mie-boss-iseebi-taisho",
@@ -210,6 +329,10 @@
         {
           "speaker": "伊賀[いが]の 忍者[にんじゃ]の 先生[せんせい]",
           "text": "ここは 伊賀[いが]。むかし 忍者[にんじゃ]が くらした 町[まち]じゃ。忍者[にんじゃ]の 知恵[ちえ]を ためして みるか？"
+        },
+        {
+          "speaker": "見聞帳[けんぶんちょう]の シオリ",
+          "text": "知[し]らせは 集[あつ]めるだけでは 役[やく]に 立[た]たない。だれへ、いつ、どの 道[みち]で 届[とど]いたかまで 追[お]おう。"
         }
       ],
       "question": {
@@ -249,6 +372,10 @@
         {
           "speaker": "伊賀[いが]の 忍者[にんじゃ]の 先生[せんせい]",
           "text": "みごと！ 忍者[にんじゃ]は たたかう より、知[し]らせを もちかえる ことが 大事[だいじ]だったのじゃ。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "知[し]らせを 受[う]け取[と]った 人[ひと]の 選択[せんたく]まで 見[み]れば、情報[じょうほう]が どんな 結果[けっか]を 生[う]んだか たしかめられるね。"
         }
       ]
     }

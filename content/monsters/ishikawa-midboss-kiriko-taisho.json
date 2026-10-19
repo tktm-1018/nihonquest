@@ -7,31 +7,56 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 137,
-    "mp": 21,
-    "atk": 14,
-    "def": 9,
-    "spd": 8,
-    "wis": 9
+    "hp": 82.2,
+    "mp": 12.6,
+    "spd": 5.7,
+    "wis": 5.4,
+    "scienceAtk": 8.8,
+    "humanitiesAtk": 8.8,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 8.8,
-    "mp": 2,
-    "atk": 1.3,
-    "def": 1.1,
-    "spd": 0.7,
-    "wis": 0.7
+    "base": {
+      "hp": 4.6,
+      "mp": 0.9,
+      "spd": 0.2,
+      "wis": 0.3,
+      "scienceAtk": 0.5,
+      "humanitiesAtk": 0.5,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-hono-no-mai"
   ],
-  "drops": [
-  ],
+  "drops": [],
   "recruitRate": 0,
   "xp": 78,
   "gold": 92,
   "spriteKey": "mon.ishikawa-midboss-kiriko-taisho",
-  "dexBlurb": "能登[のと]の キリコ祭[まつ]りの 大[おお]きな あかりの モンスター。キリコには、高[たか]さが 10メートルを こえる ものも ある。",
+  "dexBlurb": "能登[のと]の キリコ祭[まつ]りの 大[おお]きな あかりの マナビモノ。キリコには、高[たか]さが 10メートルを こえる ものも ある。",
   "fieldLine": "さあさあ！ この 道[みち]を とおりたければ、わしと しょうぶだ！",
   "isBoss": true,
   "bossPhases": [

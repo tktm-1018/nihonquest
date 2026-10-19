@@ -1,0 +1,60 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-kagurabi",
+  "name": "カグラビ",
+  "area": "iwate",
+  "motifId": "iwate-san",
+  "element": "hino",
+  "weakness": "mizu",
+  "baseStats": {
+    "hp": 20.4,
+    "mp": 4.8,
+    "spd": 5,
+    "wis": 3,
+    "scienceAtk": 5.6,
+    "humanitiesAtk": 5.6,
+    "scienceDef": 4,
+    "humanitiesDef": 4
+  },
+  "growth": {
+    "base": {
+      "hp": 2,
+      "mp": 0.3,
+      "spd": 0.4,
+      "wis": 0.4,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
+  },
+  "skills": [
+    "sk-hinoko"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 0,
+  "gold": 0,
+  "spriteKey": "mon.iwate-kagurabi",
+  "dexBlurb": "神楽[かぐら]の 火[ひ]から 生[う]まれた、めずらしい 守[まも]り手[て]。選[えら]んだ 旅人[たびびと]の 道[みち]だけを てらす。"
+}

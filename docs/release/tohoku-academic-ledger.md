@@ -1,7 +1,7 @@
 # 東北版 教材・学術レビュー台帳
 
-確認日: 2026-10-03（日本時間）  
-対象: 問題JSONの `tags` に青森・岩手・宮城・秋田・山形・福島の `prefecture:*` を持つ問題  
+確認日: 2026-10-03（日本時間）
+対象: 問題JSONの `tags` に青森・岩手・宮城・秋田・山形・福島の `prefecture:*` を持つ問題
 公開判定: **全18問、人間の学術責任者による承認待ち（この台帳だけでは公開承認しない）**
 
 ## 判定ルール
@@ -18,7 +18,7 @@
 |---|---|
 | `questions/rika/g4/mizu-experiment.json` | `d803cdec84f39c5064e3fee34f53800c11f1e9d28fa1888b0f435690c652f139` |
 | `questions/sansu/g1/ringo-number-build.json` | `d228c03711c81016e2b58b7e87e80403161896b95d7b187e767637be63fbb956` |
-| `questions/sansu/g1/tashizan.json` | `b8860fd300c1c31eaae3cabb46c640e961ac0921859611350e6e6441bdc55ed7` |
+| `questions/sansu/g1/tashizan.json` | `e9bd4b8a952489c7f2da25d5f03ce18833df2a68de5f0824fc353392bb27977d` |
 | `questions/shakai/g4/todofuken.json` | `dbca6eb3b92ad1c778dd940da3f2066f100527fd6df4ed4187db1e2df3f8c2bc` |
 | `questions/shakai/g4/tohoku.json` | `78d29fd8752b970bf7b8dd88462cb0260673ae67a32e6cfdc3e4ba14228bc4e7` |
 

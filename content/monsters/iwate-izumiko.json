@@ -1,0 +1,60 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-izumiko",
+  "name": "イズミコ",
+  "area": "iwate",
+  "motifId": "ryusendo",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 19.2,
+    "mp": 6,
+    "spd": 5.7,
+    "wis": 4.2,
+    "scienceAtk": 4.4,
+    "humanitiesAtk": 4.4,
+    "scienceDef": 4,
+    "humanitiesDef": 4
+  },
+  "growth": {
+    "base": {
+      "hp": 1.8,
+      "mp": 0.5,
+      "spd": 0.5,
+      "wis": 0.5,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
+  },
+  "skills": [
+    "sk-shizuku"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 0,
+  "gold": 0,
+  "spriteKey": "mon.iwate-izumiko",
+  "dexBlurb": "龍泉洞[りゅうせんどう]の 青[あお]い 水[みず]から 生[う]まれた、めずらしい 守[まも]り手[て]。心[こころ]の まよいを 水面[みなも]に うつす。"
+}

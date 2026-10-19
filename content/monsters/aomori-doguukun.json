@@ -7,22 +7,50 @@
   "element": "tsuchi",
   "weakness": "kaze",
   "baseStats": {
-    "hp": 40,
-    "mp": 4,
-    "atk": 8,
-    "def": 9,
-    "spd": 3,
-    "wis": 5
+    "hp": 24,
+    "mp": 2.4,
+    "spd": 2.1,
+    "wis": 3,
+    "scienceAtk": 5,
+    "humanitiesAtk": 5,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 6,
-    "mp": 0.5,
-    "atk": 1.1,
-    "def": 1.6,
-    "spd": 0.4,
-    "wis": 0.8
+    "base": {
+      "hp": 2.9,
+      "mp": 0,
+      "spd": 0,
+      "wis": 0.4,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.8,
+      "humanitiesDef": 0.8
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-suna-kabe"],
+  "skills": [
+    "sk-suna-kabe"
+  ],
   "drops": [
     {
       "itemId": "aomori-doki-kakera",

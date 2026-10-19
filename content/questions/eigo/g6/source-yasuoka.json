@@ -7,7 +7,7 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「私は海に行きました。」の（ ）に入る英語はどれ？ / I ( ) to the sea.",
+      "prompt": "「私[わたし]は海[うみ]に行[い]きました。」の（ ）に入[はい]る英語[えいご]はどれ？ / I ( ) to the sea.",
       "choices": [
         {
           "id": "a",
@@ -29,7 +29,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "過去の出来事なので go の過去形 went を使います。"
+    "explanation": "過去[かこ]の出来事[できごと]なので go の過去形[かこけい] went を使[つか]います。"
   },
   {
     "id": "eigo.g6.memories-dreams.0002",
@@ -39,29 +39,29 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "make や time の最後にある e はどう発音する？",
+      "prompt": "make や time の最後[さいご]にある e はどう発音[はつおん]する？",
       "choices": [
         {
           "id": "a",
-          "text": "「エ」と発音する"
+          "text": "「エ」と発音[はつおん]する"
         },
         {
           "id": "b",
-          "text": "「イ」と発音する"
+          "text": "「イ」と発音[はつおん]する"
         },
         {
           "id": "c",
-          "text": "発音しない"
+          "text": "発音[はつおん]しない"
         },
         {
           "id": "d",
-          "text": "「ア」と発音する"
+          "text": "「ア」と発音[はつおん]する"
         }
       ],
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "語末の e を発音せず、直前の母音がアルファベット読みになることがあります。"
+    "explanation": "語末[ごまつ]の e を発音[はつおん]せず、直前[ちょくぜん]の母音[ぼいん]がアルファベット読[よ]みになることがあります。"
   },
   {
     "id": "eigo.g6.memories-dreams.0003",
@@ -71,7 +71,7 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「私は獣医になりたいです。」を表す英語はどれ？",
+      "prompt": "「私[わたし]は獣医[じゅうい]になりたいです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -93,7 +93,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "I want to be a ... で「〜になりたい」です。vet は獣医です。"
+    "explanation": "I want to be a ... で「〜になりたい」です。vet は獣医[じゅうい]です。"
   },
   {
     "id": "eigo.g6.memories-dreams.0004",
@@ -103,7 +103,7 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「車いすテニス」を表す英語はどれ？",
+      "prompt": "「車[くるま]いすテニス」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -125,7 +125,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "wheelchair tennis は「車いすテニス」です。"
+    "explanation": "wheelchair tennis は「車[くるま]いすテニス」です。"
   },
   {
     "id": "eigo.g6.memories-dreams.0005",
@@ -135,7 +135,7 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「イタリアに行きたいです。」を表す英語はどれ？",
+      "prompt": "「イタリアに行[い]きたいです。」を表[あらわ]す英語[えいご]はどれ？",
       "choices": [
         {
           "id": "a",
@@ -157,7 +157,7 @@
       "answer": "d",
       "shuffle": true
     },
-    "explanation": "I want to go to ... で「〜に行きたい」です。"
+    "explanation": "I want to go to ... で「〜に行[い]きたい」です。"
   },
   {
     "id": "eigo.g6.memories-dreams.0006",
@@ -167,7 +167,7 @@
     "unit": "eigo.g6.memories-dreams",
     "tags": ["source:yasuoka-docx", "review:pending-human"],
     "payload": {
-      "prompt": "「彼女は〜です」と第三者を紹介するときの正しい組み合わせはどれ？",
+      "prompt": "「彼女[かのじょ]は〜です」と第三者[だいさんしゃ]を紹介[しょうかい]するときの正[ただ]しい組[く]み合[あ]わせはどれ？",
       "choices": [
         {
           "id": "a",
@@ -189,6 +189,6 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "She のあとには is を使います。"
+    "explanation": "She のあとには is を使[つか]います。"
   }
 ]

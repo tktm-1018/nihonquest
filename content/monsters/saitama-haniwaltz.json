@@ -7,22 +7,51 @@
   "element": "tsuchi",
   "weakness": "kaze",
   "baseStats": {
-    "hp": 47,
-    "mp": 8,
-    "atk": 9,
-    "def": 9,
-    "spd": 6,
-    "wis": 6
+    "hp": 28.2,
+    "mp": 4.8,
+    "spd": 4.3,
+    "wis": 3.6,
+    "scienceAtk": 5.6,
+    "humanitiesAtk": 5.6,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 5.5,
-    "mp": 1,
-    "atk": 1.2,
-    "def": 1.2,
-    "spd": 0.9,
-    "wis": 0.7
+    "base": {
+      "hp": 2.6,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.3,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.5,
+      "humanitiesDef": 0.5
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-suna-kabe", "sk-kazoe-giri"],
+  "skills": [
+    "sk-suna-kabe",
+    "sk-kazoe-giri"
+  ],
   "drops": [
     {
       "itemId": "saitama-haniwa-doki-kakera",
@@ -37,5 +66,5 @@
     "to": "saitama-haniwa-musha",
     "item": "saitama-haniwa-doki-kakera"
   },
-  "dexBlurb": "さきたま古墳群[こふんぐん]から 出[で]てきた、おどる はにわの モンスター。「埼玉[さいたま]」の 名前[なまえ]は、この あたりの 地名[ちめい]「さきたま」から きて いる。"
+  "dexBlurb": "さきたま古墳群[こふんぐん]から 出[で]てきた、おどる はにわの マナビモノ。「埼玉[さいたま]」の 名前[なまえ]は、この あたりの 地名[ちめい]「さきたま」から きて いる。"
 }

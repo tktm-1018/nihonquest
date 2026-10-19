@@ -21,6 +21,19 @@ export interface ShopEntry {
 export const INN_PRICE = 10;
 /** 店の品数の上限（content の shop が無い県） */
 const SHOP_MAX = 6;
+export const MUSUBI_DAMA_ITEM_ID = 'common-musubi-dama';
+
+function inventoryTotalAfterAdding(gs: GameState, itemId: string, n: number): number | null {
+  const current = gs.inventory[itemId] ?? 0;
+  const total = current + n;
+  return Number.isSafeInteger(current) &&
+    current >= 0 &&
+    Number.isSafeInteger(n) &&
+    n > 0 &&
+    Number.isSafeInteger(total)
+    ? total
+    : null;
+}
 
 /** その県の 名産の たべもの（HP が かいふくする。名所・特産品の じゅんで さいしょの もの）。宝箱・おみやげに つかう */
 export function localFood(area: Area | undefined, items: ReadonlyMap<string, Item>): Item | undefined {
@@ -33,27 +46,52 @@ export function localFood(area: Area | undefined, items: ReadonlyMap<string, Ite
 
 /** おみせの 品ぞろえ。content の area.shop があれば それ、無ければ その県の たべもの・そざい */
 export function shopStock(area: Area, items: ReadonlyMap<string, Item>): ShopEntry[] {
-  if (area.shop.length) return area.shop.filter((s) => items.has(s.itemId));
-  const out: ShopEntry[] = [];
-  for (const it of items.values()) {
-    if (out.length >= SHOP_MAX) break;
-    if (it.areaOrigin !== area.id || !it.price) continue;
-    if (it.kind !== 'consumable' && it.kind !== 'material') continue;
-    out.push({ itemId: it.id, price: it.price });
+  const out = area.shop.length
+    ? area.shop.filter((entry) => items.has(entry.itemId))
+    : [...items.values()]
+        .flatMap((item) => {
+          if (item.areaOrigin !== area.id || !item.price) return [];
+          if (item.kind !== 'consumable' && item.kind !== 'material') return [];
+          return [{ itemId: item.id, price: item.price }];
+        })
+        .slice(0, SHOP_MAX);
+  const musubiDama = items.get(MUSUBI_DAMA_ITEM_ID);
+  if (musubiDama?.price && !out.some((entry) => entry.itemId === musubiDama.id)) {
+    out.push({ itemId: musubiDama.id, price: musubiDama.price });
   }
   return out;
 }
 
 /** かう。おかねが たりなければ null */
 export function buyItem(prev: GameState, e: ShopEntry, n = 1, now = Date.now()): GameState | null {
-  if (!Number.isInteger(n) || n <= 0 || !Number.isFinite(e.price) || e.price <= 0) return null;
+  if (!Number.isInteger(n) || n <= 0 || !Number.isSafeInteger(e.price) || e.price <= 0) return null;
   const cost = e.price * n;
   if (!Number.isSafeInteger(cost)) return null;
   if (prev.player.gold < cost) return null;
+  const itemTotal = inventoryTotalAfterAdding(prev, e.itemId, n);
+  if (itemTotal === null) return null;
   const gs = structuredClone(prev);
   gs.player.gold -= cost;
-  gs.inventory[e.itemId] = (gs.inventory[e.itemId] ?? 0) + n;
+  gs.inventory[e.itemId] = itemTotal;
   if (!gs.dex.items.includes(e.itemId)) gs.dex.items.push(e.itemId);
+  gs.updatedAt = now;
+  return gs;
+}
+
+export function sellPrice(item: Pick<Item, 'kind' | 'price'>): number | null {
+  if (item.kind === 'key' || !item.price || item.price <= 0) return null;
+  return Math.max(1, Math.floor(item.price / 2));
+}
+
+/** うる。装備中の品は inventory から外れているため、所持している余剰品だけが対象になる。 */
+export function sellItem(prev: GameState, item: Item, n = 1, now = Date.now()): GameState | null {
+  const price = sellPrice(item);
+  if (price === null || !Number.isInteger(n) || n <= 0 || (prev.inventory[item.id] ?? 0) < n) return null;
+  const income = price * n;
+  if (!Number.isSafeInteger(income) || !Number.isSafeInteger(prev.player.gold + income)) return null;
+  const gs = structuredClone(prev);
+  gs.inventory[item.id] = (gs.inventory[item.id] ?? 0) - n;
+  gs.player.gold += income;
   gs.updatedAt = now;
   return gs;
 }
@@ -84,17 +122,35 @@ export function knownRecipes(recipes: Iterable<Recipe>, gs: GameState): Recipe[]
   return [...recipes].filter((r) => r.unlockedByDefault || gs.progress.unlockedRecipes.includes(r.id));
 }
 
+function materialTotals(r: Recipe): Map<string, number> | null {
+  const totals = new Map<string, number>();
+  for (const material of r.materials) {
+    const total = (totals.get(material.itemId) ?? 0) + material.n;
+    if (!Number.isSafeInteger(total) || total <= 0) return null;
+    totals.set(material.itemId, total);
+  }
+  return totals;
+}
+
 export function canCraft(gs: GameState, r: Recipe): boolean {
-  return gs.player.gold >= r.gold && r.materials.every((m) => (gs.inventory[m.itemId] ?? 0) >= m.n);
+  const totals = materialTotals(r);
+  return (
+    totals !== null &&
+    inventoryTotalAfterAdding(gs, r.result.itemId, r.result.n) !== null &&
+    gs.player.gold >= r.gold &&
+    [...totals].every(([itemId, n]) => (gs.inventory[itemId] ?? 0) >= n)
+  );
 }
 
 /** ざいりょうと おかねを つかって つくる。たりなければ null */
 export function craft(prev: GameState, r: Recipe, now = Date.now()): GameState | null {
   if (!canCraft(prev, r)) return null;
+  const totals = materialTotals(r)!;
+  const resultTotal = inventoryTotalAfterAdding(prev, r.result.itemId, r.result.n)!;
   const gs = structuredClone(prev);
   gs.player.gold -= r.gold;
-  for (const m of r.materials) gs.inventory[m.itemId] = (gs.inventory[m.itemId] ?? 0) - m.n;
-  gs.inventory[r.result.itemId] = (gs.inventory[r.result.itemId] ?? 0) + r.result.n;
+  for (const [itemId, n] of totals) gs.inventory[itemId] = (gs.inventory[itemId] ?? 0) - n;
+  gs.inventory[r.result.itemId] = resultTotal;
   if (!gs.dex.items.includes(r.result.itemId)) gs.dex.items.push(r.result.itemId);
   gs.updatedAt = now;
   return gs;

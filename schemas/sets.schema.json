@@ -66,18 +66,26 @@
                 "type": "object",
                 "properties": {
                   "hp": {
-                    "type": "integer",
-                    "minimum": 0
-                  },
-                  "mp": {
-                    "type": "integer",
-                    "minimum": 0
-                  },
-                  "atk": {
                     "type": "number",
                     "minimum": 0
                   },
-                  "def": {
+                  "mp": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "scienceAtk": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "humanitiesAtk": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "scienceDef": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "humanitiesDef": {
                     "type": "number",
                     "minimum": 0
                   },

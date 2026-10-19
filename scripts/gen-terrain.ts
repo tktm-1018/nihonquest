@@ -39,6 +39,7 @@ import {
   type Ring,
 } from './terrain/raster.js';
 import { ATTRIBUTION, loadBiwa, loadDem, loadPrefectures } from './terrain/sources.js';
+import { deriveLandBorderLinks } from './terrain/prefectureBorders.js';
 
 const OUT = fileURLToPath(new URL('./data/terrain.json', import.meta.url));
 
@@ -64,8 +65,12 @@ const FIELD = {
  * 2026-09-30 に 青森を 名所エリアに 分けたとき「島を 広くしても かまわない」と 言われた
  */
 const FIELD_EXTRA_SCALE: Readonly<Record<string, number>> = { aomori: 1.5 };
-/** にほんちずの地方の図（見るだけの地図）は、広げない */
-const ISLAND = { margin: 2, maxW: 44, maxH: 46 };
+/**
+ * にほんちずの地方の図（見るだけの地図）。
+ * 旧 44x46 では、小さい県の半島・湾・くびれが数マスにつぶれていた。
+ * 表示サイズは UI 側で 400px に収めるため、地理データだけを高解像度に保つ。
+ */
+const ISLAND = { margin: 6, maxW: 176, maxH: 182 };
 const ENCLAVE = { margin: 2, maxW: Math.round(44 * WALK_SCALE), maxH: Math.round(34 * WALK_SCALE) };
 
 /** マスの何割がその県なら、その県の陸にするか */
@@ -174,6 +179,9 @@ function autoBBox(list: Poly[]): BBox {
 async function main(): Promise<void> {
   console.log('元データを読み込み中…');
   const raw = await loadPrefectures();
+  const interPrefectureBorders = deriveLandBorderLinks(raw, PREFECTURES);
+  if (interPrefectureBorders.length !== 86)
+    throw new Error(`陸上県境が86組ではありません (${interPrefectureBorders.length}組)`);
   const polys = new Map<string, Poly[]>();
   for (const p of PREFECTURES) {
     const list = raw.get(Number(p.code));
@@ -304,7 +312,7 @@ async function main(): Promise<void> {
       return '.';
     });
     lakeLayer(grid, cells, (c) => c === '#' || c === 'x');
-    // 県境にかかる湖（十和田湖など）は、県の外の陸（x ＝ 海の色でかく）や海とつながって湖に見えないので、
+    // 県境にかかる湖（十和田湖など）は、県の外の陸（x）や海とつながって湖に見えないので、
     // 湖のまわり 2 マスの x・海を陸にして、湖を陸でかこむ（1 マスだと細い土手に見えて湖らしくない）
     const SHORE = 2;
     const shore: number[] = [];
@@ -466,6 +474,7 @@ async function main(): Promise<void> {
     about:
       'pnpm gen:terrain が実在の地理から作ったマップの地形（手で編集しない）。記号の意味は scripts/gen-terrain.ts の先頭コメント',
     sources: ATTRIBUTION,
+    interPrefectureBorders,
     maps,
   };
   const options = (await resolveConfig(OUT)) ?? {};

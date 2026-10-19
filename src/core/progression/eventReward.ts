@@ -5,6 +5,7 @@
 import type { Reward } from '../content/schemas';
 import type { GameState } from '../state/schema';
 import { areaBossFlag } from './route';
+import { addProgressValue } from '../../shared/safeInteger';
 
 export interface RewardTier {
   min: number;
@@ -31,16 +32,16 @@ export function applyReward(
   const gs = structuredClone(prev);
   const lines: RewardLine[] = [];
   if (r.xp) {
-    gs.player.xp += r.xp;
+    gs.player.xp = addProgressValue(gs.player.xp, r.xp);
     lines.push({ kind: 'xp', n: r.xp });
   }
   if (r.gold) {
-    gs.player.gold += r.gold;
+    gs.player.gold = addProgressValue(gs.player.gold, r.gold);
     lines.push({ kind: 'gold', n: r.gold });
   }
   for (const it of r.items ?? []) {
     const n = it.n ?? 1;
-    gs.inventory[it.itemId] = (gs.inventory[it.itemId] ?? 0) + n;
+    gs.inventory[it.itemId] = addProgressValue(gs.inventory[it.itemId] ?? 0, n);
     if (!gs.dex.items.includes(it.itemId)) gs.dex.items.push(it.itemId);
     lines.push({ kind: 'item', id: it.itemId, n });
   }
@@ -54,9 +55,17 @@ export function applyReward(
     gs.progress.unlockedRecipes.push(rc);
     lines.push({ kind: 'recipe', id: rc });
   }
-  // 出現の解放そのものはエンカウント表の担当（Step 7）。ここでは知らせるだけ
-  if (r.unlockMonsters?.length) lines.push({ kind: 'monster' });
-  if (r.title) lines.push({ kind: 'title', id: r.title });
+  let unlockedMonster = false;
+  for (const monsterId of r.unlockMonsters ?? []) {
+    if (gs.progress.unlockedMonsters.includes(monsterId)) continue;
+    gs.progress.unlockedMonsters.push(monsterId);
+    unlockedMonster = true;
+  }
+  if (unlockedMonster) lines.push({ kind: 'monster' });
+  if (r.title && !gs.progress.titles.includes(r.title)) {
+    gs.progress.titles.push(r.title);
+    lines.push({ kind: 'title', id: r.title });
+  }
   gs.updatedAt = now;
   return { state: gs, lines };
 }

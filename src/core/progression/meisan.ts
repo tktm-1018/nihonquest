@@ -2,7 +2,7 @@
  * めいさんひんの そうび（県の ごほうび）。純粋関数のみ。
  *  - 県の 名所スタンプ（にほんちずの ★）を ぜんぶ あつめると、その県の めいさんひんの そうびが もらえる
  *  - id が `<県>-meisan-<名産品>`、kind が そうびの 部位、areaOrigin が その県の どうぐ
- *  - ふつうの そうびと 同じく バッグに いれると 強くなり（stats）、主人公の 絵も かわる（scenes/art/costumes.ts）
+ *  - ふつうの そうびと 同じく バッグに いれると 強くなり（stats）、主人公の 絵も かわる（rendering/costumes.ts）
  */
 import type { Item } from '../content/schemas';
 import type { GameState } from '../state/schema';
@@ -10,7 +10,7 @@ import { isEquip } from './inventory';
 import { motifStamp } from './route';
 
 export const isMeisanGear = (it: Item): boolean =>
-  isEquip(it) && /^[a-z]+-meisan-/.test(it.id) && !!it.areaOrigin;
+  isEquip(it) && !!it.areaOrigin && it.id.startsWith(`${it.areaOrigin}-meisan-`);
 
 /** もっている（あずけている か そうびしている） */
 const owns = (gs: GameState, id: string): boolean =>

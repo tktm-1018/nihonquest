@@ -7,31 +7,56 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 139,
-    "mp": 21,
-    "atk": 15,
-    "def": 9,
-    "spd": 9,
-    "wis": 8
+    "hp": 83.4,
+    "mp": 12.6,
+    "spd": 6.4,
+    "wis": 4.8,
+    "scienceAtk": 9.4,
+    "humanitiesAtk": 9.4,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 8.8,
-    "mp": 2,
-    "atk": 1.3,
-    "def": 1.1,
-    "spd": 0.7,
-    "wis": 0.7
+    "base": {
+      "hp": 4.6,
+      "mp": 0.9,
+      "spd": 0.2,
+      "wis": 0.3,
+      "scienceAtk": 0.5,
+      "humanitiesAtk": 0.5,
+      "scienceDef": 0.4,
+      "humanitiesDef": 0.4
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-hono-no-mai"
   ],
-  "drops": [
-  ],
+  "drops": [],
   "recruitRate": 0,
   "xp": 79,
   "gold": 93,
   "spriteKey": "mon.toyama-midboss-gabujishi",
-  "dexBlurb": "井波彫刻[いなみちょうこく]の 職人[しょくにん]が ほった 獅子頭[ししがしら]の モンスター。富山県[とやまけん]では、春[はる]や 秋[あき]の 祭[まつ]りで たくさんの 獅子舞[ししまい]が おどられる。",
+  "dexBlurb": "井波彫刻[いなみちょうこく]の 職人[しょくにん]が ほった 獅子頭[ししがしら]の マナビモノ。富山県[とやまけん]では、春[はる]や 秋[あき]の 祭[まつ]りで たくさんの 獅子舞[ししまい]が おどられる。",
   "fieldLine": "カチカチ、ガブッ！ ここを とおりたければ、わしと しょうぶだ！",
   "isBoss": true,
   "bossPhases": [

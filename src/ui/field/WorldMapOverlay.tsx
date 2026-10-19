@@ -6,56 +6,18 @@
  * ロジックは持たない（進みぐあいは Overworld が計算して渡す）。見つけていない名所の名前は出さない。
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { NQ } from '../../scenes/art/palette';
+import { NQ } from '../../rendering/palette';
 import { t } from '../i18n';
 import { PixelIcon } from '../PixelIcon';
 import { RubyLabel } from '../RubyLabel';
+import { displayText } from '../ruby';
 import { playSfx } from '../sfx';
+import { useModalFocus } from '../useModalFocus';
+import { JAPAN_GENERAL_REGIONS, JapanMapOverview } from './JapanMapOverview';
+import { areaAt, type MapRegionInfo, type RegionGrid } from './worldMapModel';
 import './field.css';
 
-/** public/worldmap.json の形 */
-export interface WorldMapData {
-  regions: {
-    id: string;
-    width: number;
-    height: number;
-    /** '.' は海、'a' + i は areas[i] の県 */
-    rows: string[];
-    areas: { id: string; capital: [number, number]; stamps: string[] }[];
-  }[];
-}
-
-export interface MapAreaInfo {
-  id: string;
-  /** 県名（RubyText） */
-  name: string;
-  /** 県庁所在地のマス */
-  capital: [number, number];
-  /** フィールドの名所（★ 看板）と 特産品（宝箱）。見つけたものは名前（かな）、まだのものは null */
-  stamps: { name: string | null; box: boolean }[];
-  /** 中ボス：たおした / まだ / いない */
-  boss: 'done' | 'yet' | 'none';
-  /** 行ったことがある（ロック解除）。まだの県は灰色で、ワープできない */
-  visited: boolean;
-}
-
-export interface MapRegionInfo {
-  id: string;
-  /** 地方（島）の名前（RubyText） */
-  name: string;
-  width: number;
-  height: number;
-  rows: string[];
-  areas: MapAreaInfo[];
-  /** stub の地方は結界だけを表示し、県へ移動できない。 */
-  status: 'playable' | 'stub';
-  islandBoss: {
-    name: string;
-    state: 'locked' | 'ready' | 'done';
-    foundSigns: number;
-    requiredSigns: number;
-  };
-}
+export type { MapRegionInfo, WorldMapData } from './worldMapModel';
 
 export interface WorldMapOverlayProps {
   regions: MapRegionInfo[];
@@ -69,21 +31,11 @@ export interface WorldMapOverlayProps {
 /** 地図の 1 マス = 4 ドット。CSS で ×2 して 1 ドット = 2px（フィールドと同じ大きさのドット） */
 const DOT = 4;
 const CELL = DOT * 2;
+const MAP_INNER = 400;
 
-/** 地方の地図のマス目（にほんちず・左上の小さな地図で共通） */
-export interface RegionGrid {
-  width: number;
-  height: number;
-  /** '.' は海、'a' + i は areas[i] の県 */
-  rows: string[];
-  areas: { capital: [number, number] }[];
-}
-
-/** rows の 1 文字 → 県の番号（海は -1） */
-export function areaAt(r: RegionGrid, x: number, y: number): number {
-  const c = r.rows[y]?.[x];
-  return c && c !== '.' ? c.charCodeAt(0) - 97 : -1;
-}
+/** 高解像度の地方図も 400px の枠へ整数倍で収め、ドット絵をぼかさない。 */
+export const regionDisplayCell = (r: Pick<RegionGrid, 'width' | 'height'>): number =>
+  Math.max(1, Math.min(CELL, Math.floor(MAP_INNER / Math.max(r.width, r.height))));
 
 function cellsOf(r: RegionGrid, k: number): [number, number][] {
   const out: [number, number][] = [];
@@ -170,7 +122,10 @@ export function heroCell(r: RegionGrid, k: number, at?: [number, number]): [numb
 }
 
 /** 地図の上のしるし（主人公・王冠）は、マスのまん中に足もとが来るように置く */
-const pinAt = ([x, y]: [number, number]) => ({ left: x * CELL + CELL / 2, top: y * CELL + CELL / 2 });
+const pinAt = ([x, y]: [number, number], cell = CELL) => ({
+  left: x * cell + cell / 2,
+  top: y * cell + cell / 2,
+});
 
 /** 県庁所在地の印と重なりにくい陸地を、地方ボスの城の位置にする。 */
 export function islandBossCell(r: RegionGrid): [number, number] {
@@ -185,25 +140,27 @@ export function islandBossCell(r: RegionGrid): [number, number] {
   }, cells[0]!);
 }
 
-export function WorldMapOverlay({
+function RegionWorldMapOverlay({
   regions,
   here,
   onGo,
   onChallengeIslandBoss,
   onClose,
-}: WorldMapOverlayProps) {
-  const home = Math.max(
-    0,
-    regions.findIndex((r) => r.areas.some((a) => a.id === here?.areaId)),
-  );
+  initialRegion,
+  onBack,
+}: WorldMapOverlayProps & { initialRegion: number; onBack: () => void }) {
+  const home = Math.max(0, initialRegion);
   const [ri, setRi] = useState(home);
   const [ai, setAi] = useState(() =>
     Math.max(0, regions[home]?.areas.findIndex((a) => a.id === here?.areaId) ?? 0),
   );
   const region = regions[ri];
+  const cell = region ? regionDisplayCell(region) : CELL;
   const area = region?.areas[ai];
   const base = useRef<HTMLCanvasElement>(null);
   const sel = useRef<HTMLCanvasElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocus(dialogRef, '.nq-back');
 
   useEffect(() => {
     if (base.current && region) drawRegion(base.current, region);
@@ -247,11 +204,19 @@ export function WorldMapOverlay({
     playSfx('select');
     onChallengeIslandBoss(region.id);
   };
+  const activate = () => {
+    if (region?.islandBoss.state === 'ready') challengeIslandBoss();
+    else go();
+  };
 
-  const live = useRef({ pickRegion, pickArea, go, onClose, ai, n: 0 });
-  live.current = { pickRegion, pickArea, go, onClose, ai, n: region?.areas.length ?? 0 };
+  const live = useRef({ pickRegion, pickArea, activate, onBack, ai, n: 0 });
+  live.current = { pickRegion, pickArea, activate, onBack, ai, n: region?.areas.length ?? 0 };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const inControl =
+        e.target instanceof HTMLElement &&
+        e.target.closest('button, input, select, textarea, [contenteditable="true"]');
+      if (inControl && (e.key === 'Enter' || e.key === ' ')) return;
       const L = live.current;
       switch (e.key) {
         case 'ArrowLeft':
@@ -270,12 +235,12 @@ export function WorldMapOverlay({
         case ' ':
         case 'z':
         case 'Z':
-          L.go();
+          L.activate();
           break;
         case 'Escape':
         case 'x':
         case 'X':
-          L.onClose();
+          L.onBack();
           break;
         default:
           return;
@@ -290,8 +255,8 @@ export function WorldMapOverlay({
   const onMapClick = (e: MouseEvent) => {
     const el = e.currentTarget as HTMLElement;
     const box = el.getBoundingClientRect();
-    const x = Math.floor(((e.clientX - box.left) * el.offsetWidth) / box.width / CELL);
-    const y = Math.floor(((e.clientY - box.top) * el.offsetHeight) / box.height / CELL);
+    const x = Math.floor(((e.clientX - box.left) * el.offsetWidth) / box.width / cell);
+    const y = Math.floor(((e.clientY - box.top) * el.offsetHeight) / box.height / cell);
     if (region) pickArea(areaAt(region, x, y));
   };
 
@@ -299,15 +264,32 @@ export function WorldMapOverlay({
   const found = area ? area.stamps.filter((s) => s.name !== null).length : 0;
 
   return (
-    <div class="nq-wmap" onClick={onClose}>
+    <div
+      ref={dialogRef}
+      class="nq-wmap"
+      role="dialog"
+      aria-modal="true"
+      aria-label={displayText(t('field.worldMap'))}
+      onClick={onClose}
+    >
       <div class="nq-win nq-wmap-box" onClick={(e) => e.stopPropagation()}>
         <div class="nq-wmap-left">
           <div class="nq-wmap-region">
-            <button type="button" class="nq-wmap-arrow" onClick={() => pickRegion(-1)}>
+            <button
+              type="button"
+              class="nq-wmap-arrow"
+              aria-label={t('field.mapPreviousRegion')}
+              onClick={() => pickRegion(-1)}
+            >
               ◀
             </button>
             <RubyLabel text={region?.name ?? ''} class="nq-wmap-rname" />
-            <button type="button" class="nq-wmap-arrow" onClick={() => pickRegion(1)}>
+            <button
+              type="button"
+              class="nq-wmap-arrow"
+              aria-label={t('field.mapNextRegion')}
+              onClick={() => pickRegion(1)}
+            >
               ▶
             </button>
           </div>
@@ -315,7 +297,7 @@ export function WorldMapOverlay({
             {region && (
               <div
                 class="nq-wmap-canvas"
-                style={{ width: region.width * CELL, height: region.height * CELL }}
+                style={{ width: region.width * cell, height: region.height * cell }}
                 onClick={onMapClick}
               >
                 <canvas ref={base} />
@@ -323,24 +305,26 @@ export function WorldMapOverlay({
                 {region.areas.map(
                   (a) =>
                     a.boss === 'done' && (
-                      <span key={a.id} class="nq-wmap-pin" style={pinAt(a.capital)}>
+                      <span key={a.id} class="nq-wmap-pin" style={pinAt(a.capital, cell)}>
                         <PixelIcon name="boss" scale={2} />
                       </span>
                     ),
                 )}
-                {region.status === 'playable' && (
+                {region.status === 'playable' && region.islandBoss.state !== 'locked' && (
                   <button
                     type="button"
                     class={`nq-wmap-castle nq-wmap-castle-${region.islandBoss.state}`}
-                    style={pinAt(islandBossCell(region))}
+                    style={pinAt(islandBossCell(region), cell)}
                     disabled={region.islandBoss.state !== 'ready'}
-                    aria-label={t(
-                      region.islandBoss.state === 'done'
-                        ? 'field.mapIslandBossDoneLabel'
-                        : region.islandBoss.state === 'ready'
-                          ? 'field.mapIslandBossReadyLabel'
-                          : 'field.mapIslandBossLockedLabel',
-                      { name: region.islandBoss.name },
+                    aria-label={displayText(
+                      t(
+                        region.islandBoss.state === 'done'
+                          ? 'field.mapIslandBossDoneLabel'
+                          : region.islandBoss.state === 'ready'
+                            ? 'field.mapIslandBossReadyLabel'
+                            : 'field.mapIslandBossLockedLabel',
+                        { name: region.islandBoss.name },
+                      ),
                     )}
                     onClick={(event) => {
                       event.stopPropagation();
@@ -351,7 +335,10 @@ export function WorldMapOverlay({
                   </button>
                 )}
                 {hereK >= 0 && (
-                  <span class="nq-wmap-pin nq-wmap-hero" style={pinAt(heroCell(region, hereK, here?.at))}>
+                  <span
+                    class="nq-wmap-pin nq-wmap-hero"
+                    style={pinAt(heroCell(region, hereK, here?.at), cell)}
+                  >
                     <PixelIcon name="hero" scale={2} />
                   </span>
                 )}
@@ -362,6 +349,9 @@ export function WorldMapOverlay({
 
         <div class="nq-wmap-right">
           <div class="nq-wmap-head">
+            <button type="button" class="nq-back nq-wmap-national-back" onClick={onBack}>
+              ← {t('field.mapNationBack')}
+            </button>
             <span class="nq-wmap-title">
               <PixelIcon name="map" scale={3} />
               {t('field.worldMap')}
@@ -374,11 +364,13 @@ export function WorldMapOverlay({
             <div class="nq-wmap-info nq-wmap-barrier">
               <PixelIcon name="gate" scale={6} />
               <RubyLabel text={region.name} class="nq-wmap-aname" />
-              <p>{t('field.mapIslandBarrier')}</p>
+              <p>
+                <RubyLabel text={t('field.mapIslandBarrier')} />
+              </p>
             </div>
           ) : area ? (
             <div class="nq-wmap-info">
-              <div class="nq-wmap-aname-row">
+              <div class="nq-wmap-aname-row" role="status" aria-live="polite">
                 <RubyLabel text={area.visited ? area.name : t('field.dexUnknown')} class="nq-wmap-aname" />
                 {area.id === here?.areaId && (
                   <span class="nq-wmap-here">
@@ -387,13 +379,17 @@ export function WorldMapOverlay({
                   </span>
                 )}
               </div>
-              {!area.visited && <p class="nq-wmap-locked">{t('field.mapLocked')}</p>}
+              {!area.visited && (
+                <p class="nq-wmap-locked">
+                  <RubyLabel text={t('field.mapLocked')} />
+                </p>
+              )}
               {area.boss !== 'none' && (
                 <p class="nq-wmap-row">
                   <PixelIcon name="boss" scale={3} />
-                  {t('field.mapBoss')}
+                  <RubyLabel text={t('field.mapBoss')} />
                   <span class={area.boss === 'done' ? 'nq-wmap-ok' : 'nq-wmap-yet'}>
-                    {t(area.boss === 'done' ? 'field.mapBossDone' : 'field.mapBossYet')}
+                    <RubyLabel text={t(area.boss === 'done' ? 'field.mapBossDone' : 'field.mapBossYet')} />
                   </span>
                 </p>
               )}
@@ -408,31 +404,26 @@ export function WorldMapOverlay({
                 {area.stamps.map((s, i) => (
                   <li key={i} class={s.name === null ? 'nq-wmap-yet' : ''}>
                     <PixelIcon name={s.box ? 'chest' : s.name === null ? 'star-off' : 'star'} scale={2} />
-                    {s.name ?? t('field.mapUnknown')}
+                    <RubyLabel text={s.name ?? t('field.mapUnknown')} />
                   </li>
                 ))}
               </ul>
-              <div class={`nq-wmap-island-boss nq-wmap-island-boss-${region?.islandBoss.state}`}>
-                <PixelIcon name="dungeon" scale={3} />
-                <span>
-                  {t('field.mapIslandBoss')}: {region?.islandBoss.name}
-                </span>
-                <strong>
-                  {t(
-                    `field.mapIslandBoss${
-                      region?.islandBoss.state === 'done'
-                        ? 'Done'
-                        : region?.islandBoss.state === 'ready'
-                          ? 'Ready'
-                          : 'Locked'
-                    }`,
-                    {
-                      found: region?.islandBoss.foundSigns ?? 0,
-                      required: region?.islandBoss.requiredSigns ?? 0,
-                    },
-                  )}
-                </strong>
-              </div>
+              {region?.islandBoss.state !== 'locked' && (
+                <div class={`nq-wmap-island-boss nq-wmap-island-boss-${region.islandBoss.state}`}>
+                  <PixelIcon name="dungeon" scale={3} />
+                  <span>
+                    <RubyLabel text={`${t('field.mapIslandBoss')}: ${region.islandBoss.name}`} />
+                  </span>
+                  <strong>
+                    <RubyLabel
+                      text={t(`field.mapIslandBoss${region.islandBoss.state === 'done' ? 'Done' : 'Ready'}`, {
+                        found: region.islandBoss.foundSigns,
+                        required: region.islandBoss.requiredSigns,
+                      })}
+                    />
+                  </strong>
+                </div>
+              )}
             </div>
           ) : (
             <p class="nq-wmap-info">{t('field.mapMissing')}</p>
@@ -441,7 +432,7 @@ export function WorldMapOverlay({
             {region?.islandBoss.state === 'ready' ? (
               <button type="button" class="nq-opt nq-wmap-go" onClick={challengeIslandBoss}>
                 <PixelIcon name="dungeon" scale={3} />
-                {t('field.mapIslandBossChallenge')}
+                <RubyLabel text={t('field.mapIslandBossChallenge')} />
               </button>
             ) : (
               <button
@@ -460,4 +451,33 @@ export function WorldMapOverlay({
       </div>
     </div>
   );
+}
+
+export function WorldMapOverlay(props: WorldMapOverlayProps) {
+  const home = Math.max(
+    0,
+    props.regions.findIndex((region) => region.areas.some((area) => area.id === props.here?.areaId)),
+  );
+  const homeGroup = Math.max(
+    0,
+    JAPAN_GENERAL_REGIONS.findIndex((group) => group.sourceIds.some((id) => id === props.regions[home]?.id)),
+  );
+  const [overview, setOverview] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState(home);
+  const [selectedGroup, setSelectedGroup] = useState(homeGroup);
+  if (overview)
+    return (
+      <JapanMapOverview
+        regions={props.regions}
+        hereAreaId={props.here?.areaId}
+        selectedGroup={selectedGroup}
+        onSelectGroup={setSelectedGroup}
+        onOpen={(regionIndex) => {
+          setSelectedRegion(regionIndex);
+          setOverview(false);
+        }}
+        onClose={props.onClose}
+      />
+    );
+  return <RegionWorldMapOverlay {...props} initialRegion={selectedRegion} onBack={() => setOverview(true)} />;
 }

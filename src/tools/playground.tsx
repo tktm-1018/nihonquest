@@ -12,9 +12,8 @@ import {
   type QuestionResult,
 } from '../questions/contracts';
 import { allRenderers, getRenderer } from '../questions/renderers/registry';
-import { fetchReader } from '../core/content/loader';
-import type { ContentManifest } from '../core/content/loader';
-import { setDictionary, t, type I18nDict } from '../ui/i18n';
+import { fetchReader, parseContentManifest } from '../core/content/loader';
+import { setDictionary, tOpt, type I18nDict } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
 import { kanjiGradeTable, setKanjiLevel, type KanjiGradeTable } from '../ui/ruby';
 import { QuestionList, type QuestionEntry } from './QuestionList';
@@ -67,6 +66,7 @@ function App() {
   const [subjects, setSubjects] = useState<ReadonlyMap<string, string>>(new Map());
   const [kanji, setKanji] = useState<{ table: KanjiGradeTable; names: ReadonlySet<string> } | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState('');
   const [json, setJson] = useState('');
   const [grade, setGrade] = useState<Grade>(3);
   const [timeLimit, setTimeLimit] = useState(20);
@@ -84,7 +84,7 @@ function App() {
 
   const loadAll = async () => {
     try {
-      const m = (await read('manifest.json')) as ContentManifest;
+      const m = parseContentManifest(await read('manifest.json'));
       setFiles(m.questions);
       const requestedId = new URLSearchParams(location.search).get('q');
       const directFile = requestedId ? m.questionIndex?.[requestedId] : undefined;
@@ -129,8 +129,15 @@ function App() {
     read(file)
       .then((raw) => {
         const arr = Array.isArray(raw) ? raw : [];
-        setItems(arr.filter((q) => questionBaseSchema.safeParse(q).success) as QuestionBase[]);
-        if (arr[0]) setJson(JSON.stringify(arr[0], null, 2));
+        const validItems = arr.filter((q) => questionBaseSchema.safeParse(q).success) as QuestionBase[];
+        const requestedId = new URLSearchParams(location.search).get('q');
+        const initial = validItems.find((q) => q.id === requestedId) ?? validItems[0];
+        setItems(validItems);
+        setSelectedItemId(initial?.id ?? '');
+        if (initial) {
+          setGrade(initial.grade);
+          setJson(JSON.stringify(initial, null, 2));
+        }
       })
       .catch((e) => setError(String(e)));
   }, [file]);
@@ -193,6 +200,9 @@ function App() {
   const pick = (e: QuestionEntry) => {
     const text = JSON.stringify(e.raw, null, 2);
     setSelected(e.key);
+    setFile(e.file);
+    setSelectedItemId(e.q?.id ?? '');
+    if (e.q) setGrade(e.q.grade);
     setJson(text);
     if (e.q) history.replaceState(null, '', `?q=${encodeURIComponent(e.q.id)}`);
     stage.current?.scrollIntoView({ block: 'nearest' });
@@ -218,7 +228,7 @@ function App() {
               href={`${base}/`}
               style="font-size:13px; font-weight:bold; color:#334155; text-decoration:none; background:#e2e8f0; padding:4px 8px; border-radius:4px;"
             >
-              ← {t('ui.backToGame')}
+              ← {tOpt('ui.backToGame')}
             </a>
             <a
               href={`${base}/editor.html`}
@@ -229,8 +239,9 @@ function App() {
           </div>
         </div>
         <div class="pg-row">
-          <label>学年</label>
+          <label for="pg-grade">学年</label>
           <select
+            id="pg-grade"
             value={grade}
             onChange={(e) => setGrade(Number((e.target as HTMLSelectElement).value) as Grade)}
           >
@@ -238,8 +249,9 @@ function App() {
               <option value={g}>小{g}</option>
             ))}
           </select>
-          <label>制限(秒)</label>
+          <label for="pg-time-limit">制限(秒)</label>
           <input
+            id="pg-time-limit"
             type="number"
             value={timeLimit}
             min={3}
@@ -247,7 +259,7 @@ function App() {
             onInput={(e) => setTimeLimit(Number((e.target as HTMLInputElement).value))}
           />
         </div>
-        <label>問題ファイル</label>
+        <label for="pg-file">問題ファイル</label>
         <select id="pg-file" value={file} onChange={(e) => setFile((e.target as HTMLSelectElement).value)}>
           <option value="">-- content/questions から選ぶ --</option>
           {files.map((f) => (
@@ -256,9 +268,21 @@ function App() {
         </select>
         {items.length > 0 && (
           <select
-            onChange={(e) =>
-              setJson(JSON.stringify(items[Number((e.target as HTMLSelectElement).value)], null, 2))
-            }
+            id="pg-question"
+            aria-label="このファイルの 問題"
+            value={String(
+              Math.max(
+                0,
+                items.findIndex((item) => item.id === selectedItemId),
+              ),
+            )}
+            onChange={(e) => {
+              const item = items[Number((e.target as HTMLSelectElement).value)];
+              if (!item) return;
+              setSelectedItemId(item.id);
+              setGrade(item.grade);
+              setJson(JSON.stringify(item, null, 2));
+            }}
           >
             {items.map((q, i) => (
               <option value={i}>
@@ -267,7 +291,7 @@ function App() {
             ))}
           </select>
         )}
-        <label>問題 JSON（直接編集して試せます）</label>
+        <label for="pg-json">問題 JSON（直接編集して試せます）</label>
         <textarea
           id="pg-json"
           value={json}
@@ -275,10 +299,10 @@ function App() {
           spellcheck={false}
         />
         <div class="pg-row">
-          <button class="pg-run" onClick={() => void run()} disabled={running}>
+          <button type="button" class="pg-run" onClick={() => void run()} disabled={running}>
             ▶ 表示
           </button>
-          <button onClick={() => abort.current?.abort()} disabled={!running}>
+          <button type="button" onClick={() => abort.current?.abort()} disabled={!running}>
             中断
           </button>
           <span style="font-size:12px">

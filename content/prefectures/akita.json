@@ -108,18 +108,6 @@
         {
           "monsterId": "akita-hanabii",
           "weight": 12
-        },
-        {
-          "monsterId": "akita-kometsubun",
-          "weight": 15
-        },
-        {
-          "monsterId": "akita-inaniwan",
-          "weight": 15
-        },
-        {
-          "monsterId": "akita-kunikko",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 12,
@@ -134,10 +122,6 @@
         },
         {
           "monsterId": "akita-akitainu",
-          "weight": 35
-        },
-        {
-          "monsterId": "akita-kometsubun",
           "weight": 35
         }
       ],
@@ -154,10 +138,6 @@
         {
           "monsterId": "akita-akitainu",
           "weight": 35
-        },
-        {
-          "monsterId": "akita-chokaikko",
-          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -173,29 +153,6 @@
         {
           "monsterId": "akita-magewappan",
           "weight": 45
-        },
-        {
-          "monsterId": "akita-chokaikko",
-          "weight": 40
-        }
-      ],
-      "stepsPerCheck": 12,
-      "rate": 0.25
-    },
-    {
-      "zone": "shore",
-      "table": [
-        {
-          "monsterId": "akita-kunikko",
-          "weight": 60
-        },
-        {
-          "monsterId": "akita-hanabii",
-          "weight": 20
-        },
-        {
-          "monsterId": "akita-kiritanpon",
-          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -219,18 +176,191 @@
         {
           "monsterId": "akita-hanabii",
           "weight": 12
-        },
-        {
-          "monsterId": "akita-chokaikko",
-          "weight": 15
-        },
-        {
-          "monsterId": "akita-inaniwan",
-          "weight": 10
         }
       ],
       "stepsPerCheck": 8,
       "rate": 0.35
+    },
+    {
+      "zone": "field",
+      "region": "akita-oga-ogata",
+      "table": [
+        {
+          "monsterId": "akita-kiritanpon",
+          "weight": 47
+        },
+        {
+          "monsterId": "akita-hanabii",
+          "weight": 45
+        },
+        {
+          "monsterId": "akita-kometsubun",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "odate-kazuno",
+      "table": [
+        {
+          "monsterId": "akita-akitainu",
+          "weight": 45
+        },
+        {
+          "monsterId": "akita-magewappan",
+          "weight": 35
+        },
+        {
+          "monsterId": "akita-kiritanpon",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-hanabii",
+          "weight": 5
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "tazawako-kakunodate",
+      "table": [
+        {
+          "monsterId": "akita-magewappan",
+          "weight": 37
+        },
+        {
+          "monsterId": "akita-akitainu",
+          "weight": 25
+        },
+        {
+          "monsterId": "akita-kiritanpon",
+          "weight": 20
+        },
+        {
+          "monsterId": "akita-hanabii",
+          "weight": 10
+        },
+        {
+          "monsterId": "akita-kunikko",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "field",
+      "region": "omagari-chokai",
+      "table": [
+        {
+          "monsterId": "akita-hanabii",
+          "weight": 34
+        },
+        {
+          "monsterId": "akita-magewappan",
+          "weight": 20
+        },
+        {
+          "monsterId": "akita-kiritanpon",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-akitainu",
+          "weight": 15
+        },
+        {
+          "monsterId": "akita-chokaikko",
+          "weight": 8
+        },
+        {
+          "monsterId": "akita-inaniwan",
+          "weight": 8
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    }
+  ],
+  "regions": [
+    {
+      "id": "akita-oga-ogata",
+      "name": "秋田[あきた]・男鹿[おが]・大潟[おおがた]エリア",
+      "motifs": [
+        "kanto-matsuri",
+        "namahage",
+        "ogata-okome"
+      ],
+      "start": true,
+      "boss": {
+        "monsterId": "akita-kiritanpo-nabe",
+        "level": 17
+      }
+    },
+    {
+      "id": "odate-kazuno",
+      "name": "大館[おおだて]・鹿角[かづの]エリア",
+      "motifs": [
+        "kiritanpo",
+        "magewappa",
+        "akita-inu"
+      ],
+      "boss": {
+        "monsterId": "akita-chuken-maru",
+        "level": 17
+      }
+    },
+    {
+      "id": "tazawako-kakunodate",
+      "name": "田沢湖[たざわこ]・角館[かくのだて]エリア",
+      "motifs": [
+        "tazawako",
+        "kakunodate"
+      ],
+      "boss": {
+        "monsterId": "akita-wappa-toride",
+        "level": 17
+      }
+    },
+    {
+      "id": "omagari-chokai",
+      "name": "大曲[おおまがり]・鳥海[ちょうかい]エリア",
+      "motifs": [
+        "omagari-hanabi",
+        "inaniwa-udon",
+        "chokaisan"
+      ],
+      "boss": {
+        "monsterId": "akita-oodama-hanabi",
+        "level": 17
+      }
+    }
+  ],
+  "regionGates": [
+    {
+      "between": [
+        "akita-oga-ogata",
+        "odate-kazuno"
+      ],
+      "openedBy": "akita-oga-ogata"
+    },
+    {
+      "between": [
+        "odate-kazuno",
+        "tazawako-kakunodate"
+      ],
+      "openedBy": "odate-kazuno"
+    },
+    {
+      "between": [
+        "tazawako-kakunodate",
+        "omagari-chokai"
+      ],
+      "openedBy": "tazawako-kakunodate"
     }
   ],
   "boss": "akita-boss-namahage-ou",
@@ -252,7 +382,11 @@
       "dialogue": [
         {
           "speaker": "田沢湖[たざわこ]の ガイドさん",
-          "text": "ここは 日本[にほん]で いちばん 深[ふか]い 湖[みずうみ]だよ。水[みず]の ふしぎを しらべよう！"
+          "text": "湖[みずうみ]の 水[みず]や 天気[てんき]の 記録[きろく]が 読[よ]めなくなったんだ。このままでは 冬[ふゆ]じたくを いつ 始[はじ]めればいいか わからないよ。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "水[みず]の ようすを 観察[かんさつ]して、わかったことを ガイドさんへ 伝[つた]えよう。"
         }
       ],
       "question": {
@@ -291,7 +425,11 @@
       "afterDialogue": [
         {
           "speaker": "田沢湖[たざわこ]の ガイドさん",
-          "text": "よく しらべたね！ 田沢湖[たざわこ]の 水[みず]は すきとおって きれいでしょう。"
+          "text": "記録[きろく]が 読[よ]める！ みんなへ 伝[つた]えて、食[た]べものと まきを 分[わ]けておくよ。これで 冬[ふゆ]を むかえられる。"
+        },
+        {
+          "speaker": "ミチル",
+          "text": "知[し]ったことを 分[わ]けあえば、だれかを 守[まも]る じゅんびが できるんだね。"
         }
       ]
     }
@@ -318,6 +456,17 @@
         "dialogue": [
           {
             "text": "大館[おおだて]の 曲[ま]げわっぱは、秋田[あきた]すぎの いい かおりが する おべんとうばこだよ。"
+          }
+        ]
+      },
+      {
+        "id": "npc-akita-haru",
+        "name": "見聞帳[けんぶんちょう]の シオリ",
+        "spriteKey": "char.npc-aomori-dex",
+        "role": "talk",
+        "dialogue": [
+          {
+            "text": "冬[ふゆ]じたくは、ひとりで 全部[ぜんぶ]できなくても いいんだ。できることを 分[わ]けあう 方法[ほうほう]も、大切[たいせつ]な 知識[ちしき]なんだね。"
           }
         ]
       }

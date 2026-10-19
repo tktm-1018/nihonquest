@@ -1,54 +1,59 @@
 import type { Grade } from '../content/schemas';
-import { mvpRegion, type MvpRegionId } from '../regions/mvp';
 import { freshSeed } from '../rng';
 import { SCHEMA_VERSION, type GameState } from './schema';
+import { STARTER_EQUIPMENT_ID } from './starter';
 
 export interface NewGameOptions {
-  name?: string;
-  appearance?: { hair: number; skin: number; cloth: number };
-  starterMonsterId?: string;
+  name: string;
+  appearance?: { hair: number; skin: number; cloth: number; hairStyle?: number; eyes?: number };
   grade: Grade;
-  startRegion?: MvpRegionId;
 }
 
+export const UNNAMED_HERO = '？？？';
+
 export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
-  const region = mvpRegion(o.startRegion);
-  const starter = o.starterMonsterId
-    ? [{ uid: 'starter', monsterId: o.starterMonsterId, level: 1, xp: 0 }]
-    : [];
   return {
     schemaVersion: SCHEMA_VERSION,
     createdAt: now,
     updatedAt: now,
     seed: freshSeed(),
     player: {
-      name: o.name ?? '？？？',
-      appearance: o.appearance ?? { hair: 0, skin: 0, cloth: 0 },
+      name: o.name,
+      appearance: { hair: 0, skin: 0, cloth: 0, hairStyle: 0, eyes: 0, ...o.appearance },
       level: 1,
       xp: 0,
       gold: 100,
-      baseStats: { hp: 40, mp: 10, atk: 8, def: 6, spd: 7, wis: 5 },
+      baseStats: {
+        hp: 24,
+        mp: 6,
+        scienceAtk: 5,
+        humanitiesAtk: 5,
+        scienceDef: 4,
+        humanitiesDef: 4,
+        spd: 5,
+        wis: 3,
+      },
       bonusWis: 0,
-      skills: [region.initialSkill, 'sk-katakana-shibari'],
+      skills: ['sk-tashizan-giri', 'sk-katakana-shibari'],
       equipment: {},
-      hp: 40,
-      mp: 10,
+      hp: 24,
+      mp: 6,
     },
     party: {
-      owned: starter,
-      activeUid: starter.length ? 'starter' : null,
-      team: starter.length ? ['starter'] : [],
+      owned: [],
+      activeUid: null,
+      team: [],
       reserve: [],
       bagPlacements: {
-        hero: { x: 0, y: 0, rotated: false },
-        ...(starter.length ? { 'mon:starter': { x: 1, y: 0, rotated: false } } : {}),
+        hero: { x: 1, y: 1, rotated: false },
       },
+      bagItems: [],
     },
-    inventory: {},
+    inventory: { [STARTER_EQUIPMENT_ID]: 1 },
     progress: {
-      currentIsland: region.id,
-      currentArea: region.startArea,
-      currentMap: region.startMap,
+      currentIsland: 'tohoku',
+      currentArea: 'aomori',
+      currentMap: 'aomori-field',
       position: { x: 160, y: 160 },
       lastInn: null,
       areaSigns: [],
@@ -56,6 +61,8 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       eventsDone: [],
       chestsOpened: [],
       unlockedRecipes: ['rc-nebuta-no-kabuto', 'rc-hiba-no-koshiate'],
+      unlockedMonsters: [],
+      titles: [],
       missions: {},
       counters: { 'story.prologue': 0 },
     },

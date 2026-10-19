@@ -3,11 +3,14 @@
  *   pnpm scaffold:maps          (未作成のみ)
  *   pnpm scaffold:maps --force  (既存マップを上書き)
  *   pnpm scaffold:maps --force --only=aomori  (その県の フィールドだけ 作りなおす。ほかの マップ・にほんちずは さわらない)
+ *   pnpm scaffold:maps --links-only --only=aomori  (既存フィールドを保ち、県間入口だけ同期)
+ *   pnpm scaffold:maps --force --worldmap-only  (にほんちずだけ作りなおす)
+ *   pnpm scaffold:maps --towns-only  (全県の町マップだけ作りなおす)
  *
  * フィールド・離島・にほんちずの地形は scripts/data/terrain.json（pnpm gen:terrain が実在の地理から作る）を使う。
  * 町（県庁所在地）・ダンジョン・名所・港も、実際の場所に置く（位置は scripts/data/geo.ts）。
- * 県のフィールドは、県の外の陸地も海として描く（県はそれぞれ海にかこまれた島。
- * となりの県へは、中ボスを倒すと開くワープホールか、にほんちずから行く）。
+ * 県のフィールドは、県外の陸地も陸として描く。県境は通れず、となりの県へは
+ * 県境門または実在する橋・トンネル・鉄道・航路の入口から行く。
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -31,7 +34,6 @@ import {
   REGION_VILLAGES,
   STRUCTURE_SIZE,
   type LonLat,
-  type StructureKind,
 } from './data/geo.js';
 import {
   CITY_LOOKS,
@@ -45,35 +47,50 @@ import {
   type TownTree,
 } from './data/towns.js';
 import { SECRET_SPOTS } from './data/secrets.js';
+import { TRANSPORT_LINKS } from './data/interPrefectureLinks.js';
 import { components, project } from './terrain/raster.js';
+import type { LandBorderLink } from './terrain/prefectureBorders.js';
+import {
+  deriveRegionSeedCoordinates,
+  filterRegionSeedCoordinates,
+  type SeedEvent,
+  type SeedRegion,
+} from './regions/seedCoordinates.js';
+import { partitionConnectedRegions } from './regions/connectedPartition.js';
+import { applyRegionWalls } from './regions/partitionWalls.js';
+import { interPrefectureObjectDefinitions } from './maps/interPrefectureObjects.js';
+import { findImmediateArrivalTile, hasImmediateArrivalTile } from './maps/immediateArrival.js';
+import { syncInterPrefectureMapFile } from './maps/syncInterPrefectureMap.js';
 import { createRng } from '../src/core/rng.js';
 import { GROUND_TILES, type Ground } from '../src/core/world/ground.js';
 import type { TerrainMap } from './gen-terrain.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const DIRS = [`${ROOT}maps/`, `${ROOT}public/maps/`];
+/** マップの唯一の編集・生成先。Vite が dev では直接配信し、build では dist/maps へコピーする。 */
+const MAPS_DIR = `${ROOT}maps/`;
 
 const args = process.argv.slice(2);
 const force = args.includes('--force');
+const townsOnly = args.includes('--towns-only');
 const only = args.find((a) => a.startsWith('--only='))?.slice('--only='.length);
+const worldMapOnly = args.includes('--worldmap-only');
+const linksOnly = args.includes('--links-only');
 
-DIRS.forEach((dir) => {
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-});
+if (!existsSync(MAPS_DIR)) mkdirSync(MAPS_DIR, { recursive: true });
 
-const TERRAIN = (
-  JSON.parse(readFileSync(`${ROOT}scripts/data/terrain.json`, 'utf8')) as { maps: Record<string, TerrainMap> }
-).maps;
+const TERRAIN_DATA = JSON.parse(readFileSync(`${ROOT}scripts/data/terrain.json`, 'utf8')) as {
+  maps: Record<string, TerrainMap>;
+  interPrefectureBorders: LandBorderLink[];
+};
+const TERRAIN = TERRAIN_DATA.maps;
 
-/** 地形記号 → タイル番号（src/scenes/overworld/fieldArt.ts の仮タイルセットと対応）。県の外の陸地（x）も海（3） */
-const TILE: Record<string, number> = { '.': 3, '~': 3, '#': 1, '^': 11, A: 12, x: 3, W: 159 };
+/** 地形記号 → タイル番号（src/rendering/overworld/fieldArt.ts の仮タイルセットと対応） */
+const TILE: Record<string, number> = { '.': 3, '~': 3, '#': 1, '^': 11, A: 12, x: 1, W: 159 };
 /** にほんちずの地図データ。Tiled のマップではないので maps/ には入れず、ゲームが読む public/ にだけ置く */
 const WORLD_MAP_FILE = 'public/worldmap.json';
 /** collision レイヤーでこの番号のマスは通れない（Overworld.ts） */
 const BLOCK = 3;
-/** 海・湖・県外の陸地は通れない */
+/** 海・湖・県外の陸地は通れない（x は陸として描くが県境の外なので止める） */
 const BLOCKED = new Set(['.', '~', 'x', 'W']);
 /** 看板・入口などの目じるしどうしを、何マス離すか（Placer） */
 const SIGN_GAP = 3;
@@ -157,17 +174,13 @@ let createdCount = 0;
 /** pnpm lint（prettier --check）がそのまま通るよう、Prettier で整形してから書き出す */
 const PRETTIER = { ...((await resolveConfig(`${ROOT}maps/map.json`)) ?? {}), parser: 'json' };
 
-async function saveMap(filename: string, content: object) {
+async function saveMap(filename: string, content: object, replace = force) {
   const jsonStr = await format(JSON.stringify(content), PRETTIER);
-  let createdAny = false;
-  DIRS.forEach((dir) => {
-    const filePath = `${dir}${filename}`;
-    if (!existsSync(filePath) || force) {
-      writeFileSync(filePath, jsonStr, 'utf8');
-      createdAny = true;
-    }
-  });
-  if (createdAny) createdCount++;
+  const filePath = `${MAPS_DIR}${filename}`;
+  if (!existsSync(filePath) || replace) {
+    writeFileSync(filePath, jsonStr, 'utf8');
+    createdCount++;
+  }
 }
 
 async function saveWorldMap(content: object) {
@@ -176,7 +189,6 @@ async function saveWorldMap(content: object) {
   writeFileSync(filePath, await format(JSON.stringify(content), PRETTIER), 'utf8');
   createdCount++;
 }
-
 const toObjects = (defs: ObjDef[]): MapObject[] =>
   defs.map((d, i) => ({
     id: i + 1,
@@ -358,7 +370,6 @@ class Land {
     return [sx / n, sy / n];
   }
 }
-
 /**
  * 物体を重ならないように置いていく。看板・入口などの目じるし（labeled）どうしは SIGN_GAP マス離す
  * （名所に「着いた」とみなす まわり 1 マスの範囲が、となりの看板と重ならないように）
@@ -428,11 +439,25 @@ class Placer {
   gate(target: Pt, ok: (i: number) => boolean): Pt {
     return this.put(target, ok, true, true);
   }
-
   /** at のすぐ南（ふさがっていれば近く）の、同じ陸続きの空きマス。行き先から戻ってきたときに立つ場所 */
   beside(at: Pt): Pt {
     const comp = this.land.compOf(at);
     return this.put([at[0] + 0.5, at[1] + 1.5], (i) => this.land.label[i] === comp, false);
+  }
+
+  /** i のすぐ隣に、同じ陸続きの空いた到着マスを確保できるか。 */
+  hasImmediateArrival(i: number): boolean {
+    return hasImmediateArrivalTile(this.land, i, (x, y) => this.free(x, y, false));
+  }
+
+  /** 県間入口のすぐ隣に到着地点を置く。遠くへずらして入口と到着地点を分離しない。 */
+  besideImmediate(at: Pt, preferred: readonly number[] = []): Pt {
+    const arrival = findImmediateArrivalTile(this.land, at, preferred, (x, y) => this.free(x, y, false));
+    if (arrival) {
+      this.taken.push({ at: arrival, labeled: false });
+      return arrival;
+    }
+    throw new Error(`${this.land.key}: 入口の隣に到着地点を置けません`);
   }
 
   /** 陸続きでない2つの陸（from → to）を結ぶ船着き場を、互いにいちばん近い海岸に置く */
@@ -542,7 +567,7 @@ const MARSHES: Record<string, string[]> = { miyagi: ['izunuma'] };
  *   A → やま（雪の山）。^ → 平地から 2 マス以上 おくは やま、ふちは もり
  *   平地（#）→ 湖・沼の そばは みずべ、海の となりは すなはま、丘の となりは もり、
  *              海からも 丘からも はなれた 所は たはた（ところどころ くさはら）、ほかは くさはら
- * 県の外（x）は 海の絵でも 海では ないので、すなはまに しない
+ * 県の外（x）は 陸の絵だが通れない。海では ないので、すなはまに しない
  */
 function groundTiles(land: Land, prefId: string): (c: string, i: number) => number {
   const sea = distanceFrom(land, (c) => c === '.');
@@ -622,7 +647,13 @@ const SPECIALTY_KINDS = new Set(['food', 'craft']);
  * 名所の ★ 看板と 特産品の宝箱のうち、このマップの範囲に入るもの（フィールドと離島で分ける）。
  * 実際の場所にいちばん近い、ok を満たす歩けるマスに立つ（湖の中心なら岸）
  */
-function landmarkObjects(prefId: string, land: Land, place: Placer, ok: (i: number) => boolean): ObjDef[] {
+function landmarkObjects(
+  prefId: string,
+  land: Land,
+  place: Placer,
+  ok: (i: number) => boolean,
+  inMotifRegion?: (i: number, motifId: string) => boolean,
+): ObjDef[] {
   // 離島マップの範囲がフィールドの範囲に重なる県（淡路島・天草・桜島・佐渡）は、重なる所の名所を離島に立てる
   const enclave = ENCLAVES.find((e) => e.prefId === prefId)?.enclaveId;
   const island = enclave && enclave !== land.key ? Land.of(enclave, () => false) : null;
@@ -634,7 +665,7 @@ function landmarkObjects(prefId: string, land: Land, place: Placer, ok: (i: numb
     defs.push({
       name: `${specialty ? 'sp' : 'lm'}_${motifId}`,
       type: specialty ? 'specialty' : 'landmark',
-      at: place.put(land.tile(ll), ok),
+      at: place.put(land.tile(ll), (i) => ok(i) && (inMotifRegion?.(i, motifId) ?? true)),
       properties: [str('motifId', motifId)],
     });
     placedLandmarks.set(prefId, [...(placedLandmarks.get(prefId) ?? []), motifId]);
@@ -643,8 +674,7 @@ function landmarkObjects(prefId: string, land: Land, place: Placer, ok: (i: numb
 }
 
 /** 県のフィールド：町・ダンジョン・名所・離島への港・宝箱・中ボス */
-interface RegionDef {
-  id: string;
+interface RegionDef extends SeedRegion {
   boss?: unknown;
 }
 interface RegionPartition {
@@ -655,6 +685,9 @@ interface RegionPartition {
   gates: { i: number; between: [string, string]; openedBy: string }[];
   /** エリアの ぬしが 立つ 目じるし（たねの 1 つ目） */
   bossAt: Map<string, Pt>;
+  /** motif と event 物体を、content で宣言したエリア内へ置くための対応 */
+  motifRegion: Map<string, number>;
+  eventRegion: Map<string, number>;
 }
 
 /**
@@ -668,12 +701,37 @@ function regionPartition(land: Land, prefId: string): RegionPartition | null {
   const data = JSON.parse(readFileSync(file, 'utf8')) as {
     regions?: RegionDef[];
     regionGates?: { between: [string, string]; openedBy: string }[];
+    events?: SeedEvent[];
   };
   const regions = data.regions ?? [];
   if (!regions.length) return null;
-  const seeds = REGION_SEEDS[prefId];
-  if (!seeds) throw new Error(`${prefId}: 名所エリアの たねが geo.ts の REGION_SEEDS に ありません`);
+  const enclaveId = ENCLAVES.find((enclave) => enclave.prefId === prefId)?.enclaveId;
+  const enclaveLand = enclaveId && enclaveId !== land.key ? Land.of(enclaveId, () => false) : null;
+  const seedIsUsable = (coordinate: LonLat) =>
+    land.contains(coordinate) && !enclaveLand?.contains(coordinate);
+  const seeds = Object.fromEntries(
+    regions.map((region) => {
+      const candidates = deriveRegionSeedCoordinates(prefId, region, {
+        explicitSeeds: REGION_SEEDS[prefId],
+        landmarkSpots: LANDMARK_SPOTS[prefId],
+        events: data.events ?? [],
+        eventSpots: EVENT_SPOTS,
+        capital: CAPITALS[prefId],
+      });
+      const usable = filterRegionSeedCoordinates(prefId, region, candidates, seedIsUsable, CAPITALS[prefId]);
+      return [region.id, usable];
+    }),
+  );
   const ids = regions.map((r) => r.id);
+  const motifRegion = new Map(
+    regions.flatMap((region, index) => region.motifs.map((motifId) => [motifId, index] as const)),
+  );
+  const eventRegion = new Map(
+    (data.events ?? []).flatMap((event) => {
+      const index = event.motifId ? motifRegion.get(event.motifId) : undefined;
+      return event.trigger && index !== undefined ? [[event.trigger.objectName, index] as const] : [];
+    }),
+  );
   const n = land.cells.length;
   const main = land.largest;
   const around = (i: number) => {
@@ -713,99 +771,49 @@ function regionPartition(land: Land, prefId: string): RegionPartition | null {
     return d;
   };
   const dist = seedIdx.map(bfs);
-  // おなじ くらいの 広さに：いちばん せまい エリアから 1 マスずつ ひろげる（陸続きの まま そだつ）
-  const region = new Int32Array(n).fill(-1);
-  const size = ids.map(() => 0);
-  const front = seedIdx.map((list) => [...list]);
-  const heads = ids.map(() => 0);
-  for (;;) {
-    let r = -1;
-    for (let k = 0; k < ids.length; k++)
-      if (heads[k]! < front[k]!.length && (r < 0 || size[k]! < size[r]!)) r = k;
-    if (r < 0) break;
-    const i = front[r]![heads[r]!++]!;
-    if (region[i]! >= 0 || !land.walk(i)) continue;
-    region[i] = r;
-    size[r]!++;
-    for (const j of around(i)) if (region[j] === -1 && land.walk(j)) front[r]!.push(j);
-  }
-  // どの たねからも とどかない 島は いちばん ちかい エリア
-  for (let i = 0; i < n; i++) {
-    if (!land.walk(i) || region[i]! >= 0) continue;
-    let best = 0;
-    let bd = Infinity;
-    dist.forEach((d, r) => {
-      if (d[i]! >= 0 && d[i]! < bd) {
-        bd = d[i]!;
-        best = r;
-      }
-    });
-    region[i] = best;
-  }
-  console.log(`  ${prefId}: エリアの 広さ ${ids.map((id, r) => `${id}=${size[r]}`).join(' ')}`);
-  // となりあう エリア（関所を おける 組）を 出す：regionGates を きめる ときの 目安
-  const touch = new Map<string, number>();
-  for (let i = 0; i < n; i++)
-    for (const j of around(i))
-      if (region[i]! >= 0 && region[j]! > region[i]!) {
-        const k = `${ids[region[i]!]}-${ids[region[j]!]}`;
-        touch.set(k, (touch.get(k) ?? 0) + 1);
-      }
-  console.log(`  ${prefId}: となりあう エリア ${[...touch].map(([k, v]) => `${k}(${v})`).join(' ')}`);
-  // さかいの 山なみ：となりが ちがう エリアの マスは りょうがわ とも かべ（2 マスの 山なみ。1 マスだと ななめに すきまが 見える）
-  const wall = new Uint8Array(n);
-  for (let i = 0; i < n; i++) {
-    const r = region[i]!;
-    if (r < 0) continue;
-    if (around(i).some((j) => region[j]! >= 0 && region[j] !== r)) wall[i] = 1;
-  }
-  // 関所：その 2 つの エリアの さかいで となりあう かべ 2 マス（a がわ i・b がわ j）。どちらも 自分の エリアの
-  // かべで ない マスに つながる ところのうち、2 つの たねから 歩いて いちばん ちかい ところ。i に 門を おく
-  const gates: RegionPartition['gates'] = [];
-  for (const g of data.regionGates ?? []) {
-    const [a, b] = g.between.map((id) => ids.indexOf(id));
-    if (a! < 0 || b! < 0)
-      throw new Error(`${prefId}: 関所の エリア ${g.between.join('・')} が regions に ありません`);
-    const reach = (k: number, r: number) => around(k).some((m) => region[m] === r && !wall[m]);
-    let best: [number, number] | null = null;
-    let bs = Infinity;
-    for (let i = 0; i < n; i++) {
-      if (!wall[i] || region[i] !== a || !reach(i, a!)) continue;
-      for (const j of around(i)) {
-        if (!wall[j] || region[j] !== b || !reach(j, b!)) continue;
-        const sc = dist[a!]![i]! + dist[b!]![j]!;
-        if (sc < bs) {
-          bs = sc;
-          best = [i, j];
-        }
-      }
-    }
-    if (!best)
-      throw new Error(`${prefId}: ${g.between.join('・')} は となりあって いないので 関所を おけません`);
-    wall[best[0]] = 0;
-    wall[best[1]] = 0;
-    gates.push({ i: best[0], between: g.between, openedBy: g.openedBy });
-  }
-  // かべの マスは エリアの 外（-1）に して、地形を 'W' に
-  for (let i = 0; i < n; i++) if (wall[i]) region[i] = -1;
+  const region = partitionConnectedRegions({
+    prefId,
+    cellCount: n,
+    walkable: (i) => land.label[i] === main,
+    around,
+    anchors: seedIdx,
+    requiredAdjacencies: (data.regionGates ?? []).map(
+      ({ between }) => between.map((id) => ids.indexOf(id)) as [number, number],
+    ),
+  });
+  const gates = applyRegionWalls({
+    prefId,
+    ids,
+    region,
+    distances: dist,
+    seedIndexes: seedIdx,
+    protectedIndexes: new Set(seedIdx.flat()),
+    width: land.w,
+    around,
+    gates: data.regionGates ?? [],
+  });
   const bossAt = new Map<string, Pt>();
   ids.forEach((id, r) => {
     const s = seedIdx[r]![0]!;
     bossAt.set(id, [(s % land.w) + 0.5, Math.floor(s / land.w) + 0.5]);
   });
-  return { ids, region, gates, bossAt };
+  return { ids, region, gates, bossAt, motifRegion, eventRegion };
 }
 
 /** エリアの さかいの かべ（'W'）を 入れた 地形 */
 function withWalls(land: Land, part: RegionPartition): Land {
   const cells = [...land.cells].map((c, i) =>
-    land.walk(i) && part.region[i]! < 0 && !part.gates.some((g) => g.i === i) ? 'W' : c,
+    land.walk(i) &&
+    land.label[i] === land.largest &&
+    part.region[i]! < 0 &&
+    !part.gates.some((g) => g.i === i)
+      ? 'W'
+      : c,
   );
   const rows: string[] = [];
   for (let y = 0; y < land.h; y++) rows.push(cells.slice(y * land.w, (y + 1) * land.w).join(''));
   return new Land(land.key, { ...land.terrain, rows }, (c) => !BLOCKED.has(c));
 }
-
 function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
   const { id: prefId } = pref;
   const land0 = Land.of(`${prefId}-field`, (c) => !BLOCKED.has(c));
@@ -814,6 +822,14 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
   const main = land.largest;
   const inMain = (i: number) => land.label[i] === main;
   const place = new Placer(land);
+  // 関所は境界上の1マスにしか置けないため、ほかの物体より先に場所を確保する。
+  const regionGateDefs: ObjDef[] =
+    part?.gates.map((gate) => ({
+      name: `gate_${gate.between.join('_')}`,
+      type: 'regionGate',
+      at: place.put([(gate.i % land.w) + 0.5, Math.floor(gate.i / land.w) + 0.5], (i) => i === gate.i, false),
+      properties: [str('between', gate.between.join(',')), str('openedBy', gate.openedBy)],
+    })) ?? [];
 
   const town = place.gate(land.tile(CAPITALS[prefId]!), inMain);
   const fromTown = land.steps(town);
@@ -842,19 +858,41 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
         `  ${prefId}-field: ${name} の場所が geo.ts の EVENT_SPOTS にないので、適当な所に置きます`,
       );
     const target = spot ? land.tile(spot) : land.best(inMain, (i) => Math.abs(fromTown[i]! - farthest * 0.5));
-    return { name, type: 'event', at: place.put(target, inMain) };
+    const expectedRegion = part?.eventRegion.get(name);
+    return {
+      name,
+      type: 'event',
+      at: place.put(
+        target,
+        (i) => inMain(i) && (expectedRegion === undefined || part?.region[i] === expectedRegion),
+      ),
+    };
   });
 
   // 名所スタンプ（イベントの無い名所）：★ の看板。近づくと説明が出る
-  const landmarks = landmarkObjects(prefId, land, place, inMain);
+  const landmarks = landmarkObjects(prefId, land, place, inMain, (i, motifId) => {
+    const expectedRegion = part?.motifRegion.get(motifId);
+    return expectedRegion === undefined || part?.region[i] === expectedRegion;
+  });
 
   // 離島・飛地への港: その島にいちばん近い海岸
   const enclave = ENCLAVES.find((e) => e.prefId === prefId);
   const enclaveBox = enclave ? ENCLAVE_GEO[enclave.enclaveId]?.panels[0] : undefined;
+  const enclaveLand = enclave ? Land.of(enclave.enclaveId, () => false) : null;
+  const enclaveRegions = new Set(
+    Object.entries(LANDMARK_SPOTS[prefId] ?? {}).flatMap(([motifId, coordinate]) => {
+      if (!part || !enclaveLand?.contains(coordinate)) return [];
+      const region = part.motifRegion.get(motifId);
+      return region === undefined ? [] : [region];
+    }),
+  );
+  if (enclaveRegions.size > 1) throw new Error(`${prefId}: 離島の motif が複数のエリアに分かれています`);
+  const enclaveRegion = enclaveRegions.values().next().value as number | undefined;
   const port = enclaveBox
     ? place.gate(
         land.tile([(enclaveBox[0] + enclaveBox[2]) / 2, (enclaveBox[1] + enclaveBox[3]) / 2]),
-        (i) => inMain(i) && land.coastal(i),
+        (i) =>
+          inMain(i) && land.coastal(i) && (enclaveRegion === undefined || part?.region[i] === enclaveRegion),
       )
     : null;
 
@@ -882,6 +920,7 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
   const secret = secretSpot ? place.gate(land.tile(secretSpot), inMain) : null;
 
   const defs: ObjDef[] = [
+    ...regionGateDefs,
     { name: 'spawn', type: 'spawn', at: spawn },
     { name: 'from_town', type: 'spawn', at: place.beside(town) },
     { name: 'from_dungeon', type: 'spawn', at: place.beside(dungeon) },
@@ -890,7 +929,10 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
       name: 'to_dungeon',
       type: 'transition',
       at: dungeon,
-      properties: warp(`${prefId}-dungeon`, 'from_field'),
+      properties: [
+        ...warp(`${prefId}-dungeon`, 'from_field'),
+        ...(part ? [str('lock', 'regionBosses')] : []),
+      ],
     },
     {
       name: `chest_${prefId}_field`,
@@ -925,32 +967,45 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
     );
 
   if (part) {
-    // 関所（エリアの さかい）と エリアの ぬし
-    for (const g of part.gates)
-      defs.push({
-        name: `gate_${g.between.join('_')}`,
-        type: 'regionGate',
-        at: place.put([(g.i % land.w) + 0.5, Math.floor(g.i / land.w) + 0.5], (i) => i === g.i, false),
-        properties: [str('between', g.between.join(',')), str('openedBy', g.openedBy)],
-      });
+    // エリアの ぬし
     part.ids.forEach((id, r) => {
-      const at = part.bossAt.get(id)!;
       // まわり 4 マスが おなじ エリアの 広い ところ（ぬしが 道を ふさがないように）
       const roomy = (i: number) =>
         part.region[i] === r && around4(land, i).every((j) => part.region[j] === r);
+      // 最初のエリアのぬしは、ゲーム開始直後に見えない距離まで町から離す。
+      // 遠すぎて迷わないよう、歩行距離20マス前後の広い場所を選ぶ。
+      const at =
+        r === 0
+          ? land.best(
+              (i) => inMain(i) && roomy(i),
+              (i) => Math.abs(fromTown[i]! - 20),
+            )
+          : part.bossAt.get(id)!;
       defs.push({
         name: `regionboss_${id}`,
         type: 'regionBoss',
-        at: place.gate(at, (i) => inMain(i) && roomy(i)),
+        // 地域ボスは倒すまで道をふさぐ存在なので、遷移口向けの「置いても陸を切らない」制約は使わない。
+        // 開始地域は上の target 選定で町から約20歩の場所を優先する。
+        at: place.put(at, (i) => inMain(i) && part.region[i] === r, false),
         properties: [str('region', id)],
       });
     });
   }
+  defs.push(
+    ...interPrefectureObjectDefinitions({
+      prefId,
+      land,
+      place,
+      inMain,
+      borders: TERRAIN_DATA.interPrefectureBorders,
+      transports: TRANSPORT_LINKS,
+    }),
+  );
   const { bg, col } = terrainLayers(land, groundTiles(land, prefId));
   if (FIELD_ALL_GRASS.has(prefId)) allGrass(land, bg);
   if (part) regionLooks(land, part, prefId, bg);
   if (part) {
-    defs.push(...villages(land, part, prefId, defs, col, bg));
+    defs.push(...villages(land, part, prefId, defs, col));
     roads(land, defs, col, bg);
   }
   const props = part
@@ -971,7 +1026,6 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
     : undefined;
   return tiledMap(land.w, land.h, bg, col, toObjects(defs), false, undefined, props);
 }
-
 /** 陸の 地面を ぜんぶ 草原に（海・湖・さかいの 山なみは そのまま） */
 function allGrass(land: Land, bg: number[]): void {
   for (let i = 0; i < bg.length; i++) {
@@ -983,130 +1037,70 @@ function allGrass(land: Land, bg: number[]): void {
 
 /**
  * 名所エリアの むら（geo.ts の REGION_VILLAGES）：建物を おいて、その マスを 通れなく する（col を BLOCK）。
- * 建物の まわり 1 マスは 歩ける 空き地（ほかの 物・建物・海・さかいに かからない）ので、道や 陸続きを ふさがない。
- * 土地に あわせる：
- *  - 船（boat・fune）は 陸でなく、その エリアの 岸に となりあう 海・湖の 上
- *  - 滝（taki・bigTaki）は うしろと 横を 岩山に、下に たきつぼの 池（水）を つくる
- *  - そのほかの 建物の 足もとと まわり 1 マスは 草の 広場（森や 砂地の 中でも 建物が 木に うもれない）
+ * 建物の まわり 1 マスは 歩ける 空き地（ほかの 物・建物・海・さかいに かからない）ので、道や 陸続きを ふさがない
  */
-const ON_WATER = new Set<StructureKind>(['boat', 'fune']);
-const WATERFALL = new Set<StructureKind>(['taki', 'bigTaki']);
-const MOUNTAIN_TILES = GROUND_TILES.mountain;
-
 function villages(
   land: Land,
   part: RegionPartition,
   prefId: string,
   defs: ObjDef[],
   col: number[],
-  bg: number[],
 ): ObjDef[] {
   const out: ObjDef[] = [];
   const taken = new Set(defs.map((d) => land.idx([Math.floor(d.at[0]), Math.floor(d.at[1])])));
   const used = new Set<number>();
-  const inside = (x: number, y: number) => x >= 0 && y >= 0 && x < land.w && y < land.h;
   const fits = (x0: number, y0: number, w: number, h: number, r: number) => {
     for (let y = y0 - 1; y <= y0 + h; y++)
       for (let x = x0 - 1; x <= x0 + w; x++) {
-        if (!inside(x, y)) return false;
+        if (x < 0 || y < 0 || x >= land.w || y >= land.h) return false;
         const i = y * land.w + x;
         if (!land.walk(i) || part.region[i] !== r || col[i] === BLOCK || taken.has(i) || used.has(i))
           return false;
       }
     return true;
   };
-  /** 水の 上（海・湖。県の 外の 陸 x は だめ）で、その エリアの 陸に となりあう */
-  const water = (i: number) => land.cells[i] === '.' || land.cells[i] === '~';
-  const floats = (x0: number, y0: number, w: number, h: number, r: number) => {
-    let shore = false;
-    for (let y = y0 - 1; y <= y0 + h; y++)
-      for (let x = x0 - 1; x <= x0 + w; x++) {
-        if (!inside(x, y)) return false;
-        const i = y * land.w + x;
-        const body = x >= x0 && x < x0 + w && y >= y0 && y < y0 + h;
-        if (body && (!water(i) || used.has(i))) return false;
-        if (!body && used.has(i) && !water(i)) return false;
-        if (
-          !body &&
-          part.region[i] === r &&
-          (x === x0 - 1 || x === x0 + w) !== (y === y0 - 1 || y === y0 + h)
-        )
-          shore = true;
-      }
-    return shore;
-  };
-  const free = (i: number, r: number) =>
-    land.walk(i) && part.region[i] === r && col[i] !== BLOCK && !taken.has(i) && !used.has(i);
   for (const [regionId, list] of Object.entries(REGION_VILLAGES[prefId] ?? {})) {
     const r = part.ids.indexOf(regionId);
     if (r < 0) continue;
     for (const v of list) {
       const [cx, cy] = land.tile(v.at);
-      for (const b of v.buildings) {
+      v.buildings.forEach((b, k) => {
         const [w, h] = STRUCTURE_SIZE[b.kind];
         const tx = Math.floor(cx) + b.dx;
         const ty = Math.floor(cy) + b.dy;
-        const boat = ON_WATER.has(b.kind);
-        const ok = boat ? floats : fits;
-        // ふさがって いれば うずまきに 近くを さがす（船は 岸まで とおくても よい）
+        // ふさがって いれば うずまきに 近くを さがす
         let at: [number, number] | null = null;
-        for (let d = 0; d <= (boat ? 16 : 10) && !at; d++)
+        for (let d = 0; d <= 8 && !at; d++)
           for (let oy = -d; oy <= d && !at; oy++)
             for (let ox = -d; ox <= d && !at; ox++)
-              if (Math.max(Math.abs(ox), Math.abs(oy)) === d && ok(tx + ox, ty + oy, w, h, r))
+              if (Math.max(Math.abs(ox), Math.abs(oy)) === d && fits(tx + ox, ty + oy, w, h, r))
                 at = [tx + ox, ty + oy];
         if (!at) {
           console.warn(`  ${prefId}: ${regionId} の ${b.kind} を おける 場所が ありません`);
-          continue;
+          return;
         }
-        const [ax, ay] = at;
-        for (let y = ay; y < ay + h; y++)
-          for (let x = ax; x < ax + w; x++) {
+        for (let y = at[1]; y < at[1] + h; y++)
+          for (let x = at[0]; x < at[0] + w; x++) {
             col[y * land.w + x] = BLOCK;
             used.add(y * land.w + x);
           }
-        if (WATERFALL.has(b.kind)) {
-          // たきつぼの 池（下 1〜2 だん）と、うしろ・横の 岩山
-          for (let x = ax; x < ax + w; x++) {
-            const i1 = (ay + h) * land.w + x;
-            bg[i1] = 3;
-            col[i1] = BLOCK;
-            const i2 = i1 + land.w;
-            if (inside(x, ay + h + 1) && free(i2, r)) {
-              bg[i2] = 3;
-              col[i2] = BLOCK;
-              used.add(i2);
-            }
-          }
-          for (let y = ay - 1; y <= ay + h; y++)
-            for (const x of y === ay - 1
-              ? [...Array(w + 2).keys()].map((k) => ax - 1 + k)
-              : [ax - 1, ax + w]) {
-              const i = y * land.w + x;
-              if (land.walk(i) && col[i] !== BLOCK) bg[i] = MOUNTAIN_TILES[(x + y) % 2]!;
-            }
-        } else if (!boat) {
-          for (let y = ay - 1; y <= ay + h; y++)
-            for (let x = ax - 1; x <= ax + w; x++) {
-              const i = y * land.w + x;
-              if (land.walk(i)) bg[i] = noise(x, y) < 0.8 ? 1 : 14;
-            }
-        }
-        for (let y = ay - 1; y <= ay + h; y++)
-          for (let x = ax - 1; x <= ax + w; x++) if (inside(x, y)) used.add(y * land.w + x);
+        for (let y = at[1] - 1; y <= at[1] + h; y++)
+          for (let x = at[0] - 1; x <= at[0] + w; x++) used.add(y * land.w + x);
         out.push({
           name: `structure_${regionId}_${b.kind}_${out.length + 1}`,
           type: 'structure',
           at,
           w,
-          properties: [str('kind', b.kind), int('h', h), str('region', regionId)],
+          properties: [str('kind', b.kind), int('h', h)],
         });
-      }
+        void k;
+      });
     }
   }
   return out;
 }
 
+/** 道の タイル（草原の 上の 土の 道。歩ける。地面は 草原） */
 const ROAD_TILE = 163;
 
 /**
@@ -1115,12 +1109,20 @@ const ROAD_TILE = 163;
  */
 function roads(land: Land, defs: ObjDef[], col: number[], bg: number[]): void {
   const idxOf = (d: ObjDef) => land.idx([Math.floor(d.at[0]), Math.floor(d.at[1])]);
-  const passThrough = new Set(['regionGate', 'transition']);
+  const passThrough = new Set(['regionGate', 'transition', 'interPrefectureLink']);
   const blockers = new Set(defs.filter((d) => !passThrough.has(d.type) && d.type !== 'spawn').map(idxOf));
   const targets = defs.filter((d) =>
-    ['regionGate', 'transition', 'regionBoss', 'event', 'landmark', 'specialty', 'midboss', 'chest'].includes(
-      d.type,
-    ),
+    [
+      'regionGate',
+      'transition',
+      'interPrefectureLink',
+      'regionBoss',
+      'event',
+      'landmark',
+      'specialty',
+      'midboss',
+      'chest',
+    ].includes(d.type),
   );
   const town = defs.find((d) => d.name === 'to_town');
   if (!town) return;
@@ -1132,7 +1134,14 @@ function roads(land: Land, defs: ObjDef[], col: number[], bg: number[]): void {
       (j) => j >= 0 && j < n,
     );
   };
-  const road = new Set<number>([idxOf(town)]);
+  const townIndex = idxOf(town);
+  const townX = townIndex % land.w;
+  // 町の絵は3×3マス。道路は建物の下へ敷かず、入口の1マス下から伸ばす。
+  const townRoad =
+    [townIndex + land.w, townX < land.w - 1 ? townIndex + 1 : -1, townX > 0 ? townIndex - 1 : -1]
+      .filter((i) => i >= 0 && i < bg.length)
+      .find(open) ?? townIndex;
+  const road = new Set<number>([townRoad]);
   const goalOf = (d: ObjDef): Set<number> => {
     const i = idxOf(d);
     return passThrough.has(d.type) ? new Set([i]) : new Set(nb(i).filter(open));
@@ -1140,7 +1149,7 @@ function roads(land: Land, defs: ObjDef[], col: number[], bg: number[]): void {
   // ちかい じゅん（町からの 歩く きょり）
   const fromTown = new Int32Array(n).fill(-1);
   {
-    const q = [idxOf(town)];
+    const q = [townRoad];
     fromTown[q[0]!] = 0;
     for (let h = 0; h < q.length; h++)
       for (const j of nb(q[h]!))
@@ -1186,6 +1195,10 @@ function roads(land: Land, defs: ObjDef[], col: number[], bg: number[]): void {
     );
     if (side !== undefined) wide.add(side);
   }
+  // 入口中央だけを道につなぐ。左右の家の下には道路を敷かない。
+  wide.add(townIndex);
+  wide.delete(townIndex - 1);
+  wide.delete(townIndex + 1);
   for (const i of wide) if (col[i] !== BLOCK && land.walk(i)) bg[i] = ROAD_TILE;
 }
 
@@ -1327,7 +1340,7 @@ function enclaveMap(enc: EnclaveDef): object {
 const ROOM_W = 52;
 const ROOM_H = 40;
 
-/** 町・ダンジョンで使う タイル番号（src/scenes/overworld/fieldArt.ts と対応） */
+/** 町・ダンジョンで使う タイル番号（src/rendering/overworld/fieldArt.ts と対応） */
 const T = {
   grass: 1,
   stone: 5,
@@ -1362,7 +1375,7 @@ const T = {
   pool: 58,
   altar: 59,
   water: 3,
-  // ───── 県ごとの 町の テーマ（src/scenes/overworld/townTiles.ts・scripts/data/towns.ts） ─────
+  // ───── 県ごとの 町の テーマ（src/rendering/overworld/townTiles.ts・scripts/data/towns.ts） ─────
   snow: 61,
   snow2: 62,
   sand: 63,
@@ -1420,7 +1433,7 @@ const T = {
   dino: 133,
   /** 137〜146 の 2×5 */
   pagoda: 137,
-  // ───── 都会の 町（161〜220。src/scenes/overworld/townTiles.ts） ─────
+  // ───── 都会の 町（161〜220。src/rendering/overworld/townTiles.ts） ─────
   road: 161,
   roadLineV: 162,
   roadLineH: 163,
@@ -1461,7 +1474,7 @@ const T = {
   overpass: 220,
 } as const;
 
-/** ダンジョンの タイル（221〜269 は src/scenes/overworld/dungeonTiles.ts） */
+/** ダンジョンの タイル（221〜269 は src/rendering/overworld/dungeonTiles.ts） */
 const D = {
   limeFloor: 221,
   limeFloor2: 222,
@@ -1758,12 +1771,13 @@ const SECRETS = new Set(
     return existsSync(file) && !!(JSON.parse(readFileSync(file, 'utf8')) as { secret?: unknown }).secret;
   }).map((p) => p.id),
 );
-const DEFAULT_ROLES = ['shop', 'inn', 'smith', 'board'];
+const DEFAULT_ROLES = ['shop', 'inn', 'smith', 'barber', 'board'];
 /** 建物に入る お店（目立つ場所から順に）と、屋根の色 */
 const SHOP_ROOF: Record<string, number> = {
   shop: T.roofRed,
   inn: T.roofBlue,
   smith: T.roofBrown,
+  barber: T.roofGreen,
   dex: T.roofGreen,
   arena: T.roofRed,
 };
@@ -2633,6 +2647,30 @@ function dungeonMap(prefId: string, eventNames: string[], kind: 'dungeon' | 'sec
 const triggers = eventTriggers();
 for (const pref of PREFECTURES) {
   const events = (triggers.get(`${pref.id}-field`) ?? []).map((e) => e.name);
+  if (linksOnly) {
+    const filename = `${pref.id}-field.json`;
+    if (!only || pref.id === only)
+      await saveMap(
+        filename,
+        syncInterPrefectureMapFile(
+          pref.id,
+          `${MAPS_DIR}${filename}`,
+          TERRAIN[`${pref.id}-field`]!,
+          TERRAIN_DATA.interPrefectureBorders,
+        ),
+        true,
+      );
+    continue;
+  }
+  // にほんちずの名所一覧は fieldMap が確定した配置を使う。ファイルは書かず配置計算だけ行う。
+  if (worldMapOnly) {
+    fieldMap(pref, events);
+    continue;
+  }
+  if (townsOnly) {
+    await saveMap(`${pref.id}-town.json`, townMap(pref.id), true);
+    continue;
+  }
   if (only) {
     if (pref.id === only) await saveMap(`${pref.id}-field.json`, fieldMap(pref, events));
     continue;
@@ -2643,11 +2681,16 @@ for (const pref of PREFECTURES) {
   await saveMap(`${pref.id}-dungeon.json`, dungeonMap(pref.id, inDungeon));
   if (SECRETS.has(pref.id)) await saveMap(`${pref.id}-secret.json`, dungeonMap(pref.id, [], 'secret'));
 }
-if (!only) {
-  for (const enc of ENCLAVES) await saveMap(`${enc.enclaveId}.json`, enclaveMap(enc));
+if (!only && !townsOnly && !linksOnly) {
+  for (const enc of ENCLAVES) {
+    const map = enclaveMap(enc);
+    if (!worldMapOnly) await saveMap(`${enc.enclaveId}.json`, map);
+  }
   await saveWorldMap(worldMap(triggers));
 }
-for (const [prefId, spots] of Object.entries(only ? {} : LANDMARK_SPOTS))
+for (const [prefId, spots] of Object.entries(
+  only || worldMapOnly || townsOnly || linksOnly ? {} : LANDMARK_SPOTS,
+))
   for (const motifId of Object.keys(spots))
     if (!placedLandmarks.get(prefId)?.includes(motifId))
       console.warn(

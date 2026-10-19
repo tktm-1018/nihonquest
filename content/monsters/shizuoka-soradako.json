@@ -7,22 +7,50 @@
   "element": "kaze",
   "weakness": "tsuchi",
   "baseStats": {
-    "hp": 42,
-    "mp": 10,
-    "atk": 12,
-    "def": 6,
-    "spd": 12,
-    "wis": 6
+    "hp": 25.2,
+    "mp": 6,
+    "spd": 8.6,
+    "wis": 3.6,
+    "scienceAtk": 7.5,
+    "humanitiesAtk": 7.5,
+    "scienceDef": 4,
+    "humanitiesDef": 4
   },
   "growth": {
-    "hp": 4.3,
-    "mp": 1,
-    "atk": 1.4,
-    "def": 0.8,
-    "spd": 1.2,
-    "wis": 0.7
+    "base": {
+      "hp": 1.9,
+      "mp": 0.3,
+      "spd": 0.6,
+      "wis": 0.3,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.2,
+      "humanitiesDef": 0.2
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-abc-call"],
+  "skills": [
+    "sk-abc-call"
+  ],
   "drops": [
     {
       "itemId": "shizuoka-hamamatsu-takoito",
@@ -37,5 +65,5 @@
     "to": "shizuoka-kazekiri-dako",
     "item": "shizuoka-hamamatsu-takoito"
   },
-  "dexBlurb": "浜松[はままつ]まつりの 大[おお]だこの モンスター。浜松[はままつ]では、子[こ]どもが 生[う]まれた おいわいに 「初凧[はつだこ]」を あげる。"
+  "dexBlurb": "浜松[はままつ]まつりの 大[おお]だこの マナビモノ。浜松[はままつ]では、子[こ]どもが 生[う]まれた おいわいに 「初凧[はつだこ]」を あげる。"
 }

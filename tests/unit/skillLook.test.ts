@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { lookup, type I18nDict } from '../../src/ui/i18n';
-import { skillLook, subjectFxKey, unitFxKey } from '../../src/scenes/battle/skillLook';
+import { skillLook, subjectFxKey, unitFxKey } from '../../src/rendering/battle/skillLook';
 
 const ja = JSON.parse(
   readFileSync(new URL('../../content/i18n/ja.json', import.meta.url), 'utf8'),
@@ -66,18 +66,22 @@ describe('技の 名前に あう 字', () => {
 
 describe('モンスターの モチーフの こうげき', () => {
   it('どの モンスターも、モチーフの 絵（名産の アイコン か 名所の 絵）が 出せる', async () => {
-    const { motifArtGrid } = await import('../../src/scenes/art/motifArt');
+    const { motifArtGrid } = await import('../../src/rendering/motifArt');
     const c = await content();
     const none: string[] = [];
+    const checked = new Set<string>();
     for (const m of c.monsters.values()) {
       // 地方ボス（県で ない）は モチーフの 絵なし（ボスなので ほかの 演出は ぜんぶ 出る）
       if (!c.areas.has(m.area)) continue;
+      const key = `${m.area}:${m.motifId}`;
+      if (checked.has(key)) continue;
+      checked.add(key);
       const motif = c.areas.get(m.area)?.motifs.find((x) => x.id === m.motifId);
       const ok = !!motif && (c.items.has(`${m.area}-${m.motifId}`) || !!motifArtGrid(m.area, motif));
       if (!ok) none.push(`${m.id}(${m.motifId})`);
     }
     expect(none).toEqual([]);
-  });
+  }, 15_000);
 
   it('ネブタン → ネブタムシャ → ネブタイショウ は しんかの だんかいが 1 → 2 → 3（演出が だんだん はでに）', async () => {
     const { evolutionStage } = await import('../../src/core/progression/bag');

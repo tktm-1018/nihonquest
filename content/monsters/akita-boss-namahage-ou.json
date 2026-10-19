@@ -7,20 +7,46 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 288,
-    "mp": 46,
-    "atk": 17,
-    "def": 12,
-    "spd": 8,
-    "wis": 11
+    "hp": 172.8,
+    "mp": 27.6,
+    "spd": 5.7,
+    "wis": 6.6,
+    "scienceAtk": 10.6,
+    "humanitiesAtk": 10.6,
+    "scienceDef": 8,
+    "humanitiesDef": 8
   },
   "growth": {
-    "hp": 11.0,
-    "mp": 2.2,
-    "atk": 1.7,
-    "def": 1.3,
-    "spd": 0.9,
-    "wis": 1.1
+    "base": {
+      "hp": 5.9,
+      "mp": 1,
+      "spd": 0.3,
+      "wis": 0.6,
+      "scienceAtk": 0.8,
+      "humanitiesAtk": 0.8,
+      "scienceDef": 0.6,
+      "humanitiesDef": 0.6
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-namahage-otakebi",
@@ -53,7 +79,7 @@
   "gold": 234,
   "spriteKey": "mon.akita-boss-namahage-ou",
   "dexBlurb": "なまはげたちの 王[おう]さま。「なまけものは いねがー」と 大[おお]きな 声[こえ]で さけぶが、がんばる 子[こ]には やさしい。",
-  "fieldLine": "なまけものは いねがー！ きょうの べんきょうは、ちゃんと したか？",
+  "fieldLine": "わからぬことを こわがり、冬[ふゆ]じたくを あきらめる 者[もの]は いねがー！ 助[たす]けあう 覚悟[かくご]を 見[み]せてみろ！",
   "isBoss": true,
   "bossPhases": [
     {
@@ -63,7 +89,7 @@
         "sk-hono-no-uzu",
         "sk-yamadashi-tosshin"
       ],
-      "line": "なまけものは いねがー！ 大晦日[おおみそか]の 火[ひ]を うけてみろー！"
+      "line": "ひとりで できぬなら 声[こえ]を あげろ！ 助[たす]けを もとめる 勇気[ゆうき]も、わしが ためしてやる！"
     }
   ]
 }

@@ -1,5 +1,5 @@
 /*
- * メニュー（ずかん・どうぐ・そうび）。枠は チーム編成・にほんちずと同じ（.nq-wmap-box）で、上に タブを ならべる。
+ * メニュー（ずかん・どうぐ・そうび）。最初に大きなカテゴリーカードを並べ、選ぶと詳細へ進む。
  * 文字は 12 / 24 / 36 / 48px だけ。
  */
 .nq-menu-box {
@@ -23,13 +23,141 @@
   font-size: 24px;
   color: var(--nq-yellow);
 }
-.nq-menu-tabs {
+.nq-menu-key-hint {
+  color: var(--nq-silver);
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.nq-menu-home {
   display: grid;
-  /* 文字数の多い図鑑タブに幅を渡し、短い操作タブは詰める。 */
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 4px solid #263759;
+  background: #0b0e1c;
+  box-shadow: inset 0 0 0 4px #121b35;
+}
+.nq-menu-footer {
+  display: flex;
+  min-height: 48px;
   align-items: center;
-  gap: 3px;
-  flex: none;
+  gap: 12px;
+}
+.nq-menu-footer .nq-parent-open {
+  margin-left: auto;
+}
+.nq-menu-saved {
+  color: var(--nq-mint);
+  font-size: 16px;
+}
+.nq-menu-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nq-menu-subtabs {
+  display: flex;
+  gap: 8px;
+}
+.nq-menu-subtabs .nq-opt {
+  min-height: 48px;
+  padding: 4px 16px;
+}
+.nq-dex-regions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.nq-dex-regions .nq-opt {
+  min-height: 32px;
+  padding: 2px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.nq-menu-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  padding: 12px 8px;
+  color: #fff;
+  font: inherit;
+  text-align: center;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 64px auto;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 4px solid #4f5c7a;
+  background: linear-gradient(135deg, #1e2c4a, #10172d);
+  box-shadow: 0 6px 0 #070a13;
+}
+.nq-menu-card:hover,
+.nq-menu-card:focus-visible,
+.nq-menu-card.nq-focus {
+  color: var(--nq-yellow);
+  outline: 4px solid var(--nq-yellow);
+  outline-offset: -4px;
+  transform: translateY(-2px);
+}
+.nq-menu-card-roadmap,
+.nq-menu-card-mistakes {
+  background: linear-gradient(135deg, #314f82, #17223d);
+}
+.nq-menu-card-monsters,
+.nq-menu-card-specialties {
+  background: linear-gradient(135deg, #376247, #172d24);
+}
+.nq-menu-card-bag,
+.nq-menu-card-equip,
+.nq-menu-card-party {
+  background: linear-gradient(135deg, #74472f, #342118);
+}
+.nq-menu-card-look {
+  background: linear-gradient(135deg, #633f78, #2b1d39);
+}
+.nq-menu-card-icon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 3px solid rgba(255, 255, 255, 0.28);
+  background: rgba(8, 11, 24, 0.55);
+}
+.nq-menu-category-icon {
+  display: block;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+.nq-menu-card-label {
+  max-width: 100%;
+  font-size: 24px;
+  line-height: 30px;
+  overflow-wrap: anywhere;
+}
+.nq-menu-card-party .nq-menu-card-label {
+  font-size: 20px;
+  line-height: 24px;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+.nq-menu-card-count {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  min-width: 32px;
+  padding: 2px 6px;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: #e5484d;
 }
 
 /* 学習ロードマップ：単元を、草原を進む2Dゲームの道として並べる。 */
@@ -62,20 +190,74 @@
 .nq-roadmap-subject-all {
   --nq-roadmap-subject: var(--nq-yellow);
 }
+.nq-roadmap-grade-row,
+.nq-roadmap-term-row {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 3px solid #14192d;
+  background: #18223b;
+}
+.nq-roadmap-filter-title {
+  width: 112px;
+  flex: none;
+  color: var(--nq-yellow);
+  font-size: 16px;
+  white-space: nowrap;
+}
+.nq-roadmap-grades,
+.nq-roadmap-terms {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+.nq-roadmap-grade,
+.nq-roadmap-term {
+  min-width: 62px;
+  min-height: 40px;
+  padding: 2px 8px;
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid #62739b;
+  background: #263759;
+}
+.nq-roadmap-grade:hover,
+.nq-roadmap-grade:focus-visible,
+.nq-roadmap-term:hover,
+.nq-roadmap-term:focus-visible {
+  outline: 3px solid var(--nq-yellow);
+  outline-offset: 1px;
+}
+.nq-roadmap-filter-active {
+  color: #16213e;
+  border-color: #fff1a8;
+  background: var(--nq-yellow);
+  box-shadow: inset 0 -3px 0 #c9972e;
+}
+.nq-roadmap-term-note {
+  margin-left: auto;
+  color: #c8d5ef;
+  font-size: 14px;
+  white-space: nowrap;
+}
 .nq-roadmap-subjects {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 .nq-roadmap-subject {
-  min-height: 32px;
+  min-height: 44px;
   padding: 0 8px;
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-roadmap-score {
   margin-left: auto;
   color: var(--nq-yellow);
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-roadmap-overview {
   display: grid;
@@ -131,6 +313,19 @@
   color: var(--nq-yellow);
   font-size: 16px;
 }
+.nq-roadmap-summary-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nq-roadmap-summary-extra {
+  padding: 0 4px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  border: 2px solid #28586e;
+  background: #26778e;
+}
 .nq-roadmap-summary-meter {
   display: block;
   height: 12px;
@@ -148,8 +343,8 @@
   flex: none;
   overflow: hidden;
   color: #fff;
-  font-size: 12px;
-  line-height: 12px;
+  font-size: 16px;
+  line-height: 20px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -167,30 +362,18 @@
   background-size: 24px 24px;
   box-shadow: inset 0 0 0 4px #91d36e;
 }
-.nq-roadmap-water {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 132px;
-  height: 64px;
-  padding: 8px;
-  color: #d6f4ff;
-  font-size: 24px;
-  background: #318ac6;
-  border-left: 4px solid #e4d080;
-  border-top: 4px solid #e4d080;
-}
 .nq-roadmap-path {
   position: relative;
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(6, minmax(96px, 1fr));
-  grid-auto-rows: 112px;
+  grid-auto-rows: 136px;
   gap: 12px 8px;
   min-width: 720px;
 }
 .nq-roadmap-node {
   position: relative;
+  z-index: 1;
   display: flex;
   width: 104px;
   align-items: center;
@@ -198,18 +381,44 @@
   flex-direction: column;
   gap: 3px;
   color: #fff;
+  padding: 0;
+  font: inherit;
   text-align: center;
+  cursor: pointer;
+  background: none;
+  border: 0;
 }
-.nq-roadmap-node::before {
+.nq-roadmap-node:focus-visible .nq-roadmap-step {
+  outline: 4px solid #fff;
+  outline-offset: 2px;
+}
+.nq-roadmap-from-left::before,
+.nq-roadmap-from-right::before {
   content: '';
   position: absolute;
   z-index: -1;
   top: 27px;
-  left: -60px;
   width: 120px;
   height: 12px;
   background: #d8bd79;
   box-shadow: 0 4px 0 #9a7747;
+}
+.nq-roadmap-from-left::before {
+  left: -60px;
+}
+.nq-roadmap-from-right::before {
+  left: 44px;
+}
+.nq-roadmap-turn::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 27px;
+  left: 46px;
+  width: 12px;
+  height: 124px;
+  background: #d8bd79;
+  box-shadow: 4px 0 0 #9a7747;
 }
 .nq-roadmap-step {
   display: grid;
@@ -232,21 +441,44 @@
   animation: nq-wmap-blink 1s steps(2) infinite;
 }
 .nq-roadmap-locked {
-  opacity: 0.48;
+  opacity: 0.65;
   filter: grayscale(0.7);
+  cursor: not-allowed;
 }
 .nq-roadmap-node-name {
   display: -webkit-box;
-  min-height: 24px;
+  min-height: 40px;
   overflow: hidden;
-  font-size: 12px;
-  line-height: 12px;
+  font-size: 16px;
+  line-height: 20px;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+.nq-roadmap-node-tags {
+  display: flex;
+  min-height: 22px;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.nq-roadmap-node-term,
+.nq-roadmap-node-extra {
+  min-height: 18px;
+  padding: 0 4px;
+  color: #18223b;
+  font-size: 13px;
+  line-height: 18px;
+  border: 2px solid #513b2b;
+  background: #fff1b8;
+}
+.nq-roadmap-node-extra {
+  color: #fff;
+  border-color: #28586e;
+  background: #26778e;
+}
 .nq-roadmap-meter {
   width: 76px;
-  height: 8px;
+  height: 12px;
   overflow: hidden;
   background: #20253d;
   border: 2px solid #111525;
@@ -260,38 +492,33 @@
   position: static;
   text-align: center;
 }
-.nq-menu-tab {
-  position: relative;
-  justify-content: center;
-  min-width: 0;
-  overflow: hidden;
-  width: 100%;
-  gap: 2px;
-  padding: 0 2px;
-  font-size: 12px !important;
+.nq-menu-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--nq-cloud);
+  font-size: 18px;
   white-space: nowrap;
-}
-.nq-menu-tab > span {
-  min-width: 0;
-  overflow: hidden;
 }
 .nq-menu-detail-count {
   align-self: flex-start;
   padding: 0 6px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 20px;
   color: var(--nq-yellow);
   border: 2px solid var(--nq-slate);
   background: var(--nq-panel);
 }
 .nq-menu-close {
-  margin-left: auto;
+  white-space: nowrap;
+}
+.nq-menu-back {
   white-space: nowrap;
 }
 .nq-parent-open {
   margin-left: auto;
   padding: 0 12px;
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-box {
   width: 888px;
@@ -329,7 +556,15 @@
 }
 .nq-parent-primary {
   justify-content: center;
+  border-color: #f6e7c1;
+  background: #315c94;
+  color: #fff;
   font-size: 24px;
+}
+.nq-parent-primary:hover,
+.nq-parent-primary:focus-visible {
+  border-color: var(--nq-yellow);
+  background: #4276b8;
 }
 .nq-parent-error {
   color: #ff8a80;
@@ -350,19 +585,26 @@
 .nq-parent-card h3 {
   margin-bottom: 6px;
   color: var(--nq-yellow);
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px 12px;
 }
+.nq-parent-grid .nq-parent-check {
+  grid-column: 1 / -1;
+  white-space: nowrap;
+}
 .nq-parent-card label {
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-card select {
+  min-height: 36px;
   margin-left: 6px;
   font: inherit;
+  font-size: 16px;
+  line-height: 24px;
 }
 .nq-parent-sliders {
   display: grid;
@@ -378,11 +620,24 @@
 }
 .nq-parent-scroll {
   overflow: auto;
+  scrollbar-color: var(--nq-yellow) var(--nq-night);
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+}
+.nq-parent-scroll::-webkit-scrollbar {
+  width: 12px;
+}
+.nq-parent-scroll::-webkit-scrollbar-track {
+  background: var(--nq-night);
+}
+.nq-parent-scroll::-webkit-scrollbar-thumb {
+  border: 2px solid var(--nq-night);
+  background: var(--nq-yellow);
 }
 .nq-parent-time {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-mastery {
   display: grid;
@@ -390,7 +645,7 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 4px;
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-mastery > span {
   overflow: hidden;
@@ -398,7 +653,7 @@
   white-space: nowrap;
 }
 .nq-parent-mastery i {
-  height: 10px;
+  height: 14px;
   border: 2px solid #111;
   background: #303750;
 }
@@ -414,7 +669,7 @@
   margin: 6px 0;
   padding: 6px;
   border: 1px solid #65708f;
-  font-size: 11px;
+  font-size: 12px;
 }
 .nq-parent-concept strong,
 .nq-parent-concept small {
@@ -423,11 +678,14 @@
 .nq-parent-concept small {
   color: #c9d3ee;
 }
+.nq-parent-concept-description {
+  line-height: 18px;
+}
 .nq-parent-diagnosis {
   padding: 6px;
   border: 1px solid #9b7b45;
   background: #232031;
-  font-size: 11px;
+  font-size: 12px;
 }
 .nq-parent-diagnosis p {
   display: grid;
@@ -447,9 +705,9 @@
   gap: 6px;
 }
 .nq-parent-actions button {
-  min-height: 28px;
+  min-height: 44px;
   padding: 0 8px;
-  font-size: 12px;
+  font-size: 16px;
 }
 .nq-parent-save textarea {
   flex: 1;
@@ -457,13 +715,13 @@
   margin-top: 6px;
   resize: none;
   color: #dce7ff;
-  font: 12px/1.3 monospace;
+  font: 14px/1.4 monospace;
   border: 2px solid var(--nq-slate);
   background: #090c16;
 }
 .nq-parent-message {
   color: #9ff49c;
-  font-size: 12px;
+  font-size: 16px;
 }
 /* タブの下に、左の リストと 右の せつめい */
 .nq-menu-body {
@@ -477,17 +735,139 @@
   min-height: 0;
 }
 .nq-menu-body > .nq-wmap-left {
-  width: 376px;
+  width: 456px;
 }
 .nq-menu-body > .nq-wmap-right {
   padding-left: 4px;
 }
 .nq-menu-body .nq-party-list {
   padding-right: 4px;
+  scrollbar-color: var(--nq-yellow) var(--nq-night);
+  scrollbar-width: auto;
+}
+.nq-menu-body .nq-party-list::-webkit-scrollbar {
+  width: 12px;
+}
+.nq-menu-body .nq-party-list::-webkit-scrollbar-track {
+  background: var(--nq-night);
+  border-left: 2px solid var(--nq-slate);
+}
+.nq-menu-body .nq-party-list::-webkit-scrollbar-thumb {
+  background: var(--nq-yellow);
+  border: 2px solid var(--nq-night);
 }
 .nq-menu-body .nq-party-list > li {
   content-visibility: auto;
   contain-intrinsic-size: auto 52px;
+}
+.nq-menu-body .nq-dex-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 6px;
+  padding: 4px;
+}
+.nq-menu-body .nq-dex-grid > li {
+  contain-intrinsic-size: auto 144px;
+}
+.nq-menu-body .nq-dex-grid .nq-opt {
+  position: relative;
+  display: grid;
+  height: 144px;
+  padding: 5px 3px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 78px 40px 20px;
+  place-items: center;
+  overflow: hidden;
+  text-align: center;
+}
+.nq-menu-body .nq-dex-grid .nq-amap-cur {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+}
+.nq-menu-body .nq-dex-grid .nq-menu-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0;
+  object-fit: contain;
+}
+.nq-dex-bag-size {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+.nq-dex-name-row {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  height: 72px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.nq-dex-info .nq-party-head {
+  min-height: 148px;
+  align-items: start;
+}
+.nq-dex-info .nq-party-who {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  grid-template-rows: 72px 24px 36px;
+  gap: 4px;
+}
+.nq-dex-info .nq-dex-name-row .nq-party-name {
+  display: -webkit-box;
+  min-width: 0;
+  height: 72px;
+  overflow: hidden;
+  font-size: 24px;
+  line-height: 36px;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.nq-dex-info .nq-dex-bag-size {
+  margin-top: 6px;
+}
+.nq-dex-info .nq-menu-detail-count {
+  grid-row: 2;
+}
+.nq-dex-info .nq-party-sub {
+  min-height: 36px;
+  grid-row: 3;
+}
+.nq-dex-bag-cells {
+  display: grid;
+  gap: 3px;
+}
+.nq-dex-bag-1x1 .nq-dex-bag-cells {
+  grid-template-columns: 18px;
+}
+.nq-dex-bag-2x1 .nq-dex-bag-cells,
+.nq-dex-bag-2x2 .nq-dex-bag-cells {
+  grid-template-columns: repeat(2, 18px);
+}
+.nq-dex-bag-3x1 .nq-dex-bag-cells {
+  grid-template-columns: repeat(3, 18px);
+}
+.nq-dex-bag-cells i {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #000;
+  background: var(--nq-yellow);
+}
+.nq-menu-body .nq-dex-grid .nq-opt-name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.nq-menu-body .nq-dex-grid .nq-town-right {
+  font-size: 14px;
 }
 .nq-menu-body .nq-party-list .nq-opt {
   min-height: 52px;
@@ -497,18 +877,139 @@
 }
 .nq-menu-summary {
   margin: 0;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 24px;
   color: var(--nq-cloud);
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
+
+/* まちがいノート：問題文を主役にし、教科・学年を補助情報として揃える。 */
+.nq-mistake-menu {
+  gap: 8px;
+}
+.nq-menu-body.nq-mistake-menu > .nq-wmap-left {
+  width: 420px;
+}
+.nq-menu-body.nq-mistake-menu > .nq-wmap-right {
+  flex: 1;
+  padding-left: 0;
+}
+.nq-mistake-list {
+  gap: 6px;
+  padding: 4px 6px 4px 4px !important;
+  border: 3px solid #263759;
+  background: #0b0e1c;
+}
+.nq-menu-body .nq-mistake-list > li {
+  contain-intrinsic-size: auto 68px;
+}
+.nq-mistake-list .nq-opt {
+  position: relative;
+  display: grid;
+  min-height: 68px !important;
+  padding: 6px 10px 6px 34px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  border: 3px solid #425173;
+  background: #141b31;
+}
+.nq-mistake-list .nq-opt:hover,
+.nq-mistake-list .nq-opt:focus-visible,
+.nq-mistake-list .nq-opt.nq-focus {
+  color: #fff;
+  border-color: var(--nq-yellow);
+  outline: none;
+  background: #25385b;
+  box-shadow: inset 5px 0 0 var(--nq-yellow);
+  transform: none;
+}
+.nq-mistake-list .nq-amap-cur {
+  top: 22px;
+  left: 10px;
+}
+.nq-mistake-row-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.nq-mistake-list .nq-opt-name {
+  display: block;
+  overflow: hidden;
+  font-size: 18px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nq-mistake-row-meta {
+  color: #9dd8ff;
+  font-size: 14px;
+  line-height: 16px;
+}
+.nq-mistake-list .nq-town-right {
+  align-self: start;
+  margin: 0;
+  padding: 1px 5px;
+  color: #17223d;
+  font-size: 14px;
+  border: 2px solid #f4e5a5;
+  background: #f4e5a5;
+}
+.nq-mistake-info {
+  min-height: 0;
+  padding: 18px 20px;
+  gap: 12px;
+  border: 4px solid #52658d;
+  background: #10162a !important;
+  box-shadow: inset 0 0 0 4px #18233e;
+}
+.nq-mistake-info .nq-party-art {
+  display: none;
+}
+.nq-mistake-info .nq-party-head {
+  min-height: 0;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #344466;
+}
+.nq-mistake-info .nq-party-name {
+  display: block;
+  max-height: 96px;
+  overflow: auto;
+  color: #fff;
+  font-size: 24px;
+  line-height: 32px;
+}
+.nq-mistake-info .nq-party-sub {
+  width: max-content;
+  padding: 1px 6px;
+  color: #d6f1ff;
+  font-size: 16px;
+  background: #275478;
+}
+.nq-mistake-info .nq-town-lines {
+  gap: 6px;
+  font-size: 16px;
+  line-height: 22px;
+  color: #c8d5ef;
+}
+.nq-mistake-info .nq-party-blurb {
+  margin-top: 4px;
+  padding: 10px 12px;
+  color: #fff1a8;
+  font-size: 18px;
+  line-height: 26px;
+  border-left: 5px solid var(--nq-yellow);
+  background: #1a223a;
+}
 /* まだ であっていない・見つけていない：リストは うすく、絵は かげだけ */
 .nq-menu-unknown {
-  opacity: 0.55;
+  opacity: 0.7;
 }
 .nq-menu-unknown .nq-menu-icon,
 .nq-menu-unknown-art img {
   filter: brightness(0);
-  opacity: 0.6;
+  opacity: 0.75;
 }

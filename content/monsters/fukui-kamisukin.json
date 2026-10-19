@@ -7,20 +7,46 @@
   "element": "kaze",
   "weakness": "tsuchi",
   "baseStats": {
-    "hp": 37,
-    "mp": 11,
-    "atk": 10,
-    "def": 6,
-    "spd": 10,
-    "wis": 8
+    "hp": 22.2,
+    "mp": 6.6,
+    "spd": 7.1,
+    "wis": 4.8,
+    "scienceAtk": 6.3,
+    "humanitiesAtk": 6.3,
+    "scienceDef": 4,
+    "humanitiesDef": 4
   },
   "growth": {
-    "hp": 4.5,
-    "mp": 1,
-    "atk": 1.4,
-    "def": 0.8,
-    "spd": 1.2,
-    "wis": 0.9
+    "base": {
+      "hp": 2,
+      "mp": 0.3,
+      "spd": 0.6,
+      "wis": 0.4,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.2,
+      "humanitiesDef": 0.2
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
   "skills": [
     "sk-abc-call"
@@ -39,5 +65,5 @@
     "to": "fukui-kami-fubuki",
     "item": "fukui-kamisuki-washi"
   },
-  "dexBlurb": "すいたばかりの 越前和紙[えちぜんわし]が 風[かぜ]に のって まう モンスター。紙[かみ]は こうぞなどの 木[き]の かわから 作[つく]る。"
+  "dexBlurb": "すいたばかりの 越前和紙[えちぜんわし]が 風[かぜ]に のって まう マナビモノ。紙[かみ]は こうぞなどの 木[き]の かわから 作[つく]る。"
 }

@@ -7,22 +7,50 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 52,
-    "mp": 14,
-    "atk": 17,
-    "def": 9,
-    "spd": 9,
-    "wis": 9
+    "hp": 31.2,
+    "mp": 8.4,
+    "spd": 6.4,
+    "wis": 5.4,
+    "scienceAtk": 10.6,
+    "humanitiesAtk": 10.6,
+    "scienceDef": 6,
+    "humanitiesDef": 6
   },
   "growth": {
-    "hp": 4.8,
-    "mp": 1,
-    "atk": 1.5,
-    "def": 0.9,
-    "spd": 0.9,
-    "wis": 0.8
+    "base": {
+      "hp": 2.2,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.4,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.3,
+      "humanitiesDef": 0.3
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-hinoko"],
+  "skills": [
+    "sk-hinoko"
+  ],
   "drops": [
     {
       "itemId": "kumamoto-higotai-no-hana",
@@ -37,5 +65,5 @@
     "to": "kumamoto-dai-karudera",
     "item": "kumamoto-higotai-no-hana"
   },
-  "dexBlurb": "阿蘇山[あそさん]の 火口[かこう]が 頭[あたま]に なった モンスター。阿蘇山[あそさん]の まわりには「カルデラ」と よばれる とても 大[おお]きな くぼ地[ち]が 広[ひろ]がる。"
+  "dexBlurb": "阿蘇山[あそさん]の 火口[かこう]が 頭[あたま]に なった マナビモノ。阿蘇山[あそさん]の まわりには「カルデラ」と よばれる とても 大[おお]きな くぼ地[ち]が 広[ひろ]がる。"
 }

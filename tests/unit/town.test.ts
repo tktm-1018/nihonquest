@@ -13,6 +13,7 @@ import {
   knownRecipes,
   missionStatus,
   missionsFor,
+  sellItem,
   shopStock,
   villagerGift,
 } from '../../src/core/progression/town';
@@ -31,16 +32,25 @@ beforeAll(async () => {
   c = await content();
 });
 
-const fresh = (): GameState =>
-  createNewGame({ name: 'テスト', grade: 3, starterMonsterId: 'aomori-nebutan' }, 1000);
+const fresh = (): GameState => createNewGame({ name: 'テスト', grade: 3 }, 1000);
 
 describe('おみせ・やどや・かじや', () => {
   it('青森の おみせは content の品ぞろえ、無い県は その県の どうぐ', () => {
     expect(shopStock(c.areas.get('aomori')!, c.items).map((s) => s.itemId)).toContain('aomori-ringo');
     const akita = shopStock(c.areas.get('akita')!, c.items);
     expect(akita.length).toBeGreaterThan(0);
-    expect(akita.every((s) => s.itemId.startsWith('akita-'))).toBe(true);
+    expect(akita.every((s) => s.itemId.startsWith('akita-') || s.itemId === 'common-musubi-dama')).toBe(true);
     expect(akita.every((s) => s.price > 0)).toBe(true);
+  });
+
+  it('むすび玉は全ての町で、30Gの商品と1枠だけ並ぶ', () => {
+    const item = c.items.get('common-musubi-dama');
+    expect(item).toMatchObject({ kind: 'consumable', price: 30, use: { recruit: true } });
+    expect(item && sellItem({ ...fresh(), inventory: { [item.id]: 1 } }, item)?.player.gold).toBe(115);
+    for (const area of c.areas.values()) {
+      const entries = shopStock(area, c.items).filter((entry) => entry.itemId === 'common-musubi-dama');
+      expect(entries, area.id).toEqual([{ itemId: 'common-musubi-dama', price: 30 }]);
+    }
   });
 
   it('かうと おかねが へって どうぐが ふえる。たりなければ かえない', () => {
@@ -60,7 +70,30 @@ describe('おみせ・やどや・かじや', () => {
     expect(buyItem(gs, entry, -2)).toBeNull();
     expect(buyItem(gs, entry, 1.5)).toBeNull();
     expect(buyItem(gs, { ...entry, price: -15 }, 1)).toBeNull();
+    expect(buyItem(gs, { ...entry, price: 1.5 }, 2)).toBeNull();
     expect(gs.inventory['aomori-ringo']).toBeUndefined();
+  });
+
+  it('購入後の所持数が安全整数を超える場合は購入しない', () => {
+    gs = fresh();
+    gs.inventory['aomori-ringo'] = Number.MAX_SAFE_INTEGER;
+
+    expect(buyItem(gs, { itemId: 'aomori-ringo', price: 1 })).toBeNull();
+    expect(gs.inventory['aomori-ringo']).toBe(Number.MAX_SAFE_INTEGER);
+  });
+
+  it('売ると所持品が減って定価の半額を受け取り、キーアイテムは売れない', () => {
+    gs = fresh();
+    gs.inventory['aomori-ringo'] = 2;
+    const apple = c.items.get('aomori-ringo')!;
+    const sold = sellItem(gs, apple, 1, 2_000)!;
+    expect(sold.inventory[apple.id]).toBe(1);
+    expect(sold.player.gold).toBe(gs.player.gold + Math.max(1, Math.floor(apple.price! / 2)));
+    expect(sold.updatedAt).toBe(2_000);
+
+    const keyItem = { ...apple, id: 'test-key', kind: 'key' as const };
+    gs.inventory[keyItem.id] = 1;
+    expect(sellItem(gs, keyItem)).toBeNull();
   });
 
   it('やどやは HP ぜんかい＋もどり先。おかねが無くても とまれる', () => {
@@ -89,6 +122,36 @@ describe('おみせ・やどや・かじや', () => {
     const next = craft(rich, rc)!;
     expect(next.inventory[rc.result.itemId]).toBe(rc.result.n);
     expect(rc.materials.every((m) => next.inventory[m.itemId] === 0)).toBe(true);
+  });
+
+  it('同じ素材が複数行あるレシピは必要数を合算し、在庫を負数にしない', () => {
+    gs = fresh();
+    gs.inventory['aomori-ringo'] = 2;
+    const recipe = {
+      id: 'duplicate-material-test',
+      result: { itemId: 'aomori-ringo-no-yoroi', n: 1 },
+      materials: [
+        { itemId: 'aomori-ringo', n: 2 },
+        { itemId: 'aomori-ringo', n: 1 },
+      ],
+      gold: 0,
+      unlockedByDefault: true,
+    };
+
+    expect(canCraft(gs, recipe)).toBe(false);
+    expect(craft(gs, recipe)).toBeNull();
+    expect(gs.inventory['aomori-ringo']).toBe(2);
+  });
+
+  it('完成品の所持数が安全整数を超える場合は制作しない', () => {
+    gs = fresh();
+    const recipe = knownRecipes(c.recipes.values(), gs).find((r) => r.id === 'rc-nebuta-no-kabuto')!;
+    for (const material of recipe.materials) gs.inventory[material.itemId] = material.n;
+    gs.inventory[recipe.result.itemId] = Number.MAX_SAFE_INTEGER;
+
+    expect(canCraft(gs, recipe)).toBe(false);
+    expect(craft(gs, recipe)).toBeNull();
+    expect(gs.inventory[recipe.result.itemId]).toBe(Number.MAX_SAFE_INTEGER);
   });
 });
 

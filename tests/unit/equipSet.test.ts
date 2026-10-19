@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { content } from './helpers';
 import { partyFromGameState } from '../../src/core/battle/setup';
+import { equipPosition } from '../../src/core/progression/bag';
 import { equipSetProgress } from '../../src/core/progression/inventory';
 import { createNewGame } from '../../src/core/state/newGame';
 import { equipmentMenu } from '../../src/scenes/overworld/menuEntries';
@@ -8,10 +9,19 @@ import { setDictionary, t } from '../../src/ui/i18n';
 import ja from '../../content/i18n/ja.json';
 
 // アイコンは canvas で 描くので、この テストでは いらない
-vi.mock('../../src/scenes/art/itemIcons', () => ({ itemIconUrl: () => '' }));
+vi.mock('../../src/rendering/itemIcons', () => ({ itemIconUrl: () => '' }));
 
-const fresh = () => createNewGame({ name: 'テスト', grade: 3, starterMonsterId: 'aomori-nebutan' }, 1000);
-const stats = { hp: 40, mp: 10, atk: 1, def: 1, spd: 1, wis: 1 };
+const fresh = () => createNewGame({ name: 'テスト', grade: 3 }, 1000);
+const stats = {
+  hp: 40,
+  mp: 10,
+  scienceAtk: 1,
+  humanitiesAtk: 1,
+  scienceDef: 1,
+  humanitiesDef: 1,
+  spd: 1,
+  wis: 1,
+};
 
 describe('セット そうび', () => {
   beforeAll(() => setDictionary(ja));
@@ -44,9 +54,17 @@ describe('セット そうび', () => {
     const c = await content();
     const set = c.sets.get('set-aomori')!;
     const gs = fresh();
-    for (const id of set.pieces.slice(1)) gs.player.equipment[c.items.get(id)!.kind as 'weapon'] = id;
+    // そうびは 東北を クリアしてから つかえる
+    gs.progress.islandsCleared.push('tohoku');
+    // バッグの きまった マスに おいた そうびだけが きく
+    const wear = (id: string) => {
+      const kind = c.items.get(id)!.kind as 'weapon';
+      gs.player.equipment[kind] = id;
+      gs.party.bagPlacements[`eq:${kind}`] = { ...equipPosition(gs, kind), rotated: false };
+    };
+    set.pieces.slice(1).forEach(wear);
     const four = partyFromGameState(gs, c).hero;
-    gs.player.equipment.weapon = set.pieces[0]!;
+    wear(set.pieces[0]!);
     const five = partyFromGameState(gs, c).hero;
     const weaponWis = c.items.get(set.pieces[0]!)!.stats?.wis ?? 0;
     expect(five.stats.wis - four.stats.wis).toBe(weaponWis + 2);

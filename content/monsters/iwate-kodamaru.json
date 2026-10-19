@@ -1,0 +1,60 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-kodamaru",
+  "name": "コダマル",
+  "area": "iwate",
+  "motifId": "chusonji",
+  "element": "mori",
+  "weakness": "hino",
+  "baseStats": {
+    "hp": 22.8,
+    "mp": 4.2,
+    "spd": 3.6,
+    "wis": 3.6,
+    "scienceAtk": 4.4,
+    "humanitiesAtk": 4.4,
+    "scienceDef": 5.3,
+    "humanitiesDef": 5.3
+  },
+  "growth": {
+    "base": {
+      "hp": 2.3,
+      "mp": 0.3,
+      "spd": 0.3,
+      "wis": 0.4,
+      "scienceAtk": 0.4,
+      "humanitiesAtk": 0.4,
+      "scienceDef": 0.6,
+      "humanitiesDef": 0.6
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
+  },
+  "skills": [
+    "sk-happa-tobashi"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 0,
+  "gold": 0,
+  "spriteKey": "mon.iwate-kodamaru",
+  "dexBlurb": "古[ふる]い 森[もり]の 祈[いの]りから 生[う]まれた、めずらしい 守[まも]り手[て]。木々[きぎ]の 小[ちい]さな 声[こえ]を きく。"
+}

@@ -7,22 +7,50 @@
   "element": "hino",
   "weakness": "mizu",
   "baseStats": {
-    "hp": 36,
-    "mp": 8,
-    "atk": 11,
-    "def": 5,
-    "spd": 8,
-    "wis": 5
+    "hp": 21.6,
+    "mp": 4.8,
+    "spd": 5.7,
+    "wis": 3,
+    "scienceAtk": 6.9,
+    "humanitiesAtk": 6.9,
+    "scienceDef": 3.3,
+    "humanitiesDef": 3.3
   },
   "growth": {
-    "hp": 5,
-    "mp": 1,
-    "atk": 1.5,
-    "def": 0.8,
-    "spd": 1,
-    "wis": 0.6
+    "base": {
+      "hp": 2.3,
+      "mp": 0.3,
+      "spd": 0.4,
+      "wis": 0.3,
+      "scienceAtk": 0.6,
+      "humanitiesAtk": 0.6,
+      "scienceDef": 0.2,
+      "humanitiesDef": 0.2
+    },
+    "every5": {
+      "hp": 2,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 0
+    },
+    "every10": {
+      "hp": 3,
+      "mp": 1,
+      "scienceAtk": 1,
+      "humanitiesAtk": 1,
+      "scienceDef": 1,
+      "humanitiesDef": 1,
+      "spd": 1,
+      "wis": 1
+    }
   },
-  "skills": ["sk-hinoko"],
+  "skills": [
+    "sk-hinoko"
+  ],
   "drops": [
     {
       "itemId": "akita-hinaijidori-no-dashi",
@@ -37,5 +65,5 @@
     "to": "akita-kiritanpo-nabe",
     "item": "akita-hinaijidori-no-dashi"
   },
-  "dexBlurb": "きりたんぽに 手足[てあし]が 生[は]えた モンスター。きりたんぽは つぶした ごはんを 杉[すぎ]の ぼうに まいて やいた、秋田[あきた]の 食[た]べもの。"
+  "dexBlurb": "きりたんぽに 手足[てあし]が 生[は]えた マナビモノ。きりたんぽは つぶした ごはんを 杉[すぎ]の ぼうに まいて やいた、秋田[あきた]の 食[た]べもの。"
 }
