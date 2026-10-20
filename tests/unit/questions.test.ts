@@ -72,6 +72,16 @@ describe('QuestionBank', () => {
     expect(questions.every((question) => question.grade === 1)).toBe(true);
   });
 
+  it('英語は小学3年生以降の学年別 bundle だけに含む', async () => {
+    const loadBundle = (grade: number) =>
+      read(`questions-g${grade}-bundle.json`) as Promise<Record<string, { subject: string }[]>>;
+    const subjects = async (grade: number) => Object.values(await loadBundle(grade)).flatMap((file) => file);
+
+    expect((await subjects(1)).some((question) => question.subject === 'eigo')).toBe(false);
+    expect((await subjects(2)).some((question) => question.subject === 'eigo')).toBe(false);
+    expect((await subjects(3)).some((question) => question.subject === 'eigo')).toBe(true);
+  });
+
   it('式も図もない旧入力問題を出題候補へ入れない', async () => {
     const broken = q('broken.0001', {
       type: 'text-input',
