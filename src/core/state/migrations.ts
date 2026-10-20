@@ -3,7 +3,7 @@
  * 仕様変更でスキーマを変えるときは、必ずここに v(n) → v(n+1) を足す。子どものセーブを壊さない。
  */
 import { SCHEMA_VERSION, gameStateSchema, type GameState } from './schema';
-import { STARTER_EQUIPMENT_ID } from './starter';
+import { STARTER_EQUIPMENT_ID, STARTER_SKILL_IDS } from './starter';
 import { addProgressValue } from '../../shared/safeInteger';
 
 type Migration = (s: Record<string, unknown>) => Record<string, unknown>;
@@ -148,6 +148,14 @@ const migrations: Record<number, Migration> = {
         mp: Math.max(0, Math.min(mp, Math.round(((player.mp as number) / oldMaxMp) * mp))),
       },
     };
+  },
+  10: (s) => {
+    const player = (s.player ?? {}) as Record<string, unknown>;
+    const skills = Array.isArray(player.skills) ? [...player.skills] : [];
+    for (const skillId of STARTER_SKILL_IDS) {
+      if (!skills.includes(skillId)) skills.push(skillId);
+    }
+    return { ...s, schemaVersion: 11, player: { ...player, skills } };
   },
 };
 
