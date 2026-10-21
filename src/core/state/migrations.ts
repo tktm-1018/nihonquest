@@ -157,6 +157,14 @@ const migrations: Record<number, Migration> = {
     }
     return { ...s, schemaVersion: 11, player: { ...player, skills } };
   },
+  11: (s) => {
+    const player = (s.player ?? {}) as Record<string, unknown>;
+    const skills = Array.isArray(player.skills) ? [...player.skills] : [];
+    for (const skillId of STARTER_SKILL_IDS) {
+      if (!skills.includes(skillId)) skills.push(skillId);
+    }
+    return { ...s, schemaVersion: 12, player: { ...player, skills } };
+  },
 };
 
 export interface MigrateResult {

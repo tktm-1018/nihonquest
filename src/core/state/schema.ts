@@ -13,7 +13,7 @@ import {
 } from '../content/schemas';
 import { attemptEventSchema, conceptStateSchema } from '../learning/state';
 
-export const SCHEMA_VERSION = 11;
+export const SCHEMA_VERSION = 12;
 
 export const equipmentSchema = z
   .object({ weapon: idSchema, head: idSchema, chest: idSchema, legs: idSchema, feet: idSchema })

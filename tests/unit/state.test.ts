@@ -49,7 +49,13 @@ describe('GameState', () => {
     const state = fresh();
     expect(gameStateSchema.safeParse(state).success).toBe(true);
     expect(state.inventory['common-renshu-no-bou']).toBe(1);
-    expect(state.player.skills).toEqual(['sk-tashizan-giri', 'sk-hono-no-mai']);
+    expect(state.player.skills).toEqual([
+      'sk-tashizan-giri',
+      'sk-hono-no-mai',
+      'sk-kanji-giri',
+      'sk-bun-no-tsubasa',
+      'sk-kotoba-asobi',
+    ]);
   });
   it('安全整数を超える進行値をセーブデータとして受け入れない', () => {
     const state = fresh();
@@ -152,8 +158,27 @@ describe('GameState', () => {
 
     const migrated = migrate(legacy).state;
 
-    expect(migrated.player.skills).toEqual(['sk-tashizan-giri', 'sk-hono-no-mai']);
-    expect(migrate(migrated).state.player.skills).toEqual(['sk-tashizan-giri', 'sk-hono-no-mai']);
+    expect(migrated.player.skills).toEqual([
+      'sk-tashizan-giri',
+      'sk-hono-no-mai',
+      'sk-kanji-giri',
+      'sk-bun-no-tsubasa',
+      'sk-kotoba-asobi',
+    ]);
+    expect(migrate(migrated).state.player.skills).toEqual(migrated.player.skills);
+  });
+  it('v11 のセーブに分けた国語技を追加する', () => {
+    const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
+    legacy.schemaVersion = 11;
+    legacy.player.skills = ['sk-tashizan-giri', 'sk-hono-no-mai'];
+
+    expect(migrate(legacy).state.player.skills).toEqual([
+      'sk-tashizan-giri',
+      'sk-hono-no-mai',
+      'sk-kanji-giri',
+      'sk-bun-no-tsubasa',
+      'sk-kotoba-asobi',
+    ]);
   });
   it('v2 の学習データへ履歴と概念状態を追加して移行する', () => {
     const current = fresh();
