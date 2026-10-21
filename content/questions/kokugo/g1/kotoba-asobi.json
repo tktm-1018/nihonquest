@@ -29,7 +29,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "しりとりは前のことばのさいごの音からはじめます。「りんご」→「ご」→「ごりら」。"
+    "explanation": "しりとりは、まえの ことばの さいごの おとから はじめます。「りんご」→「ご」→「ごりら」。"
   },
   {
     "id": "kokugo.g1.kotoba-asobi.0002",
@@ -131,7 +131,7 @@
     "grade": 1,
     "unit": "kokugo.g1.kotoba-asobi",
     "payload": {
-      "prompt": "次の中で、たべものはどれ？",
+      "prompt": "つぎの なかで、たべものは どれ？",
       "choices": [
         {
           "id": "a",

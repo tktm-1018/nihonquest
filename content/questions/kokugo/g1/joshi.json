@@ -7,7 +7,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「学校___行く。」の空欄に入る正しい助詞はどれ？",
+      "prompt": "「がっこう___いく。」の ___に はいる ただしい ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -29,7 +29,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "向かう方向を表すときは「へ（え）」を使います。"
+    "explanation": "むかう ほうこうを あらわすときは「へ（え）」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0002",
@@ -38,7 +38,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「私は小学生です」の「は」の正しい発音（読み）はどれ？",
+      "prompt": "「わたしは しょうがくせいです」の「は」は、どう よみますか？",
       "choices": [
         {
           "id": "a",
@@ -60,7 +60,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "助詞の「は」は「わ」と発音します。"
+    "explanation": "ことばを つなぐ「は」は「わ」と よみます。"
   },
   {
     "id": "kokugo.g1.joshi.0003",
@@ -69,7 +69,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「ぼく___いぬが好きだ。」の空欄に入る助詞はどれ？",
+      "prompt": "「ぼく___いぬが すきだ。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -100,7 +100,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「えんぴつ___消しゴムを買う。」の空欄に入る、並べる助詞はどれ？",
+      "prompt": "「えんぴつ___けしゴムを かう。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -122,7 +122,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "物を並べるときは「と」を使います。"
+    "explanation": "ものを ならべるときは「と」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0005",
@@ -131,7 +131,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「おとうと___走る。」の空欄に入る、主語を表す助詞はどれ？",
+      "prompt": "「おとうと___はしる。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -153,7 +153,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "「〜が走る」のように「が」を使います。"
+    "explanation": "「〜が はしる」のように「が」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0006",
@@ -162,7 +162,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「こうえん___あそぶ。」の空欄に入る、場所を表す助詞はどれ？",
+      "prompt": "「こうえん___あそぶ。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -184,7 +184,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "動作をする場所を表すときは「で」を使います。"
+    "explanation": "うごきを する ばしょには「で」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0007",
@@ -193,7 +193,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「ともだち___あう。」の空欄に入る助詞はどれ？",
+      "prompt": "「ともだち___あう。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -215,7 +215,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "「会う」あいてを表すときは「に」を使います。"
+    "explanation": "あう あいてには「に」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0008",
@@ -224,7 +224,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「あさ7じ___おきる。」の空欄に入る、時こくを表す助詞はどれ？",
+      "prompt": "「あさ7じ___おきる。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -246,7 +246,7 @@
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "「〜じに」のように、時こくには「に」を使います。"
+    "explanation": "「〜じに」のように、じこくには「に」を つかいます。"
   },
   {
     "id": "kokugo.g1.joshi.0009",
@@ -255,7 +255,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "助詞の「へ」（学校へ行く、の「へ」）は、どう発音しますか？",
+      "prompt": "「がっこうへ いく」の「へ」は、どう よみますか？",
       "choices": [
         {
           "id": "a",
@@ -277,7 +277,7 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "向かう方向を表す助詞の「へ」は「え」と発音します。"
+    "explanation": "むかう ほうこうを あらわす「へ」は「え」と よみます。"
   },
   {
     "id": "kokugo.g1.joshi.0010",
@@ -286,7 +286,7 @@
     "grade": 1,
     "unit": "kokugo.g1.joshi",
     "payload": {
-      "prompt": "「あめ___ふる。」の空欄に入る、主語を表す助詞はどれ？",
+      "prompt": "「あめ___ふる。」の ___に はいる ことばは どれ？",
       "choices": [
         {
           "id": "a",
@@ -308,6 +308,6 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "「あめがふる」のように、主語には「が」を使います。"
+    "explanation": "「あめが ふる」のように「が」を つかいます。"
   }
 ]

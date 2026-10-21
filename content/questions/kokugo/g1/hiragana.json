@@ -10,19 +10,19 @@
       "choices": [
         {
           "id": "a",
-          "text": "1画"
+          "text": "1かく"
         },
         {
           "id": "b",
-          "text": "2画"
+          "text": "2かく"
         },
         {
           "id": "c",
-          "text": "3画"
+          "text": "3かく"
         },
         {
           "id": "d",
-          "text": "4画"
+          "text": "4かく"
         }
       ],
       "answer": "b",
@@ -37,7 +37,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "ひらがな「を」を使う正しい文はどれ？",
+      "prompt": "ひらがな「を」を つかう ただしい ぶんは どれ？",
       "choices": [
         {
           "id": "a",
@@ -99,7 +99,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「か」に点々（゛）をつけると、どの音になりますか？",
+      "prompt": "「か」に てんてん（゛）を つけると、どの おとに なりますか？",
       "choices": [
         {
           "id": "a",
@@ -130,7 +130,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「ぱ・ぴ・ぷ・ぺ・ぽ」につく、丸い記号（゜）の名前はどれ？",
+      "prompt": "「ぱ・ぴ・ぷ・ぺ・ぽ」につく、まるい しるし（゜）の なまえは どれ？",
       "choices": [
         {
           "id": "a",
@@ -161,7 +161,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「おねえさん」を正しく書いたものはどれ？",
+      "prompt": "「おねえさん」を ただしく かいたものは どれ？",
       "choices": [
         {
           "id": "a",
@@ -192,7 +192,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "ひらがなの「わ」と形がにていて、まちがえやすい文字はどれ？",
+      "prompt": "ひらがなの「わ」と かたちが にていて、まちがえやすい もじは どれ？",
       "choices": [
         {
           "id": "a",
@@ -223,7 +223,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「がっこう」を正しく書いたものはどれ？",
+      "prompt": "「がっこう」を ただしく かいたものは どれ？",
       "choices": [
         {
           "id": "a",
@@ -254,7 +254,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「きょう（今日）」を正しく書いたものはどれ？",
+      "prompt": "「きょう」を ただしく かいたものは どれ？",
       "choices": [
         {
           "id": "a",
@@ -285,7 +285,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「あいうえお」で、「う」の次にくる文字はどれ？",
+      "prompt": "「あいうえお」で、「う」の つぎに くる もじは どれ？",
       "choices": [
         {
           "id": "a",
@@ -307,7 +307,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "あ→い→う→え→おの順なので、「う」の次は「え」です。"
+    "explanation": "あ→い→う→え→おの じゅんなので、「う」の つぎは「え」です。"
   },
   {
     "id": "kokugo.g1.hiragana.0019",
@@ -316,7 +316,7 @@
     "grade": 1,
     "unit": "kokugo.g1.hiragana",
     "payload": {
-      "prompt": "「ほんを よむ。」のように、ことばのあとにつけるとき、『お』と同じ音で書くひらがなはどれ？",
+      "prompt": "「ほんを よむ。」のように、ことばの あとに つけるとき、『お』と おなじ おとで かく ひらがなは どれ？",
       "choices": [
         {
           "id": "a",
@@ -338,6 +338,6 @@
       "answer": "b",
       "shuffle": true
     },
-    "explanation": "音は『お』でも、ことばのあとにつくときは「を」と書きます。"
+    "explanation": "おとは『お』でも、ことばの あとに つくときは「を」と かきます。"
   }
 ]
