@@ -557,7 +557,8 @@ function heroCommand(
         ev.push({ t: 'fleeAttempt', success: false, chance: 0 });
         return false;
       }
-      const chance = fleeChance(hero, s.enemy);
+      // 開発者モードの ボス戦は かならず にげられる
+      const chance = s.isBossBattle ? 1 : fleeChance(hero, s.enemy);
       const success = rng.chance(chance);
       ev.push({ t: 'fleeAttempt', success, chance });
       if (success) {

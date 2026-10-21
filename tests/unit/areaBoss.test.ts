@@ -102,6 +102,7 @@ describe('開発者モード', () => {
     const dev = act(createBattle({ ...opts, canFleeBoss: true }, D), { kind: 'flee' }, D);
     expect(normal.events.some((e) => e.t === 'fleeAttempt' && !e.success && e.chance === 0)).toBe(true);
     expect(normal.state.outcome).toBe('ongoing');
-    expect(dev.events.some((e) => e.t === 'fleeAttempt' && e.chance > 0)).toBe(true);
+    expect(dev.events.some((e) => e.t === 'fleeAttempt' && e.success && e.chance === 1)).toBe(true);
+    expect(dev.state.outcome).toBe('fled');
   });
 });

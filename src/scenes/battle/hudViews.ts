@@ -169,7 +169,7 @@ export function buildCommandOptions(input: {
     },
     input.canRecruit
       ? { kind: 'recruit', disabled: false, glow: true }
-      : { kind: 'flee', disabled: state.isBossBattle },
+      : { kind: 'flee', disabled: state.isBossBattle && !state.canFleeBoss },
   ];
   return list;
 }
