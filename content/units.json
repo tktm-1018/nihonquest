@@ -13,7 +13,11 @@
     },
     "curriculumCodes": ["8250213121100000", "8250213121200000", "8250213121300000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.hikizan",
@@ -29,7 +33,11 @@
     },
     "curriculumCodes": ["8250213121100000", "8250213121200000", "8250213121300000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.kazu-100",
@@ -46,7 +54,11 @@
     },
     "curriculumCodes": ["8250213111100000", "8250213111200000", "8250213111300000", "8250213111500000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.kazu-20",
@@ -168,7 +180,11 @@
     },
     "curriculumCodes": ["8250213211100000", "8250213211200000", "8250213211300000", "8250213212100000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.kurabekata",
@@ -185,7 +201,11 @@
     },
     "curriculumCodes": ["8250213311100000", "8250213311200000", "8250213312100000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.data",
@@ -202,7 +222,11 @@
     },
     "curriculumCodes": ["8250213411100000", "8250213412100000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.kuku",
@@ -212,7 +236,11 @@
     "courseKind": "required-subject",
     "curriculumCodes": ["8250223131100000", "8250223131200000", "8250223131300000", "8250223132100000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.tables-graphs",
@@ -229,7 +257,11 @@
     },
     "curriculumCodes": ["8250223411100000", "8250223412100000"],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.column-add-subtract",
@@ -246,7 +278,11 @@
     },
     "curriculumCodes": ["8250223121100000", "8250223121400000", "8250223122100000"],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.nagasa",
@@ -263,7 +299,11 @@
     },
     "curriculumCodes": ["8250223311100000", "8250223311200000", "8250223312100000"],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.numbers-to-1000",
@@ -286,7 +326,11 @@
       "8250223112100000"
     ],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.kasa",
@@ -303,7 +347,11 @@
     },
     "curriculumCodes": ["8250223311100000", "8250223311200000", "8250223312100000"],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g2.jikan",
@@ -320,7 +368,11 @@
     },
     "curriculumCodes": ["8250223321100000", "8250223322100000"],
     "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-sansu-g2", "kyoiku-shuppan-r6-sansu-g2"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-12", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g3.warizan",
@@ -348,7 +400,31 @@
     },
     "curriculumCodes": ["82102A3113000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
+  },
+  {
+    "id": "kokugo.g1.katakana",
+    "name": "カタカナ",
+    "subject": "kokugo",
+    "grade": 1,
+    "courseKind": "required-subject",
+    "placement": {
+      "terms": [1, 2],
+      "status": "reference",
+      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+      "note": "平仮名[ひらがな]の学習[がくしゅう]後[ご]から段階的[だんかいてき]に扱[あつか]う。"
+    },
+    "curriculumCodes": ["82102A3113000000"],
+    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
+    }
   },
   {
     "id": "kokugo.g1.kanji",
@@ -364,7 +440,11 @@
     },
     "curriculumCodes": ["82102A3114000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "kokugo.g1.joshi",
@@ -380,7 +460,11 @@
     },
     "curriculumCodes": ["82102A3113000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "kokugo.g1.bun-no-kimari",
@@ -396,7 +480,11 @@
     },
     "curriculumCodes": ["82102A3113000000", "82102A3116000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "kokugo.g1.kotoba-asobi",
@@ -412,7 +500,11 @@
     },
     "curriculumCodes": ["82102A3112000000", "82102A3132000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "kokugo.g2.reading-sequence",
@@ -474,6 +566,66 @@
     "review": {
       "status": "source-checked",
       "reviewedAt": "2026-10-12",
+      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
+    }
+  },
+  {
+    "id": "kokugo.g1.dokkai",
+    "name": "みじかい文[ぶん]を読[よ]む",
+    "subject": "kokugo",
+    "grade": 1,
+    "courseKind": "required-subject",
+    "placement": {
+      "terms": [1, 2, 3],
+      "status": "reference",
+      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+      "note": "短[みじか]い文章[ぶんしょう]から年間[ねんかん]を通[とお]して段階的[だんかいてき]に扱[あつか]う。"
+    },
+    "curriculumCodes": ["82102A3231100000", "82102A3231200000"],
+    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
+    }
+  },
+  {
+    "id": "kokugo.g1.hanasu-kiku",
+    "name": "話[はな]す・聞[き]く",
+    "subject": "kokugo",
+    "grade": 1,
+    "courseKind": "required-subject",
+    "placement": {
+      "terms": [1, 2, 3],
+      "status": "reference",
+      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+      "note": "学校[がっこう]生活[せいかつ]の対話[たいわ]活動[かつどう]で年間[ねんかん]を通[とお]して扱[あつか]う。"
+    },
+    "curriculumCodes": ["82102A3211100000", "82102A3211400000", "82102A3211500000"],
+    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
+    }
+  },
+  {
+    "id": "kokugo.g1.tsutaeru",
+    "name": "じゅんじょよく伝[つた]える",
+    "subject": "kokugo",
+    "grade": 1,
+    "courseKind": "required-subject",
+    "placement": {
+      "terms": [1, 2, 3],
+      "status": "reference",
+      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+      "note": "話[はな]すこと・書[か]くことの活動[かつどう]で年間[ねんかん]を通[とお]して扱[あつか]う。"
+    },
+    "curriculumCodes": ["82102A3211200000", "82102A3221200000", "82102A3221400000"],
+    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
       "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
     }
   },
@@ -554,7 +706,11 @@
     },
     "curriculumCodes": ["82702A3220000000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "seikatsu.g2.spring",
@@ -3567,7 +3723,11 @@
     },
     "curriculumCodes": ["8250213321100000", "8250213322100000"],
     "sourceIds": ["mext-82v12"],
-    "review": { "status": "source-checked", "reviewedAt": "2026-10-10", "reviewer": "Codex（一次資料照合）" }
+    "review": {
+      "status": "source-checked",
+      "reviewedAt": "2026-10-10",
+      "reviewer": "Codex（一次資料照合）"
+    }
   },
   {
     "id": "sansu.g1.legacy-math-1-9",
@@ -5675,6 +5835,30 @@
     }
   },
   {
+    "id": "seikatsu.g1.hokkaido-shizen",
+    "name": "北海道[ほっかいどう]のしぜんときせつ",
+    "subject": "seikatsu",
+    "grade": 1
+  },
+  {
+    "id": "seikatsu.g2.hokkaido-kurashi",
+    "name": "北海道[ほっかいどう]のくらしと生[い]きもの",
+    "subject": "seikatsu",
+    "grade": 2
+  },
+  {
+    "id": "seikatsu.g1.kanto-shizen",
+    "name": "関東[かんとう]のしぜんとあそび",
+    "subject": "seikatsu",
+    "grade": 1
+  },
+  {
+    "id": "seikatsu.g2.kanto-machi",
+    "name": "関東[かんとう]のまちとくらし",
+    "subject": "seikatsu",
+    "grade": 2
+  },
+  {
     "id": "shakai.g3.legacy-cur-1403-01",
     "name": "身近[みぢか]な地域[ちいき]や市区[しく]町村[ちょうそん]の様子[ようす]",
     "subject": "shakai",
@@ -6363,86 +6547,6 @@
     }
   },
   {
-    "id": "kokugo.g1.katakana",
-    "name": "カタカナ",
-    "subject": "kokugo",
-    "grade": 1,
-    "courseKind": "required-subject",
-    "placement": {
-      "terms": [1, 2],
-      "status": "reference",
-      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-      "note": "平仮名[ひらがな]の学習[がくしゅう]後[ご]から段階的[だんかいてき]に扱[あつか]う。"
-    },
-    "curriculumCodes": ["82102A3113000000"],
-    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-    "review": {
-      "status": "source-checked",
-      "reviewedAt": "2026-10-10",
-      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
-    }
-  },
-  {
-    "id": "kokugo.g1.dokkai",
-    "name": "みじかい文[ぶん]を読[よ]む",
-    "subject": "kokugo",
-    "grade": 1,
-    "courseKind": "required-subject",
-    "placement": {
-      "terms": [1, 2, 3],
-      "status": "reference",
-      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-      "note": "短[みじか]い文章[ぶんしょう]から年間[ねんかん]を通[とお]して段階的[だんかいてき]に扱[あつか]う。"
-    },
-    "curriculumCodes": ["82102A3231100000", "82102A3231200000"],
-    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-    "review": {
-      "status": "source-checked",
-      "reviewedAt": "2026-10-10",
-      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
-    }
-  },
-  {
-    "id": "kokugo.g1.hanasu-kiku",
-    "name": "話[はな]す・聞[き]く",
-    "subject": "kokugo",
-    "grade": 1,
-    "courseKind": "required-subject",
-    "placement": {
-      "terms": [1, 2, 3],
-      "status": "reference",
-      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-      "note": "学校[がっこう]生活[せいかつ]の対話[たいわ]活動[かつどう]で年間[ねんかん]を通[とお]して扱[あつか]う。"
-    },
-    "curriculumCodes": ["82102A3211100000", "82102A3211400000", "82102A3211500000"],
-    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-    "review": {
-      "status": "source-checked",
-      "reviewedAt": "2026-10-10",
-      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
-    }
-  },
-  {
-    "id": "kokugo.g1.tsutaeru",
-    "name": "じゅんじょよく伝[つた]える",
-    "subject": "kokugo",
-    "grade": 1,
-    "courseKind": "required-subject",
-    "placement": {
-      "terms": [1, 2, 3],
-      "status": "reference",
-      "sourceIds": ["tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-      "note": "話[はな]すこと・書[か]くことの活動[かつどう]で年間[ねんかん]を通[とお]して扱[あつか]う。"
-    },
-    "curriculumCodes": ["82102A3211200000", "82102A3221200000", "82102A3221400000"],
-    "sourceIds": ["mext-82v12", "tokyo-shoseki-r6-kokugo-g1", "kyoiku-shuppan-r6-kokugo-g1"],
-    "review": {
-      "status": "source-checked",
-      "reviewedAt": "2026-10-10",
-      "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
-    }
-  },
-  {
     "id": "kokugo.g5.legacy-jpn-5-kanji-1",
     "name": "5年生の漢字（読み）前半",
     "subject": "kokugo",
@@ -6997,5 +7101,53 @@
       "reviewedAt": "2026-10-12",
       "reviewer": "Codex（一次資料照合。教員レビュー未実施）"
     }
+  },
+  {
+    "id": "eigo.g4.alphabet-weather",
+    "name": "アルファベットと天気[てんき]",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g4.days-time",
+    "name": "曜日[ようび]と時[じ]こく",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g4.school-life",
+    "name": "学校[がっこう]と一日[いちにち]の生活[せいかつ]",
+    "subject": "eigo",
+    "grade": 4
+  },
+  {
+    "id": "eigo.g5.communication",
+    "name": "身近[みぢか]なことを伝[つた]えよう",
+    "subject": "eigo",
+    "grade": 5
+  },
+  {
+    "id": "eigo.g6.memories-dreams",
+    "name": "思[おも]い出[で]と将来[しょうらい]の夢[ゆめ]",
+    "subject": "eigo",
+    "grade": 6
+  },
+  {
+    "id": "eigo.g3.greetings",
+    "name": "あいさつ",
+    "subject": "eigo",
+    "grade": 3
+  },
+  {
+    "id": "eigo.g3.numbers",
+    "name": "11から20までの数[かず]",
+    "subject": "eigo",
+    "grade": 3
+  },
+  {
+    "id": "eigo.g3.likes-things",
+    "name": "好[す]きなものと身近[みぢか]なもの",
+    "subject": "eigo",
+    "grade": 3
   }
 ]

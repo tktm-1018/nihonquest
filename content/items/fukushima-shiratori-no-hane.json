@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-shiratori-no-hane",
+  "name": "白鳥[はくちょう]の はね",
+  "kind": "material",
+  "iconKey": "item.fukushima-shiratori-no-hane",
+  "areaOrigin": "fukushima",
+  "blurb": "猪苗代湖[いなわしろこ]の 白鳥[はくちょう]が おとした ふわふわの はね。スワッピが しんかする。"
+}

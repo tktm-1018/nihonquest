@@ -309,13 +309,14 @@
         }
       ],
       "question": {
-        "subject": "rika",
+        "subject": "seikatsu",
         "gradeRange": [
-          3,
-          6
+          1,
+          2
         ],
         "tags": [
-          "prefecture:chiba"
+          "prefecture:chiba",
+          "event:kujukurihama"
         ]
       },
       "rewardByScore": [

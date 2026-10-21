@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "miyagi-same-no-ha",
+  "name": "サメの は",
+  "kind": "material",
+  "iconKey": "item.miyagi-same-no-ha",
+  "areaOrigin": "miyagi",
+  "blurb": "気仙沼[けせんぬま]の サメの は。サメの はは ぬけても なんども 生[は]えかわるよ。サメッチが しんかする。"
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "iwate-hachimantai-no-yuki",
+  "name": "八幡平[はちまんたい]の ゆき",
+  "kind": "material",
+  "iconKey": "item.iwate-hachimantai-no-yuki",
+  "areaOrigin": "iwate",
+  "blurb": "八幡平[はちまんたい]の 山[やま]で ひろった、つめたくて きれいな 雪[ゆき]。ユキポッチが しんかする。"
+}

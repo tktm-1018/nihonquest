@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-tenkyo-no-shizuku",
+  "name": "天鏡湖[てんきょうこ]の しずく",
+  "kind": "material",
+  "iconKey": "item.fukushima-tenkyo-no-shizuku",
+  "areaOrigin": "fukushima",
+  "blurb": "猪苗代湖[いなわしろこ]の すんだ 水[みず]の しずく。3こ あつめると シラユキスワンが しんかする。"
+}

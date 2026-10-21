@@ -1,0 +1,578 @@
+[
+  {
+    "id": "eigo.g4.alphabet-weather.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.alphabet-weather",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "大文字[おおもじ]の R と同[おな]じ文字[もじ]の小文字[こもじ]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "r"
+        },
+        {
+          "id": "b",
+          "text": "e"
+        },
+        {
+          "id": "c",
+          "text": "l"
+        },
+        {
+          "id": "d",
+          "text": "p"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "R の小文字[こもじ]は r です。"
+  },
+  {
+    "id": "eigo.g4.alphabet-weather.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.alphabet-weather",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "小文字[こもじ]の e と同[おな]じ文字[もじ]の大文字[おおもじ]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "F"
+        },
+        {
+          "id": "b",
+          "text": "E"
+        },
+        {
+          "id": "c",
+          "text": "I"
+        },
+        {
+          "id": "d",
+          "text": "L"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "e の大文字[おおもじ]は E です。"
+  },
+  {
+    "id": "eigo.g4.alphabet-weather.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.alphabet-weather",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「晴[は]れです。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It's rainy."
+        },
+        {
+          "id": "b",
+          "text": "It's snowy."
+        },
+        {
+          "id": "c",
+          "text": "It's sunny."
+        },
+        {
+          "id": "d",
+          "text": "It's cloudy."
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "sunny は「晴[は]れた」という意味[いみ]です。"
+  },
+  {
+    "id": "eigo.g4.alphabet-weather.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.alphabet-weather",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「天気[てんき]はどうですか。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "How is the weather?"
+        },
+        {
+          "id": "b",
+          "text": "What time is it?"
+        },
+        {
+          "id": "c",
+          "text": "What day is it?"
+        },
+        {
+          "id": "d",
+          "text": "Where is the school?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "天気[てんき]をたずねるときは How is the weather? と言[い]います。"
+  },
+  {
+    "id": "eigo.g4.alphabet-weather.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.alphabet-weather",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "雨[あめ]の日[ひ]を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "sunny"
+        },
+        {
+          "id": "b",
+          "text": "rainy"
+        },
+        {
+          "id": "c",
+          "text": "snowy"
+        },
+        {
+          "id": "d",
+          "text": "windy"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "rainy は「雨[あめ]の」という意味[いみ]です。"
+  },
+  {
+    "id": "eigo.g4.days-time.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.days-time",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「火曜日[かようび]」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Monday"
+        },
+        {
+          "id": "b",
+          "text": "Tuesday"
+        },
+        {
+          "id": "c",
+          "text": "Friday"
+        },
+        {
+          "id": "d",
+          "text": "Saturday"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "Tuesday は火曜日[かようび]です。"
+  },
+  {
+    "id": "eigo.g4.days-time.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.days-time",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「土曜日[どようび]」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Sunday"
+        },
+        {
+          "id": "b",
+          "text": "Thursday"
+        },
+        {
+          "id": "c",
+          "text": "Saturday"
+        },
+        {
+          "id": "d",
+          "text": "Wednesday"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "Saturday は土曜日[どようび]です。"
+  },
+  {
+    "id": "eigo.g4.days-time.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.days-time",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「何曜日[なんようび]ですか。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "What day is it?"
+        },
+        {
+          "id": "b",
+          "text": "What time is it?"
+        },
+        {
+          "id": "c",
+          "text": "How are you?"
+        },
+        {
+          "id": "d",
+          "text": "Where are you?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "曜日[ようび]をたずねるときは What day is it? と言[い]います。"
+  },
+  {
+    "id": "eigo.g4.days-time.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.days-time",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「何時[なんじ]ですか。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "How is the weather?"
+        },
+        {
+          "id": "b",
+          "text": "What time is it?"
+        },
+        {
+          "id": "c",
+          "text": "What is this?"
+        },
+        {
+          "id": "d",
+          "text": "What day is it?"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "時刻[じこく]をたずねるときは What time is it? と言[い]います。"
+  },
+  {
+    "id": "eigo.g4.days-time.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.days-time",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "It's five twenty. は何時何分[なんじなんぷん]？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "5時[じ]2分[ふん]"
+        },
+        {
+          "id": "b",
+          "text": "5時[じ]12分[ふん]"
+        },
+        {
+          "id": "c",
+          "text": "5時[じ]20分[ふん]"
+        },
+        {
+          "id": "d",
+          "text": "5時[じ]50分[ふん]"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "five twenty は5時[じ]20分[ふん]です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「えんぴつ」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "pencil"
+        },
+        {
+          "id": "b",
+          "text": "eraser"
+        },
+        {
+          "id": "c",
+          "text": "ruler"
+        },
+        {
+          "id": "d",
+          "text": "notebook"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "pencil は「えんぴつ」です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「はさみ」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "marker"
+        },
+        {
+          "id": "b",
+          "text": "glue"
+        },
+        {
+          "id": "c",
+          "text": "scissors"
+        },
+        {
+          "id": "d",
+          "text": "pencil case"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "scissors は「はさみ」です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしはのりを持[も]っています。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I have glue."
+        },
+        {
+          "id": "b",
+          "text": "I want glue."
+        },
+        {
+          "id": "c",
+          "text": "I like glue."
+        },
+        {
+          "id": "d",
+          "text": "I see glue."
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "持[も]っているものを伝[つた]えるときは I have ... を使[つか]います。"
+  },
+  {
+    "id": "eigo.g4.school-life.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしは定規[じょうぎ]がほしいです。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I have a ruler."
+        },
+        {
+          "id": "b",
+          "text": "I want a ruler."
+        },
+        {
+          "id": "c",
+          "text": "I use a ruler."
+        },
+        {
+          "id": "d",
+          "text": "I see a ruler."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "ほしいものを伝[つた]えるときは I want ... を使[つか]います。"
+  },
+  {
+    "id": "eigo.g4.school-life.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「これは体育館[たいいくかん]です。」の（ ）に入[はい]る英語[えいご]はどれ？ / This is the ( ).",
+      "choices": [
+        {
+          "id": "a",
+          "text": "library"
+        },
+        {
+          "id": "b",
+          "text": "gym"
+        },
+        {
+          "id": "c",
+          "text": "science room"
+        },
+        {
+          "id": "d",
+          "text": "music room"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "gym は「体育館[たいいくかん]」です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「右[みぎ]に曲[きょく]がってください。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Turn left."
+        },
+        {
+          "id": "b",
+          "text": "Go straight."
+        },
+        {
+          "id": "c",
+          "text": "Turn right."
+        },
+        {
+          "id": "d",
+          "text": "Stop here."
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "right は「右[みぎ]」、Turn right. は「右[みぎ]に曲[きょく]がってください」です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0007",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「朝食[ちょうしょく]を食[た]べる」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "eat breakfast"
+        },
+        {
+          "id": "b",
+          "text": "go to school"
+        },
+        {
+          "id": "c",
+          "text": "get up"
+        },
+        {
+          "id": "d",
+          "text": "brush my teeth"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "eat breakfast は「朝食[ちょうしょく]を食[た]べる」です。"
+  },
+  {
+    "id": "eigo.g4.school-life.0008",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 4,
+    "unit": "eigo.g4.school-life",
+    "tags": ["source:yasuoka-pdf", "review:pending-human"],
+    "payload": {
+      "prompt": "「学校[がっこう]に行[い]く」は英語[えいご]でどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "go home"
+        },
+        {
+          "id": "b",
+          "text": "go to school"
+        },
+        {
+          "id": "c",
+          "text": "eat dinner"
+        },
+        {
+          "id": "d",
+          "text": "take a bath"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "go to school は「学校[がっこう]に行[い]く」です。"
+  }
+]

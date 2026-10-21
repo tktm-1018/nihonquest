@@ -4,7 +4,7 @@
  *  - そうびする：バッグの そうびを その部位に つける（前の そうびは バッグに もどる）
  *  - はずす：そうびを バッグに もどす
  */
-import { equipKinds, type Item } from '../content/schemas';
+import { equipKinds, type EquipSet, type Item } from '../content/schemas';
 import type { GameState } from '../state/schema';
 
 export type EquipSlot = (typeof equipKinds)[number];
@@ -17,6 +17,16 @@ const canReturnToInventory = (gs: GameState, id: string): boolean => {
   const count = gs.inventory[id] ?? 0;
   return Number.isSafeInteger(count) && count >= 0 && count < Number.MAX_SAFE_INTEGER;
 };
+
+/** セット装備の装着数。効果の計算は battle/factory の applyEquipment が担当する。 */
+export function equipSetProgress(
+  set: EquipSet,
+  equipment: GameState['player']['equipment'],
+): { have: number; total: number; complete: boolean } {
+  const worn = Object.values(equipment);
+  const have = set.pieces.filter((id) => worn.includes(id)).length;
+  return { have, total: set.pieces.length, complete: have === set.pieces.length };
+}
 
 /** つかえる どうぐか（かいふくの どうぐで、HP か MP が へっている） */
 export function canUse(gs: GameState, it: Item, max: { hp: number; mp: number }): boolean {

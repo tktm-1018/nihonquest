@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "miyagi-tairyo-no-hata",
+  "name": "大漁旗[たいりょうばた]",
+  "kind": "material",
+  "iconKey": "item.miyagi-tairyo-no-hata",
+  "areaOrigin": "miyagi",
+  "blurb": "魚[さかな]が たくさん とれた ふねが 港[みなと]に かえる とき かかげる、はでな はた。3まい あつめると ケセンザメが しんかする。"
+}

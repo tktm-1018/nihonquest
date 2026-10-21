@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "akita-minori-oh",
+  "name": "ミノリオウ",
+  "area": "akita",
+  "motifId": "ogata-okome",
+  "element": "hikari",
+  "weakness": "yami",
+  "baseStats": {
+    "hp": 60,
+    "mp": 16,
+    "atk": 16,
+    "def": 12,
+    "spd": 11,
+    "wis": 10
+  },
+  "growth": {
+    "hp": 6.5,
+    "mp": 1.5,
+    "atk": 2.1,
+    "def": 1.5,
+    "spd": 1.4,
+    "wis": 1.1
+  },
+  "skills": [
+    "sk-kanji-barrier",
+    "sk-hikari-no-ya",
+    "sk-hikari-no-hane"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 52,
+  "gold": 32,
+  "spriteKey": "mon.akita-minori-oh",
+  "dexBlurb": "イナホカカシが しんかした すがた。わらの みのを まとい、金[きん]いろの いなほを かかげる 実[みの]りの 王[おう]さま。八郎潟[はちろうがた]は むかし、日本[にほん]で 2ばんめに 大[おお]きな 湖[みずうみ]だったんだよ。"
+}

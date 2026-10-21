@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "yamagata-namikigura",
+  "name": "ナミキグラ",
+  "area": "yamagata",
+  "motifId": "sankyo-soko",
+  "element": "kaze",
+  "weakness": "tsuchi",
+  "baseStats": {
+    "hp": 52,
+    "mp": 12,
+    "atk": 14,
+    "def": 11,
+    "spd": 14,
+    "wis": 8
+  },
+  "growth": {
+    "hp": 5.5,
+    "mp": 1.2,
+    "atk": 1.7,
+    "def": 1.2,
+    "spd": 1.3,
+    "wis": 0.9
+  },
+  "skills": [
+    "sk-abc-shout",
+    "sk-habataki"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 36,
+  "gold": 25,
+  "spriteKey": "mon.yamagata-namikigura",
+  "dexBlurb": "タワラッピが しんかした すがた。けやきなみきを せおった くら。山居倉庫[さんきょそうこ]の けやきは、夏[なつ]の つよい 日[ひ]ざしと 風[かぜ]から お米[こめ]を まもるために うえられたんだ。"
+}

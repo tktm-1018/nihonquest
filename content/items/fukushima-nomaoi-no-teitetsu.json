@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-nomaoi-no-teitetsu",
+  "name": "野馬追[のまおい]の ていてつ",
+  "kind": "material",
+  "iconKey": "item.fukushima-nomaoi-no-teitetsu",
+  "areaOrigin": "fukushima",
+  "blurb": "馬[うま]の ひづめを まもる、Uの 字[じ]の かたちの てつ。ノマッコが しんかする。"
+}

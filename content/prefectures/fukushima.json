@@ -115,6 +115,14 @@
         {
           "monsterId": "fukushima-chijiremen",
           "weight": 12
+        },
+        {
+          "monsterId": "fukushima-nomakko",
+          "weight": 18
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 12
         }
       ],
       "stepsPerCheck": 12,
@@ -130,6 +138,10 @@
         {
           "monsterId": "fukushima-akabekon",
           "weight": 30
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -145,6 +157,10 @@
         {
           "monsterId": "fukushima-koboshi",
           "weight": 45
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -160,6 +176,52 @@
         {
           "monsterId": "fukushima-koboshi",
           "weight": 50
+        },
+        {
+          "monsterId": "fukushima-nomakko",
+          "weight": 12
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 15
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "beach",
+      "table": [
+        {
+          "monsterId": "fukushima-tomoshibin",
+          "weight": 55
+        },
+        {
+          "monsterId": "fukushima-swappi",
+          "weight": 20
+        },
+        {
+          "monsterId": "fukushima-chijiremen",
+          "weight": 25
+        }
+      ],
+      "stepsPerCheck": 12,
+      "rate": 0.25
+    },
+    {
+      "zone": "shore",
+      "table": [
+        {
+          "monsterId": "fukushima-swappi",
+          "weight": 60
+        },
+        {
+          "monsterId": "fukushima-tomoshibin",
+          "weight": 20
+        },
+        {
+          "monsterId": "fukushima-akabekon",
+          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -183,6 +245,22 @@
         {
           "monsterId": "fukushima-chijiremen",
           "weight": 12
+        },
+        {
+          "monsterId": "fukushima-swappi",
+          "weight": 10
+        },
+        {
+          "monsterId": "fukushima-nomakko",
+          "weight": 12
+        },
+        {
+          "monsterId": "fukushima-tomoshibin",
+          "weight": 10
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 10
         }
       ],
       "stepsPerCheck": 8,
@@ -194,11 +272,15 @@
       "table": [
         {
           "monsterId": "fukushima-momorin",
-          "weight": 60
+          "weight": 55
         },
         {
           "monsterId": "fukushima-koboshi",
           "weight": 40
+        },
+        {
+          "monsterId": "fukushima-kayabukin",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -210,7 +292,7 @@
       "table": [
         {
           "monsterId": "fukushima-akabekon",
-          "weight": 50
+          "weight": 45
         },
         {
           "monsterId": "fukushima-momorin",
@@ -219,6 +301,10 @@
         {
           "monsterId": "fukushima-koboshi",
           "weight": 25
+        },
+        {
+          "monsterId": "fukushima-nomakko",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -230,7 +316,7 @@
       "table": [
         {
           "monsterId": "fukushima-chijiremen",
-          "weight": 45
+          "weight": 40
         },
         {
           "monsterId": "fukushima-akabekon",
@@ -243,6 +329,10 @@
         {
           "monsterId": "fukushima-momorin",
           "weight": 10
+        },
+        {
+          "monsterId": "fukushima-swappi",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -254,7 +344,7 @@
       "table": [
         {
           "monsterId": "fukushima-koboshi",
-          "weight": 40
+          "weight": 35
         },
         {
           "monsterId": "fukushima-momorin",
@@ -267,6 +357,10 @@
         {
           "monsterId": "fukushima-chijiremen",
           "weight": 15
+        },
+        {
+          "monsterId": "fukushima-tomoshibin",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,

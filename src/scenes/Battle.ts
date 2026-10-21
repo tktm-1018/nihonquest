@@ -69,6 +69,7 @@ import { battleSummary, defeatResultView, victoryResultView } from './battle/res
 import { questionQueryForSkill, recruitQuestionQuery } from './battle/questionQueries';
 import { prepareMusubiDamaCommand } from './battle/musubiDamaFlow';
 import { runBattleQuestion } from './battle/questionFlow';
+import { skillLockBanner } from './battle/skillLockPresentation';
 import { BattleHudFlow } from './battle/hudFlow';
 import { hasStoryCompanion } from '../core/progression/storyCompanion';
 import { monsterDisplaySize, monsterMenuArtUrl } from '../rendering/menuArt';
@@ -291,8 +292,8 @@ export class BattleScene extends Phaser.Scene {
 
   /**
    * モンスターの絵の大きさ：地方ボス 56 / 中ボス 40 / 県ボス 48 / 通常 32。
-   * 地方ボスは area が「県には無い 地方の id」の モンスター（北海道のように 県 id と 地方 id が
-   * 同じ ところが あるので、県に ある id は 県あつかい）
+   * 地方ボスは world の島の bossId に なっている モンスター（北海道のように 県 id と 地方 id が
+   * 同じ ところが あるので、area では 見分けない）
    */
   private sizeOf(def: Monster, isBoss: boolean): number {
     const size = monsterDisplaySize(def, this.content);
@@ -544,7 +545,7 @@ export class BattleScene extends Phaser.Scene {
     return buildSwapOptions(this.state, this.deps);
   }
 
-  /** 必殺技の一覧（主人公・オトモの わざ・教科の 固有スキル）。教科ゲージが たりない 必殺技は 打てない */
+  /** 必殺技一覧。教科ゲージ不足や「しばり」中の選択可否も表示モデルへ反映する。 */
   private skillOptions(): SkillOption[] {
     return buildSkillOptions({
       state: this.state,
@@ -1123,6 +1124,12 @@ export class BattleScene extends Phaser.Scene {
         playSfx('buff');
         this.patchGauge(e.subject, e.value);
         return;
+      case 'skillLock': {
+        playSfx(e.remain > 0 ? 'buff' : 'select');
+        const lockBanner = skillLockBanner(e.remain, t);
+        await this.showBanner('skill', lockBanner.title, lockBanner.detail, 'kokugo', 800);
+        return;
+      }
       case 'itemUsed':
         playSfx('select');
         return;

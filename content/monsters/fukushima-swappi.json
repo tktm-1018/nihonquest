@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "fukushima-swappi",
+  "name": "スワッピ",
+  "area": "fukushima",
+  "motifId": "inawashiroko",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 40,
+    "mp": 10,
+    "atk": 9,
+    "def": 7,
+    "spd": 10,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 5,
+    "mp": 1.1,
+    "atk": 1.3,
+    "def": 1,
+    "spd": 1.1,
+    "wis": 0.9
+  },
+  "skills": [
+    "sk-shizuku"
+  ],
+  "drops": [
+    {
+      "itemId": "fukushima-shiratori-no-hane",
+      "rate": 0.1
+    },
+    {
+      "itemId": "fukushima-tenkyo-no-shizuku",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 22,
+  "gold": 16,
+  "spriteKey": "mon.fukushima-swappi",
+  "evolution": {
+    "to": "fukushima-shirayuki-swan",
+    "item": "fukushima-shiratori-no-hane"
+  },
+  "dexBlurb": "猪苗代湖[いなわしろこ]に やってくる 白鳥[はくちょう]の ひな。白鳥の 子[こ]どもは まだ 白[しろ]くなくて、はいいろの はねを しているんだよ。"
+}

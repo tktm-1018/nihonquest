@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-hoshikusa-no-taba",
+  "name": "ほしくさの たば",
+  "kind": "material",
+  "iconKey": "item.yamagata-hoshikusa-no-taba",
+  "areaOrigin": "yamagata",
+  "blurb": "お日[ひ]さまで よく ほした 草[くさ]。牛[うし]の だいすきな ごはん。ヨネギュンが しんかする。"
+}

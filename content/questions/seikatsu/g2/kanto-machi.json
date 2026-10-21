@@ -1,0 +1,263 @@
+[
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0001",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:tochigi", "event:nikko-toshogu", "review:pending-human"],
+    "payload": {
+      "prompt": "日光東照宮[にっこうとうしょうぐう]の 「聞[き]かざる」の さるは、どこを おさえている？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "みみ"
+        },
+        {
+          "id": "b",
+          "text": "め"
+        },
+        {
+          "id": "c",
+          "text": "くち"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "「見[み]ざる」は め、「言[い]わざる」は くち、「聞[き]かざる」は みみを おさえているよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0002",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:gunma", "event:tomioka-seishijo", "review:pending-human"],
+    "payload": {
+      "prompt": "富岡製糸場[とみおかせいしじょう]で、生糸[きいと]を とる もとに なった ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "カイコの まゆ"
+        },
+        {
+          "id": "b",
+          "text": "ひつじの 毛[け]"
+        },
+        {
+          "id": "c",
+          "text": "木[き]の かわ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "カイコが 作[つく]る まゆから、生糸[きいと]を とるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0003",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:gunma", "event:tomioka-seishijo", "review:pending-human"],
+    "payload": {
+      "prompt": "カイコが たべる はっぱは どれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "クワの はっぱ"
+        },
+        {
+          "id": "b",
+          "text": "マツの はっぱ"
+        },
+        {
+          "id": "c",
+          "text": "イネの はっぱ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "カイコは クワの はっぱを たべて 大[おお]きく なるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0004",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:saitama", "event:sakitama-kofun", "review:pending-human"],
+    "payload": {
+      "prompt": "古墳[こふん]の まわりに ならべられた、土[つち]で できた 人[ひと]や どうぶつの やきものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "はにわ"
+        },
+        {
+          "id": "b",
+          "text": "こけし"
+        },
+        {
+          "id": "c",
+          "text": "だるま"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "はにわは、古墳[こふん]の まわりに ならべられた 土[つち]の やきものだよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0005",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:saitama", "event:sakitama-kofun", "review:pending-human"],
+    "payload": {
+      "prompt": "さきたま古墳[こふん]の 「さきたま」が 名前[なまえ]の もとに なった 県[けん]は？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "埼玉県[さいたまけん]"
+        },
+        {
+          "id": "b",
+          "text": "千葉県[ちばけん]"
+        },
+        {
+          "id": "c",
+          "text": "群馬県[ぐんまけん]"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "「さきたま」が もとに なって、埼玉県[さいたまけん]と いう 名前[なまえ]が できたよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0006",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:ibaraki", "event:fukuroda-no-taki", "review:pending-human"],
+    "payload": {
+      "prompt": "滝[たき]が まるごと こおる ことを なんと いう？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ひょうばく"
+        },
+        {
+          "id": "b",
+          "text": "なだれ"
+        },
+        {
+          "id": "c",
+          "text": "にじ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "滝[たき]が こおる ことを ひょうばく（氷瀑[ひょうばく]）と いうよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0007",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:tokyo", "review:pending-human"],
+    "payload": {
+      "prompt": "電車[でんしゃ]に のるとき、まもると よい ことは どれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "おりる 人[ひと]を 先[さき]に とおす"
+        },
+        {
+          "id": "b",
+          "text": "ドアの 前[まえ]で あそぶ"
+        },
+        {
+          "id": "c",
+          "text": "大[おお]きな こえで さわぐ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "おりる 人[ひと]が おりてから のると、みんなが あんぜんに のれるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0008",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:tokyo", "review:pending-human"],
+    "payload": {
+      "prompt": "駅[えき]で、きっぷや カードを とおして 入[はい]る ところを なんと いう？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "かいさつ"
+        },
+        {
+          "id": "b",
+          "text": "ホーム"
+        },
+        {
+          "id": "c",
+          "text": "せんろ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "かいさつで きっぷや カードを とおしてから、ホームへ 行[い]くよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.kanto-machi.0009",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.kanto-machi",
+    "tags": ["prefecture:tokyo", "review:pending-human"],
+    "payload": {
+      "prompt": "道[みち]を わたるとき、しんごうが 赤[あか]だったら どうする？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "とまって まつ"
+        },
+        {
+          "id": "b",
+          "text": "はしって わたる"
+        },
+        {
+          "id": "c",
+          "text": "目[め]を つぶって わたる"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "赤[あか]は とまれ。青[あお]に なるまで まとう。"
+  }
+]

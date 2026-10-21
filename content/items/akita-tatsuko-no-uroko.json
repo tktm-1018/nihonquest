@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "akita-tatsuko-no-uroko",
+  "name": "辰子[たつこ]の うろこ",
+  "kind": "material",
+  "iconKey": "item.akita-tatsuko-no-uroko",
+  "areaOrigin": "akita",
+  "blurb": "田沢湖[たざわこ]の そこで 金[きん]いろに ひかる うろこ。3まい あつめると ルリイロマスが しんかする。"
+}

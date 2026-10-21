@@ -107,6 +107,14 @@
         {
           "monsterId": "iwate-tono-kappa",
           "weight": 45
+        },
+        {
+          "monsterId": "iwate-reimenbo",
+          "weight": 15
+        },
+        {
+          "monsterId": "iwate-undaman",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -125,6 +133,10 @@
         },
         {
           "monsterId": "iwate-iwa-kamoshika",
+          "weight": 20
+        },
+        {
+          "monsterId": "iwate-reimenbo",
           "weight": 20
         }
       ],
@@ -145,6 +157,10 @@
         {
           "monsterId": "iwate-tono-kappa",
           "weight": 25
+        },
+        {
+          "monsterId": "iwate-yukipocchi",
+          "weight": 15
         }
       ],
       "stepsPerCheck": 12,
@@ -160,6 +176,10 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 30
+        },
+        {
+          "monsterId": "iwate-yukipocchi",
+          "weight": 25
         }
       ],
       "stepsPerCheck": 12,
@@ -178,6 +198,10 @@
         },
         {
           "monsterId": "iwate-wakamekko",
+          "weight": 25
+        },
+        {
+          "monsterId": "iwate-shirahamaru",
           "weight": 25
         }
       ],
@@ -198,6 +222,10 @@
         {
           "monsterId": "iwate-wakamekko",
           "weight": 20
+        },
+        {
+          "monsterId": "iwate-shirahamaru",
+          "weight": 20
         }
       ],
       "stepsPerCheck": 12,
@@ -213,6 +241,10 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 40
+        },
+        {
+          "monsterId": "iwate-undaman",
+          "weight": 20
         }
       ],
       "stepsPerCheck": 8,
@@ -224,11 +256,15 @@
       "table": [
         {
           "monsterId": "iwate-iwa-kamoshika",
-          "weight": 55
+          "weight": 50
         },
         {
           "monsterId": "iwate-wankosobat",
           "weight": 45
+        },
+        {
+          "monsterId": "iwate-reimenbo",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -240,7 +276,7 @@
       "table": [
         {
           "monsterId": "iwate-ryusen-uo",
-          "weight": 55
+          "weight": 50
         },
         {
           "monsterId": "iwate-iwa-kamoshika",
@@ -249,6 +285,10 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 20
+        },
+        {
+          "monsterId": "iwate-shirahamaru",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -260,7 +300,7 @@
       "table": [
         {
           "monsterId": "iwate-tono-kappa",
-          "weight": 50
+          "weight": 45
         },
         {
           "monsterId": "iwate-ryusen-uo",
@@ -273,6 +313,10 @@
         {
           "monsterId": "iwate-wankosobat",
           "weight": 10
+        },
+        {
+          "monsterId": "iwate-undaman",
+          "weight": 5
         }
       ],
       "stepsPerCheck": 12,
@@ -284,7 +328,7 @@
       "table": [
         {
           "monsterId": "iwate-wakamekko",
-          "weight": 50
+          "weight": 45
         },
         {
           "monsterId": "iwate-tono-kappa",
@@ -300,6 +344,10 @@
         },
         {
           "monsterId": "iwate-wankosobat",
+          "weight": 5
+        },
+        {
+          "monsterId": "iwate-yukipocchi",
           "weight": 5
         }
       ],

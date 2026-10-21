@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "akita-ruri-no-shizuku",
+  "name": "るりいろの しずく",
+  "kind": "material",
+  "iconKey": "item.akita-ruri-no-shizuku",
+  "areaOrigin": "akita",
+  "blurb": "田沢湖[たざわこ]の こい 青[あお]い 水[みず]が かたまった しずく。クニッコが しんかする。"
+}

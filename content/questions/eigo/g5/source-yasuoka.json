@@ -1,0 +1,258 @@
+[
+  {
+    "id": "eigo.g5.communication.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「あなたの名前[なまえ]のつづりはどう書[か]きますか？」と聞[き]く英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "What is your name?"
+        },
+        {
+          "id": "b",
+          "text": "How do you spell it?"
+        },
+        {
+          "id": "c",
+          "text": "How are you?"
+        },
+        {
+          "id": "d",
+          "text": "Who are you?"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "つづりを聞[き]くときは How do you spell it? と言[い]います。"
+  },
+  {
+    "id": "eigo.g5.communication.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「あなたの誕生日[たんじょうび]はいつですか？」とたずねる英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "When is your birthday?"
+        },
+        {
+          "id": "b",
+          "text": "What is your birthday?"
+        },
+        {
+          "id": "c",
+          "text": "Where is your birthday?"
+        },
+        {
+          "id": "d",
+          "text": "How is your birthday?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "時期[じき]を聞[き]く疑問詞[ぎもんし] When を使[つか]います。"
+  },
+  {
+    "id": "eigo.g5.communication.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「わたしは理科[りか]を勉強[べんきょう]したいです。」の（ ）に入[はい]る英語[えいご]はどれ？ / I want to study ( ).",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Japanese"
+        },
+        {
+          "id": "b",
+          "text": "math"
+        },
+        {
+          "id": "c",
+          "text": "science"
+        },
+        {
+          "id": "d",
+          "text": "music"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "理科[りか]は science です。"
+  },
+  {
+    "id": "eigo.g5.communication.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「あなたは何[なに]になりたいですか？」と聞[き]く英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "What do you want to be?"
+        },
+        {
+          "id": "b",
+          "text": "What do you want to study?"
+        },
+        {
+          "id": "c",
+          "text": "What do you like?"
+        },
+        {
+          "id": "d",
+          "text": "What time is it?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "want to be で「〜になりたい」という意味[いみ]です。"
+  },
+  {
+    "id": "eigo.g5.communication.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「あなたは何時[なんじ]に起[お]きますか？」とたずねる英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "What time do you get up?"
+        },
+        {
+          "id": "b",
+          "text": "What time is it?"
+        },
+        {
+          "id": "c",
+          "text": "Do you get up?"
+        },
+        {
+          "id": "d",
+          "text": "When is your birthday?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "日課[にっか]の時刻[じこく]をたずねるときは What time を使[つか]います。"
+  },
+  {
+    "id": "eigo.g5.communication.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「彼[かれ]は速[はや]く走[はし]ることができます。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I can run fast."
+        },
+        {
+          "id": "b",
+          "text": "He can run fast."
+        },
+        {
+          "id": "c",
+          "text": "She can run fast."
+        },
+        {
+          "id": "d",
+          "text": "You can run fast."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "「彼[かれ]」は He、できることは can で表[あらわ]します。"
+  },
+  {
+    "id": "eigo.g5.communication.0007",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「郵便局[ゆうびんきょく]はどこですか？」とたずねる英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Where is the post office?"
+        },
+        {
+          "id": "b",
+          "text": "What is the post office?"
+        },
+        {
+          "id": "c",
+          "text": "Who is the post office?"
+        },
+        {
+          "id": "d",
+          "text": "When is the post office?"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "場所[ばしょ]をたずねる疑問詞[ぎもんし] Where を使[つか]います。"
+  },
+  {
+    "id": "eigo.g5.communication.0008",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 5,
+    "unit": "eigo.g5.communication",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "店[みせ]で「何[なに]になさいますか？」とていねいに聞[き]く英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "What do you want?"
+        },
+        {
+          "id": "b",
+          "text": "What would you like?"
+        },
+        {
+          "id": "c",
+          "text": "What do you like?"
+        },
+        {
+          "id": "d",
+          "text": "What is this?"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "What would you like? は店[みせ]などで使[つか]うていねいな表現[ひょうげん]です。"
+  }
+]

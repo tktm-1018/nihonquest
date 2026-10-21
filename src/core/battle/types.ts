@@ -62,6 +62,8 @@ export type SubjectGauges = Record<Subject, number>;
 /** プレイヤー（主人公）の バトル中の 状態。hp・stats は ally.hero */
 export interface PlayerState {
   subjectGauges: SubjectGauges;
+  /** この技しか使えない「しばり」。turns は、このあと使う残り回数 */
+  skillLock: { skillId: string; turns: number } | null;
   /** いまの 連続成功数（Streak） */
   comboCount: number;
   /** この バトルで いちばん 長かった 連続成功数（けいけんち・おかねの ボーナス） */
@@ -165,6 +167,8 @@ export type BattleEvent =
       unlocked: string[];
     }
   | { t: 'gaugeUse'; subject: Subject; amount: number; value: number }
+  /** 主人公が同じ技だけを使う状態になった／残り回数が変わった。0で解除 */
+  | { t: 'skillLock'; skillId: string; remain: number }
   /** 教科ゲージが たりなくて 打てない（ターンは すすまない） */
   | { t: 'gaugeShort'; subject: Subject; need: number; have: number }
   | { t: 'itemUsed'; itemId: string; targetId: string; side?: Side }

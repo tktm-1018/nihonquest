@@ -89,6 +89,7 @@ import { ParentOverlay } from '../ui/field/ParentOverlay';
 import { isImportedLocationValid, rememberLocationState, resolveSpawn } from './overworld/importedLocation';
 import { WorldMapOverlay, type MapRegionInfo, type WorldMapData } from '../ui/field/WorldMapOverlay';
 import { t, tOpt } from '../ui/i18n';
+import { HeroIdentitySetup, type HeroIdentity } from '../ui/title/HeroIdentitySetup';
 import { createSpeaker } from '../ui/overlay';
 import { QuestionFrame } from '../ui/QuestionFrame';
 import { stripRuby } from '../ui/ruby';
@@ -2588,7 +2589,22 @@ export class OverworldScene extends Phaser.Scene {
     }
   }
 
-  /** 会話を出す。choices があれば最後の行で選ばせて、その番号を返す（選択肢なしは -1） */
+  private askHeroIdentity(appearance: GameState['player']['appearance']): Promise<HeroIdentity> {
+    return new Promise((resolve) => {
+      const root = this.root('dialogue');
+      render(
+        h(HeroIdentitySetup, {
+          initialAppearance: appearance,
+          onComplete: (identity: HeroIdentity) => {
+            render(null, root);
+            resolve(identity);
+          },
+        }),
+        root,
+      );
+    });
+  }
+
   private choose(lines: DialogueLine[], choices?: string[]): Promise<number> {
     return presentDialogue(this.root('dialogue'), lines, choices, () => {
       this.inputLockUntil = this.time.now + 250;

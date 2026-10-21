@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "yamagata-yonezawa-ogyu",
+  "name": "ヨネザワオウギュウ",
+  "area": "yamagata",
+  "motifId": "yonezawa-gyu",
+  "element": "tsuchi",
+  "weakness": "kaze",
+  "baseStats": {
+    "hp": 58,
+    "mp": 10,
+    "atk": 17,
+    "def": 14,
+    "spd": 7,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 6.2,
+    "mp": 1.2,
+    "atk": 1.7,
+    "def": 1.5,
+    "spd": 0.9,
+    "wis": 0.9
+  },
+  "skills": [
+    "sk-tsuchi-kabe",
+    "sk-iwa-otoshi"
+  ],
+  "drops": [],
+  "recruitRate": 0,
+  "xp": 36,
+  "gold": 25,
+  "spriteKey": "mon.yamagata-yonezawa-ogyu",
+  "dexBlurb": "ヨネギュンが しんかした すがた。米沢牛[よねざわぎゅう]の 王[おう]さま。150年[ねん]ほど 前[まえ]、米沢に きた イギリス人[じん]の 先生[せんせい]が おいしさを 友[とも]だちに つたえて、ゆうめいに なったんだ。"
+}

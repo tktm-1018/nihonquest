@@ -64,7 +64,8 @@ export function skillTarget(sk: Pick<Skill, 'targetType' | 'effect'>): TargetTyp
 }
 
 /** その 必殺技を いま 打てるか（教科ゲージが costGauge 以上） */
-export function canAfford(s: BattleState, sk: Pick<Skill, 'subject' | 'costGauge'>): boolean {
+export function canAfford(s: BattleState, sk: Pick<Skill, 'id' | 'subject' | 'costGauge'>): boolean {
+  if (s.player.skillLock?.skillId === sk.id) return true;
   return s.player.subjectGauges[sk.subject] >= sk.costGauge;
 }
 
@@ -151,7 +152,7 @@ export function createBattle(
     turn: 1,
     ally,
     enemy,
-    player: { subjectGauges: emptyGauges(), comboCount: 0, maxCombo: 0 },
+    player: { subjectGauges: emptyGauges(), skillLock: null, comboCount: 0, maxCombo: 0 },
     companion: makeCompanion(ally.monsters[ally.activeMonsterIndex], def),
     rngState: undefined,
     seed: opts.seed,
@@ -408,13 +409,14 @@ function useSkill(
   const actor = actorId === hero.id ? hero : s.ally.monsters.find((m) => m.id === actorId)!;
   const p = s.player;
   const st = def.settings;
+  const continuingLock = p.skillLock?.skillId === sk.id;
 
   const have = p.subjectGauges[sk.subject];
-  if (have < sk.costGauge) {
+  if (!continuingLock && have < sk.costGauge) {
     ev.push({ t: 'gaugeShort', subject: sk.subject, need: sk.costGauge, have });
     return false;
   }
-  if (sk.costGauge > 0) {
+  if (!continuingLock && sk.costGauge > 0) {
     p.subjectGauges[sk.subject] = have - sk.costGauge;
     ev.push({ t: 'gaugeUse', subject: sk.subject, amount: sk.costGauge, value: p.subjectGauges[sk.subject] });
   }
@@ -479,6 +481,11 @@ function useSkill(
       break;
     }
   }
+  if (sk.selfLockTurns) {
+    const remain = continuingLock ? Math.max(0, (p.skillLock?.turns ?? 1) - 1) : sk.selfLockTurns - 1;
+    p.skillLock = remain > 0 ? { skillId: sk.id, turns: remain } : null;
+    ev.push({ t: 'skillLock', skillId: sk.id, remain });
+  }
   chargeGauge(s, sk, score, def, ev);
   return true;
 }
@@ -492,6 +499,14 @@ function heroCommand(
   ev: BattleEvent[],
 ): boolean {
   const hero = s.ally.hero;
+  const lock = s.player.skillLock;
+  if (
+    lock &&
+    (command.kind !== 'skill' ||
+      command.skillId !== lock.skillId ||
+      (command.actorId !== undefined && command.actorId !== hero.id))
+  )
+    return false;
   switch (command.kind) {
     case 'wait':
       // 主人公は 動かない（たおれて いる ときなど）。オトモと てきは 動く

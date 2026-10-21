@@ -20,6 +20,7 @@
       "mapKey": "hokkaido-island",
       "areas": ["hokkaido"],
       "bossId": "hokkaido-islandboss-shirogane-oowashi",
+      "opensAfter": "tohoku",
       "recommendedGrade": [1, 6],
       "status": "playable"
     },
@@ -30,6 +31,7 @@
       "mapKey": "kanto-island",
       "areas": ["ibaraki", "tochigi", "gunma", "saitama", "chiba", "tokyo", "kanagawa"],
       "bossId": "kanto-islandboss-nanatsu-kage",
+      "opensAfter": "hokkaido",
       "recommendedGrade": [2, 6],
       "status": "playable"
     },

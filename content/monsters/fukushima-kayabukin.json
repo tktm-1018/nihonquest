@@ -1,0 +1,44 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "fukushima-kayabukin",
+  "name": "カヤブキン",
+  "area": "fukushima",
+  "motifId": "ouchijuku",
+  "element": "mori",
+  "weakness": "hino",
+  "baseStats": {
+    "hp": 44,
+    "mp": 9,
+    "atk": 9,
+    "def": 10,
+    "spd": 6,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 5,
+    "mp": 1.1,
+    "atk": 1.3,
+    "def": 1,
+    "spd": 1.1,
+    "wis": 0.9
+  },
+  "skills": [
+    "sk-happa-tobashi"
+  ],
+  "drops": [
+    {
+      "itemId": "fukushima-kaya-no-taba",
+      "rate": 0.2
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 22,
+  "gold": 16,
+  "spriteKey": "mon.fukushima-kayabukin",
+  "evolution": {
+    "to": "fukushima-ookaya-yashiki",
+    "item": "fukushima-kaya-no-taba",
+    "count": 3
+  },
+  "dexBlurb": "大内宿[おおうちじゅく]の かやぶき屋根[やね]の せい。大内宿は 江戸時代[えどじだい]の 宿場町[しゅくばまち]で、いまも かやぶき屋根の 家[いえ]が ずらりと ならんでいるよ。"
+}

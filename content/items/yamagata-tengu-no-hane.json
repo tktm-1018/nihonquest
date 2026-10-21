@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-tengu-no-hane",
+  "name": "てんぐの はね",
+  "kind": "material",
+  "iconKey": "item.yamagata-tengu-no-hane",
+  "areaOrigin": "yamagata",
+  "blurb": "山[やま]の 中[なか]に おちていた ふしぎな 黒[くろ]い はね。3まい あつめると ヤマブシンが しんかする。"
+}

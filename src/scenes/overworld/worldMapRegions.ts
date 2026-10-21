@@ -1,6 +1,6 @@
 import type { ContentIndex } from '../../core/content/loader';
 import type { Area, Motif } from '../../core/content/schemas';
-import { canChallengeIslandBoss } from '../../core/progression/island';
+import { canChallengeIslandBoss, isIslandOpen } from '../../core/progression/island';
 import { midBossFlag, motifStamp } from '../../core/progression/route';
 import type { GameState } from '../../core/state/schema';
 import type { MapAreaInfo, MapRegionInfo, WorldMapData } from '../../ui/field/worldMapModel';
@@ -27,13 +27,16 @@ export function buildWorldMapRegions(
       const foundSigns = island.areas.filter((id) => gs?.progress.areaSigns.includes(id)).length;
       const cleared = gs?.progress.islandsCleared.includes(island.id) ?? false;
       const ready = !!gs && canChallengeIslandBoss(content.world, island.id, gs.progress);
+      // 航路が ひらく 島（opensAfter）は、最初の県が 船の 着く 港。行ったことが なくても わたれる
+      const open = isIslandOpen(content.world, island.id, gs?.progress ?? { islandsCleared: [] });
+      const harbor = island.opensAfter ? island.areas[0] : undefined;
       return {
         id: region.id,
         name: island.name,
         width: region.width,
         height: region.height,
         rows: region.rows,
-        status: island.status,
+        status: open ? 'playable' : 'stub',
         islandBoss: {
           name: content.monsters.get(island.bossId)?.name ?? island.bossId,
           state: cleared ? 'done' : ready ? 'ready' : 'locked',
@@ -56,7 +59,7 @@ export function buildWorldMapRegions(
             capital: mapArea.capital,
             stamps,
             boss: boss(area),
-            visited: island.status === 'playable' && visitedAreas.has(mapArea.id),
+            visited: open && (visitedAreas.has(mapArea.id) || mapArea.id === harbor),
           };
         }),
       };

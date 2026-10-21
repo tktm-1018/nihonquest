@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "miyagi-naruko-kyo-no-momiji",
+  "name": "鳴子峡[なるこきょう]の もみじ",
+  "kind": "material",
+  "iconKey": "item.miyagi-naruko-kyo-no-momiji",
+  "areaOrigin": "miyagi",
+  "blurb": "鳴子峡[なるこきょう]の たにで まっかに そまった もみじの 葉[は]。モミッピが しんかする。"
+}

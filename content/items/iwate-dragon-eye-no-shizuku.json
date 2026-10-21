@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "iwate-dragon-eye-no-shizuku",
+  "name": "ドラゴンアイの しずく",
+  "kind": "material",
+  "iconKey": "item.iwate-dragon-eye-no-shizuku",
+  "areaOrigin": "iwate",
+  "blurb": "鏡沼[かがみぬま]の「ドラゴンアイ」から とれた、青[あお]く ひかる 水[みず]の しずく。3こ あつめると ユキカイロウが しんかする。"
+}

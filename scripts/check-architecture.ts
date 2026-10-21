@@ -8,6 +8,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SRC = resolve(ROOT, 'src');
 const SCRIPTS = resolve(ROOT, 'scripts');
 const errors: string[] = [];
+const projectPath = (file: string): string => relative(ROOT, file).replaceAll('\\', '/');
 
 const importSpecifiers = (source: string): string[] =>
   [...source.matchAll(/(?:from\s+|import\s*)['"]([^'"]+)['"]/g)].map((match) => match[1] ?? '');
@@ -43,7 +44,7 @@ for (const file of files(resolve(SRC, 'shared'))) {
 }
 
 for (const file of files(resolve(SRC, 'ui'))) {
-  const rel = relative(ROOT, file);
+  const rel = projectPath(file);
   const source = readFileSync(file, 'utf8');
   for (const specifier of importSpecifiers(source)) {
     if (specifier.includes('/core/state/save'))
@@ -73,7 +74,7 @@ for (const file of files(resolve(SRC, 'questions', 'renderers'))) {
 }
 
 for (const file of files(SRC)) {
-  const rel = relative(ROOT, file);
+  const rel = projectPath(file);
   if (rel === 'src/core/state/save.ts') continue;
   const source = readFileSync(file, 'utf8');
   if (/from\s+['"]localforage['"]|\b(?:localStorage|sessionStorage|indexedDB)\b/.test(source))

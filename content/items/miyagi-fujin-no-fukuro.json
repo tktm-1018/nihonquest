@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "miyagi-fujin-no-fukuro",
+  "name": "風神[ふうじん]の ふくろ",
+  "kind": "material",
+  "iconKey": "item.miyagi-fujin-no-fukuro",
+  "areaOrigin": "miyagi",
+  "blurb": "かぜが ぎっしり つまった ふしぎな ふくろ。3つ あつめると ツムジモミジが しんかする。"
+}

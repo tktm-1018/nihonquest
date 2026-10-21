@@ -5,4 +5,5 @@ export const STARTER_SKILL_IDS = [
   'sk-kanji-giri',
   'sk-bun-no-tsubasa',
   'sk-kotoba-asobi',
+  'sk-katakana-shibari',
 ] as const;

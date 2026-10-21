@@ -997,12 +997,39 @@
           "width": 16,
           "height": 16,
           "properties": [{ "name": "region", "type": "string", "value": "kushiro-okhotsk" }]
+        },
+        {
+          "id": 37,
+          "name": "event_hokkaido_ryuhyo",
+          "type": "event",
+          "x": 1216,
+          "y": 544,
+          "width": 16,
+          "height": 16
+        },
+        {
+          "id": 38,
+          "name": "event_hokkaido_furano-lavender",
+          "type": "event",
+          "x": 784,
+          "y": 736,
+          "width": 16,
+          "height": 16
+        },
+        {
+          "id": 39,
+          "name": "event_hokkaido_yuki-matsuri",
+          "type": "event",
+          "x": 480,
+          "y": 848,
+          "width": 16,
+          "height": 16
         }
       ]
     }
   ],
   "nextlayerid": 4,
-  "nextobjectid": 37,
+  "nextobjectid": 40,
   "tilesets": [
     {
       "firstgid": 1,

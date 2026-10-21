@@ -269,6 +269,9 @@ export function findBrokenReferences(c: ContentIndex): string[] {
       }
     }
   }
+  for (const island of c.world.islands)
+    if (island.opensAfter && (island.opensAfter === island.id || !islandIds.has(island.opensAfter)))
+      errs.push(`world: island "${island.id}" の opensAfter "${island.opensAfter}" が ほかの島に ありません`);
   for (const [areaId, owners] of areaOwners)
     if (owners.length > 1) errs.push(`world: area "${areaId}" が複数の島にあります: ${owners.join(', ')}`);
   for (const a of c.areas.values()) {

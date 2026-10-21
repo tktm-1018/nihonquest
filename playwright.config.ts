@@ -17,6 +17,8 @@ export default defineConfig({
   // Phaser/WebGL と4,000問超のJSONを複数ブラウザで同時に初期化すると、
   // CI の小さいCPUでは正常な画面までタイムアウトする。ゲームE2Eは直列で再現性を優先する。
   workers: 1,
+  // CI ではログを取りに行けなくても失敗したテストが分かるよう、チェックの注釈にも出す。
+  reporter: process.env.CI ? [['github'], ['line']] : 'list',
   use: {
     baseURL: `http://localhost:${port}`,
     viewport: { width: 960, height: 540 },

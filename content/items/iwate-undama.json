@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "iwate-undama",
+  "name": "うん玉[だま]",
+  "kind": "material",
+  "iconKey": "item.iwate-undama",
+  "areaOrigin": "iwate",
+  "blurb": "「福[ふく]」や「運[うん]」の 字[じ]が かかれた 土[つち]の 玉[たま]。猊鼻渓[げいびけい]で 岩[いわ]の あなに 入[い]れると ねがいが かなうと いわれる。ウンダマンが しんかする。"
+}

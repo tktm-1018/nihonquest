@@ -56,6 +56,42 @@ describe('registry', () => {
 });
 
 describe('QuestionBank', () => {
+  it('小学1年のひらがなとカタカナは別の単元ファイルになっている', async () => {
+    const hiragana = (await read('questions/kokugo/g1/hiragana.json')) as QuestionBase[];
+    const katakana = (await read('questions/kokugo/g1/katakana.json')) as QuestionBase[];
+    expect(hiragana.length).toBeGreaterThan(0);
+    expect(katakana.length).toBeGreaterThan(0);
+    expect(new Set(hiragana.map((question) => question.unit))).toEqual(new Set(['kokugo.g1.hiragana']));
+    expect(new Set(katakana.map((question) => question.unit))).toEqual(new Set(['kokugo.g1.katakana']));
+    expect(katakana.every((question) => question.id.startsWith('kokugo.g1.katakana.'))).toBe(true);
+  });
+
+  it('小学1年の読む・話す聞く・伝える問題が単元ごとに登録されている', async () => {
+    const units = ['dokkai', 'hanasu-kiku', 'tsutaeru'] as const;
+    for (const unit of units) {
+      const questions = (await read(`questions/kokugo/g1/${unit}.json`)) as QuestionBase[];
+      expect(questions).toHaveLength(6);
+      expect(new Set(questions.map((question) => question.unit))).toEqual(new Set([`kokugo.g1.${unit}`]));
+      expect(questions.every((question) => question.id.startsWith(`kokugo.g1.${unit}.`))).toBe(true);
+    }
+  });
+
+  it('提供された2・4・5・6年生の国語問題を読み込める', async () => {
+    const expected = new Map([
+      [2, 24],
+      [4, 5],
+      [5, 255],
+      [6, 180],
+    ]);
+    for (const [grade, count] of expected) {
+      const questions = (await read(`questions/kokugo/g${grade}/yasuoka-source.json`)) as QuestionBase[];
+      expect(questions).toHaveLength(count);
+      expect(questions.every((question) => question.subject === 'kokugo' && question.grade === grade)).toBe(
+        true,
+      );
+    }
+  });
+
   it('実際の content/questions を読み込める', async () => {
     const manifest = (await read('manifest.json')) as { questions: string[] };
     const { bank, report } = await QuestionBank.load(manifest.questions, read);

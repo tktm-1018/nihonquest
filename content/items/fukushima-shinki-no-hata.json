@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-shinki-no-hata",
+  "name": "神旗[しんき]の 旗[はた]",
+  "kind": "material",
+  "iconKey": "item.fukushima-shinki-no-hata",
+  "areaOrigin": "fukushima",
+  "blurb": "野馬追[のまおい]の 神旗争奪戦[しんきそうだつせん]で 空[そら]から まいおりる 旗[はた]。3まい あつめると ハタカゼウマが しんかする。"
+}

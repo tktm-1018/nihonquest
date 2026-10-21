@@ -25,7 +25,9 @@ function serveRootDirs(dirs: string[]): Plugin {
     name: 'nihonquest:serve-root-dirs',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        const url = (req.url ?? '').split('?')[0] ?? '';
+        const [url = '', query = ''] = (req.url ?? '').split('?');
+        // import.meta.glob などの JSON import（?import / ?raw / ?url）は Vite に JS へ変換させる
+        if (/(^|&)(import|raw|url|inline|worker)(=|&|$)/.test(query)) return next();
         const dir = dirs.find((d) => url.startsWith(`/${d}/`));
         if (!dir) return next();
         const file = resolve(root, decodeURIComponent(url.slice(1)));

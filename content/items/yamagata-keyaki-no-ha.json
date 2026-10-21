@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-keyaki-no-ha",
+  "name": "けやきの はっぱ",
+  "kind": "material",
+  "iconKey": "item.yamagata-keyaki-no-ha",
+  "areaOrigin": "yamagata",
+  "blurb": "山居倉庫[さんきょそうこ]の けやきなみきの はっぱ。タワラッピが しんかする。"
+}

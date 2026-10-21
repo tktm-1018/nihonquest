@@ -135,7 +135,14 @@
     "experimentRun": "じっけんする",
     "experimentAgain": "かえて もういちど",
     "experimentOn": "オン",
-    "experimentOff": "オフ"
+    "experimentOff": "オフ",
+    "pairMatchBack": "ふせてある カード",
+    "kanjiTracePrompt": "うすい 字[じ]を なぞろう",
+    "kanjiTraceReadingPrompt": "この 字[じ]の よみかたは どれ？",
+    "kanjiTraceStrokes": "（{n}かく）",
+    "kanjiTraceCanvas": "「{kanji}」を なぞる ところ",
+    "kanjiTraceClear": "けす",
+    "kanjiTraceDone": "できた！"
   },
   "world": {
     "sealed": "この 島[しま]は まだ けっかいに まもられている…",
@@ -264,7 +271,13 @@
     "stripKo": "浄化[じょうか]した！",
     "rewardBonus": "{n}れんぞく ボーナス ×{m}",
     "skillBy": "{name}の 必殺技[ひっさつわざ]",
-    "skillGone": "その 必殺技[ひっさつわざ]は いまは つかえない…"
+    "skillGone": "その 必殺技[ひっさつわざ]は いまは つかえない…",
+    "skillLockedOther": "カタカナしばり中[ちゅう]",
+    "skillLockBanner": "カタカナしばり！",
+    "skillLockRemain": "あと {n}ターン",
+    "skillLockEnd": "しばりが とけた！",
+    "skillLockMessage": "{skill}！ あと {n}ターン、この技[わざ]だけ！",
+    "skillLockEndMessage": "カタカナしばりが とけた！"
   },
   "field": {
     "prologueNarrator": "？？？",
@@ -1969,6 +1982,8 @@
     "equipEmptyHint": "どうぐの タブか バッグで『バッグに いれる』と そうびできるよ",
     "equipStats": "HP {hp}/{max}　MP {mp}/{maxMp}　理攻[りこう] {scienceAtk}　文攻[ぶんこう] {humanitiesAtk}　理防[りぼう] {scienceDef}　文防[ぶんぼう] {humanitiesDef}　速[そく] {spd}　賢[けん] {wis}",
     "equipSet": "セット：{name}",
+    "equipSetProgress": "{name}　{have}/{total}",
+    "equipSetDone": "{name}が そろった！",
     "partyEvolve": "しんか",
     "partyEvolveNeed": "{item}を {need}こ つかって {to}に しんか（もっている：{n}こ）",
     "partyEvolveNo": "{to}への しんかには {item}が {need}こ ひつよう（もっている：{n}こ）",
@@ -1991,7 +2006,44 @@
     "motifNature": "しぜん",
     "motifFestival": "まつり",
     "motifHistory": "れきし",
-    "system": "システム"
+    "system": "システム",
+    "prologueAskIdentity": "あなたのことを 教[おし]えて。\n名前[なまえ]は なんていうの？",
+    "prologueNoema": "うばわれた 知識[ちしき]は『ノエマ』という 魔物[まもの]に すがたを かえた。たおして 浄化[じょうか]すれば、知識[ちしき]は 土地[とち]へ もどるはず。",
+    "island": {
+      "tohoku": {
+        "islandBossAsk": "6つの 県[けん]の しるしが ひびきあい、お城[しろ]への 道[みち]が ひらいた。地方[ちほう]ボスに いどみますか？",
+        "islandBossIntroFairy": "これで 東北[とうほく]の 知識[ちしき]は ひとつに まとまる……。さあ、あの 王[おう]を 浄化[じょうか]して。",
+        "islandBossRoar": "六[むっ]つの 冬[ふゆ]は わたさぬ。知識[ちしき]を あつめる 者[もの]よ、ここから 立[た]ち去[さ]れ！",
+        "islandBossCleared": "東北[とうほく]を おおっていた 結界[けっかい]が きえた！",
+        "islandFairyDeflect": "……冬[ふゆ]の 王[おう]の ことばに まどわされないで。いまは 東北[とうほく]に もどった 知識[ちしき]を よろこぼう。",
+        "islandChapterEnd": "第一章[だいいっしょう]　東北[とうほく]の 知識[ちしき]　完[かん]",
+        "islandFairyNext": "北[きた]の 海[うみ]に 航路[こうろ]が ひらいた！ にほんちずから 北海道[ほっかいどう]へ わたろう。"
+      },
+      "hokkaido": {
+        "islandBossAsk": "北海道[ほっかいどう]の しるしが かがやき、流氷[りゅうひょう]の お城[しろ]への 道[みち]が ひらいた。地方[ちほう]ボスに いどみますか？",
+        "islandBossIntroFairy": "北[きた]の 大地[だいち]の 知識[ちしき]が、あの 大[おお]わしに とじこめられている……。さあ、浄化[じょうか]して。",
+        "islandBossRoar": "こおりの 海[うみ]は だれにも わたさぬ。南[みなみ]から 来[き]た 者[もの]よ、こごえて 立[た]ち去[さ]れ！",
+        "islandBossCleared": "北海道[ほっかいどう]を おおっていた 結界[けっかい]が きえた！",
+        "islandBossSecret": "その 光[ひかり]……。東北[とうほく]の 王[おう]も 見[み]たはずだ。おまえは、いつから そこに いる……？",
+        "islandFairyDeflect": "……こおりの ぬしは ねぼけていたみたい。さあ、北海道[ほっかいどう]に 春[はる]が もどったよ。",
+        "islandChapterEnd": "第二章[だいにしょう]　北海道[ほっかいどう]の 知識[ちしき]　完[かん]",
+        "arrive": "ここが 北海道[ほっかいどう]。広[ひろ]い 大地[だいち]の 知識[ちしき]も、だれかに うばわれているみたい……。",
+        "islandFairyNext": "南[みなみ]の 海[うみ]に 航路[こうろ]が ひらいた！ にほんちずから 関東[かんとう]へ わたろう。"
+      },
+      "kanto": {
+        "islandBossAsk": "7つの 都県[とけん]の しるしが ひびきあい、お城[しろ]への 道[みち]が ひらいた。地方[ちほう]ボスに いどみますか？",
+        "islandBossIntroFairy": "町[まち]を まく 大[おお]きな へびが、関東[かんとう]の 知識[ちしき]を ためこんでいる……。さあ、浄化[じょうか]して。",
+        "islandBossRoar": "この 町[まち]の 知識[ちしき]は ぜんぶ わしの もの。ぐるりと まいて、にがさぬぞ！",
+        "islandBossCleared": "関東[かんとう]を おおっていた 結界[けっかい]が きえた！",
+        "islandBossSecret": "その 光[ひかり]……。北[きた]の 大[おお]わしも おまえを 見[み]ていた。おまえは、なにを あつめている……？",
+        "islandFairyDeflect": "……町[まち]の さわがしさで、ぬしも つかれていたんだね。さあ、関東[かんとう]に 知識[ちしき]が もどったよ。",
+        "islandChapterEnd": "第三章[だいさんしょう]　関東[かんとう]の 知識[ちしき]　完[かん]",
+        "arrive": "ここが 関東[かんとう]。たくさんの 人[ひと]が くらす 町[まち]の 知識[ちしき]も、うばわれているみたい……。"
+      }
+    },
+    "bagSlots": "{used}/{max}マス",
+    "bagMoved": "ばしょを いどうした！",
+    "bagKeys": "↑↓ えらぶ　Z いれる・だす　X とじる"
   },
   "ui": {
     "start": "はじめる",
@@ -2017,7 +2069,8 @@
     "saveError": "セーブに しっぱいしました。\n\nあそんだ きろくを のこすため、もういちど おしてね。",
     "retry": "もういちど",
     "tagline": "にほんを たびして、たたかって、まなぶ RPG",
-    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth"
+    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth",
+    "noSave": "セーブデータは まだ ないよ"
   },
   "cutscene": {
     "sceneLabel": "ものがたりの シーン",
@@ -2036,6 +2089,7 @@
     "namePlaceholder": "なまえを いれてね",
     "grade": "がくねん",
     "gradeValue": "しょうがく {n}ねん",
+    "subject": "さいしょの きょうか",
     "look": "みため",
     "lookPreview": "しゅじんこうの みため",
     "hair": "かみ",
@@ -2045,7 +2099,12 @@
     "eyes": "め",
     "option": "{part} {n}",
     "previous": "{part}を ひとつ もどす",
-    "next": "{part}を ひとつ すすめる"
+    "next": "{part}を ひとつ すすめる",
+    "identityTitle": "ようせいとの であい",
+    "identityAsk": "なまえと すがたを おしえてね",
+    "identityConfirm": "これが わたし",
+    "starter": "いっしょに たびする なかま",
+    "region": "さいしょに いく ちほう"
   },
   "skillFx": {
     "_comment": "必殺技で とぶ 字（src/rendering/battle/skillLook.ts）。スペース区切り。1〜2文字は とぶ字、3文字いじょうは きめで 大きく出す ことば。単元の id の . は _ に。skill.<技の id> が あれば その字だけを つかう（「炎[ほのお]」のように 読みを つけられる）",
@@ -2063,6 +2122,7 @@
       "sansu_g1_kazu-100": "10 20 50 90 100 50＋50＝100",
       "sansu_g2_kuku": "× × 2 4 6 8 3×4＝12 7×8＝56 9×9＝81",
       "kokugo_g1_hiragana": "あ い う え お か き く あいうえお",
+      "kokugo_g1_katakana": "ア イ ウ エ オ カ キ ク カタカナ",
       "kokugo_g1_kanji": "山 川 木 日 月 火 水 一 二 三 大",
       "kokugo_g1_joshi": "は が を に へ で と も わたしは",
       "kokugo_g1_bun-no-kimari": "。 、 「 」 ！ ？ まる。",
@@ -2082,7 +2142,12 @@
       "eigo_g3_alphabet-small": "a b c d e abc!",
       "eigo_g1_fruits": "A P L E APPLE! BANANA!",
       "eigo_g2_animals": "C A T D O G CAT! DOG!",
-      "eigo_g3_sea": "F I S H FISH! SEA!"
+      "eigo_g3_sea": "F I S H FISH! SEA!",
+      "kokugo_g3_kanji": "漢 字 島 湖 波 羊 漢字",
+      "rika_g3_hikari": "☆ ◎ ◇ ★ ひかり！",
+      "shakai_g3_machi": "〒 文 田 店 駅 町 ちずきごう",
+      "shakai_g5_sangyo": "米 工 船 魚 牛 車 さんぎょう",
+      "shakai_g6_rekishi": "城 刀 武 士 和 れきし"
     },
     "skill": {
       "sk-hono-no-mai": "炎[ほのお]",

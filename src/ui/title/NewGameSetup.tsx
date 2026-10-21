@@ -122,6 +122,7 @@ export function NewGameSetup({
         <label>
           <span>{t('newGame.grade')}</span>
           <select
+            autofocus
             aria-label={t('newGame.grade')}
             value={grade}
             onChange={(event) => setGrade(Number((event.target as HTMLSelectElement).value) as Grade)}

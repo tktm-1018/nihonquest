@@ -1,0 +1,194 @@
+[
+  {
+    "id": "eigo.g6.memories-dreams.0001",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「私[わたし]は海[うみ]に行[い]きました。」の（ ）に入[はい]る英語[えいご]はどれ？ / I ( ) to the sea.",
+      "choices": [
+        {
+          "id": "a",
+          "text": "go"
+        },
+        {
+          "id": "b",
+          "text": "went"
+        },
+        {
+          "id": "c",
+          "text": "want"
+        },
+        {
+          "id": "d",
+          "text": "saw"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "過去[かこ]の出来事[できごと]なので go の過去形[かこけい] went を使[つか]います。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0002",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "make や time の最後[さいご]にある e はどう発音[はつおん]する？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "「エ」と発音[はつおん]する"
+        },
+        {
+          "id": "b",
+          "text": "「イ」と発音[はつおん]する"
+        },
+        {
+          "id": "c",
+          "text": "発音[はつおん]しない"
+        },
+        {
+          "id": "d",
+          "text": "「ア」と発音[はつおん]する"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "語末[ごまつ]の e を発音[はつおん]せず、直前[ちょくぜん]の母音[ぼいん]がアルファベット読[よ]みになることがあります。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0003",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「私[わたし]は獣医[じゅうい]になりたいです。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I want to go to a vet."
+        },
+        {
+          "id": "b",
+          "text": "I want to be a vet."
+        },
+        {
+          "id": "c",
+          "text": "I want a vet."
+        },
+        {
+          "id": "d",
+          "text": "I saw a vet."
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "I want to be a ... で「〜になりたい」です。vet は獣医[じゅうい]です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0004",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「車[くるま]いすテニス」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "sitting volleyball"
+        },
+        {
+          "id": "b",
+          "text": "wheelchair tennis"
+        },
+        {
+          "id": "c",
+          "text": "table tennis"
+        },
+        {
+          "id": "d",
+          "text": "wheelchair marathon"
+        }
+      ],
+      "answer": "b",
+      "shuffle": true
+    },
+    "explanation": "wheelchair tennis は「車[くるま]いすテニス」です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0005",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「イタリアに行[い]きたいです。」を表[あらわ]す英語[えいご]はどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "I went to Italy."
+        },
+        {
+          "id": "b",
+          "text": "I live in Italy."
+        },
+        {
+          "id": "c",
+          "text": "I want to be Italy."
+        },
+        {
+          "id": "d",
+          "text": "I want to go to Italy."
+        }
+      ],
+      "answer": "d",
+      "shuffle": true
+    },
+    "explanation": "I want to go to ... で「〜に行[い]きたい」です。"
+  },
+  {
+    "id": "eigo.g6.memories-dreams.0006",
+    "type": "choice",
+    "subject": "eigo",
+    "grade": 6,
+    "unit": "eigo.g6.memories-dreams",
+    "tags": ["source:yasuoka-docx", "review:pending-human"],
+    "payload": {
+      "prompt": "「彼女[かのじょ]は〜です」と第三者[だいさんしゃ]を紹介[しょうかい]するときの正[ただ]しい組[く]み合[あ]わせはどれ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "She am"
+        },
+        {
+          "id": "b",
+          "text": "She are"
+        },
+        {
+          "id": "c",
+          "text": "She is"
+        },
+        {
+          "id": "d",
+          "text": "She do"
+        }
+      ],
+      "answer": "c",
+      "shuffle": true
+    },
+    "explanation": "She のあとには is を使[つか]います。"
+  }
+]

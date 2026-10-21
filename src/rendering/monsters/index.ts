@@ -73,8 +73,10 @@ export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   ...TOHOKU,
   // 北海道
   ...HOKKAIDO,
+  'hokkaido-boss': HOKKAIDO['hokkaido-boss-higuma-daio']!,
   // 関東
   ...IBARAKI,
+  'kanto-boss': TOHOKU['tohoku-boss-rokufuyu']!,
   ...TOCHIGI,
   ...GUNMA,
   ...SAITAMA,

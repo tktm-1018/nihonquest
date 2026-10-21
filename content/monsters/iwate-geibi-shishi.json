@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "iwate-geibi-shishi",
+  "name": "ゲイビシシ",
+  "area": "iwate",
+  "motifId": "geibikei",
+  "element": "tsuchi",
+  "weakness": "kaze",
+  "baseStats": {
+    "hp": 50,
+    "mp": 10,
+    "atk": 13,
+    "def": 12,
+    "spd": 8,
+    "wis": 7
+  },
+  "growth": {
+    "hp": 5.6,
+    "mp": 1.2,
+    "atk": 1.7,
+    "def": 1.2,
+    "spd": 1.3,
+    "wis": 1.0
+  },
+  "skills": [
+    "sk-tsuchi-kabe",
+    "sk-iwa-otoshi"
+  ],
+  "drops": [],
+  "recruitRate": 0.0,
+  "xp": 32,
+  "gold": 22,
+  "spriteKey": "mon.iwate-geibi-shishi",
+  "dexBlurb": "ウンダマンが しんかした すがた。猊鼻渓[げいびけい]の 名前[なまえ]は、川[かわ]ぞいの 岩[いわ]が しし（ライオン）の はなの かたちに 見[み]えることから ついたんだ。"
+}

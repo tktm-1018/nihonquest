@@ -46,21 +46,27 @@ async function seedTohokuBossReady(page: Page): Promise<void> {
 }
 
 async function savedTohokuClear(page: Page): Promise<boolean> {
+  return (await savedProgress(page))?.islandsCleared?.includes('tohoku') ?? false;
+}
+
+async function savedProgress(
+  page: Page,
+): Promise<{ islandsCleared?: string[]; eventsDone?: string[] } | undefined> {
   return page.evaluate(async () => {
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open('nihonquest');
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
     });
-    const state = await new Promise<{ progress?: { islandsCleared?: string[] } } | undefined>(
-      (resolve, reject) => {
-        const request = database.transaction('saves').objectStore('saves').get('save:3');
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => resolve(request.result);
-      },
-    );
+    const state = await new Promise<
+      { progress?: { islandsCleared?: string[]; eventsDone?: string[] } } | undefined
+    >((resolve, reject) => {
+      const request = database.transaction('saves').objectStore('saves').get('save:3');
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
     database.close();
-    return state?.progress?.islandsCleared?.includes('tohoku') ?? false;
+    return state?.progress;
   });
 }
 
@@ -109,7 +115,6 @@ test('タップだけで東北地方ボスを倒し、再読込後もバッグ�
   await page.getByRole('button', { name: /スロット 3/ }).click();
   await completeNewGameSetup(page);
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 30_000 });
-  await clickThroughDialogue(page);
 
   // ゲーム画面を終了してオートセーブの発生源を止めてから、E2E用の進行状態を直接注入する。
   // プレイ中に注入すると、先に作られた古いスナップショットが後着して上書きし得る。

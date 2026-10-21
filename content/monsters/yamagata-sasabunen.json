@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schemas/monsters.schema.json",
+  "id": "yamagata-sasabunen",
+  "name": "ササブネン",
+  "area": "yamagata",
+  "motifId": "mogamigawa",
+  "element": "mizu",
+  "weakness": "mori",
+  "baseStats": {
+    "hp": 32,
+    "mp": 8,
+    "atk": 9,
+    "def": 5,
+    "spd": 11,
+    "wis": 5
+  },
+  "growth": {
+    "hp": 4.5,
+    "mp": 1,
+    "atk": 1.3,
+    "def": 0.9,
+    "spd": 1.1,
+    "wis": 0.7
+  },
+  "skills": [
+    "sk-shizuku"
+  ],
+  "drops": [
+    {
+      "itemId": "yamagata-sendo-no-sugegasa",
+      "rate": 0.1
+    },
+    {
+      "itemId": "yamagata-samidare-no-shizuku",
+      "rate": 0.25
+    }
+  ],
+  "recruitRate": 0.08,
+  "xp": 16,
+  "gold": 11,
+  "spriteKey": "mon.yamagata-sasabunen",
+  "evolution": {
+    "to": "yamagata-sendobune",
+    "item": "yamagata-sendo-no-sugegasa"
+  },
+  "dexBlurb": "最上川[もがみがわ]を ながれる ささぶねの せい。最上川は 1つの けんの 中[なか]だけを ながれる 川[かわ]では、日本[にほん]で いちばん 長[なが]いんだよ。"
+}

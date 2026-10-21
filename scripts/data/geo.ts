@@ -315,6 +315,9 @@ export const EVENT_SPOTS: Record<string, LonLat> = {
   'event_shimane_matsue-jo': [133.05, 35.475], // 松江市
   'event_okayama_seto-ohashi': [133.8, 34.46], // 倉敷市児島
   'event_hokkaido_kushiro-shitsugen': [144.4, 43.1], // 釧路市・釧路町・標茶町・鶴居村
+  event_hokkaido_ryuhyo: [144.27, 44.02], // 網走市
+  'event_hokkaido_furano-lavender': [142.43, 43.41], // 中富良野町・富良野市
+  'event_hokkaido_yuki-matsuri': [141.35, 43.06], // 札幌市（大通公園）
   'event_ibaraki_fukuroda-no-taki': [140.406, 36.765], // 大子町
   'event_tochigi_nikko-toshogu': [139.599, 36.758], // 日光市
   event_chiba_kujukurihama: [140.5, 35.55], // 九十九里町
@@ -365,12 +368,9 @@ export const LANDMARK_SPOTS: Record<string, Record<string, LonLat>> = {
   hokkaido: {
     shiretoko: [145.122, 44.076], // 斜里町・羅臼町（羅臼岳）
     mashuko: [144.535, 43.574], // 弟子屈町
-    ryuhyo: [144.27, 44.02], // 網走市
     asahidake: [142.854, 43.664], // 東川町
-    'furano-lavender': [142.43, 43.41], // 中富良野町・富良野市
     toyako: [140.85, 42.6], // 洞爺湖町・壮瞥町
     goryokaku: [140.757, 41.797], // 函館市
-    'yuki-matsuri': [141.35, 43.06], // 札幌市（大通公園）
     'soya-misaki': [141.936, 45.522], // 稚内市
     upopoy: [141.355, 42.557], // 白老町（ポロト湖のほとり）
     'yubari-melon': [141.974, 43.057], // 夕張市

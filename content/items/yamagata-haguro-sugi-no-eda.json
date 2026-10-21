@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "yamagata-haguro-sugi-no-eda",
+  "name": "羽黒山[はぐろさん]の すぎの えだ",
+  "kind": "material",
+  "iconKey": "item.yamagata-haguro-sugi-no-eda",
+  "areaOrigin": "yamagata",
+  "blurb": "羽黒山[はぐろさん]の 石[いし]の かいだんに ならぶ、大[おお]きな すぎの 木[き]の えだ。ホラッコが しんかする。"
+}

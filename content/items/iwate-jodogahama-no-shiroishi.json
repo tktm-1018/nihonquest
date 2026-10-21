@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "iwate-jodogahama-no-shiroishi",
+  "name": "浄土ヶ浜[じょうどがはま]の しろいし",
+  "kind": "material",
+  "iconKey": "item.iwate-jodogahama-no-shiroishi",
+  "areaOrigin": "iwate",
+  "blurb": "浄土ヶ浜[じょうどがはま]の なみうちぎわで ひろった、まっ白[しろ]な 石[いし]。シラハマルが しんかする。"
+}

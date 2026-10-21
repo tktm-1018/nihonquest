@@ -55,6 +55,7 @@ describe('GameState', () => {
       'sk-kanji-giri',
       'sk-bun-no-tsubasa',
       'sk-kotoba-asobi',
+      'sk-katakana-shibari',
     ]);
   });
   it('安全整数を超える進行値をセーブデータとして受け入れない', () => {
@@ -164,6 +165,7 @@ describe('GameState', () => {
       'sk-kanji-giri',
       'sk-bun-no-tsubasa',
       'sk-kotoba-asobi',
+      'sk-katakana-shibari',
     ]);
     expect(migrate(migrated).state.player.skills).toEqual(migrated.player.skills);
   });
@@ -178,6 +180,7 @@ describe('GameState', () => {
       'sk-kanji-giri',
       'sk-bun-no-tsubasa',
       'sk-kotoba-asobi',
+      'sk-katakana-shibari',
     ]);
   });
   it('v2 の学習データへ履歴と概念状態を追加して移行する', () => {
@@ -198,6 +201,15 @@ describe('GameState', () => {
     expect(migrated.migratedFrom).toBe(2);
     expect(migrated.state.learning.attempts).toEqual([]);
     expect(migrated.state.learning.conceptStates).toEqual({});
+    expect(migrated.state.player.skills).toContain('sk-katakana-shibari');
+  });
+  it('v3 の既存セーブへ主人公専用のカタカナしばりを追加する', () => {
+    const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
+    legacy.schemaVersion = 3;
+    legacy.player.skills = legacy.player.skills.filter((id) => id !== 'sk-katakana-shibari');
+    const migrated = migrate(legacy);
+    expect(migrated.state.schemaVersion).toBe(SCHEMA_VERSION);
+    expect(migrated.state.player.skills).toContain('sk-katakana-shibari');
   });
   it('v3 の序盤セーブは主人公を3x3中央へ移し、未解放の装備を所持品へ戻す', () => {
     const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };

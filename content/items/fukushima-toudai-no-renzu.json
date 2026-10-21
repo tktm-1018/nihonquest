@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/items.schema.json",
+  "id": "fukushima-toudai-no-renzu",
+  "name": "灯台[とうだい]の レンズ",
+  "kind": "material",
+  "iconKey": "item.fukushima-toudai-no-renzu",
+  "areaOrigin": "fukushima",
+  "blurb": "灯台[とうだい]の あかりを 遠[とお]くまで とどける ガラスの レンズ。トモシビンが しんかする。"
+}

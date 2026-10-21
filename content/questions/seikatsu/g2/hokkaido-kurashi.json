@@ -1,0 +1,292 @@
+[
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0001",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]では 牛[うし]を たくさん かっている。牛[うし]から とれる 白[しろ]い のみものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ぎゅうにゅう"
+        },
+        {
+          "id": "b",
+          "text": "ジュース"
+        },
+        {
+          "id": "c",
+          "text": "おちゃ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "牛[うし]の おちちを しぼって、ぎゅうにゅう（牛乳[ぎゅうにゅう]）に するよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0002",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "夕張[ゆうばり]で 作[つく]られる、かわに あみめの もようが ある くだものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "メロン"
+        },
+        {
+          "id": "b",
+          "text": "バナナ"
+        },
+        {
+          "id": "c",
+          "text": "ぶどう"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "夕張[ゆうばり]メロンは、かわに あみめの もようが あるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0003",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:kushiro-shitsugen"],
+    "payload": {
+      "prompt": "釧路湿原[くしろしつげん]に すむ、あたまの 上[うえ]が 赤[あか]い 大[おお]きな 白[しろ]い 鳥[とり]は？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "タンチョウ"
+        },
+        {
+          "id": "b",
+          "text": "カラス"
+        },
+        {
+          "id": "c",
+          "text": "スズメ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "タンチョウは あたまの てっぺんが 赤[あか]い つるの なかまだよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0004",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "知床[しれとこ]などの 森[もり]に すむ、大[おお]きな クマは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ヒグマ"
+        },
+        {
+          "id": "b",
+          "text": "パンダ"
+        },
+        {
+          "id": "c",
+          "text": "コアラ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "ヒグマは 北海道[ほっかいどう]の 森[もり]に すむ 大[おお]きな クマだよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0005",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]の 海[うみ]で たくさん とれる、かいがらが 2まい ある 貝[かい]は？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "ホタテ"
+        },
+        {
+          "id": "b",
+          "text": "イカ"
+        },
+        {
+          "id": "c",
+          "text": "タコ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "ホタテは かいがらが 2まい ある 貝[かい]だよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0006",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "日高[ひだか]の 海[うみ]で とれて、おだしに つかう ものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "こんぶ"
+        },
+        {
+          "id": "b",
+          "text": "キャベツ"
+        },
+        {
+          "id": "c",
+          "text": "たけのこ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "こんぶは 海[うみ]で そだつ。おいしい おだしが とれるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0007",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北見[きたみ]で たくさん 作[つく]られる、きると 目[め]が しみる やさいは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "たまねぎ"
+        },
+        {
+          "id": "b",
+          "text": "にんじん"
+        },
+        {
+          "id": "c",
+          "text": "トマト"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "たまねぎを きると、目[め]が しみる ことが あるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0008",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "雪[ゆき]が つもった 道[みち]で、雪[ゆき]を どけるのに つかう どうぐは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "スコップ"
+        },
+        {
+          "id": "b",
+          "text": "うちわ"
+        },
+        {
+          "id": "c",
+          "text": "かさ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "雪[ゆき]かきには、スコップなどを つかうよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0009",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human"],
+    "payload": {
+      "prompt": "北海道[ほっかいどう]の 家[いえ]で、まどが 2まい かさなっている ことが 多[おお]いのは なぜ？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "さむさを ふせぐため"
+        },
+        {
+          "id": "b",
+          "text": "虫[むし]を つかまえるため"
+        },
+        {
+          "id": "c",
+          "text": "おとを 大[おお]きく するため"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "まどを 2まいに すると、そとの さむさが 入[はい]りにくく なるよ。"
+  },
+  {
+    "$schema": "../../../../schemas/questions/choice.schema.json",
+    "id": "seikatsu.g2.hokkaido-kurashi.0010",
+    "type": "choice",
+    "subject": "seikatsu",
+    "grade": 2,
+    "unit": "seikatsu.g2.hokkaido-kurashi",
+    "tags": ["prefecture:hokkaido", "review:pending-human", "event:ryuhyo"],
+    "payload": {
+      "prompt": "りゅうひょうの 下[した]の 海[うみ]に すむ、「りゅうひょうの てんし」と よばれる 生[い]きものは？",
+      "choices": [
+        {
+          "id": "a",
+          "text": "クリオネ"
+        },
+        {
+          "id": "b",
+          "text": "イルカ"
+        },
+        {
+          "id": "c",
+          "text": "カメ"
+        }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "クリオネは ちいさな 貝[かい]の なかま。ひらひら およぐ すがたから てんしと よばれるよ。"
+  }
+]
