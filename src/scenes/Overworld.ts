@@ -578,8 +578,9 @@ export class OverworldScene extends Phaser.Scene {
       // 会話を閉じたキーをおしたままでも、すぐに次の会話が始まらないように、いちど はなすまで待つ
       if (dir) return;
       this.waitRelease = false;
-      this.game.canvas.dataset.inputReady = 'true';
     }
+    // 会話の あとに マップを 切りかえると waitRelease が 消えるので、ここで かならず 立てなおす
+    if (this.game.canvas.dataset.inputReady !== 'true') this.game.canvas.dataset.inputReady = 'true';
     if (!dir) {
       this.standStill();
       return;
