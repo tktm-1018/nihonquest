@@ -12,6 +12,7 @@ import { addProgressValue } from '../../shared/safeInteger';
 import { comboBonus, computeDamage, fleeChance, recruitChance, scoreBand, scoreMultiplier } from './damage';
 import { commandPriority, initiativeOrder } from './initiative';
 import { useMusubiDama } from './musubiDama';
+import { canUseBattleItem, frontAlly, skillTarget, weakestAlly } from './queries';
 import { clampBattleValue, cloneBattleValue, emptyGauges } from './utils';
 import type {
   BattleEvent,
@@ -22,7 +23,6 @@ import type {
   EnemyUnit,
   Party,
   Side,
-  TargetType,
 } from './types';
 
 export interface BattleDeps {
@@ -57,28 +57,7 @@ const ENEMY_HEAL_RATIO = 0.25;
 const ENEMY_GUARD_MULT = 1.5;
 const ENEMY_GUARD_TURNS = 1;
 export { emptyGauges } from './utils';
-
-/** 必殺技の 対象。targetType を 省略したら effect から（かいふく・まもりは 自分、ほかは 敵） */
-export function skillTarget(sk: Pick<Skill, 'targetType' | 'effect'>): TargetType {
-  return sk.targetType ?? (sk.effect === 'heal' || sk.effect === 'buff' ? 'self' : 'singleEnemy');
-}
-
-/** その 必殺技を いま 打てるか（教科ゲージが costGauge 以上） */
-export function canAfford(s: BattleState, sk: Pick<Skill, 'id' | 'subject' | 'costGauge'>): boolean {
-  if (s.player.skillLock?.skillId === sk.id) return true;
-  return s.player.subjectGauges[sk.subject] >= sk.costGauge;
-}
-
-/** 主人公が いま コマンドを 出せるか（ターン制：たたかいが つづいて いて たおれて いなければ いつでも） */
-export function isHeroReady(s: BattleState): boolean {
-  return s.outcome === 'ongoing' && s.ally.hero.hp > 0;
-}
-
-/** 敵が ねらう 相手：前に 立つ オトモ。いなければ 主人公 */
-export function frontAlly(s: BattleState): Combatant {
-  const m = s.ally.monsters[s.ally.activeMonsterIndex];
-  return m && m.hp > 0 ? m : s.ally.hero;
-}
+export { canAfford, canUseBattleItem, frontAlly, isHeroReady, skillTarget } from './queries';
 
 /**
  * 出撃中の 仲間モンスターから オトモを つくる。
@@ -351,21 +330,6 @@ function allyTargets(s: BattleState, sk: Skill, actor: Combatant): Combatant[] {
   if (skillTarget(sk) !== 'party') return [actor];
   const front = frontAlly(s);
   return front !== s.ally.hero ? [s.ally.hero, front] : [s.ally.hero];
-}
-
-/** HP の 割合が いちばん 低い 味方（どうぐは この 味方に 使う） */
-function weakestAlly(s: BattleState): Combatant {
-  const front = frontAlly(s);
-  const r = (c: Combatant) => c.hp / Math.max(1, c.stats.hp);
-  return front !== s.ally.hero && r(front) < r(s.ally.hero) ? front : s.ally.hero;
-}
-
-/** 戦闘の自動対象に、回復どうぐの効果が実際にあるか。 */
-export function canUseBattleItem(s: BattleState, item: Item): boolean {
-  if (item.kind !== 'consumable' || !item.use) return false;
-  if (item.use.recruit) return true;
-  const target = weakestAlly(s);
-  return (!!item.use.heal && target.hp < target.stats.hp) || (!!item.use.mp && target.mp < target.stats.mp);
 }
 
 /** こたえた 教科の ゲージを ためる（オトモの 教科なら たまりやすい） */

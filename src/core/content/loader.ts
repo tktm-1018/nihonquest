@@ -2,7 +2,6 @@
  * content/ の読み込み・検証・索引。ブラウザ（fetch）と Node（fs）の両方から使える。
  * 実ファイル一覧は content/manifest.json（`pnpm gen:manifest` が生成）に従う。
  */
-import { z, type ZodTypeAny } from 'zod';
 import {
   contentKinds,
   elementSchema,
@@ -21,41 +20,12 @@ import {
   type World,
   type XpTable,
 } from './schemas';
+import { ContentError, parseContentManifest, parseWith, type ContentManifest } from './parse';
 import { checkRewardReferences } from './rewardValidation';
 
-export interface ContentManifest {
-  generatedAt: string;
-  files: Record<ContentKind, string[]>;
-  questions: string[];
-  /** Playground の ?q= 直リンクで全問題を読み込まず、該当ファイルだけ取得する索引。 */
-  questionIndex?: Record<string, string>;
-  /** ゲーム開始時に選択学年だけ読み込むための索引。 */
-  questionFilesByGrade?: Record<string, string[]>;
-}
-
-const contentManifestSchema = z.object({
-  generatedAt: z.string(),
-  files: z.record(z.array(z.string().min(1))),
-  questions: z.array(z.string().min(1)),
-  questionIndex: z.record(z.string().min(1)).optional(),
-  questionFilesByGrade: z.record(z.array(z.string().min(1))).optional(),
-});
-
-export function parseContentManifest(data: unknown): ContentManifest {
-  return parseWith<ContentManifest>(contentManifestSchema, data, 'manifest.json');
-}
+export { ContentError, parseContentManifest, type ContentManifest } from './parse';
 
 export type FileReader = (relPath: string) => Promise<unknown>;
-
-export class ContentError extends Error {
-  constructor(
-    public readonly file: string,
-    message: string,
-  ) {
-    super(`${file}: ${message}`);
-    this.name = 'ContentError';
-  }
-}
 
 export interface ContentIndex {
   world: World;
@@ -100,15 +70,6 @@ export function bundledFetchReader(base: string, bundleName = 'content-bundle.js
     if (!Object.prototype.hasOwnProperty.call(bundle, rel)) return fallback(rel);
     return bundle[rel];
   };
-}
-
-function parseWith<T>(schema: ZodTypeAny, data: unknown, file: string): T {
-  const r = schema.safeParse(data);
-  if (!r.success) {
-    const issues = r.error.issues.map((i) => `  - ${i.path.join('.') || '(root)'}: ${i.message}`).join('\n');
-    throw new ContentError(file, `スキーマ違反\n${issues}`);
-  }
-  return r.data as T;
 }
 
 async function loadKind<T extends { id: string }>(
