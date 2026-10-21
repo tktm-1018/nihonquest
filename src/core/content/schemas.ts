@@ -4,6 +4,7 @@
  * - 問題（questions）の payload スキーマはここではなく各レンダラーが所有する（docs/01 §3.3）。
  */
 import { z } from 'zod';
+import { normalizeLegacyStats } from './legacyStats';
 
 export const safeNonnegativeIntegerSchema = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 export const safePositiveIntegerSchema = z.number().int().positive().max(Number.MAX_SAFE_INTEGER);
@@ -42,18 +43,6 @@ const academicStatsObjectSchema = z.object({
   spd: z.number().nonnegative(),
   wis: z.number().nonnegative(),
 });
-
-const normalizeLegacyStats = (value: unknown): unknown => {
-  if (!value || typeof value !== 'object') return value;
-  const stats = value as Record<string, unknown>;
-  return {
-    ...stats,
-    scienceAtk: stats.scienceAtk ?? stats.atk,
-    humanitiesAtk: stats.humanitiesAtk ?? stats.atk,
-    scienceDef: stats.scienceDef ?? stats.def,
-    humanitiesDef: stats.humanitiesDef ?? stats.def,
-  };
-};
 
 /** 旧JSONは読込時だけ文理へ複製し、ランタイムでは8能力に統一する。 */
 export const statsSchema = z.preprocess(normalizeLegacyStats, academicStatsObjectSchema);
