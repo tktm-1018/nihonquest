@@ -84,27 +84,11 @@ import {
   slashSheet,
   type BackdropKind,
 } from './battle/pixelArt';
-import type { EncounterZone } from '../core/battle/setup';
-import type { Ground } from '../core/world/ground';
 import { buildAskEnv } from './shared/askEnv';
 import { buildAllyViews, buildEnemyView, buildGaugeViews } from './battle/hudViews';
 import { buildSkillOptions, lockedCommandOptions, skillLockBanner } from './battle/skillLockPresentation';
-export interface BattleSceneData {
-  enemyId: string;
-  level: number;
-  zone: EncounterZone;
-  /** フィールドの 地面（すなはま・もり …）。バトルの 背景が かわる */
-  ground?: Ground;
-  /** 中ボス・県ボス・地方ボス戦（にげられない）。省略時はモンスター定義の isBoss */
-  isBoss?: boolean;
-  /** 開発者モード：ボス戦でも にげられる（ふつうの モンスターとは そもそも 出会わない） */
-  devMode?: boolean;
-}
-
-export interface BattleEndPayload {
-  outcome: BattleSummary['outcome'];
-  goldLost: number;
-}
+import type { BattleEndEvent, BattleEndPayload, BattleLaunchData } from './battle/contracts';
+export type { BattleEndEvent, BattleEndPayload, BattleLaunchData, BattleSceneData } from './battle/contracts';
 
 type Intent =
   | { kind: 'attack' }
@@ -156,7 +140,7 @@ export class BattleScene extends Phaser.Scene {
   private gs!: GameState;
   private deps!: BattleDeps;
   private state!: BattleState;
-  private opts!: BattleSceneData;
+  private opts!: BattleLaunchData;
   private mastery!: MasteryStore;
   private readonly speak = createSpeaker();
   private readonly qRng = createRng(freshSeed());
@@ -213,7 +197,7 @@ export class BattleScene extends Phaser.Scene {
     super('Battle');
   }
 
-  init(data: BattleSceneData): void {
+  init(data: BattleLaunchData): void {
     this.opts = data;
     this.hud = new HudStore();
     this.hudRoot = null;
@@ -252,7 +236,10 @@ export class BattleScene extends Phaser.Scene {
     if (!def || !this.gs) {
       console.error('[battle] 敵かセーブデータが見つかりません', this.opts);
       this.scene.stop();
-      this.game.events.emit('battle:end', { outcome: 'fled', goldLost: 0 } satisfies BattleEndPayload);
+      this.game.events.emit('battle:end', {
+        encounterId: this.opts.encounterId,
+        result: { outcome: 'fled', goldLost: 0 },
+      } satisfies BattleEndEvent);
       return;
     }
     this.enemyDef = def;
@@ -1838,6 +1825,9 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.fadeOut(280, 0, 0, 0);
     await this.wait(300);
     this.scene.stop();
-    this.game.events.emit('battle:end', { outcome, goldLost } satisfies BattleEndPayload);
+    this.game.events.emit('battle:end', {
+      encounterId: this.opts.encounterId,
+      result: { outcome, goldLost },
+    } satisfies BattleEndEvent);
   }
 }
