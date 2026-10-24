@@ -3,7 +3,7 @@
  * - ここを変えたら `pnpm gen:schemas` で schemas/*.schema.json を再生成し、docs/04 も更新する。
  * - 問題（questions）の payload スキーマはここではなく各レンダラーが所有する（docs/01 §3.3）。
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 export const safeNonnegativeIntegerSchema = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 export const safePositiveIntegerSchema = z.number().int().positive().max(Number.MAX_SAFE_INTEGER);
@@ -289,6 +289,7 @@ export const monsterSchema = z.object({
   baseStats: statsSchema,
   growth: growthCurveSchema,
   skills: z.array(idSchema).default([]),
+  initialLevelCap: safePositiveIntegerSchema.min(10).max(60).multipleOf(10),
   drops: z.array(z.object({ itemId: idSchema, rate: z.number().min(0).max(1) })).default([]),
   recruitRate: z.number().min(0).max(1).default(0),
   recruitItem: idSchema.optional(),
@@ -447,6 +448,16 @@ const bandNumbers = (n: z.ZodNumber) => z.object({ perfect: n, good: n, weak: n,
 export const settingsSchema = z.object({
   timeLimitSecByGrade: z.record(z.string(), z.number().positive()),
   heroGrowth: growthCurveSchema.describe('主人公の基礎成長と5・10レベルごとの節目成長'),
+  levelCaps: z.object({
+    heroInitial: safePositiveIntegerSchema,
+    heroMaximum: safePositiveIntegerSchema,
+    monsterMaximum: safePositiveIntegerSchema,
+    standardStep: safePositiveIntegerSchema,
+    heroPost100Step: safePositiveIntegerSchema,
+    learningFragmentsPerUnlock: safePositiveIntegerSchema,
+    trialCoresPerUnlock: safePositiveIntegerSchema,
+    heroPost100GrowthRate: z.number().positive().max(1),
+  }),
   scoreMultipliers: bandNumbers(z.number().positive())
     .refine(
       ({ perfect, good, weak, miss }) => perfect >= good && good >= weak && weak >= miss,
@@ -631,7 +642,6 @@ export type Unit = z.infer<typeof unitSchema>;
 export type Region = z.infer<typeof regionSchema>;
 export type RegionGate = z.infer<typeof regionGateSchema>;
 export type ArenaRival = z.infer<typeof arenaRivalSchema>;
-
 /** gen-schemas / validate-content が走査する「ファイル種別 → スキーマ」の対応表 */
 export const contentKinds = {
   world: { schema: worldSchema, glob: 'world/*.json', array: false },
@@ -647,5 +657,4 @@ export const contentKinds = {
   settings: { schema: settingsSchema, glob: 'balance/settings.json', array: false },
   rivals: { schema: arenaRivalSchema, glob: 'arena/rivals.json', array: true },
 } as const;
-
 export type ContentKind = keyof typeof contentKinds;

@@ -2,6 +2,7 @@ import type { Grade } from '../content/schemas';
 import { freshSeed } from '../rng';
 import { SCHEMA_VERSION, type GameState } from './schema';
 import { STARTER_EQUIPMENT_ID, STARTER_SKILL_IDS } from './starter';
+import { ensureRoadmapMasterySnapshot } from './roadmapSnapshot';
 
 export interface NewGameOptions {
   name: string;
@@ -11,8 +12,8 @@ export interface NewGameOptions {
 
 export const UNNAMED_HERO = '？？？';
 
-export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
-  return {
+export function createNewGame(o: NewGameOptions, now = Date.now(), heroInitialLevelCap = 10): GameState {
+  return ensureRoadmapMasterySnapshot({
     schemaVersion: SCHEMA_VERSION,
     createdAt: now,
     updatedAt: now,
@@ -21,6 +22,7 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       name: o.name,
       appearance: { hair: 0, skin: 0, cloth: 0, hairStyle: 0, eyes: 0, ...o.appearance },
       level: 1,
+      levelCap: heroInitialLevelCap,
       xp: 0,
       gold: 100,
       baseStats: {
@@ -73,6 +75,8 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
       challengeHigher: false,
       kanjiLevel: o.grade,
       mastery: {},
+      masteredRewardUnits: [],
+      correctedRewardQuestionIds: [],
       recent: [],
       mistakes: [],
       playSecondsByDate: {},
@@ -81,5 +85,5 @@ export function createNewGame(o: NewGameOptions, now = Date.now()): GameState {
     },
     arena: { badges: 0, ghostParty: null },
     settings: { bgmVolume: 0.6, seVolume: 0.8, timeLimitScale: 1 },
-  };
+  });
 }

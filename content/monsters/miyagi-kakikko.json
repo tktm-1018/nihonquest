@@ -22,7 +22,9 @@
     "spd": 1.1,
     "wis": 0.7
   },
-  "skills": ["sk-kana-barrier"],
+  "skills": [
+    "sk-kana-barrier"
+  ],
   "drops": [
     {
       "itemId": "miyagi-miyagi-kaki",
@@ -39,5 +41,6 @@
     "item": "miyagi-miyagi-kaki",
     "count": 3
   },
-  "dexBlurb": "宮城[みやぎ]の 海[うみ]で そだつ かきの 子[こ]ども。かきは いかだから つるした ロープに くっついて 大[おお]きく なる。えいようが たっぷりで「海の ミルク」と よばれるよ。"
+  "dexBlurb": "宮城[みやぎ]の 海[うみ]で そだつ かきの 子[こ]ども。かきは いかだから つるした ロープに くっついて 大[おお]きく なる。えいようが たっぷりで「海の ミルク」と よばれるよ。",
+  "initialLevelCap": 10
 }

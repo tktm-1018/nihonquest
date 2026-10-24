@@ -43,5 +43,6 @@
     "to": "fukushima-shirayuki-swan",
     "item": "fukushima-shiratori-no-hane"
   },
-  "dexBlurb": "猪苗代湖[いなわしろこ]に やってくる 白鳥[はくちょう]の ひな。白鳥の 子[こ]どもは まだ 白[しろ]くなくて、はいいろの はねを しているんだよ。"
+  "dexBlurb": "猪苗代湖[いなわしろこ]に やってくる 白鳥[はくちょう]の ひな。白鳥の 子[こ]どもは まだ 白[しろ]くなくて、はいいろの はねを しているんだよ。",
+  "initialLevelCap": 10
 }

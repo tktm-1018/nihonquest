@@ -59,7 +59,10 @@ test('歩行中も場所名とミニマップが残り、県マップを拡大�
   await expect(unavailableWarp.locator('ruby')).toHaveCount(1);
   await expect(unavailableWarp).not.toContainText('[');
   await expect(areaMapDialog.getByRole('button', { name: 'にほんちず' })).toBeFocused();
-  await expect(page.getByText('100%', { exact: true })).toBeVisible();
+  await expect(areaMapDialog.locator('.nq-amap-tools')).toHaveCount(0);
+  await expect(areaMapDialog.locator('.nq-amap-zoom-value')).toHaveCount(0);
+  await expect(areaMapDialog.locator('.nq-amap-reset')).toHaveCount(0);
+  await expect(areaMapDialog.getByRole('button', { name: /ちずを (おおきく|ちいさく)する/ })).toHaveCount(0);
 
   const box = await mapView.boundingBox();
   expect(box).not.toBeNull();
@@ -67,14 +70,6 @@ test('歩行中も場所名とミニマップが残り、県マップを拡大�
   await page.keyboard.down('Control');
   await page.mouse.wheel(0, -100);
   await page.keyboard.up('Control');
-  await expect(page.getByText('150%', { exact: true })).toBeVisible();
-  await page.keyboard.down('Control');
-  await page.mouse.wheel(0, 100);
-  await page.keyboard.up('Control');
-  await expect(page.getByText('100%', { exact: true })).toBeVisible();
-
-  await page.getByRole('button', { name: 'ちずを おおきくする' }).click();
-  await expect(page.getByText('150%', { exact: true })).toBeVisible();
   await expect(mapCanvas).toHaveCSS('transform', /matrix\(1\.5, 0, 0, 1\.5,/);
 
   await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
@@ -83,8 +78,9 @@ test('歩行中も場所名とミニマップが残り、県マップを拡大�
   await page.mouse.up();
   await expect(mapCanvas).not.toHaveCSS('transform', /matrix\(1\.5, 0, 0, 1\.5, 0, 0\)/);
 
-  await page.getByRole('button', { name: 'もどす', exact: true }).click();
-  await expect(page.getByText('100%', { exact: true })).toBeVisible();
+  await page.keyboard.down('Control');
+  await page.mouse.wheel(0, 100);
+  await page.keyboard.up('Control');
   await expect(mapCanvas).toHaveCSS('transform', /matrix\(1, 0, 0, 1, 0, 0\)/);
 
   // 県のしるしがそろうまでは、地方ボスの存在・名前・城を先に見せない。
@@ -116,8 +112,6 @@ test('鳥取県の大きな地図で現在県だけを詳しく、周辺県を�
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
   await completeNewGameSetup(page, 'ちず');
-  await expect(page.getByRole('dialog', { name: 'ものがたりの シーン' })).toBeVisible({ timeout: 40_000 });
-  await page.getByRole('button', { name: 'スキップ' }).click();
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible();
 
   await page.reload();

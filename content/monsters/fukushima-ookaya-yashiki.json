@@ -27,9 +27,10 @@
     "sk-happa-arashi"
   ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 36,
   "gold": 24,
   "spriteKey": "mon.fukushima-ookaya-yashiki",
-  "dexBlurb": "カヤブキンが しんかした すがた。大内宿[おおうちじゅく]の 名物[めいぶつ]「ねぎそば」は、おはしの かわりに ながい ねぎ 1本[ぽん]で たべるんだよ。"
+  "dexBlurb": "カヤブキンが しんかした すがた。大内宿[おおうちじゅく]の 名物[めいぶつ]「ねぎそば」は、おはしの かわりに ながい ねぎ 1本[ぽん]で たべるんだよ。",
+  "initialLevelCap": 10
 }

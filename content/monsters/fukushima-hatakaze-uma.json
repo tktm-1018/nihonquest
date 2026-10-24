@@ -27,7 +27,7 @@
     "sk-habataki"
   ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 34,
   "gold": 22,
   "spriteKey": "mon.fukushima-hatakaze-uma",
@@ -36,5 +36,6 @@
     "item": "fukushima-shinki-no-hata",
     "count": 3
   },
-  "dexBlurb": "ノマッコが しんかした すがた。せなかに 旗[はた]を たてて 風[かぜ]のように 走[はし]る 馬[うま]。野馬追[のまおい]では、よろいかぶとの 人[ひと]を のせた 馬が 何百頭[なんびゃくとう]も あつまるよ。"
+  "dexBlurb": "ノマッコが しんかした すがた。せなかに 旗[はた]を たてて 風[かぜ]のように 走[はし]る 馬[うま]。野馬追[のまおい]では、よろいかぶとの 人[ひと]を のせた 馬が 何百頭[なんびゃくとう]も あつまるよ。",
+  "initialLevelCap": 10
 }

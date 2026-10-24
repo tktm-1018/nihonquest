@@ -187,7 +187,6 @@ describe('RubyText', () => {
         mapKeys: string;
         mapNationKeys: string;
         areaMapKeys: string;
-        menuKeys: string;
         barberKeys: string;
         lookSummary: string;
       };
@@ -200,7 +199,6 @@ describe('RubyText', () => {
       dictionary.field.mapKeys,
       dictionary.field.mapNationKeys,
       dictionary.field.areaMapKeys,
-      dictionary.field.menuKeys,
       dictionary.field.barberKeys,
       dictionary.field.lookSummary,
     ];

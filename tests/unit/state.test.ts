@@ -2,8 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { createNewGame } from '../../src/core/state/newGame';
 import { migrate } from '../../src/core/state/migrations';
 import { SCHEMA_VERSION, gameStateSchema } from '../../src/core/state/schema';
+import { normalizeLevelCaps } from '../../src/core/state/levelCaps';
 import { exportJson, importJson, summarizeSlot } from '../../src/core/state/save';
 import { recordPlayDuration, recordPlayMinute } from '../../src/core/state/playTime';
+import {
+  ROADMAP_GRANDFATHERED_PREFIX,
+  ROADMAP_MASTERY_SNAPSHOT_COUNTER,
+  roadmapGrandfatheredUnitIds,
+} from '../../src/core/state/roadmapSnapshot';
 
 const fresh = () => createNewGame({ name: 'ハル', grade: 3 });
 
@@ -57,6 +63,23 @@ describe('GameState', () => {
       'sk-kotoba-asobi',
       'sk-katakana-shibari',
     ]);
+    expect(state.player.levelCap).toBe(10);
+    expect(state.learning.masteredRewardUnits).toEqual([]);
+    expect(state.learning.correctedRewardQuestionIds).toEqual([]);
+    expect(state.progress.counters[ROADMAP_MASTERY_SNAPSHOT_COUNTER]).toBe(1);
+  });
+
+  it('スキルツリー導入前の習得済み単元を一度だけ既得進捗として保存する', () => {
+    const legacy = fresh();
+    delete legacy.progress.counters[ROADMAP_MASTERY_SNAPSHOT_COUNTER];
+    legacy.learning.mastery['sansu.g1.tashizan'] = { value: 0.9, n: 3, lastAt: 123 };
+
+    const migrated = migrate(legacy).state;
+
+    expect(roadmapGrandfatheredUnitIds(migrated)).toEqual(['sansu.g1.tashizan']);
+    expect(migrated.progress.counters[`${ROADMAP_GRANDFATHERED_PREFIX}sansu.g1.tashizan`]).toBe(1);
+    expect(migrated.learning.masteredRewardUnits).toEqual([]);
+    expect(migrate(migrated).state).toEqual(migrated);
   });
   it('安全整数を超える進行値をセーブデータとして受け入れない', () => {
     const state = fresh();
@@ -113,7 +136,13 @@ describe('GameState', () => {
   it('v9 の能力を文理能力へ移行し、現在HP・MP割合を保つ', () => {
     const source = fresh();
     source.player.equipment.weapon = 'common-renshu-no-bou';
-    source.party.owned.push({ uid: 'pal-1', monsterId: 'aomori-ringoron', level: 3, xp: 12 });
+    source.party.owned.push({
+      uid: 'pal-1',
+      monsterId: 'aomori-ringoron',
+      level: 3,
+      levelCap: 10,
+      xp: 12,
+    });
     source.party.activeUid = 'pal-1';
     source.party.team = ['pal-1'];
     source.learning.mastery['sansu:addition'] = { value: 0.75, n: 4, lastAt: 1234 };
@@ -122,7 +151,9 @@ describe('GameState', () => {
       party: structuredClone(source.party),
       learning: structuredClone(source.learning),
     };
-    const legacy = structuredClone(source) as unknown as LegacyV9State;
+    const legacyWithoutCaps = structuredClone(source);
+    delete (legacyWithoutCaps.party.owned[0] as { levelCap?: number }).levelCap;
+    const legacy = legacyWithoutCaps as unknown as LegacyV9State;
     legacy.schemaVersion = 9;
     legacy.player.baseStats = {
       hp: 40,
@@ -152,13 +183,71 @@ describe('GameState', () => {
     expect(migrated.learning).toEqual(preserved.learning);
     expect(migrate(migrated).state).toEqual(migrated);
   });
-  it('v10 のセーブに1年生の国語技を重複なく追加する', () => {
+  it('v10 の進行を保ったまま個体上限・学習報酬履歴・国語技を追加する', () => {
     const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
     legacy.schemaVersion = 10;
     legacy.player.skills = ['sk-tashizan-giri'];
+    legacy.player.level = 37;
+    legacy.player.xp = 12_345;
+    legacy.player.equipment.weapon = 'common-renshu-no-bou';
+    legacy.party.owned = [
+      {
+        uid: 'same-uid',
+        monsterId: 'aomori-ringoron',
+        nickname: 'リン',
+        level: 12,
+        levelCap: 20,
+        xp: 678,
+      },
+    ];
+    legacy.dex.monsters = ['aomori-ringoron'];
+    legacy.inventory['aomori-ringo'] = 4;
+    legacy.learning.mastery['sansu.g1'] = { value: 0.9, n: 8, lastAt: 123 };
+    delete (legacy.player as Partial<typeof legacy.player>).levelCap;
+    delete (legacy.learning as Partial<typeof legacy.learning>).masteredRewardUnits;
+    delete (legacy.learning as Partial<typeof legacy.learning>).correctedRewardQuestionIds;
+    delete (legacy.party.owned[0] as Partial<(typeof legacy.party.owned)[number]>).levelCap;
+
+    const migrated = migrate(legacy);
+
+    expect(migrated.migratedFrom).toBe(10);
+    expect(migrated.state.schemaVersion).toBe(SCHEMA_VERSION);
+    expect(migrated.state.player).toMatchObject({ level: 37, xp: 12_345, levelCap: 40 });
+    expect(migrated.state.player.skills).toEqual([
+      'sk-tashizan-giri',
+      'sk-hono-no-mai',
+      'sk-kanji-giri',
+      'sk-bun-no-tsubasa',
+      'sk-kotoba-asobi',
+      'sk-katakana-shibari',
+    ]);
+    expect(migrated.state.party.owned).toEqual([
+      {
+        uid: 'same-uid',
+        monsterId: 'aomori-ringoron',
+        nickname: 'リン',
+        level: 12,
+        xp: 678,
+        levelCap: 20,
+      },
+    ]);
+    expect(migrated.state.player.equipment.weapon).toBe('common-renshu-no-bou');
+    expect(migrated.state.dex.monsters).toEqual(['aomori-ringoron']);
+    expect(migrated.state.inventory['aomori-ringo']).toBe(4);
+    expect(migrated.state.learning.mastery['sansu.g1']).toEqual({ value: 0.9, n: 8, lastAt: 123 });
+    expect(migrated.state.learning.masteredRewardUnits).toEqual([]);
+    expect(migrated.state.learning.correctedRewardQuestionIds).toEqual([]);
+    expect(migrate(migrated.state)).toEqual({ state: migrated.state, migratedFrom: null });
+  });
+  it.each([11, 12])('v%d のセーブにも分けた国語技と個体上限を追加する', (schemaVersion) => {
+    const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
+    legacy.schemaVersion = schemaVersion;
+    legacy.player.skills = ['sk-tashizan-giri', 'sk-hono-no-mai'];
+    delete (legacy.player as Partial<typeof legacy.player>).levelCap;
 
     const migrated = migrate(legacy).state;
 
+    expect(migrated.player.levelCap).toBe(10);
     expect(migrated.player.skills).toEqual([
       'sk-tashizan-giri',
       'sk-hono-no-mai',
@@ -167,21 +256,27 @@ describe('GameState', () => {
       'sk-kotoba-asobi',
       'sk-katakana-shibari',
     ]);
-    expect(migrate(migrated).state.player.skills).toEqual(migrated.player.skills);
   });
-  it('v11 のセーブに分けた国語技を追加する', () => {
-    const legacy = structuredClone(fresh()) as ReturnType<typeof fresh> & { schemaVersion: number };
-    legacy.schemaVersion = 11;
-    legacy.player.skills = ['sk-tashizan-giri', 'sk-hono-no-mai'];
+  it('読込後の上限を現在レベルと種族初期上限の大きい方へ一度だけ正規化する', () => {
+    const state = fresh();
+    state.player.level = 37;
+    state.player.levelCap = 40;
+    state.party.owned = [
+      {
+        uid: 'same-uid',
+        monsterId: 'aomori-ringoron',
+        level: 12,
+        xp: 678,
+        levelCap: 20,
+      },
+    ];
+    const monsters = new Map([['aomori-ringoron', { initialLevelCap: 40 }]]);
 
-    expect(migrate(legacy).state.player.skills).toEqual([
-      'sk-tashizan-giri',
-      'sk-hono-no-mai',
-      'sk-kanji-giri',
-      'sk-bun-no-tsubasa',
-      'sk-kotoba-asobi',
-      'sk-katakana-shibari',
-    ]);
+    const normalized = normalizeLevelCaps(state, monsters, 10);
+
+    expect(normalized.player.levelCap).toBe(40);
+    expect(normalized.party.owned[0]?.levelCap).toBe(40);
+    expect(normalizeLevelCaps(normalized, monsters, 10)).toBe(normalized);
   });
   it('v2 の学習データへ履歴と概念状態を追加して移行する', () => {
     const current = fresh();

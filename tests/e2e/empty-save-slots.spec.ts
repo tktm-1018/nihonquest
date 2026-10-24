@@ -4,6 +4,22 @@ test('ローカル確認URLで古いセーブを消し、3枠とも新規作成�
   test.setTimeout(90_000);
   await page.goto('/');
   await expect(page.getByRole('menuitem', { name: /はじめから/ })).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(
+      () =>
+        page.evaluate(async () => {
+          const database = await new Promise<IDBDatabase>((resolve, reject) => {
+            const request = indexedDB.open('nihonquest');
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+          });
+          const ready = database.objectStoreNames.contains('saves');
+          database.close();
+          return ready;
+        }),
+      { timeout: 30_000 },
+    )
+    .toBe(true);
 
   // 本当に既存データがあっても消えることを確認するため、壊れた旧データを3枠へ置く。
   await page.evaluate(async () => {
@@ -31,7 +47,7 @@ test('ローカル確認URLで古いセーブを消し、3枠とも新規作成�
   const slots = page.locator('.nq-save-slots > div > button');
   await expect(slots).toHaveCount(3);
   await expect(slots.first()).toBeFocused();
-  await expect(slotDialog.locator('.nq-save-slots-hint')).toContainText('スロットを タップして えらぶ');
+  await expect(slotDialog.locator('.nq-save-slots-hint')).toHaveCount(0);
   await page.keyboard.press('ArrowDown');
   await expect(slots.nth(1)).toBeFocused();
   await page.keyboard.press('End');
@@ -42,6 +58,9 @@ test('ローカル確認URLで古いセーブを消し、3枠とも新規作成�
     'background-color',
     'rgb(49, 92, 148)',
   );
+  await slots.nth(1).hover();
+  await expect(slots.nth(1)).toBeFocused();
+  await expect(slots.nth(1)).toHaveCSS('border-color', 'rgb(255, 212, 71)');
   for (let index = 0; index < 3; index += 1) {
     await expect(slots.nth(index)).toContainText('あたらしく はじめる');
     await expect(slots.nth(index)).not.toContainText(/Lv|★|うわがき/);

@@ -171,12 +171,6 @@ export function AreaMapOverlay({
       y: Math.max(-maxY, Math.min(maxY, next.y)),
     };
   };
-  const changeZoom = (next: number) => {
-    const level = Math.max(1, Math.min(3, next));
-    playSfx('move');
-    setZoom(level);
-    setPan((current) => clampPan(current, level));
-  };
   const zoomAt = (next: number, x: number, y: number) => {
     const current = view.current;
     const level = Math.max(1, Math.min(3, next));
@@ -197,12 +191,6 @@ export function AreaMapOverlay({
     setZoom(level);
     setPan(nextPan);
   };
-  const resetView = () => {
-    playSfx('move');
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
-  };
-
   // 地方地図の現在県の範囲を、詳細地形の陸地の範囲へ合わせる。
   // 周辺県はこの変換を共有するため、県同士の位置関係を保った暗いシルエットになる。
   const regionRef = useRef<HTMLCanvasElement>(null);
@@ -430,34 +418,6 @@ export function AreaMapOverlay({
               <PixelIcon name="map" scale={2} />
               {worldLabel}
             </button>
-          </div>
-          <div class="nq-amap-tools">
-            <div class="nq-amap-zoom-group">
-              <button
-                type="button"
-                class="nq-wmap-arrow"
-                aria-label={t('field.areaMapZoomOut')}
-                disabled={zoom === 1}
-                onClick={() => changeZoom(zoom - 0.5)}
-              >
-                −
-              </button>
-              <span class="nq-amap-zoom-value" aria-live="polite">
-                {Math.round(zoom * 100)}%
-              </span>
-              <button
-                type="button"
-                class="nq-wmap-arrow"
-                aria-label={t('field.areaMapZoomIn')}
-                disabled={zoom === 3}
-                onClick={() => changeZoom(zoom + 0.5)}
-              >
-                ＋
-              </button>
-              <button type="button" class="nq-opt nq-amap-reset" onClick={resetView}>
-                {t('field.areaMapReset')}
-              </button>
-            </div>
           </div>
           <div
             class={`nq-wmap-view nq-amap-view ${zoom > 1 ? 'nq-amap-pannable' : ''}`}

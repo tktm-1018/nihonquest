@@ -6,9 +6,27 @@
   "motifId": "takaosan",
   "element": "tsuchi",
   "weakness": "mori",
-  "baseStats": { "hp": 700, "mp": 90, "atk": 26, "def": 20, "spd": 11, "wis": 17 },
-  "growth": { "hp": 0, "mp": 0, "atk": 0, "def": 0, "spd": 0, "wis": 0 },
-  "skills": ["sk-tsuchi-kabe", "sk-iwa-otoshi", "sk-mizu-teppo"],
+  "baseStats": {
+    "hp": 700,
+    "mp": 90,
+    "atk": 26,
+    "def": 20,
+    "spd": 11,
+    "wis": 17
+  },
+  "growth": {
+    "hp": 0,
+    "mp": 0,
+    "atk": 0,
+    "def": 0,
+    "spd": 0,
+    "wis": 0
+  },
+  "skills": [
+    "sk-tsuchi-kabe",
+    "sk-iwa-otoshi",
+    "sk-mizu-teppo"
+  ],
   "drops": [],
   "recruitRate": 0,
   "xp": 900,
@@ -20,14 +38,22 @@
     {
       "hpBelow": 0.66,
       "element": "kaze",
-      "skills": ["sk-habataki", "sk-iwa-otoshi", "sk-tsuchi-kabe"],
+      "skills": [
+        "sk-habataki",
+        "sk-iwa-otoshi",
+        "sk-tsuchi-kabe"
+      ],
       "line": "ぐるぐる まわれ！ 町[まち]の 風[かぜ]よ、ふきあれろ！"
     },
     {
       "hpBelow": 0.25,
       "element": "none",
-      "skills": ["sk-happa-arashi", "sk-hikari-no-ya"],
+      "skills": [
+        "sk-happa-arashi",
+        "sk-hikari-no-ya"
+      ],
       "line": "……町[まち]の 人[ひと]たちの こえが、きこえる……。"
     }
-  ]
+  ],
+  "initialLevelCap": 10
 }

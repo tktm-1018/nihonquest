@@ -27,7 +27,7 @@
     "sk-uzushio"
   ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 34,
   "gold": 22,
   "spriteKey": "mon.fukushima-shirayuki-swan",
@@ -36,5 +36,6 @@
     "item": "fukushima-tenkyo-no-shizuku",
     "count": 3
   },
-  "dexBlurb": "スワッピが しんかした すがた。まっ白[しろ]な はねを ひろげた 白鳥[はくちょう]。冬[ふゆ]に なると、とおい シベリアから 猪苗代湖[いなわしろこ]へ わたってくるよ。"
+  "dexBlurb": "スワッピが しんかした すがた。まっ白[しろ]な はねを ひろげた 白鳥[はくちょう]。冬[ふゆ]に なると、とおい シベリアから 猪苗代湖[いなわしろこ]へ わたってくるよ。",
+  "initialLevelCap": 10
 }

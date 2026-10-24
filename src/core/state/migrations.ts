@@ -5,8 +5,55 @@
 import { SCHEMA_VERSION, gameStateSchema, type GameState } from './schema';
 import { STARTER_EQUIPMENT_ID, STARTER_SKILL_IDS } from './starter';
 import { addProgressValue } from '../../shared/safeInteger';
+import { provisionalLevelCap } from '../progression/levelCap';
+import { ensureRoadmapMasterySnapshot } from './roadmapSnapshot';
 
 type Migration = (s: Record<string, unknown>) => Record<string, unknown>;
+
+function addLevelCapsRewardsAndStarterSkills(
+  s: Record<string, unknown>,
+  schemaVersion: number,
+): Record<string, unknown> {
+  const player = (s.player ?? {}) as Record<string, unknown>;
+  const party = (s.party ?? {}) as Record<string, unknown>;
+  const learning = (s.learning ?? {}) as Record<string, unknown>;
+  const skills = Array.isArray(player.skills) ? [...player.skills] : [];
+  for (const skillId of STARTER_SKILL_IDS) {
+    if (!skills.includes(skillId)) skills.push(skillId);
+  }
+  const owned = Array.isArray(party.owned)
+    ? party.owned.map((value) => {
+        const monster = value as Record<string, unknown>;
+        return {
+          ...monster,
+          levelCap:
+            typeof monster.levelCap === 'number'
+              ? monster.levelCap
+              : provisionalLevelCap(Number(monster.level) || 1, 100),
+        };
+      })
+    : [];
+  return {
+    ...s,
+    schemaVersion,
+    player: {
+      ...player,
+      skills,
+      levelCap:
+        typeof player.levelCap === 'number'
+          ? player.levelCap
+          : provisionalLevelCap(Number(player.level) || 1, 200),
+    },
+    party: { ...party, owned },
+    learning: {
+      ...learning,
+      masteredRewardUnits: Array.isArray(learning.masteredRewardUnits) ? learning.masteredRewardUnits : [],
+      correctedRewardQuestionIds: Array.isArray(learning.correctedRewardQuestionIds)
+        ? learning.correctedRewardQuestionIds
+        : [],
+    },
+  };
+}
 
 // v7 までは解放条件を抽選へ反映しておらず、イタコドリは最初から出現していた。
 // アップデートで既存プレイヤーの出現候補を減らさないため、旧セーブでは解放済みとして引き継ぐ。
@@ -149,22 +196,9 @@ const migrations: Record<number, Migration> = {
       },
     };
   },
-  10: (s) => {
-    const player = (s.player ?? {}) as Record<string, unknown>;
-    const skills = Array.isArray(player.skills) ? [...player.skills] : [];
-    for (const skillId of STARTER_SKILL_IDS) {
-      if (!skills.includes(skillId)) skills.push(skillId);
-    }
-    return { ...s, schemaVersion: 11, player: { ...player, skills } };
-  },
-  11: (s) => {
-    const player = (s.player ?? {}) as Record<string, unknown>;
-    const skills = Array.isArray(player.skills) ? [...player.skills] : [];
-    for (const skillId of STARTER_SKILL_IDS) {
-      if (!skills.includes(skillId)) skills.push(skillId);
-    }
-    return { ...s, schemaVersion: 12, player: { ...player, skills } };
-  },
+  10: (s) => addLevelCapsRewardsAndStarterSkills(s, 11),
+  11: (s) => addLevelCapsRewardsAndStarterSkills(s, 12),
+  12: (s) => addLevelCapsRewardsAndStarterSkills(s, 13),
 };
 
 export interface MigrateResult {
@@ -188,5 +222,8 @@ export function migrate(raw: unknown): MigrateResult {
     throw new Error(
       `セーブデータが壊れています: ${parsed.error.issues.map((i) => i.path.join('.')).join(', ')}`,
     );
-  return { state: parsed.data, migratedFrom: from === SCHEMA_VERSION ? null : from };
+  return {
+    state: ensureRoadmapMasterySnapshot(parsed.data),
+    migratedFrom: from === SCHEMA_VERSION ? null : from,
+  };
 }

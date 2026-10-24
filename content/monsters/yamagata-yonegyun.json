@@ -39,5 +39,6 @@
     "to": "yamagata-yonezawa-ogyu",
     "item": "yamagata-hoshikusa-no-taba"
   },
-  "dexBlurb": "米沢[よねざわ]の まきばで そだつ 子牛[こうし]。山形[やまがた]の ことばでは、牛[うし]の ことを「べこ」と よぶ ことも あるよ。"
+  "dexBlurb": "米沢[よねざわ]の まきばで そだつ 子牛[こうし]。山形[やまがた]の ことばでは、牛[うし]の ことを「べこ」と よぶ ことも あるよ。",
+  "initialLevelCap": 30
 }

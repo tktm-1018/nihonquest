@@ -172,47 +172,6 @@
 .nq-wmap-left {
   position: relative;
 }
-.nq-amap-tools {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  height: 44px;
-  padding: 2px 4px;
-  color: var(--nq-white);
-  background: var(--nq-night);
-  border: 2px solid var(--nq-slate);
-}
-.nq-amap-zoom-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: none;
-}
-.nq-amap-tools .nq-wmap-arrow {
-  width: 44px;
-  height: 44px;
-  border-width: 2px;
-  font-size: 24px;
-}
-.nq-amap-tools .nq-wmap-arrow:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.nq-amap-zoom-value {
-  min-width: 44px;
-  text-align: center;
-  font-size: 16px;
-}
-.nq-amap-reset {
-  min-height: 44px;
-  padding: 0 8px;
-  border-width: 2px;
-  font-size: 16px;
-}
-.nq-wmap-view.nq-amap-view {
-  height: 352px;
-}
 .nq-amap-pan-hint {
   position: absolute;
   z-index: 6;
@@ -945,10 +904,36 @@
   justify-content: center;
 }
 .nq-japan-view canvas {
+  position: absolute;
+  inset: 0;
   width: 400px;
   height: 400px;
   image-rendering: pixelated;
+}
+.nq-japan-view {
+  position: relative;
+  overflow: hidden;
+}
+.nq-japan-map {
   cursor: pointer;
+}
+.nq-japan-highlight {
+  pointer-events: none;
+  animation: nq-japan-highlight-pulse 1.2s steps(3, end) infinite;
+}
+@keyframes nq-japan-highlight-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nq-japan-highlight {
+    animation: none;
+  }
 }
 .nq-japan-info > p {
   margin: 0;

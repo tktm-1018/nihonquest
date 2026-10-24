@@ -2,7 +2,7 @@
  * セーブデータ（GameState）。子どものセーブを壊さないよう schemaVersion + マイグレーションを持つ。
  * 個人情報は一切入れない（GDD §8：ログイン不要・端末内保存）。
  */
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import {
   gradeSchema,
   idSchema,
@@ -13,7 +13,7 @@ import {
 } from '../content/schemas';
 import { attemptEventSchema, conceptStateSchema } from '../learning/state';
 
-export const SCHEMA_VERSION = 12;
+export const SCHEMA_VERSION = 13;
 
 export const equipmentSchema = z
   .object({ weapon: idSchema, head: idSchema, chest: idSchema, legs: idSchema, feet: idSchema })
@@ -24,6 +24,7 @@ export const ownedMonsterSchema = z.object({
   monsterId: idSchema,
   nickname: z.string().max(8).optional(),
   level: safePositiveIntegerSchema,
+  levelCap: safePositiveIntegerSchema,
   xp: safeNonnegativeIntegerSchema,
 });
 
@@ -54,6 +55,7 @@ export const gameStateSchema = z.object({
       eyes: z.number().int().min(0).max(2).default(0),
     }),
     level: safePositiveIntegerSchema,
+    levelCap: safePositiveIntegerSchema,
     xp: safeNonnegativeIntegerSchema,
     gold: safeNonnegativeIntegerSchema,
     baseStats: statsSchema,
@@ -107,6 +109,8 @@ export const gameStateSchema = z.object({
     challengeHigher: z.boolean().default(false),
     kanjiLevel: gradeSchema.describe('漢字表示レベル'),
     mastery: z.record(z.string(), masteryRecordSchema),
+    masteredRewardUnits: z.array(idSchema),
+    correctedRewardQuestionIds: z.array(idSchema),
     recent: z.array(z.string()),
     mistakes: z.array(z.string()),
     playSecondsByDate: z.record(z.string(), safeNonnegativeIntegerSchema),

@@ -27,7 +27,7 @@
     "sk-hikari-no-ya"
   ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 31,
   "gold": 21,
   "spriteKey": "mon.akita-inaho-kakashi",
@@ -36,5 +36,6 @@
     "item": "akita-kogane-no-inaho",
     "count": 3
   },
-  "dexBlurb": "コメツブンが しんかした すがた。大潟村[おおがたむら]の 田[た]んぼを まもる かかし。大潟村の 田んぼは 1まいが サッカーの コートより 大[おお]きくて、まっすぐ ならんで いるよ。"
+  "dexBlurb": "コメツブンが しんかした すがた。大潟村[おおがたむら]の 田[た]んぼを まもる かかし。大潟村の 田んぼは 1まいが サッカーの コートより 大[おお]きくて、まっすぐ ならんで いるよ。",
+  "initialLevelCap": 20
 }

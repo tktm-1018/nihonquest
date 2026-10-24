@@ -28,9 +28,10 @@
     "sk-fubuki"
   ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 56,
   "gold": 34,
   "spriteKey": "mon.fukushima-tenkyo-swan",
-  "dexBlurb": "猪苗代湖[いなわしろこ]の ぬしの 白鳥[はくちょう]。猪苗代湖は 磐梯山[ばんだいさん]を かがみのように うつすので「天鏡湖[てんきょうこ]」とも よばれるよ。"
+  "dexBlurb": "猪苗代湖[いなわしろこ]の ぬしの 白鳥[はくちょう]。猪苗代湖は 磐梯山[ばんだいさん]を かがみのように うつすので「天鏡湖[てんきょうこ]」とも よばれるよ。",
+  "initialLevelCap": 10
 }

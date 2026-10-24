@@ -22,7 +22,9 @@
     "spd": 1.1,
     "wis": 0.7
   },
-  "skills": ["sk-shizuku"],
+  "skills": [
+    "sk-shizuku"
+  ],
   "drops": [
     {
       "itemId": "miyagi-same-no-ha",
@@ -41,5 +43,6 @@
     "to": "miyagi-kesen-zame",
     "item": "miyagi-same-no-ha"
   },
-  "dexBlurb": "気仙沼[けせんぬま]の 港[みなと]に あがる サメの 子[こ]ども。気仙沼は、日本[にほん]で いちばん たくさん サメが 水[みず]あげされる 港なんだよ。"
+  "dexBlurb": "気仙沼[けせんぬま]の 港[みなと]に あがる サメの 子[こ]ども。気仙沼は、日本[にほん]で いちばん たくさん サメが 水[みず]あげされる 港なんだよ。",
+  "initialLevelCap": 10
 }

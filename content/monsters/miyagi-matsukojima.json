@@ -22,7 +22,9 @@
     "spd": 1.1,
     "wis": 0.7
   },
-  "skills": ["sk-suna-kabe"],
+  "skills": [
+    "sk-suna-kabe"
+  ],
   "drops": [
     {
       "itemId": "miyagi-matsubokkuri",
@@ -37,5 +39,6 @@
     "to": "miyagi-niojiman",
     "item": "miyagi-matsubokkuri"
   },
-  "dexBlurb": "松島[まつしま]に うかぶ 小[ちい]さな 島[しま]の 子[こ]ども。松島の 島は やわらかい 岩[いわ]で できていて、なみに けずられて いろいろな かたちに なったよ。"
+  "dexBlurb": "松島[まつしま]に うかぶ 小[ちい]さな 島[しま]の 子[こ]ども。松島の 島は やわらかい 岩[いわ]で できていて、なみに けずられて いろいろな かたちに なったよ。",
+  "initialLevelCap": 30
 }

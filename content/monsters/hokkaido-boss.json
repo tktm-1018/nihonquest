@@ -6,9 +6,27 @@
   "motifId": "ryuhyo",
   "element": "mizu",
   "weakness": "hino",
-  "baseStats": { "hp": 600, "mp": 80, "atk": 23, "def": 18, "spd": 10, "wis": 15 },
-  "growth": { "hp": 0, "mp": 0, "atk": 0, "def": 0, "spd": 0, "wis": 0 },
-  "skills": ["sk-fubuki", "sk-uzushio", "sk-mizu-teppo"],
+  "baseStats": {
+    "hp": 600,
+    "mp": 80,
+    "atk": 23,
+    "def": 18,
+    "spd": 10,
+    "wis": 15
+  },
+  "growth": {
+    "hp": 0,
+    "mp": 0,
+    "atk": 0,
+    "def": 0,
+    "spd": 0,
+    "wis": 0
+  },
+  "skills": [
+    "sk-fubuki",
+    "sk-uzushio",
+    "sk-mizu-teppo"
+  ],
   "drops": [],
   "recruitRate": 0,
   "xp": 750,
@@ -20,14 +38,22 @@
     {
       "hpBelow": 0.66,
       "element": "kaze",
-      "skills": ["sk-habataki", "sk-fubuki", "sk-uzushio"],
+      "skills": [
+        "sk-habataki",
+        "sk-fubuki",
+        "sk-uzushio"
+      ],
       "line": "つばさが こおりを くだく……！ 北[きた]の 風[かぜ]よ、ふけ！"
     },
     {
       "hpBelow": 0.25,
       "element": "none",
-      "skills": ["sk-happa-arashi", "sk-hikari-no-ya"],
+      "skills": [
+        "sk-happa-arashi",
+        "sk-hikari-no-ya"
+      ],
       "line": "……春[はる]の 海[うみ]は、こんなに あかるかったのか。"
     }
-  ]
+  ],
+  "initialLevelCap": 10
 }

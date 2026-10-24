@@ -22,11 +22,15 @@
     "spd": 1.3,
     "wis": 0.9
   },
-  "skills": ["sk-tsuchi-kabe", "sk-iwa-otoshi"],
+  "skills": [
+    "sk-tsuchi-kabe",
+    "sk-iwa-otoshi"
+  ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 34,
   "gold": 23,
   "spriteKey": "mon.miyagi-niojiman",
-  "dexBlurb": "マツコジマが しんかした すがた。松島[まつしま]には、お寺[てら]を まもる 仁王[におう]さまのように 見[み]える「仁王島[におうじま]」と いう 島[しま]が あるよ。"
+  "dexBlurb": "マツコジマが しんかした すがた。松島[まつしま]には、お寺[てら]を まもる 仁王[におう]さまのように 見[み]える「仁王島[におうじま]」と いう 島[しま]が あるよ。",
+  "initialLevelCap": 30
 }

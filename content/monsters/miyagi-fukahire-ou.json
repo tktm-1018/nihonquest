@@ -22,11 +22,16 @@
     "spd": 1.4,
     "wis": 1.1
   },
-  "skills": ["sk-mizu-teppo", "sk-uzushio", "sk-fubuki"],
+  "skills": [
+    "sk-mizu-teppo",
+    "sk-uzushio",
+    "sk-fubuki"
+  ],
   "drops": [],
-  "recruitRate": 0.0,
+  "recruitRate": 0,
   "xp": 53,
   "gold": 32,
   "spriteKey": "mon.miyagi-fukahire-ou",
-  "dexBlurb": "ケセンザメが しんかした すがた。大漁旗[たいりょうばた]の マントを なびかせる 海[うみ]の 王[おう]さま。気仙沼[けせんぬま]の 港[みなと]は、とれたての カツオの 水[みず]あげが なん年[ねん]も つづけて 日本一[にほんいち]だよ。"
+  "dexBlurb": "ケセンザメが しんかした すがた。大漁旗[たいりょうばた]の マントを なびかせる 海[うみ]の 王[おう]さま。気仙沼[けせんぬま]の 港[みなと]は、とれたての カツオの 水[みず]あげが なん年[ねん]も つづけて 日本一[にほんいち]だよ。",
+  "initialLevelCap": 10
 }

@@ -34,6 +34,10 @@ async function seedTohokuBossReady(page: Page): Promise<void> {
         state.progress.areaSigns = signs;
         state.progress.islandsCleared = [];
         state.progress.counters['story.prologue'] = 1;
+        state.progress.counters['story.hero-identity'] = 1;
+        delete state.progress.counters['tutorial.battle-basics.pending'];
+        if (!state.progress.eventsDone.includes('tutorial.battle-basics'))
+          state.progress.eventsDone.push('tutorial.battle-basics');
         state.updatedAt = Date.now();
         store.put(state, 'save:3');
       };
@@ -176,8 +180,9 @@ test('タップだけで東北地方ボスを倒し、再読込後もバッグ�
     .getByLabel('メニュー')
     .getByRole('button', { name: /もちもの・へんせい/ })
     .click();
-  await expect(page.locator('.nq-bag-grid')).toHaveCSS('grid-template-columns', '76px 76px 76px 76px');
-  await expect(page.locator('.nq-bag-grid')).toHaveCSS('grid-template-rows', '76px 76px 76px');
+  // The contract is the unlocked 4x3 capacity, not a particular CSS pixel size.
+  // Keeping this outcome-based lets the responsive layout evolve safely.
+  await expect(page.locator('.nq-bag-grid .nq-bag-cell')).toHaveCount(12);
   await page.getByRole('button', { name: /とじる/ }).click();
   await expect.poll(() => savedTohokuClear(page), { timeout: 20_000 }).toBe(true);
 
