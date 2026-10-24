@@ -34,6 +34,29 @@ async function answerCurrentQuestion(page: Page): Promise<void> {
   await page.locator('.nq-map-tap').click({ position: { x: 20, y: 20 } });
 }
 
+async function fieldRuntime(page: Page): Promise<{
+  active: boolean;
+  paused: boolean;
+  flowRunning: boolean;
+  zoom: number;
+  rotation: number;
+}> {
+  return page.evaluate(() => {
+    const game = (window as unknown as { __nq: Phaser.Game }).__nq;
+    const scene = game.scene.getScene('Overworld') as Phaser.Scene & {
+      fieldFlow: { isRunning: boolean };
+    };
+    const camera = scene.cameras.main as Phaser.Cameras.Scene2D.Camera & { rotation: number };
+    return {
+      active: game.scene.isActive('Overworld'),
+      paused: game.scene.isPaused('Overworld'),
+      flowRunning: scene.fieldFlow.isRunning,
+      zoom: camera.zoom,
+      rotation: camera.rotation,
+    };
+  });
+}
+
 test('バトル：たたかう を続けると決着がつき、フィールドに戻る', async ({ page }) => {
   test.setTimeout(120_000);
   const errors: string[] = [];
@@ -57,6 +80,62 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
   else await page.locator('[data-result-close]').click();
   await expect(page.locator('.nq-battle')).toHaveCount(0, { timeout: 10_000 });
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 10_000 });
+  await expect
+    .poll(() => fieldRuntime(page))
+    .toEqual({
+      active: true,
+      paused: false,
+      flowRunning: false,
+      zoom: 3,
+      rotation: 0,
+    });
+
+  // 背景タブで止まり得る fadeIn を focus 復帰時に除去できることも確認する。
+  await page.evaluate(() => {
+    const game = (window as unknown as { __nq: Phaser.Game }).__nq;
+    game.scene.getScene('Overworld').cameras.main.fadeIn(10_000, 0, 0, 0);
+    window.dispatchEvent(new Event('focus'));
+  });
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const game = (window as unknown as { __nq: Phaser.Game }).__nq;
+        return game.scene.getScene('Overworld').cameras.main.fadeEffect.isRunning;
+      }),
+    )
+    .toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('バトル：重複した敗北通知でも一度だけ再起動し、フィールド操作を解放する', async ({ page }) => {
+  test.setTimeout(90_000);
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(String(error)));
+  await start(page, 8);
+
+  await page.evaluate(() => {
+    const game = (window as unknown as { __nq: Phaser.Game }).__nq;
+    const overworld = game.scene.getScene('Overworld') as Phaser.Scene & {
+      encounters: { active: { id: string } | null };
+    };
+    const encounterId = overworld.encounters.active?.id;
+    if (!encounterId) throw new Error('active encounter がありません');
+    const event = { encounterId, result: { outcome: 'defeat', goldLost: 0 } };
+    game.events.emit('battle:end', event);
+    game.events.emit('battle:end', event);
+  });
+
+  await expect(page.locator('.nq-battle')).toHaveCount(0, { timeout: 20_000 });
+  await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 20_000 });
+  await expect
+    .poll(() => fieldRuntime(page))
+    .toEqual({
+      active: true,
+      paused: false,
+      flowRunning: false,
+      zoom: 3,
+      rotation: 0,
+    });
   expect(errors).toEqual([]);
 });
 

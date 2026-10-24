@@ -185,7 +185,8 @@ setInterval(() => {
   });
 }, 60_000);
 
-// 開発中だけ、ブラウザのコンソールや E2E からゲームの中を見られるようにする（本番ビルドには入らない）
-if (import.meta.env.DEV) (window as unknown as { __nq?: Phaser.Game }).__nq = game;
+// 開発中と明示したE2Eビルドだけ、ブラウザからゲーム内部を観測できるようにする。
+if (import.meta.env.DEV || import.meta.env.VITE_E2E === '1')
+  (window as unknown as { __nq?: Phaser.Game }).__nq = game;
 
 export { game };
