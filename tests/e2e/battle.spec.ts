@@ -56,6 +56,7 @@ test('バトル：たたかう を続けると決着がつき、フィールド�
     await page.locator('.nq-result-btns .nq-cmd').nth(1).click();
   else await page.locator('[data-result-close]').click();
   await expect(page.locator('.nq-battle')).toHaveCount(0, { timeout: 10_000 });
+  await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 10_000 });
   expect(errors).toEqual([]);
 });
 
