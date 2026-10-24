@@ -1409,7 +1409,7 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "ずをみて、つぎのけいさんの こたえを えらぼう。",
+      "prompt": "15 から 7 を ひくと、いくつですか。ずの まるを みて こたえを えらぼう。",
       "choices": [
         {
           "id": "c1",
@@ -1507,7 +1507,7 @@
       "shuffle": true,
       "promptImage": "questions/legacy/c03cf27e48b1875f.png"
     },
-    "explanation": "15 を 10 と 5 にわけて、10 から 7 をひくと、3 になる。 3 と 5 をあわせて、8 だね。"
+    "explanation": "15この まるから 7こを とると、8こ のこる。15 - 7 = 8 だね。"
   },
   {
     "id": "legacy.sansu.g1.math-1-5.9d2bbdf6748d",
