@@ -136,6 +136,7 @@ import { bagMenu, equipmentMenu, menuTabs, mistakeMenu } from './overworld/menuE
 import { buildReviewQueue } from './overworld/reviewQueue';
 import { buildWorldMapRegions } from './overworld/worldMapRegions';
 import { buildStructureArt, structureKey, type StructureKind } from './overworld/structureArt';
+import { createFieldFlowRuntime, type FieldFlowRuntime } from './overworld/fieldFlowRuntime';
 import { askFirst, buildAskEnv, relaxedQueries } from './shared/askEnv';
 import { scopeQueryToGrade } from '../questions/engine/gradeScope';
 
@@ -359,6 +360,7 @@ export class OverworldScene extends Phaser.Scene {
   private rng: Rng = createRng(freshSeed());
   private readonly speak = createSpeaker();
   private readonly roots = new Map<RootName, HTMLDivElement>();
+  private fieldFlow!: FieldFlowRuntime;
   // ↓ マップが変わるたびに resetMapState() で作り直す
   private moving = false;
   private busy = false;
@@ -429,6 +431,16 @@ export class OverworldScene extends Phaser.Scene {
 
   create(): void {
     this.resetMapState();
+    this.fieldFlow = createFieldFlowRuntime({
+      lockInput: () => {
+        this.busy = true;
+      },
+      releaseInput: () => {
+        this.busy = false;
+      },
+      cleanupTransientUi: () => this.cleanupTransientUi(),
+      reportError: (error, reason) => console.error(`[Overworld] field flow failed: ${reason}`, error),
+    });
     for (const r of ['hud', 'title', 'fx', 'dialogue', 'travel'] as const) this.root(r);
 
     const onBattleEnd = (p: BattleEndPayload) => this.onBattleEnd(p);
@@ -439,10 +451,12 @@ export class OverworldScene extends Phaser.Scene {
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('focus', onVisible);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      const hadFieldFlow = this.fieldFlow.isRunning;
+      this.fieldFlow.cancel('scene-shutdown');
       this.game.events.off('battle:end', onBattleEnd);
       document.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('focus', onVisible);
-      for (const r of ['title', 'fx', 'dialogue', 'travel'] as const) render(null, this.root(r));
+      if (!hadFieldFlow) this.cleanupTransientUi();
     });
 
     this.map = this.make.tilemap({ key: this.mapKey });
@@ -2731,6 +2745,10 @@ export class OverworldScene extends Phaser.Scene {
       this.roots.set(name, el);
     }
     return el;
+  }
+
+  private cleanupTransientUi(): void {
+    for (const name of ['title', 'fx', 'dialogue', 'travel'] as const) render(null, this.root(name));
   }
 
   /** DOM の部品を出して、閉じられるまで待つ */
