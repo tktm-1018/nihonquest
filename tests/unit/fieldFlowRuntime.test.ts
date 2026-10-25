@@ -1,18 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createFieldFlowRuntime, type FieldFlowHooks } from '../../src/scenes/overworld/fieldFlowRuntime';
 
-function hooks(): FieldFlowHooks & {
-  lockInput: ReturnType<typeof vi.fn>;
-  releaseInput: ReturnType<typeof vi.fn>;
-  cleanupTransientUi: ReturnType<typeof vi.fn>;
-  reportError: ReturnType<typeof vi.fn>;
-} {
+function hooks() {
   return {
-    lockInput: vi.fn(),
-    releaseInput: vi.fn(),
-    cleanupTransientUi: vi.fn(),
-    reportError: vi.fn(),
-  };
+    lockInput: vi.fn<FieldFlowHooks['lockInput']>(),
+    releaseInput: vi.fn<FieldFlowHooks['releaseInput']>(),
+    cleanupTransientUi: vi.fn<FieldFlowHooks['cleanupTransientUi']>(),
+    reportError: vi.fn<FieldFlowHooks['reportError']>(),
+  } satisfies FieldFlowHooks;
 }
 
 function deferred<T>() {
