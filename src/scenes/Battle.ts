@@ -64,7 +64,7 @@ import {
   buildSkillOptions,
   buildSwapOptions,
 } from './battle/hudViews';
-import type { BattleEndPayload, BattleSceneData } from './battle/contracts';
+import { battleEndEvent, type BattleEndPayload, type BattleLaunchData } from './battle/contracts';
 import { battleSummary, defeatResultView, victoryResultView } from './battle/resultView';
 import { questionQueryForSkill, recruitQuestionQuery } from './battle/questionQueries';
 import { prepareMusubiDamaCommand } from './battle/musubiDamaFlow';
@@ -91,7 +91,7 @@ export class BattleScene extends Phaser.Scene {
   private gs!: GameState;
   private deps!: BattleDeps;
   private state!: BattleState;
-  private opts!: BattleSceneData;
+  private opts!: BattleLaunchData;
   private mastery!: MasteryStore;
   private readonly speak = createSpeaker();
   private readonly qRng = createRng(freshSeed());
@@ -147,7 +147,7 @@ export class BattleScene extends Phaser.Scene {
     super('Battle');
   }
 
-  init(data: BattleSceneData): void {
+  init(data: BattleLaunchData): void {
     this.opts = { ...data, presentation: data.presentation ?? 'depth' };
     this.hud = new HudStore();
     this.hudFlow = new BattleHudFlow(
@@ -187,7 +187,7 @@ export class BattleScene extends Phaser.Scene {
     if (!def || !this.gs) {
       console.error('[battle] 敵かセーブデータが見つかりません', this.opts);
       this.scene.stop();
-      this.game.events.emit('battle:end', { outcome: 'fled', goldLost: 0 } satisfies BattleEndPayload);
+      this.game.events.emit('battle:end', battleEndEvent(this.opts.encounterId, 'fled', 0));
       return;
     }
     this.enemyDef = def;
@@ -1634,7 +1634,7 @@ export class BattleScene extends Phaser.Scene {
       console.error('[battle] エラーから戻れませんでした', leaveError);
       if (!this.stopped) {
         this.scene.stop();
-        this.game.events.emit('battle:end', { outcome: 'fled', goldLost: 0 } satisfies BattleEndPayload);
+        this.game.events.emit('battle:end', battleEndEvent(this.opts.encounterId, 'fled', 0));
       }
     }
   }
@@ -1741,6 +1741,6 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.fadeOut(280, 0, 0, 0);
     await this.wait(300);
     this.scene.stop();
-    this.game.events.emit('battle:end', { outcome, goldLost } satisfies BattleEndPayload);
+    this.game.events.emit('battle:end', battleEndEvent(this.opts.encounterId, outcome, goldLost));
   }
 }

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { finishHeroIntroduction } from './helpers/onboarding';
 import { completeNewGameSetup } from './newGame';
 
 async function startGame(page: Page) {
@@ -6,9 +7,7 @@ async function startGame(page: Page) {
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
   await completeNewGameSetup(page);
-  await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 40_000 });
-  const storySkip = page.getByRole('button', { name: 'スキップ' });
-  if (await storySkip.isVisible()) await storySkip.click();
+  await finishHeroIntroduction(page);
 }
 
 for (const width of [640, 960]) {
@@ -252,13 +251,17 @@ test('バトル画面は狭い表示でもステージ内に収まる', async ({
   await expect(enemyWindow.locator('.nq-foe-hp .nq-bar-value')).toContainText('/');
   const message = page.locator('.nq-box');
   const partyWindow = page.locator('.nq-party');
+  await expect(page.locator('.nq-box-next')).toBeVisible({ timeout: 10_000 });
   const messageBox = await message.boundingBox();
-  const partyBox = await partyWindow.boundingBox();
   expect(messageBox).not.toBeNull();
-  expect(partyBox).not.toBeNull();
-  expect(messageBox!.y).toBeLessThan(partyBox!.y);
+  expect(messageBox!.x).toBeGreaterThanOrEqual(0);
+  expect(messageBox!.x + messageBox!.width).toBeLessThanOrEqual(641);
   await message.click();
   await expect(partyWindow.locator('.nq-ally-heading')).toBeVisible();
+  const partyBox = await partyWindow.boundingBox();
+  expect(partyBox).not.toBeNull();
+  expect(partyBox!.x).toBeGreaterThanOrEqual(0);
+  expect(partyBox!.x + partyBox!.width).toBeLessThanOrEqual(641);
   await expect(partyWindow.locator('.nq-ally-hp')).toContainText('/');
   await expect(page.locator('.nq-box-speak')).toHaveCount(0);
   await expect(page.locator('.nq-sound')).toHaveCount(0);

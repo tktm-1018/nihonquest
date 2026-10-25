@@ -31,7 +31,7 @@ test('小2を選び、東北の冒険を青森から開始できる', async ({ p
   await page.getByRole('textbox', { name: 'なまえ' }).fill('ハル');
   await page.getByRole('button', { name: 'これで けってい' }).click();
   await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 30_000 });
-  await finishHeroIntroduction(page, 'ミライ');
+  await finishHeroIntroduction(page);
 
   const saved = await page.evaluate(async () => {
     const database = await new Promise<IDBDatabase>((resolve, reject) => {
