@@ -1849,6 +1849,7 @@
     "mapMissing": "ちずを よみこめなかった…",
     "areaMap": "{name}の ちず",
     "areaMapOpen": "ちずを ひらく",
+    "areaMapOpenFor": "{area}の ちずを ひらく",
     "places": "いったことの ある ばしょ",
     "placesEmpty": "まだ ワープできる ばしょが ない。まちや めいしょに いってみよう！",
     "placeGo": "ワープする",
