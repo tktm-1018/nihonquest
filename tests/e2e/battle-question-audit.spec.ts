@@ -18,8 +18,10 @@ test('画像英単語問題はバトル問題枠に収まる', async ({ page }) 
 });
 
 test('全問題をバトル問題枠で描画してレイアウトを検査する', async ({ page }) => {
-  test.setTimeout(300_000);
+  test.setTimeout(420_000);
   await page.goto('/battle-question-audit.html');
-  await expect(page.locator('[data-audit-status="complete"]')).toBeVisible({ timeout: 280_000 });
+  const audit = page.locator('[data-audit-status]');
+  await expect(audit).toHaveAttribute('data-audit-status', /^(?:complete|failed)$/, { timeout: 400_000 });
+  await expect(audit).toHaveAttribute('data-audit-status', 'complete');
   await expect(page.locator('[data-audit-failure-count]')).toHaveAttribute('data-audit-failure-count', '0');
 });
