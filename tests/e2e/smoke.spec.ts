@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { finishHeroIntroduction } from './helpers/onboarding';
 import { completeNewGameSetup } from './newGame';
 
 test('タイトル画面が立ち上がり、コンテンツが読み込まれる', async ({ page }) => {
@@ -83,9 +84,7 @@ test('保護者メニューで概念別学習状態と診断欄を確認でき�
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
   await completeNewGameSetup(page, 'テスト');
-  const story = page.getByRole('dialog', { name: 'ものがたりの シーン' });
-  await expect(story).toBeVisible({ timeout: 30_000 });
-  await story.getByRole('button', { name: 'スキップ' }).click();
+  await finishHeroIntroduction(page, 'テスト');
   await page.getByRole('button', { name: 'メニュー' }).click({ timeout: 30_000 });
   await page.getByRole('button', { name: /ほごしゃ/ }).click();
   await page.getByLabel('こたえ').fill('12');
