@@ -12,8 +12,11 @@ describe('ソース行数ポリシー', () => {
     expect(sourceBudget('scripts/example.ts').maxLines).toBe(2700);
   });
 
-  it('既存の巨大Sceneは現在より増やせない', () => {
-    expect(sourceBudget('src/scenes/Overworld.ts').maxLines).toBe(3490);
+  it('既存の巨大モジュールは本番ベースラインより増やせない', () => {
+    expect(sourceBudget('src/core/battle/engine.ts').maxLines).toBe(665);
+    expect(sourceBudget('src/core/content/loader.ts').maxLines).toBe(651);
+    expect(sourceBudget('src/core/content/schemas.ts').maxLines).toBe(651);
+    expect(sourceBudget('src/scenes/Overworld.ts').maxLines).toBe(3505);
     expect(sourceBudget('src/scenes/Battle.ts').maxLines).toBe(1750);
   });
 });
