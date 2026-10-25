@@ -189,8 +189,8 @@ test('バトル：重複した敗北通知でも一度だけ再起動し、フ�
 
 test('バトル：ターン表示を出さず、こちらが動くと次のコマンド選択へ戻る', async ({ page }) => {
   test.setTimeout(60_000);
-  // lv は敵レベル。初期パーティが一撃で全滅しない条件で、1ターンの完走を確認する。
-  await start(page, 1);
+  // 初期パーティを一撃で倒さず、正解・会心でも一撃では倒せない敵レベルで1ターンを確認する。
+  await start(page, 5);
   await expect(page.locator('.nq-turn-stage')).toHaveCount(0);
   await expect(page.locator('.nq-sgauge')).toBeVisible();
   await expect(page.locator('.nq-cmd[data-cmd="skill"]')).toBeVisible({ timeout: 20_000 });
@@ -198,7 +198,17 @@ test('バトル：ターン表示を出さず、こちらが動くと次のコ�
   await expect(page.getByRole('meter', { name: /ハル HP/ })).toBeVisible();
   await useFirstAvailableSkill(page);
   // 敵は攻撃だけでなく防御も選ぶため、次のコマンド選択へ戻ることを確認する。
-  await expect(page.locator('.nq-cmd[data-cmd="skill"]')).toBeVisible({ timeout: 30_000 });
+  const command = page.locator('.nq-cmd[data-cmd="skill"]');
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline && !(await command.isVisible())) {
+    if (await page.locator('.nq-box-next').isVisible())
+      await page
+        .locator('.nq-box')
+        .click({ timeout: 1_000 })
+        .catch(() => undefined);
+    await page.waitForTimeout(100);
+  }
+  await expect(command).toBeVisible();
 });
 
 test('バトル：コマンドと主人公情報はポケモン風の独立したコンパクトな枠に収まる', async ({ page }) => {
