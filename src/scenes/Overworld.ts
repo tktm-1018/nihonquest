@@ -499,7 +499,6 @@ export class OverworldScene extends Phaser.Scene {
       );
     }
   }
-
   private resetMapState(): void {
     this.moving = false;
     this.busy = false;
