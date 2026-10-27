@@ -13,6 +13,17 @@
   font-family: var(--nq-font, 'PixelMplus12', monospace);
   font-size: 24px;
 }
+.nq-question-root::after {
+  content: 'ID: ' attr(data-question-id);
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  z-index: 2;
+  color: #9aa3ba;
+  font-size: 12px;
+  line-height: 12px;
+  pointer-events: none;
+}
 .nq-q ruby > rt {
   font-size: 12px;
   opacity: 1;

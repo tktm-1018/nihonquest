@@ -76,6 +76,7 @@ async function runQuestion(env: AskEnv, q: QuestionBase, signal?: AbortSignal): 
 
   const container = document.createElement('div');
   container.className = 'nq-question-root';
+  container.dataset.questionId = q.id;
   env.host.replaceChildren(container);
 
   const ctx: RendererContext = {

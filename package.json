@@ -61,6 +61,8 @@
     "inventory:cinematics": "tsx scripts/inventory-cinematic-assets.ts",
     "audit:worldmap": "tsx scripts/audit-worldmap.ts",
     "audit:battle-balance": "tsx scripts/audit-battle-balance.ts",
+    "kokugo:review:export": "tsx scripts/kokugo-review.ts export",
+    "kokugo:review:apply": "tsx scripts/kokugo-review.ts apply",
     "import:legacy-questions": "tsx scripts/import-legacy-questions.ts",
     "import:legacy-roadmap": "tsx scripts/import-legacy-roadmap.ts",
     "localize:legacy-images": "tsx scripts/localize-legacy-images.ts",
