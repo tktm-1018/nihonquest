@@ -25,3 +25,33 @@ export interface BattleEndPayload {
   outcome: BattleSummary['outcome'];
   goldLost: number;
 }
+
+/** フィールド側が戦闘後の処理を決めるための、遭遇元を表す情報。 */
+export type EncounterSource =
+  | { type: 'random' }
+  | { type: 'mid-boss' }
+  | { type: 'area-boss' }
+  | { type: 'last-boss' }
+  | { type: 'region-boss'; regionId: string }
+  | { type: 'island-boss'; islandId: string }
+  | { type: 'arena'; opponentId: string };
+
+/** 1回の遭遇を一意に識別して Battle Scene へ渡す契約。 */
+export interface BattleLaunchData extends BattleSceneData {
+  encounterId: string;
+  encounterSource: EncounterSource;
+}
+
+/** Battle Scene から、開始時の遭遇へ結果を正確に返すイベント。 */
+export interface BattleEndEvent {
+  encounterId: string;
+  result: BattleEndPayload;
+}
+
+export function battleEndEvent(
+  encounterId: string,
+  outcome: BattleEndPayload['outcome'],
+  goldLost: number,
+): BattleEndEvent {
+  return { encounterId, result: { outcome, goldLost } };
+}

@@ -6,14 +6,6 @@ async function startGame(page: Page) {
   await page.getByRole('menuitem', { name: /はじめから/ }).click();
   await page.getByRole('button', { name: /スロット 1/ }).click();
   await completeNewGameSetup(page);
-  await expect(page.getByRole('button', { name: 'メニュー' })).toBeVisible({ timeout: 40_000 });
-  const storySkip = page.getByRole('button', { name: 'スキップ' });
-  if (await storySkip.isVisible()) await storySkip.click();
-  const battleTutorial = page.locator('.nq-dlg');
-  for (let step = 0; step < 12 && (await battleTutorial.isVisible()); step += 1) {
-    await battleTutorial.click();
-  }
-  await expect(battleTutorial).toHaveCount(0);
 }
 
 for (const width of [640, 960]) {
@@ -259,8 +251,11 @@ test('バトル画面は狭い表示でもステージ内に収まる', async ({
   await expect(enemyWindow.locator('.nq-foe-hp .nq-bar-value')).toContainText('/');
   const message = page.locator('.nq-box');
   const partyWindow = page.locator('.nq-party');
+  await expect(page.locator('.nq-box-next')).toBeVisible({ timeout: 10_000 });
   const messageBox = await message.boundingBox();
   expect(messageBox).not.toBeNull();
+  expect(messageBox!.x).toBeGreaterThanOrEqual(0);
+  expect(messageBox!.x + messageBox!.width).toBeLessThanOrEqual(641);
   await message.click();
   await expect(partyWindow).toBeVisible();
   const enemyBox = await enemyWindow.boundingBox();
@@ -269,6 +264,8 @@ test('バトル画面は狭い表示でもステージ内に収まる', async ({
   expect(partyBox).not.toBeNull();
   expect(enemyBox!.y).toBeLessThan(partyBox!.y);
   await expect(partyWindow.locator('.nq-ally-heading')).toBeVisible();
+  expect(partyBox!.x).toBeGreaterThanOrEqual(0);
+  expect(partyBox!.x + partyBox!.width).toBeLessThanOrEqual(641);
   await expect(partyWindow.locator('.nq-ally-hp')).toContainText('/');
   await expect(page.locator('.nq-box-speak')).toHaveCount(0);
   await expect(page.locator('.nq-sound')).toHaveCount(0);
@@ -277,7 +274,6 @@ test('バトル画面は狭い表示でもステージ内に収まる', async ({
   for (const command of await commands.all()) {
     const commandBox = await command.boundingBox();
     expect(commandBox).not.toBeNull();
-    expect(commandBox!.height).toBeGreaterThan(0);
     // 戦闘画面は960×540のゲーム座標を画面へ拡縮しているため、CSS上の
     // 最小高ではなく実際に押せる表示領域が存在することを確認する。
     expect(commandBox!.height).toBeGreaterThan(0);

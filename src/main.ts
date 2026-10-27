@@ -367,7 +367,7 @@ document.addEventListener('visibilitychange', () => {
 
 // 開発サーバーとローカル preview だけ、コンソールや E2E からゲーム内部を確認できるようにする。
 // 公開サイトでは本番ビルドかどうかにかかわらず露出させない。
-if (isLocalDevelopmentUrl(new URL(location.href), import.meta.env.DEV)) {
+if (isLocalDevelopmentUrl(new URL(location.href), import.meta.env.DEV) || import.meta.env.VITE_E2E === '1') {
   (window as unknown as { __nq?: Phaser.Game }).__nq = game;
 }
 

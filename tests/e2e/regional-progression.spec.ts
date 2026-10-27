@@ -76,6 +76,7 @@ interface BrowserGate {
 }
 
 interface BrowserField {
+  canWarp: boolean;
   currentRegion: string | null;
   lockedGates: Map<number, string>;
   regionGates: Map<number, BrowserGate>;
@@ -804,7 +805,14 @@ test('最後の地域ボス撃破直後にダンジョン入口のロックと�
   await continueFromSlot(page, layout.dungeonApproach.tile);
 
   expect(await regionalDungeonSnapshot(page)).toEqual({ isTinted: true, locked: true });
-  await page.waitForTimeout(500);
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const game = (window as unknown as { __nq: BrowserGame }).__nq;
+        return (game.scene.getScene('Overworld') as BrowserField).canWarp;
+      }),
+    )
+    .toBe(true);
   await walkOne(page, layout.dungeonApproach.key, 'move', layout.dungeonTile);
   await expect(page.locator('.nq-dlg')).toContainText(/まだ.*(?:地域|ちいき).*ぬし/, {
     timeout: 20_000,

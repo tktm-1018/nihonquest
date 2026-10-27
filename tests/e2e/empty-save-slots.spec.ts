@@ -4,6 +4,7 @@ test('ローカル確認URLで古いセーブを消し、3枠とも新規作成�
   test.setTimeout(90_000);
   await page.goto('/');
   await expect(page.getByRole('menuitem', { name: /はじめから/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator('.nq-title-disabled-note')).toHaveCount(0, { timeout: 30_000 });
   await expect
     .poll(
       () =>

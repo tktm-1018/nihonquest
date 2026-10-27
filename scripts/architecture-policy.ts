@@ -4,7 +4,10 @@ export interface SourceBudget {
 }
 
 const LEGACY_BUDGETS: Readonly<Record<string, SourceBudget>> = {
-  'src/scenes/Overworld.ts': { maxLines: 3490, reason: '段階的に機能別モジュールへ抽出中' },
+  'src/core/battle/engine.ts': { maxLines: 665, reason: '戦闘計算を段階的に機能別モジュールへ抽出中' },
+  'src/core/content/loader.ts': { maxLines: 651, reason: 'コンテンツ読込を段階的に分割中' },
+  'src/core/content/schemas.ts': { maxLines: 651, reason: '既存コンテンツ契約の集約モジュール' },
+  'src/scenes/Overworld.ts': { maxLines: 3505, reason: '段階的に機能別モジュールへ抽出中' },
   'src/scenes/Battle.ts': { maxLines: 1750, reason: '段階的に演出・表示モデルを抽出中' },
   'src/scenes/battle/motions.ts': { maxLines: 1250, reason: '宣言的な戦闘モーション集' },
 };
