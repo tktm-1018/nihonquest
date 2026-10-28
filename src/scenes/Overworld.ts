@@ -72,7 +72,6 @@ import {
   regionBossDefeated,
   regionBossFlag,
   nextStop,
-  type NextStop,
 } from '../core/progression/route';
 import { canChallengeIslandBoss, rewardIslandBoss } from '../core/progression/island';
 import { specialtyTreasureGain } from '../core/progression/specialty';
@@ -173,6 +172,15 @@ import { haruDialogue } from './overworld/haruDialogue';
 import { advanceWanderingNpcs, type WanderingNpc as Npc } from './overworld/npcWander';
 import { fieldRewardDialogue } from './overworld/eventRewardText';
 import { createFieldFlowRuntime, type FieldFlowRuntime } from './overworld/fieldFlowRuntime';
+import type {
+  Chest,
+  FieldTrigger,
+  MidBoss,
+  RegionBoss,
+  RegionGate,
+  Sign,
+  Warp,
+} from './overworld/fieldTypes';
 import {
   applyEncounterResultPolicy,
   createEncounterLifecycle,
@@ -235,61 +243,6 @@ interface BaseMap extends MapBase {
   objects: TiledObject[];
 }
 type RootName = 'hud' | 'title' | 'fx' | 'dialogue' | 'travel';
-
-interface FieldTrigger {
-  id: string;
-  /** 近づいただけで始めるか（once のイベント・取ったスタンプは false） */
-  auto: () => boolean;
-  run: () => Promise<void>;
-}
-
-interface Chest {
-  key: string;
-  itemId: string;
-  itemName: string;
-  count: number;
-  sprite: Phaser.GameObjects.Image;
-  /** 特産品の宝箱（あけると 特産品の説明が出て、その特産品が もらえる） */
-  specialty?: { area: Area; motif: Motif; stamp: string };
-}
-
-interface MidBoss {
-  tile: number;
-  def: Monster;
-  parts: Phaser.GameObjects.GameObject[];
-  /** オーラの光のつぶを出しつづけるタイマー */
-  sparks: Phaser.Time.TimerEvent;
-}
-
-/** 名所エリアの 関所（エリアの さかいの 門。openedBy の エリアの ぬしを たおすと ひらく） */
-interface RegionGate {
-  tile: number;
-  between: [string, string];
-  openedBy: string;
-  sprite: Phaser.GameObjects.Image;
-}
-
-/** 名所エリアの ぬし（名所の そばに 立つ「？」マーク） */
-interface RegionBoss {
-  regionId: string;
-  region: Region;
-  boss: MidBoss;
-}
-
-interface Warp {
-  tile: number;
-  to: NextStop;
-  toName: string;
-}
-
-/** 名所の ★ 看板 */
-interface Sign {
-  /** dex.motifs に入る名所スタンプ。持っている＝その名所を見つけた */
-  stamp: string;
-  found: () => boolean;
-  /** 見つけた・チャレンジを終えた あとに、★ の色と「！」をいまの進みぐあいに合わせる */
-  refresh: () => void;
-}
 
 /** 開発者モード（ぜんぶの 場所へ ワープ）の しるし。セーブの progress.counters に 1 */
 const DEV_ALL_KEY = 'dev:all';
