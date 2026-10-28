@@ -3,7 +3,7 @@ name: Mobile Playtest Pages
 on:
   push:
     branches:
-      - codex/merge-taisei-main-20261021
+      - main
   workflow_dispatch:
 
 permissions:
@@ -29,6 +29,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm validate:content
       - run: BASE_PATH=/${{ github.event.repository.name }}/ pnpm build
       - uses: actions/upload-pages-artifact@v3
         with:
