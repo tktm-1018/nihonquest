@@ -12,6 +12,7 @@ const GROUP_SPECS: Record<E2eGroup, readonly string[]> = {
     'tests/e2e/field-sounds.spec.ts',
     'tests/e2e/look-heading.spec.ts',
     'tests/e2e/mobile-interaction.spec.ts',
+    'tests/e2e/overworld.spec.ts',
     'tests/e2e/virtual-stick.spec.ts',
   ],
   bag: ['tests/e2e/bag-interactions.spec.ts'],
