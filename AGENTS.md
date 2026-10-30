@@ -75,7 +75,7 @@ pnpm check:fast
 - 作業中は `pnpm check:fast` を使う。未コミット差分の関連テストと、必要な
   データ監査は `pnpm test:changed` が自動選択する。明示したソースだけを
   再検査するときは `pnpm test:related <files...>` を使う。
-- `pnpm check:full` と `pnpm test:e2e:full` はnightlyまたはリリース前の最終確認で実行する。複数チャットで重い検査を同時実行しない。
+- PRではfast gateと `pnpm test:e2e:changed <base-ref>` を並列実行する。`pnpm check:full` と `pnpm test:e2e:full` はnightlyまたはリリース前の最終確認で実行し、複数チャットで重い検査を同時実行しない。
 - `test:fast` は日常の回帰検査、`test:data` はマップ・コンテンツ・描画資産の
   全件監査である。完全ゲートは維持するが、日常のコミットやPRの必須チェックにはしない。
 - `assets/cinematics/` は制作原本、`graphify-out/`、`dist/`、`test-results/` は生成物である。

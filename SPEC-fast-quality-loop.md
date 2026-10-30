@@ -8,6 +8,7 @@
 
 - Fast gate: `pnpm check:fast`
 - Changed tests: `pnpm test:changed [base-ref]`
+- Changed E2E: `pnpm test:e2e:changed [base-ref]`
 - Full gate: `pnpm check:full && pnpm test:e2e:full`（nightly・リリース前）
 - Formatting: `pnpm lint`
 - Architecture: `pnpm check:architecture`
@@ -38,7 +39,8 @@
 - `check:fast` と `check:full` の責務が明文化される。
 - `check:fast` が未コミット差分の関連テストを自動実行する。
 - コンテンツ・マップ・資産差分は `test:data`、テスト基盤差分は全Vitestへ自動フォールバックする。
-- PRの必須CIはaffected unitまでにし、全件・全E2Eはnightlyと手動実行へ分離する。
+- PRの必須CIはaffected unitとaffected E2Eまでにし、全件・全E2Eはnightlyと手動実行へ分離する。
+- PRではfast checkとaffected E2Eを並列実行し、既存の必須ジョブ名 `check` へ集約する。
 - 新しいPRコミットは古いCI実行をキャンセルする。
 - 並行チャットで完全検査を同時実行しない規則がある。
 

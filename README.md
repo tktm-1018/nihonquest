@@ -24,6 +24,7 @@ Node 20 以上、pnpm 10 以上。`pnpm dev` は本番ビルドを作成して�
 | `pnpm validate:content`      | **content/ の JSON を検証**（スキーマ・id 重複・参照切れ・画像の有無）                                                     | 問題作成者・コンテンツ担当 |
 | `pnpm test`                  | ユニットテスト（582 件、現在値は実行結果を正とする）                                                                       | 開発者                     |
 | `pnpm test:changed`          | Git差分に影響されるユニットテストを自動選択                                                                                | 開発者                     |
+| `pnpm test:e2e:changed`      | Git差分に影響される機能グループのE2Eだけを自動選択                                                                         | CI・開発者                 |
 | `pnpm test:e2e`              | ブラウザで通しテスト                                                                                                       | 開発者                     |
 | `pnpm lint` / `pnpm format`  | Lint / 整形                                                                                                                | 開発者                     |
 | `pnpm gen:schemas`           | Zod → JSON Schema を再生成（エディタ補完用）                                                                               | 契約を変えたとき           |
@@ -170,7 +171,7 @@ tests/           ← ユニット 582 件 + E2E（件数は増えるため実行
 
 ## CI とデプロイ
 
-`.github/workflows/ci.yml` は push / PR で lint・architecture・app型検査・affected unit・直接buildだけを高速に実行します。全unit・データ監査・全E2Eは `.github/workflows/nightly.yml` が毎日3:00 JSTと手動実行で担当します。`main` に入ると、PRをブロックしないデプロイジョブで完全品質ゲートを通してからGitHub Pagesへ自動デプロイします（`BASE_PATH` はリポジトリ名から自動設定）。
+`.github/workflows/ci.yml` は push / PR でfast checkとaffected E2Eを並列実行し、従来の必須ジョブ名 `check` で両方の成功を集約します。全unit・データ監査・全E2Eは `.github/workflows/nightly.yml` が毎日3:00 JSTと手動実行で担当します。`main` に入ると、PRをブロックしないデプロイジョブで完全品質ゲートを通してからGitHub Pagesへ自動デプロイします（`BASE_PATH` はリポジトリ名から自動設定）。
 
 ## ライセンスと素材の注意
 

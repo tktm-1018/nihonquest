@@ -41,7 +41,7 @@ function gitLines(args: readonly string[]): string[] {
     .filter(Boolean);
 }
 
-function changedFiles(base?: string): string[] {
+export function changedFiles(base?: string): string[] {
   if (base) execFileSync('git', ['rev-parse', '--verify', `${base}^{commit}`], { stdio: 'ignore' });
   const paths = [
     ...(base ? gitLines(['diff', '--name-only', '--diff-filter=ACMR', `${base}...HEAD`]) : []),

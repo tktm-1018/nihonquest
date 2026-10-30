@@ -109,6 +109,16 @@
 - [x] GitHub Actions YAMLが構文検証を通る
 - [x] fast CIとnightlyの双方に必要な品質ゲートが残る
 
+### Phase 8: Parallel affected E2E
+
+- [x] Task 20: Git差分を既存E2E機能グループへ安全側にルーティングする
+- [x] Task 21: fast checkとaffected E2Eを並列化し、`check`へ結果を集約する
+
+### Checkpoint 8
+
+- [x] 差分E2Eルーティングのunit testが成功する
+- [x] GitHub Actions YAMLが構文検証を通り、全E2Eがnightlyに残る
+
 ## Risks and Mitigations
 
 | Risk                                  | Impact | Mitigation                                                |

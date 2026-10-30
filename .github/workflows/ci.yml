@@ -7,7 +7,8 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  check:
+  fast:
+    name: Fast checks
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -26,6 +27,39 @@ jobs:
         run: pnpm test:changed "$BASE_REF"
       - name: Build application without full data audits
         run: pnpm exec vite build
+  affected-e2e:
+    name: Affected E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Run affected browser tests
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: pnpm test:e2e:changed "$BASE_REF"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: affected-e2e-results
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+  check:
+    if: always()
+    needs: [fast, affected-e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require both parallel checks
+        env:
+          FAST_RESULT: ${{ needs.fast.result }}
+          E2E_RESULT: ${{ needs.affected-e2e.result }}
+        run: test "$FAST_RESULT" = success && test "$E2E_RESULT" = success
   deploy-pages:
     if: github.ref == 'refs/heads/main'
     needs: check

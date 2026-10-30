@@ -14,7 +14,7 @@
 | 明示したソースの回帰 | `pnpm test:related <files...>` | 指定ソースに依存するVitest |
 | 通常の広い回帰 | `pnpm test:fast` | 大容量データ監査以外のunit tests |
 | コンテンツ・マップ変更 | `pnpm test:data` | 全件データ・描画資産監査 |
-| PR / main push | GitHub Actions `check` | lint、architecture、アプリ型検査、affected unit、直接build |
+| PR / main push | GitHub Actions `check` | fast checkとaffected E2Eを並列実行して結果を集約 |
 | nightly・リリース前 | `pnpm check:full` + `pnpm test:e2e:full` | 全品質ゲート、容量予算、全ブラウザ回帰 |
 | `main` デプロイ | GitHub Actions `deploy-pages` | PRをブロックせず完全品質ゲートを再実行して公開 |
 
@@ -22,7 +22,7 @@
 
 `test:changed` は通常のソースをVitestの依存グラフで絞る。`content/`（i18nを除く）、`maps/`、`assets/`、`public/`、`schemas/`、`scripts/data/`、`tests/fixtures/` の変更ではdata監査も実行し、package・lockfile・Vitest設定の変更では全Vitestへフォールバックする。PRではbase SHAを渡してコミット済み差分も対象にする。nightlyと `check:full` は従来どおり全件を実行する。
 
-PRのfast CIは新しいコミットが来たら古い実行をキャンセルする。全E2Eはマージをブロックせず、毎日3:00 JSTのnightlyと手動実行で検出する。
+PRのfast CIは新しいコミットが来たら古い実行をキャンセルする。affected E2Eはfield・bag・battle・onboarding・tools・flowsの既存spec群から差分に関係するものだけをfast checkと並列実行し、無関係な変更では起動しない。全E2Eは毎日3:00 JSTのnightlyと手動実行で検出する。
 
 2026-10-30の同一作業ツリー計測では、全Vitestは14.26秒（131 files / 1,394 tests）、同じ差分に対するVitest標準の変更影響テストは2.98秒（2 files / 6 tests）だった。
 

@@ -139,3 +139,19 @@ Verify: GitHub Actions YAML構文、fullコマンドの残存確認
 - [x] 日常コミット・PR・nightly・リリース前の責務を一致させる。
 
 Verify: `pnpm lint`, 文書レビュー
+
+## Task 20: 差分E2Eルーティング
+
+- [x] field・bag・battle・onboarding・tools・flowsへ差分を振り分ける。
+- [x] E2E自身の変更は対象spec、判定不能なアプリ変更はsmokeへフォールバックする。
+- [x] ドキュメントだけの変更ではE2Eを実行しない。
+
+Verify: `pnpm exec vitest run tests/unit/testE2eChanged.test.ts`
+
+## Task 21: PR並列実行
+
+- [x] fast checkとaffected E2Eを別ジョブで同時に実行する。
+- [x] 既存の必須ジョブ名 `check` で両方の成功を集約する。
+- [x] 全E2Eをnightly・手動実行に残す。
+
+Verify: GitHub Actions YAML構文、`pnpm check:fast`
