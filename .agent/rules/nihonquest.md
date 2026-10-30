@@ -22,7 +22,7 @@
 
 - TypeScript strict。any を使うなら理由をコメント。
 - 純粋ロジック（battle, progression, questions/engine, content loader）には Vitest のテストを必ず書く。
-- 各ステップ完了時に pnpm lint && pnpm test && pnpm validate:content && pnpm build を通す。
+- 各ステップ完了時は `pnpm check:fast` を基本とする。全件監査・全E2E・完全buildはnightlyまたはリリース前に実行する。
 - 依存を追加するときは Plan に理由を書く。軽量な選択を優先。
 
 ## 進め方

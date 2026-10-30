@@ -261,7 +261,7 @@ interface Skill {
 
 ## 6. 開発ワークフロー（人間 × Antigravity）
 
-1. `docs/` を更新 → 2. Antigravity にステップ単位のプロンプト（`02_ANTIGRAVITY_PROMPTS.md`）→ 3. Implementation Plan を **人間がレビュー**（三分割が崩れていないか、`content/` にコードが混ざっていないか）→ 4. 実装 → 5. `pnpm test && pnpm validate:content && pnpm build` が通る → 6. Walkthrough（Antigravity が生成する動作説明）を確認 → 7. コミット。
+1. `docs/` を更新 → 2. Antigravity にステップ単位のプロンプト（`02_ANTIGRAVITY_PROMPTS.md`）→ 3. Implementation Plan を **人間がレビュー**（三分割が崩れていないか、`content/` にコードが混ざっていないか）→ 4. 実装 → 5. `pnpm check:fast` が通る → 6. Walkthrough（Antigravity が生成する動作説明）を確認 → 7. コミット。全件監査と全E2Eはnightlyまたはリリース前に実行する。
 - ブランチ：`main`（常に動く）／`feat/<step>`。Antigravity には feat ブランチで作業させる。
 - コミットは小さく。1ステップ＝1PR 相当。
 # 文理戦闘契約（v10）
