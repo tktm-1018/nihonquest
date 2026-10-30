@@ -7,6 +7,7 @@
 ## Commands
 
 - Fast gate: `pnpm check:fast`
+- Changed tests: `pnpm test:changed [base-ref]`
 - Full gate: `pnpm check:full`
 - Formatting: `pnpm lint`
 - Architecture: `pnpm check:architecture`
@@ -23,7 +24,7 @@
 
 ## Testing Strategy
 
-変更前後で同一マシン上の `pnpm lint` と高速ゲートを計測する。完全ゲートで検査対象が失われていないことを確認する。
+変更前後で同一マシン上の全Vitestと差分Vitestを計測する。ソース差分はVitestの依存グラフ、コンテンツ・マップ・資産差分はdata監査、テスト基盤差分は全件へ安全側にルーティングし、完全ゲートで検査対象が失われていないことを確認する。
 
 ## Boundaries
 
@@ -35,6 +36,8 @@
 
 - Prettier が `tests/fixtures`、`assets`、`maps` を通常走査しない。
 - `check:fast` と `check:full` の責務が明文化される。
+- `check:fast` が未コミット差分の関連テストを自動実行する。
+- コンテンツ・マップ・資産差分は `test:data`、テスト基盤差分は全Vitestへ自動フォールバックする。
 - 並行チャットで完全検査を同時実行しない規則がある。
 
 ## Open Questions

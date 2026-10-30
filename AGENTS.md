@@ -74,9 +74,9 @@ pnpm build
 
 ## 検査の速度と所有権
 
-- 作業中は `pnpm check:fast` と、変更したソースを渡す
-  `pnpm test:related <files...>` を使う。データ全件監査が必要な変更だけ
-  `pnpm test:data` を追加する。
+- 作業中は `pnpm check:fast` を使う。未コミット差分の関連テストと、必要な
+  データ監査は `pnpm test:changed` が自動選択する。明示したソースだけを
+  再検査するときは `pnpm test:related <files...>` を使う。
 - `pnpm check:full` は統合担当が統合後の状態で一度実行する。複数チャットで
   `pnpm check:full`、`pnpm test`、`pnpm build` を同時実行しない。
 - `test:fast` は日常の回帰検査、`test:data` はマップ・コンテンツ・描画資産の

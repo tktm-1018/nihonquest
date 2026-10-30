@@ -88,6 +88,16 @@
 - [ ] Task 13: production previewを計測し、before/afterを記録する
 - [ ] Task 14: コードレビュー、Graphify更新、Walkthroughを完了する
 
+### Phase 6: Automatic changed-test routing
+
+- [x] Task 15: Git差分を関連Vitest・data監査・全件検査へ安全側に自動ルーティングする
+- [x] Task 16: `check:fast` へ差分テストを組み込み、運用文書と計測値を更新する
+
+### Checkpoint 6
+
+- [x] 差分ルーティングのunit testと完全Vitestが成功する
+- [x] ソース差分の実測が全件より明確に短く、CIと`check:full`の完全検査が維持される
+
 ## Risks and Mitigations
 
 | Risk                                  | Impact | Mitigation                                                |

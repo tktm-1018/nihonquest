@@ -31,6 +31,7 @@
     "test:unit": "vitest run",
     "test:fast": "vitest run --config vitest.fast.config.ts",
     "test:data": "vitest run --config vitest.data.config.ts",
+    "test:changed": "tsx scripts/test-changed.ts",
     "test:related": "vitest related --run --passWithNoTests",
     "test:watch": "vitest",
     "test:e2e": "playwright test --grep-invert '全問題をバトル問題枠'",
@@ -82,7 +83,7 @@
     "scaffold:all-areas": "tsx scripts/scaffold-area.ts --all",
     "scaffold:maps": "tsx scripts/scaffold-maps.ts",
     "gen:terrain": "tsx scripts/gen-terrain.ts",
-    "check:fast": "pnpm lint && pnpm check:architecture && pnpm typecheck:app",
+    "check:fast": "pnpm lint && pnpm check:architecture && pnpm typecheck:app && pnpm test:changed",
     "check:full": "pnpm lint && pnpm check:architecture && pnpm gen:manifest && pnpm gen:schemas && pnpm audit:curriculum --strict && pnpm audit:curriculum-model --strict && pnpm audit:roadmap-graph --strict && pnpm audit:worldmap && pnpm test:unit && pnpm validate:content && pnpm validate:curriculum-graph && pnpm typecheck && pnpm exec vite build && pnpm check:performance",
     "check": "pnpm check:full"
   },

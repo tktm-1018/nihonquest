@@ -102,3 +102,19 @@ Verify: startup retry E2E
 - [ ] 5軸コードレビューを行う。
 - [ ] Graphifyを更新する。
 - [ ] Walkthroughへ変更・検証・残課題を記録する。
+
+## Task 15: Git差分テストの自動ルーティング
+
+- [x] ソース差分をVitestの依存グラフで関連テストへ絞る。
+- [x] コンテンツ・マップ・資産差分をdata監査へ追加ルーティングする。
+- [x] テスト基盤・依存関係差分は全Vitestへ安全側にフォールバックする。
+
+Verify: ルーティングunit test、`pnpm test:changed`
+
+## Task 16: Fast gate統合と計測
+
+- [x] `check:fast` に自動差分テストを含める。
+- [x] CIと`check:full`の完全検査を維持する。
+- [x] 全件と差分の同条件実測を文書化する。
+
+Verify: `pnpm check:fast`, `pnpm test`, `pnpm check:full`
