@@ -98,6 +98,17 @@
 - [x] 差分ルーティングのunit testと完全Vitestが成功する
 - [x] ソース差分の実測が全件より明確に短く、CIと`check:full`の完全検査が維持される
 
+### Phase 7: Non-blocking full regression
+
+- [x] Task 17: PR CIをfast gateとaffected unitへ縮小する
+- [x] Task 18: 全件監査と全E2Eをnightly・手動実行へ移す
+- [x] Task 19: 開発規約と正規ドキュメントを新しい棲み分けへ統一する
+
+### Checkpoint 7
+
+- [x] GitHub Actions YAMLが構文検証を通る
+- [x] fast CIとnightlyの双方に必要な品質ゲートが残る
+
 ## Risks and Mitigations
 
 | Risk                                  | Impact | Mitigation                                                |

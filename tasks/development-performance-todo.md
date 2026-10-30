@@ -118,3 +118,24 @@ Verify: ルーティングunit test、`pnpm test:changed`
 - [x] 全件と差分の同条件実測を文書化する。
 
 Verify: `pnpm check:fast`, `pnpm test`, `pnpm check:full`
+
+## Task 17: PR CIのfast化
+
+- [x] PR / main pushはlint・architecture・app型検査・affected unit・直接buildだけを実行する。
+- [x] 新しいコミットで古いCIをキャンセルする。
+
+Verify: GitHub Actions YAML構文、workflow差分レビュー
+
+## Task 18: Full regressionの分離
+
+- [x] 全品質ゲートと全E2Eを毎日3:00 JSTのnightlyへ移す。
+- [x] 同じworkflowを手動実行できるようにする。
+
+Verify: GitHub Actions YAML構文、fullコマンドの残存確認
+
+## Task 19: 運用ルールの統一
+
+- [x] AGENTS、Antigravity規則、README、architecture、性能運用を更新する。
+- [x] 日常コミット・PR・nightly・リリース前の責務を一致させる。
+
+Verify: `pnpm lint`, 文書レビュー

@@ -23,6 +23,7 @@ Node 20 以上、pnpm 10 以上。`pnpm dev` は本番ビルドを作成して�
 | `pnpm dev:hmr`               | ソースを直接配信するHMR開発サーバーを `5173` で起動（通常ブラウザでの実装用）                                              | 開発者                     |
 | `pnpm validate:content`      | **content/ の JSON を検証**（スキーマ・id 重複・参照切れ・画像の有無）                                                     | 問題作成者・コンテンツ担当 |
 | `pnpm test`                  | ユニットテスト（582 件、現在値は実行結果を正とする）                                                                       | 開発者                     |
+| `pnpm test:changed`          | Git差分に影響されるユニットテストを自動選択                                                                                | 開発者                     |
 | `pnpm test:e2e`              | ブラウザで通しテスト                                                                                                       | 開発者                     |
 | `pnpm lint` / `pnpm format`  | Lint / 整形                                                                                                                | 開発者                     |
 | `pnpm gen:schemas`           | Zod → JSON Schema を再生成（エディタ補完用）                                                                               | 契約を変えたとき           |
@@ -30,7 +31,8 @@ Node 20 以上、pnpm 10 以上。`pnpm dev` は本番ビルドを作成して�
 | `pnpm scaffold:area <県id>`  | 都道府県ファイルの雛形を作る                                                                                               | コンテンツ担当             |
 | `pnpm gen:terrain`           | 実在の地理（県境・海岸線・湖・標高）から地形データ `scripts/data/terrain.json` を作る（初回だけネット接続）                | 地図を変えたいとき         |
 | `pnpm scaffold:maps --force` | 地形データと `scripts/data/geo.ts`（町・名所・港の位置）から `maps/` と にほんちずの地図 `public/worldmap.json` を作り直す | 地図を変えたいとき         |
-| `pnpm check`                 | lint → test → validate → build を一括                                                                                      | コミット前・CI             |
+| `pnpm check:fast`            | lint・architecture・app型検査・差分unitを一括                                                                              | 日常のコミット前・PR       |
+| `pnpm check:full`            | 全unit・全データ監査・全型検査・完全build                                                                                  | nightly・リリース前        |
 
 ---
 
@@ -158,7 +160,7 @@ tests/           ← ユニット 582 件 + E2E（件数は増えるため実行
 
 1. このフォルダを Antigravity で開く（`.agent/rules/nihonquest.md` が自動で読まれます）
 2. `docs/00_GAME_DESIGN.md` と現在のテストを正として、未完了項目を小さな単位で実装する（`docs/02` の古いStep表だけで現在地を判断しない）
-3. Implementation Plan を読んで承認 → 実装 → `pnpm check` が通ることを確認 → コミット
+3. Implementation Plan を読んで承認 → 実装 → `pnpm check:fast` が通ることを確認 → コミット
 
 仕様を変えたいときは、チャットで指示せず **`docs/00_GAME_DESIGN.md` を直してから**「GDD が変わったので追従して」と言ってください。これをやらないと、AI は docs と矛盾したコードを書き始めます。
 
@@ -168,7 +170,7 @@ tests/           ← ユニット 582 件 + E2E（件数は増えるため実行
 
 ## CI とデプロイ
 
-`.github/workflows/ci.yml` が push / PR で lint・test・validate・build を回し、スキーマの再生成漏れも検出します。`main` に入ると GitHub Pages へ自動デプロイ（`BASE_PATH` はリポジトリ名から自動設定）。
+`.github/workflows/ci.yml` は push / PR で lint・architecture・app型検査・affected unit・直接buildだけを高速に実行します。全unit・データ監査・全E2Eは `.github/workflows/nightly.yml` が毎日3:00 JSTと手動実行で担当します。`main` に入ると、PRをブロックしないデプロイジョブで完全品質ゲートを通してからGitHub Pagesへ自動デプロイします（`BASE_PATH` はリポジトリ名から自動設定）。
 
 ## ライセンスと素材の注意
 
