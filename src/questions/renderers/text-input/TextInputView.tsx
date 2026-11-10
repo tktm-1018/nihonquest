@@ -43,6 +43,7 @@ export function TextInputView({
     return () => ctx.signal?.removeEventListener('abort', abort);
   });
   const template = payload.template ?? '{{INPUT}}';
+  const inputMode = payload.answers.flat().every((answer) => /^[\d\s,，.．+-]+$/.test(answer)) ? 'decimal' : 'text';
   const pieces = template.split('{{INPUT}}');
   const compact = (value: string) => value.replaceAll('{{INPUT}}', '').replace(/\s+/g, '');
   const promptRepeated =
@@ -74,7 +75,7 @@ export function TextInputView({
                 aria-keyshortcuts="Enter"
                 value={values[index]}
                 disabled={done}
-                inputMode="decimal"
+                inputMode={inputMode}
                 onInput={(event) => {
                   const next = [...values];
                   next[index] = (event.currentTarget as HTMLInputElement).value;

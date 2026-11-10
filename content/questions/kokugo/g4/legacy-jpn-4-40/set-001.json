@@ -5,6 +5,7 @@
     "subject": "kokugo",
     "grade": 4,
     "unit": "kokugo.g4.legacy-jpn-4-40",
+    "timeLimitSec": 30,
     "tags": [
       "source:codex-supplemental",
       "reviewed:source-aligned-v1"
@@ -36,6 +37,7 @@
     "subject": "kokugo",
     "grade": 4,
     "unit": "kokugo.g4.legacy-jpn-4-40",
+    "timeLimitSec": 30,
     "tags": [
       "source:codex-supplemental",
       "reviewed:source-aligned-v1"
@@ -67,6 +69,7 @@
     "subject": "kokugo",
     "grade": 4,
     "unit": "kokugo.g4.legacy-jpn-4-40",
+    "timeLimitSec": 30,
     "tags": [
       "source:legacy-autonomy-game",
       "legacy-node:jpn_4_40",

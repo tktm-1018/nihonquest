@@ -64,6 +64,8 @@
   margin: 0;
   flex: 1;
   line-height: 1.6;
+  /* 教材データ内の段落改行をそのまま表示する。 */
+  white-space: pre-wrap;
 }
 .nq-q-prompt-img {
   width: auto;
@@ -130,6 +132,9 @@
 .nq-q-choices-5,
 .nq-q-choices-6 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.nq-q-choices-long {
+  grid-template-columns: minmax(0, 1fr);
 }
 .nq-choice {
   display: flex;

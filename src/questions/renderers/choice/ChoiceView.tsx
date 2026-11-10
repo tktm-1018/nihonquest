@@ -71,6 +71,7 @@ export function ChoiceView({ ctx, payload, order, onDone }: ChoiceViewProps) {
   const correct = chosen === payload.answer;
   // アルファベット 1〜2 もじ だけの 選択肢は、形が 見やすいよう 大きく
   const big = choices.every((c) => !c.image && /^[A-Za-z]{1,2}$/.test(c.text ?? ''));
+  const longChoice = choices.some((c) => stripRuby(c.text ?? '', 'kana').replace(/\s/g, '').length > 32);
 
   return (
     <div class="nq-q nq-q-choice">
@@ -94,7 +95,9 @@ export function ChoiceView({ ctx, payload, order, onDone }: ChoiceViewProps) {
           🔊
         </button>
       </div>
-      <div class={`nq-q-choices nq-q-choices-${choices.length}${big ? ' nq-q-choices-big' : ''}`}>
+      <div
+        class={`nq-q-choices nq-q-choices-${choices.length}${big ? ' nq-q-choices-big' : ''}${longChoice ? ' nq-q-choices-long' : ''}`}
+      >
         {choices.map((c, i) => {
           const state =
             phase === 'feedback'

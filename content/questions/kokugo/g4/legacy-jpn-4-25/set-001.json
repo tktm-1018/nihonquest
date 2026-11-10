@@ -5,13 +5,14 @@
     "subject": "kokugo",
     "grade": 4,
     "unit": "kokugo.g4.legacy-jpn-4-25",
+    "timeLimitSec": 25,
     "tags": [
       "source:legacy-autonomy-game",
       "legacy-node:jpn_4_25",
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "文「母がくるまで待っている。」は、だれが待っているのかによって二通りの意味にとれます。その二つの意味の組み合わせとして正しいものはどれですか。",
+      "prompt": "文「母が来るまで待っている。」は、だれが待っているのかによって二通りの意味にとれます。その二つの意味の組み合わせとして正しいものはどれですか。",
       "choices": [
         {
           "id": "c1",
