@@ -646,5 +646,23 @@
       "shuffle": true
     },
     "explanation": "中心になることをきめると、まとまった作文になります。"
+  },
+  {
+    "id": "kokugo.g4.romaji.alternatives.0001",
+    "type": "text-input",
+    "subject": "kokugo",
+    "grade": 4,
+    "unit": "kokugo.g4.legacy-jpn-4-5",
+    "timeLimitSec": 20,
+    "tags": [
+      "source:codex-supplemental",
+      "review:pending-human"
+    ],
+    "payload": {
+      "prompt": "ひらがな「ち」をローマ字で書[か]きましょう。",
+      "template": "{{INPUT}}",
+      "answers": [["ti", "chi"]]
+    },
+    "explanation": "訓令式[くんれいしき]では「ti」、ヘボン式[しき]では「chi」と書[か]きます。どちらも正解[せいかい]です。"
   }
 ]

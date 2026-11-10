@@ -646,5 +646,23 @@
       "shuffle": true
     },
     "explanation": "「冷（つめ）たい」と書きます。"
+  },
+  {
+    "id": "kokugo.g4.kanji-reading.okurigana.0001",
+    "type": "text-input",
+    "subject": "kokugo",
+    "grade": 4,
+    "unit": "kokugo.g4.legacy-jpn-4-29",
+    "timeLimitSec": 20,
+    "tags": [
+      "source:codex-supplemental",
+      "review:pending-human"
+    ],
+    "payload": {
+      "prompt": "「美[うつく]しい」の読[よ]みを、送[おく]りがなも含[ふく]めてひらがなで書[か]きましょう。",
+      "template": "{{INPUT}}",
+      "answers": ["うつくしい"]
+    },
+    "explanation": "「美[うつく]しい」は、送[おく]りがなの「しい」まで含[ふく]めて「うつくしい」と読[よ]みます。"
   }
 ]

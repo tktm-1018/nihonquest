@@ -825,5 +825,29 @@
       "shuffle": true
     },
     "explanation": "人手が足りず誰でもいいから手伝ってほしい様子を「猫の手も借りたい」と言います。"
+  },
+  {
+    "id": "kokugo.g4.kanyouku.context.0001",
+    "type": "choice",
+    "subject": "kokugo",
+    "grade": 4,
+    "unit": "kokugo.g4.legacy-jpn-4-3",
+    "timeLimitSec": 25,
+    "tags": [
+      "source:codex-supplemental",
+      "review:pending-human"
+    ],
+    "payload": {
+      "prompt": "宿題[しゅくだい]を始[はじ]めず、友[とも]だちと長[なが]い時間[じかん]おしゃべりしていた太郎[たろう]の様子[ようす]を表[あらわ]す慣用句[かんようく]はどれですか。",
+      "choices": [
+        { "id": "a", "text": "油[あぶら]を売[う]る" },
+        { "id": "b", "text": "頭[あたま]をひねる" },
+        { "id": "c", "text": "手[て]を焼[や]く" },
+        { "id": "d", "text": "耳[みみ]を貸[か]す" }
+      ],
+      "answer": "a",
+      "shuffle": true
+    },
+    "explanation": "「油[あぶら]を売[う]る」は、仕事[しごと]をせずにおしゃべりをして時間[じかん]を過[す]ごす様子[ようす]を表[あらわ]します。"
   }
 ]
