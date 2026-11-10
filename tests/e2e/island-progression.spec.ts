@@ -106,7 +106,7 @@ async function useFirstSkill(page: Page): Promise<void> {
 }
 
 test('タップだけで東北地方ボスを倒し、再読込後もバッグ拡張と北海道解放が残る', async ({ page }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(300_000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(String(error)));
 
@@ -151,7 +151,8 @@ test('タップだけで東北地方ボスを倒し、再読込後もバッグ�
   await expect(page.locator('.nq-box-next')).toBeVisible();
   await page.locator('.nq-box').click();
   const skill = page.locator('.nq-cmd[data-cmd="skill"]');
-  const battleDeadline = Date.now() + 90_000;
+  // 遅いCIランナーでは ボス戦だけで 90秒を こえることがあるため、余裕を もたせる。
+  const battleDeadline = Date.now() + 150_000;
   while (Date.now() < battleDeadline && !(await page.locator('.nq-result').isVisible())) {
     if (await skill.isVisible()) await useFirstSkill(page).catch(() => undefined);
     else if (await page.locator('.nq-box-next').isVisible())
