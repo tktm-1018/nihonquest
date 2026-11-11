@@ -9,6 +9,7 @@ import { ICONS, iconCanvas } from '../icons';
 import { NQ } from '../palette';
 import { addImage, addSheet } from '../sheet';
 import { drawDungeonTiles } from './dungeonTiles';
+import { drawSpecialTiles } from './specialTiles';
 import { drawTownTiles } from './townTiles';
 
 export const WARP_SIZE = 32;
@@ -18,17 +19,20 @@ type Rect = (x: number, y: number, w: number, h: number, col: string) => void;
 
 /** タイルセットの列の数（scripts/scaffold-maps.ts の TILESET.columns と同じ） */
 const TILE_COLS = 8;
+/** タイルセットの行の数（scripts/scaffold-maps.ts の TILESET.tilecount ÷ 列） */
+const TILE_ROWS = 60;
 
 /**
- * 仮タイルセット（128×640 = 16×16 タイル×320。8 列×40 行）。番号は scripts/scaffold-maps.ts の TILE・T と対応。
+ * 仮タイルセット（128×960 = 16×16 タイル×480。8 列×60 行）。番号は scripts/scaffold-maps.ts の TILE・T と対応。
  * 13〜37 は町、38〜60 はダンジョン（4 つのテーマ）、61〜146 は 県ごとの 町の テーマ（townTiles.ts）、
- * 147〜156 は フィールドの たんぼ など。161〜220 は 都会の 町、221〜300 は ダンジョンの テーマ（あき）。
+ * 147〜156 は フィールドの たんぼ など。161〜220 は 都会の 町、221〜269 は ダンジョンの テーマ（dungeonTiles.ts）、
+ * 321〜 は 県ごとの 特別な 町・ダンジョン・フィールドの かざり（specialTiles.ts）。
  * 「すけ」と書いたタイルは地面の上に重ねる（decor レイヤー）
  */
 function tilesetCanvas(): HTMLCanvasElement {
   const c = document.createElement('canvas');
   c.width = TILE_COLS * 16;
-  c.height = 640;
+  c.height = TILE_ROWS * 16;
   const ctx = c.getContext('2d')!;
   const tile = (n: number, draw: (r: Rect) => void) => {
     const ox = ((n - 1) % TILE_COLS) * 16;
@@ -575,6 +579,8 @@ function tilesetCanvas(): HTMLCanvasElement {
   drawTownTiles({ tile, block });
   // 221〜269 は ダンジョンの テーマ（dungeonTiles.ts）
   drawDungeonTiles({ tile, block });
+  // 321〜 は 県ごとの 特別な 町・ダンジョン・フィールドの かざり（specialTiles.ts）
+  drawSpecialTiles({ tile, block });
 
   // ───── フィールドの 地面の 性質（147〜158。src/core/world/ground.ts。159・160 は空き） ─────
   /** 丸い 木（w×w の かんむり。左上が 日なた、右下が かげ。下に みき） */
@@ -814,6 +820,26 @@ const SIGN = [
   '................',
 ];
 
+/** 道しるべ（16×16）：木の 柱に 左と 右を さす 矢印の 板 */
+const SIGNPOST = [
+  '................',
+  '......oo........',
+  '.oooooTToooooo..',
+  'oPPPPPTTPPPPPPo.',
+  '.oPPPPTTPPPPPPPo',
+  '..oooooTToooooo.',
+  '.oooooTToooooo..',
+  'oPPPPPTTPPPPPo..',
+  '.oPPPPTTPPPPPPo.',
+  '..oooooTTooooo..',
+  '.......TT.......',
+  '.......TT.......',
+  '.......TT.......',
+  '......oTTo......',
+  '.....oooooo.....',
+  '................',
+];
+
 const CHEST = [
   '................',
   '................',
@@ -1030,6 +1056,7 @@ export function buildFieldTextures(scene: Phaser.Scene): void {
   addImage(tx, 'fld.sign.todo', gridCanvas(SIGN, { B: NQ.brown, Y: NQ.white, T: NQ.tan }));
   addImage(tx, 'fld.sign.done', gridCanvas(SIGN, { B: NQ.brown, Y: NQ.gold, T: NQ.tan }));
   addImage(tx, 'fld.sign.mark', gridCanvas(ALERT, { W: NQ.white, R: NQ.orange }));
+  addImage(tx, 'fld.signpost', gridCanvas(SIGNPOST, { P: NQ.sand, T: NQ.brown }));
   addImage(tx, 'fld.chest', gridCanvas(CHEST, { A: NQ.amber, G: NQ.orange, Y: NQ.gold }));
   addImage(tx, 'fld.chest.open', gridCanvas(CHEST_OPEN, { A: NQ.amber, G: NQ.orange, K: NQ.night }));
   addImage(tx, 'fld.gate', gridCanvas(GATE, { V: NQ.violet, L: NQ.lavender, W: NQ.white }));

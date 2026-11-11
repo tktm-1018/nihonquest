@@ -83,7 +83,7 @@ import { ENCLAVES } from '../../scripts/data/prefectures';
 import type { DialogueLine } from '../ui/dialogue';
 import { AreaMapOverlay, type AreaMapView } from '../ui/field/AreaMap';
 import type { RegionMiniView } from '../ui/field/RegionMiniMap';
-import { AreaTitle, FieldHud, LandmarkCutin } from '../ui/field/FieldUi';
+import { AreaTitle, FieldHud, GeoNameToast, LandmarkCutin } from '../ui/field/FieldUi';
 import { BagOverlay, type BagThing } from '../ui/field/BagOverlay';
 import { bagCells } from '../ui/field/bagLayout';
 import { MenuOverlay, type MenuEntry, type MenuTab, type RoadmapNode } from '../ui/field/MenuOverlay';
@@ -147,6 +147,8 @@ import { attachFieldSounds, playFieldFootstep, playEntranceSound } from './overw
 import { attachSceneMusic } from './shared/music';
 import { buildReviewQueue, clearReviewedMistake } from './overworld/reviewQueue';
 import { dispatchMapObjects } from './overworld/objectDispatch';
+import { geoNameAt, parseSignWays, readMapLook, signText, type MapLook } from './overworld/mapGuides';
+import { addBossMarkerArt } from './overworld/bossMarker';
 import { npcModel } from './overworld/npcModel';
 import { applyChestReward, chestModel, specialtyChestModel } from './overworld/chestModel';
 import { itemKindPresentation, specialtyRewardLines } from './overworld/treasurePresentation';
@@ -242,7 +244,7 @@ interface BaseMap extends MapBase {
   tiles: readonly number[];
   objects: TiledObject[];
 }
-type RootName = 'hud' | 'title' | 'fx' | 'dialogue' | 'travel';
+type RootName = 'hud' | 'title' | 'fx' | 'dialogue' | 'travel' | 'toast';
 
 /** 開発者モード（ぜんぶの 場所へ ワープ）の しるし。セーブの progress.counters に 1 */
 const DEV_ALL_KEY = 'dev:all';
@@ -307,6 +309,9 @@ export class OverworldScene extends Phaser.Scene {
   private triggers = new Map<number, FieldTrigger>();
   private insideTrigger: string | null = null;
   private signs = new Map<number, () => Promise<void>>();
+  /** マップの 見た目・方角・地名（scripts/maps/fieldDecor.ts）と、いま 名前を 出している 地形 */
+  private mapLook: MapLook = readMapLook(null);
+  private geoHere: string | null = null;
   private npcs = new Map<number, Npc>();
   private chests = new Map<number, Chest>();
   private midBoss: MidBoss | null = null;
@@ -402,6 +407,7 @@ export class OverworldScene extends Phaser.Scene {
       return;
     }
     this.map.createLayer('background', tileset, 0, 0);
+    this.mapLook = readMapLook(this.map.properties);
     // フィールド・離島は 見た目用の レイヤーを 上に しく（データの background は そのまま。地面の 判定に つかう）
     if (this.kind() === 'field' || this.kind() === 'enclave') this.addViewLayer();
     // 町・ダンジョンの 木・かざり・たいまつ など（地面の上に重ねる）
@@ -417,6 +423,7 @@ export class OverworldScene extends Phaser.Scene {
     // はじめに いる 名所エリア（名前は 出さない。HUD の 場所の 窓に 出る）
     this.enterRegion(sx, sy);
     this.insideTrigger = this.triggers.get(this.idx(sx, sy))?.id ?? null;
+    this.geoHere = geoNameAt(this.mapLook.geoNames, sx, sy)?.name ?? null;
 
     const cam = this.cameras.main;
     cam.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -712,6 +719,7 @@ export class OverworldScene extends Phaser.Scene {
   private arrive(x: number, y: number): void {
     const i = this.idx(x, y);
     this.enterRegion(x, y);
+    this.showGeoName(x, y);
     const tr = this.transitions.get(i);
     if (tr && this.canWarp && this.isLocked(i)) {
       void this.talkLocked(i);
@@ -810,6 +818,7 @@ export class OverworldScene extends Phaser.Scene {
       bg.data.flatMap((row) => row.map((t) => t.index)),
       w,
       h,
+      { natural: this.mapLook.natural },
     );
     const rows: number[][] = [];
     for (let y = 0; y < h; y++) rows.push(ids.slice(y * w, (y + 1) * w));
@@ -835,6 +844,7 @@ export class OverworldScene extends Phaser.Scene {
       event: (object, x, y) => this.addEvent(object, x, y, area),
       landmark: (object, x, y) => this.addLandmark(object, x, y, area),
       specialty: (object, x, y) => this.addSpecialty(object, x, y, area),
+      signpost: (object, x, y) => this.addSignpost(object, x, y),
     });
   }
 
@@ -1254,73 +1264,10 @@ export class OverworldScene extends Phaser.Scene {
 
   /** ボスの「？」マーク（光のわっか・足もとの光る輪・立ちのぼる光のつぶ）を出して、そのマスを 通れなくする */
   private bossMarker(tx: number, ty: number, def: Monster): MidBoss {
-    const x = tx * TILE + 8;
-    const y = ty * TILE + 8;
-    const aura = this.add.image(x, y + 5, 'fld.boss.aura').setDepth(2);
-    this.tweens.add({
-      targets: aura,
-      alpha: 0.35,
-      yoyo: true,
-      repeat: -1,
-      duration: 500,
-      ease: 'Stepped',
-      easeParams: [2],
-    });
-    const glow = this.add
-      .image(x, y - 1, 'fld.boss.glow')
-      .setAlpha(0.45)
-      .setDepth(y - 2);
-    this.tweens.add({
-      targets: glow,
-      alpha: 0.2,
-      yoyo: true,
-      repeat: -1,
-      duration: 450,
-      ease: 'Stepped',
-      easeParams: [3],
-    });
-    const halo = this.add.image(x, y - 1, 'fld.boss.halo').setDepth(y - 1);
-    const mark = this.add.image(x, y - 1, 'fld.boss.q').setDepth(y);
-    this.tweens.add({
-      targets: [mark, halo, glow],
-      y: y - 3,
-      yoyo: true,
-      repeat: -1,
-      duration: 500,
-      ease: 'Stepped',
-      easeParams: [2],
-    });
-    this.tweens.add({
-      targets: halo,
-      alpha: 0.4,
-      yoyo: true,
-      repeat: -1,
-      duration: 350,
-      ease: 'Stepped',
-      easeParams: [2],
-    });
-    // 光のつぶが、ときどき足もとから立ちのぼって消える
-    const sparks = this.time.addEvent({
-      delay: 260,
-      loop: true,
-      callback: () => {
-        const s = this.add
-          .image(x + this.rng.int(-9, 9), y + this.rng.int(-2, 5), 'fld.boss.spark')
-          .setDepth(y + 1);
-        this.tweens.add({
-          targets: s,
-          y: s.y - 16,
-          alpha: 0,
-          duration: 700,
-          ease: 'Stepped',
-          easeParams: [7],
-          onComplete: () => s.destroy(),
-        });
-      },
-    });
+    const { parts, sparks } = addBossMarkerArt(this, tx * TILE + 8, ty * TILE + 8, this.rng);
     const i = this.idx(tx, ty);
     this.blocked.add(i);
-    return { tile: i, def, parts: [aura, glow, halo, mark], sparks };
+    return { tile: i, def, parts, sparks };
   }
 
   /** 中ボスがいた場所に、次の県（島の最後の県なら次の島の最初の県）へのワープホールを開く */
@@ -1798,15 +1745,43 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   /** まだ開かない入口に乗った理由を伝える。 */
-  private async talkLocked(tile: number): Promise<void> {
+  private talkLocked(tile: number): Promise<void> {
+    const key =
+      this.lockedGates.get(tile) === 'regionBosses' ? 'field.regionBossesRemain' : 'field.secretLocked';
+    return this.notice(t(key), 'miss');
+  }
+
+  /** 1 まいの 文を 読む（読みおわるまで 動けない） */
+  private async notice(text: string, sfx: Parameters<typeof playSfx>[0] = 'select'): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.standStill();
-    playSfx('miss');
-    const key =
-      this.lockedGates.get(tile) === 'regionBosses' ? 'field.regionBossesRemain' : 'field.secretLocked';
-    await this.talk([{ text: t(key) }]);
+    playSfx(sfx);
+    await this.talk([{ text }]);
     this.busy = false;
+  }
+
+  /** 道しるべ：話しかけると 行き先の 向き（↑ ○○エリアの ぬし ／ ← りんごの町 など）を 読む */
+  private addSignpost(obj: TiledObject, tx: number, ty: number): void {
+    const i = this.idx(tx, ty);
+    this.add.image(tx * TILE + 8, ty * TILE + 8, 'fld.signpost').setDepth(ty * TILE + 8);
+    this.blocked.add(i);
+    const area = this.currentArea();
+    const names = { town: area?.town?.name ?? t('field.kindTown'), secret: area?.secret?.name };
+    const text = signText(parseSignWays(prop(obj, 'ways')), {
+      ...names,
+      region: (id) => this.regionDef(id)?.name,
+    });
+    this.signs.set(i, () => this.notice(text));
+  }
+
+  /** 山・湖・海などに 近づいたら、画面の 上に 地形の 名前を 小さく 出す（同じ 所では くり返さない） */
+  private showGeoName(x: number, y: number): void {
+    const spot = geoNameAt(this.mapLook.geoNames, x, y);
+    if ((spot?.name ?? null) === this.geoHere) return;
+    this.geoHere = spot?.name ?? null;
+    const kind = spot ? t(`field.geoKind.${spot.kind}`) : '';
+    if (spot) void this.show('toast', (done) => h(GeoNameToast, { kind, name: spot.name, onDone: done }));
   }
 
   private async enterWarp(): Promise<void> {
@@ -2510,7 +2485,7 @@ export class OverworldScene extends Phaser.Scene {
   }
 
   private cleanupTransientUi(): void {
-    for (const name of ['title', 'fx', 'dialogue', 'travel'] as const) render(null, this.root(name));
+    for (const name of ['title', 'fx', 'dialogue', 'travel', 'toast'] as const) render(null, this.root(name));
   }
 
   /** DOM の部品を出して、閉じられるまで待つ */
@@ -3128,6 +3103,7 @@ export class OverworldScene extends Phaser.Scene {
       area: this.currentArea(),
       game: this.gs(),
       revealAll: this.devAll(),
+      compass: this.kind() === 'field' && this.mapLook.compass,
     });
   }
 

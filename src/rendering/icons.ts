@@ -5,6 +5,7 @@
  */
 import { makeGrid, paint, toCanvas } from './grid';
 import { NQ } from './palette';
+import { fineCanvas } from './battle/fine';
 
 export interface IconDef {
   rows: readonly string[];
@@ -340,13 +341,17 @@ export function iconCanvas(name: string): HTMLCanvasElement | null {
 
 const urls = new Map<string, string>();
 
-/** DOM で使う data URL（<img> を image-rendering: pixelated で拡大する） */
-export function iconUrl(name: string): string | null {
-  const hit = urls.get(name);
+/**
+ * DOM で使う data URL（<img> を image-rendering: pixelated で拡大する）。
+ * fine は バトル用の 2 倍の こまかさ（src/rendering/battle/fine.ts）
+ */
+export function iconUrl(name: string, fine = false): string | null {
+  const key = fine ? `${name}@fine` : name;
+  const hit = urls.get(key);
   if (hit) return hit;
   const c = iconCanvas(name);
   if (!c) return null;
-  const u = c.toDataURL();
-  urls.set(name, u);
+  const u = (fine ? fineCanvas(c) : c).toDataURL();
+  urls.set(key, u);
   return u;
 }

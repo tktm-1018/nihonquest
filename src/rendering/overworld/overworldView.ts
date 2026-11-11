@@ -6,6 +6,10 @@
  *  - 果樹園：1 マスに 1 本の 木（ならぶと 畑の 列。森の かたまりと 見分けが つく）
  *  - 山：1 マスに 1 つの 山（すそが マスの はばいっぱい → ならぶと 山なみ）
  *  - 草原・すなはま・みずべ：場所で きまる 2〜3 しゅるいを まぜて、同じ 絵が マス目に ならばないように
+ * natural（マップの mapLook が 'natural'。scripts/data/mapLooks.ts）なら、さらに 自然に：
+ *  - さかいの 山なみ：場所で ゆっくり かわる なみで 岩山・針葉樹の 森・岩の かたまりを まぜ、山の そばは 雪の 山
+ *  - さかいの すそ：となり（2 マス 以内）の 草原に 小石・しげみ・長い 草（さかいが 一直線に 見えない）
+ *  - 果樹園：木の 位置を ずらし、ところどころ 若い 木（ごばんの 目に 見えない）
  * 純粋関数（Phaser を 使わない）。知らない 番号は -1（background の 絵を そのまま 見せる）
  */
 
@@ -49,8 +53,25 @@ export const VIEW = {
   WATER_FLOW_2: 71,
   /** + 道の しるし（となりが 道の がわ。北 1・東 2・南 4・西 8） */
   ROAD: 72,
+  /** さかいの 山なみ（natural）：針葉樹の 森・岩の かたまり・雪の 山 */
+  RIDGE_PINE: 88,
+  RIDGE_ROCK: 89,
+  RIDGE_SNOW: 90,
+  /** さかいの すそ（natural）：小石・しげみ・長い 草 */
+  FOOT_ROCK: 91,
+  FOOT_BUSH: 92,
+  FOOT_GRASS: 93,
+  /** 果樹園（natural）：左・右に ずれた 木、若い 木 */
+  ORCHARD_LEFT: 94,
+  ORCHARD_RIGHT: 95,
+  ORCHARD_YOUNG: 96,
 } as const;
-export const VIEW_COUNT = 88;
+export const VIEW_COUNT = 97;
+
+export interface ViewOptions {
+  /** マップの mapLook が 'natural' */
+  natural?: boolean;
+}
 
 /** background の 番号（fieldArt.ts・core/world/ground.ts） */
 const WATER = 3;
@@ -60,9 +81,29 @@ const ORCHARD = new Set([157, 158]);
 
 /** 場所で きまる ばらばらの 数（同じ 県は いつも 同じ 見た目） */
 const hash = (x: number, y: number) => (Math.imul(x, 73856093) ^ Math.imul(y, 19349663)) >>> 0;
+/** ゆっくり かわる 0〜1 の なみ（size マスごとの 格子の あいだを なめらかに つなぐ） */
+const smooth = (x: number, y: number, size: number): number => {
+  const gx = Math.floor(x / size);
+  const gy = Math.floor(y / size);
+  const fx = x / size - gx;
+  const fy = y / size - gy;
+  const v = (ix: number, iy: number) => (hash(ix + 101, iy + 37) % 1000) / 1000;
+  const sx = fx * fx * (3 - 2 * fx);
+  const sy = fy * fy * (3 - 2 * fy);
+  const top = v(gx, gy) + (v(gx + 1, gy) - v(gx, gy)) * sx;
+  const bottom = v(gx, gy + 1) + (v(gx + 1, gy + 1) - v(gx, gy + 1)) * sx;
+  return top + (bottom - top) * sy;
+};
+const RIDGE = 159;
 
 /** 1 マスの 見た目。bg は 横 w・縦 h の background の 番号（行ごと） */
-export function viewTileAt(bg: readonly number[], w: number, h: number, i: number): number {
+export function viewTileAt(
+  bg: readonly number[],
+  w: number,
+  h: number,
+  i: number,
+  opts: ViewOptions = {},
+): number {
   const t = bg[i]!;
   const x = i % w;
   const y = Math.floor(i / w);
@@ -75,6 +116,10 @@ export function viewTileAt(bg: readonly number[], w: number, h: number, i: numbe
   const mask = (hit: (n: number) => boolean) =>
     (hit(at(0, -1)) ? 1 : 0) | (hit(at(1, 0)) ? 2 : 0) | (hit(at(0, 1)) ? 4 : 0) | (hit(at(-1, 0)) ? 8 : 0);
   const r = hash(x, y);
+  if (opts.natural) {
+    const look = naturalTile(t, x, y, r, at);
+    if (look >= 0) return look;
+  }
   if (t === WATER) {
     const land = mask((n) => n !== WATER && n > 0);
     return land === 0 && r % 9 === 0 ? VIEW.WATER_GLINT : VIEW.WATER + land;
@@ -117,6 +162,58 @@ export function viewTileAt(bg: readonly number[], w: number, h: number, i: numbe
   }
 }
 
+/** natural の 見た目（さかいの 山なみ・すそ・果樹園）。ほかの マスは -1（ふつうの 見た目） */
+function naturalTile(
+  t: number,
+  x: number,
+  y: number,
+  r: number,
+  at: (dx: number, dy: number) => number,
+): number {
+  if (t === RIDGE) {
+    // 山の そばは 雪の 山。ほかは ゆっくり かわる なみで 森・岩・岩山（長い さかいが 同じ 絵の 列に ならない）
+    for (const [dx, dy] of [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ] as const)
+      if (MOUNTAIN.has(at(dx, dy))) return VIEW.RIDGE_SNOW;
+    const n = smooth(x, y, 7);
+    if (n < 0.34) return VIEW.RIDGE_PINE;
+    if (n < 0.5) return r % 4 === 0 ? VIEW.RIDGE : VIEW.RIDGE_ROCK;
+    return r % 3 === 0 ? VIEW.RIDGE2 : VIEW.RIDGE;
+  }
+  if (t === 1 || t === 13 || t === 14 || t === 155 || t === 156) {
+    // さかいの すそ：となりの 草原・田んぼに 小石・しげみ・長い 草（近いほど 多い）
+    let d = 3;
+    for (let dy = -2; dy <= 2; dy++)
+      for (let dx = -2; dx <= 2; dx++)
+        if (at(dx, dy) === RIDGE) d = Math.min(d, Math.max(Math.abs(dx), Math.abs(dy)));
+    const p = d === 1 ? 50 : d === 2 ? 16 : 0;
+    // 田んぼの となりは 小石を さけて しげみと 長い 草
+    const kinds =
+      t >= 155 ? [VIEW.FOOT_BUSH, VIEW.FOOT_GRASS] : [VIEW.FOOT_ROCK, VIEW.FOOT_BUSH, VIEW.FOOT_GRASS];
+    if (r % 100 < p) return kinds[(r >>> 8) % kinds.length]!;
+    return -1;
+  }
+  if (t === 157) {
+    const k = (r >>> 4) % 20;
+    return k < 3
+      ? VIEW.ORCHARD_YOUNG
+      : k < 9
+        ? VIEW.ORCHARD_LEFT
+        : k < 15
+          ? VIEW.ORCHARD_RIGHT
+          : VIEW.ORCHARD;
+  }
+  return -1;
+}
+
 /** マップ ぜんぶの 見た目（-1 は その マスは 描かない） */
-export const overworldView = (bg: readonly number[], w: number, h: number): number[] =>
-  bg.map((_, i) => viewTileAt(bg, w, h, i));
+export const overworldView = (
+  bg: readonly number[],
+  w: number,
+  h: number,
+  opts: ViewOptions = {},
+): number[] => bg.map((_, i) => viewTileAt(bg, w, h, i, opts));

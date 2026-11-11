@@ -54,7 +54,7 @@ export function EnemyWindow({ e }: { e: EnemyView }) {
         </span>
         {e.isBoss && (
           <span class="nq-boss-tag">
-            <PixelIcon name="boss" scale={2} />
+            <PixelIcon fine name="boss" scale={2} />
             <RubyLabel text={t('battle.boss')} />
           </span>
         )}
@@ -88,14 +88,14 @@ export function AllyRow({
     >
       <div class="nq-ally-heading">
         <span class="nq-ally-cur" aria-hidden="true" />
-        <PixelIcon name={a.isHero ? 'hero' : `el-${a.element}`} scale={2} />
+        <PixelIcon fine name={a.isHero ? 'hero' : `el-${a.element}`} scale={2} />
         <RubyLabel text={a.name} class="nq-ally-name" />
         <span class="nq-ally-lv">
           {t('battle.lv')} {a.level}
         </span>
         {a.passive && (
           <span class="nq-ally-passive">
-            <PixelIcon name={`subj-${a.passive}`} scale={2} />
+            <PixelIcon fine name={`subj-${a.passive}`} scale={2} />
           </span>
         )}
         {a.defMult > 1 && <span class="nq-chip nq-def">{t('battle.defMark')}▲</span>}
@@ -132,7 +132,7 @@ export function GaugeColumn({ list, compact = false }: { list: SubjectGaugeView[
           aria-valuenow={g.value}
           aria-valuemax={g.max}
         >
-          <PixelIcon name={`subj-${g.subject}`} scale={2} />
+          <PixelIcon fine name={`subj-${g.subject}`} scale={2} />
           <span class="nq-sg-bar">
             <i class={`nq-subj-${g.subject}`} style={{ width: `${(g.value / g.max) * 100}%` }} />
             {g.marks.map((mark) => (

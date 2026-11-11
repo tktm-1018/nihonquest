@@ -93,9 +93,12 @@ function grove(
     }
 }
 
-/** 果樹園の 木：草の 上に 1 本（まるい こずえ・みき・足もとの かげ・2×2 の 実） */
-function fruitTree(p: Px, fruit: string, fruitShade: string): void {
-  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, grassAt(x, y, 0));
+/** 果樹園の 木：草の 上に 1 本（まるい こずえ・みき・足もとの かげ・2×2 の 実）。ox だけ 横に ずらす */
+function fruitTree(base: Px, fruit: string, fruitShade: string, ox = 0): void {
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) base(x, y, grassAt(x, y, 0));
+  const p: Px = (x, y, col) => {
+    if (x + ox >= 0 && x + ox < 16) base(x + ox, y, col);
+  };
   for (let y = 13; y <= 14; y++)
     for (let x = 4; x <= 11; x++) if (y === 13 || (x > 4 && x < 11)) p(x, y, NQ.green);
   for (let y = 10; y <= 13; y++) {
@@ -239,9 +242,13 @@ function drawView(px: (n: number) => Px): void {
       for (let x = 0; x < 16; x++)
         p(x, y, y % 4 === 2 && (x + (y % 8 === 2 ? 0 : 2)) % 4 < 2 ? mark : NQ.leaf);
   });
-  // 果樹園（1 本ずつ 実の なる 木）
+  // 果樹園（1 本ずつ 実の なる 木）。natural は 左右に ずれた 木と 若い 木も
   fruitTree(px(VIEW.ORCHARD), NQ.red, NQ.brick);
   fruitTree(px(VIEW.ORCHARD_PEACH), NQ.blush, NQ.berry);
+  fruitTree(px(VIEW.ORCHARD_LEFT), NQ.red, NQ.brick, -3);
+  fruitTree(px(VIEW.ORCHARD_RIGHT), NQ.red, NQ.brick, 3);
+  youngTree(px(VIEW.ORCHARD_YOUNG));
+  drawNatural(px);
   // 道：草原の 上の 土の 道。まん中と、となりが 道の がわへ のびる（ふちは 草に なじむ こげ茶の 点）
   for (let mask = 0; mask < 16; mask++) {
     const p = px(VIEW.ROAD + mask);
@@ -328,6 +335,110 @@ const ashAt = (x: number, y: number, v: number): string => {
   if (h === 11 && v === 1) return NQ.yellow;
   return (x + y * 3) % 9 === 0 ? NQ.cloud : NQ.silver;
 };
+
+/** 若い りんごの 木：細い みきに 小さな こずえと 実が 1 つ */
+function youngTree(p: Px): void {
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, grassAt(x, y, 1));
+  for (let y = 9; y <= 13; y++) p(8, y, NQ.brown);
+  p(6, 13, NQ.green);
+  p(10, 13, NQ.green);
+  for (let y = 0; y < 16; y++)
+    for (let x = 0; x < 16; x++) {
+      const d = (x - 8) ** 2 + (y - 6.5) ** 2;
+      if (d <= 10) p(x, y, d > 6 && x > 8 ? NQ.green : NQ.leaf);
+    }
+  p(9, 6, NQ.red);
+  p(10, 6, NQ.red);
+  p(10, 7, NQ.brick);
+}
+
+/** さかいの 山なみ（natural）と すそ */
+function drawNatural(px: (n: number) => Px): void {
+  // 針葉樹の 森：すきまなく ならぶ とがった 木（通れない くらい こい）
+  {
+    const p = px(VIEW.RIDGE_PINE);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, NQ.forest);
+    for (const [cx, top] of [
+      [3, 0],
+      [11, 1],
+      [7, 6],
+      [15, 7],
+      [-1, 7],
+    ] as const)
+      for (let y = top; y < top + 10 && y < 16; y++) {
+        const hw = Math.floor((y - top) / 2) + 1;
+        for (let x = cx - hw; x <= cx + hw; x++) {
+          if (x < 0 || x > 15) continue;
+          p(x, y, x < cx ? NQ.green : x === cx && y < top + 3 ? NQ.leaf : NQ.night);
+        }
+      }
+  }
+  // 岩の かたまり：はいいろの 大きな 岩が かさなる
+  {
+    const p = px(VIEW.RIDGE_ROCK);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, NQ.slate);
+    for (const [cx, cy, rx, ry] of [
+      [4, 4, 4, 3.5],
+      [12, 6, 4, 4],
+      [6, 12, 5, 3.5],
+    ] as const)
+      for (let y = 0; y < 16; y++)
+        for (let x = 0; x < 16; x++) {
+          const d = ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2;
+          if (d > 1) continue;
+          p(x, y, d > 0.6 && x >= cx ? NQ.night : x < cx && y < cy ? NQ.silver : NQ.gray);
+        }
+  }
+  // 雪の 山：すそまで 白い（山の そばの さかい）
+  {
+    const p = px(VIEW.RIDGE_SNOW);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, NQ.slate);
+    for (let y = 1; y < 16; y++) {
+      const hw = Math.round(((y - 1) * 8) / 14);
+      for (let x = 8 - hw; x <= Math.min(15, 8 + hw); x++)
+        p(x, y, y < 9 ? (x <= 8 ? NQ.white : NQ.cloud) : x <= 8 ? NQ.gray : NQ.night);
+    }
+  }
+  // すそ：小石・しげみ・長い 草
+  {
+    const p = px(VIEW.FOOT_ROCK);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, grassAt(x, y, 2));
+    for (const [x, y] of [
+      [3, 10],
+      [10, 4],
+      [12, 12],
+    ] as const) {
+      p(x, y, NQ.silver);
+      p(x + 1, y, NQ.gray);
+      p(x, y + 1, NQ.gray);
+      p(x + 1, y + 1, NQ.slate);
+    }
+  }
+  {
+    const p = px(VIEW.FOOT_BUSH);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, grassAt(x, y, 1));
+    for (let y = 0; y < 16; y++)
+      for (let x = 0; x < 16; x++) {
+        const d = ((x - 8) / 5) ** 2 + ((y - 9) / 4) ** 2;
+        if (d <= 1) p(x, y, d > 0.55 && (x > 8 || y > 10) ? NQ.forest : y < 8 && x < 8 ? NQ.lime : NQ.green);
+      }
+  }
+  {
+    const p = px(VIEW.FOOT_GRASS);
+    for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) p(x, y, grassAt(x, y, 0));
+    for (const [x, y] of [
+      [3, 5],
+      [9, 3],
+      [6, 10],
+      [12, 9],
+    ] as const)
+      for (let k = 0; k < 4; k++) {
+        p(x, y + k, NQ.green);
+        if (k > 1) p(x - 1, y + k, NQ.green);
+        if (k > 0) p(x + 1, y + k + 1 > 15 ? 15 : y + k + 1, NQ.forest);
+      }
+  }
+}
 
 /** 見た目用の タイル（'overworld-view'）を 作る。Overworld が 見た目だけの タイルマップで つかう */
 export function buildViewTexture(scene: Phaser.Scene): void {

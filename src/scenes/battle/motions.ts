@@ -21,13 +21,16 @@
  */
 import type Phaser from 'phaser';
 import type { Element } from '../../core/content/schemas';
-import { addImage } from '../../rendering/sheet';
-import { PIXEL_FONT } from '../../ui/fonts';
+import { FINE } from '../../rendering/battle/fine';
+import { addFineImage } from '../../rendering/sheet';
+import { FINE_FONT } from '../../ui/fonts';
 import { fxArt, type FxKind } from '../../rendering/battle/fxArt';
 import type { SkillLook } from '../../rendering/battle/skillLook';
 import { BACKDROP_SCALE, ELEMENT_FX } from '../../rendering/battle/pixelArt';
 
 const S = BACKDROP_SCALE;
+/** 2 倍の こまかさの テクスチャ（fine.ts）の 表示倍率 */
+const P = S / FINE;
 /** '#rrggbb' → 0xrrggbb */
 const colorOf = (hex: string): number => parseInt(hex.slice(1), 16);
 const snap = (v: number): number => Math.round(v / S) * S;
@@ -194,7 +197,7 @@ export class Motions {
     const star = this.img('spark', to.x, to.y).setTint(0xffffff);
     void this.tween({
       targets: star,
-      scale: S * (4 + st),
+      scale: P * (4 + st),
       alpha: 0,
       duration: 360,
       ease: 'Stepped',
@@ -205,7 +208,7 @@ export class Motions {
     const shock = this.img('shock', to.x, to.y + 16 * S).setTint(tint);
     void this.tween({
       targets: shock,
-      scaleX: S * (3 + st),
+      scaleX: P * (3 + st),
       alpha: 0,
       duration: 420,
       ease: 'Stepped',
@@ -222,7 +225,7 @@ export class Motions {
     const im = this.img('ring', at.x, at.y).setTint(tint);
     await this.tween({
       targets: im,
-      scale: S * to,
+      scale: P * to,
       alpha: 0,
       duration: 380,
       ease: 'Stepped',
@@ -276,7 +279,7 @@ export class Motions {
     await Promise.all(
       Array.from({ length: n }, (_, i) => {
         const a0 = (i / n) * Math.PI * 2;
-        const im = this.img('leaf', to.x, to.y).setScale(S * 1.5);
+        const im = this.img('leaf', to.x, to.y).setScale(P * 1.5);
         return this.counter(620, (t) => {
           const r = 36 * S * (1 - t);
           const a = a0 + t * Math.PI * 3;
@@ -293,7 +296,7 @@ export class Motions {
       Array.from({ length: n }, async (_, i) => {
         const x = snap(to.x + (i - (n - 1) / 2) * 8 * S);
         const im = this.img('rock', x, to.y - 70 * S)
-          .setScale(S * 1.4)
+          .setScale(P * 1.4)
           .setVisible(false);
         await this.wait(i * 120);
         im.setVisible(true);
@@ -305,7 +308,7 @@ export class Motions {
       }),
     );
     // さいごに 大きな 岩が ドーン
-    const big = this.img('rock', to.x, to.y - 90 * S).setScale(S * 3);
+    const big = this.img('rock', to.x, to.y - 90 * S).setScale(P * 3);
     await this.tween({ targets: big, y: snap(to.y), duration: 300, ease: 'Quad.easeIn' });
     big.destroy();
     this.scene.cameras.main.shake(260, 0.02);
@@ -341,12 +344,12 @@ export class Motions {
       Array.from({ length: side }, (_, i) => {
         const dx = (i % 2 ? 1 : -1) * (14 + Math.floor(i / 2) * 10) * S;
         const b = this.img('beam', to.x + dx, to.y + 10 * S).setOrigin(0.5, 1);
-        b.setScale(S * 0.6, 0);
+        b.setScale(P * 0.6, 0);
         return this.wait(i * 90)
           .then(() =>
             this.tween({
               targets: b,
-              scaleY: (to.y + 10 * S) / 48,
+              scaleY: (to.y + 10 * S) / (48 * FINE),
               duration: 160,
               ease: 'Stepped',
               easeParams: [4],
@@ -357,10 +360,10 @@ export class Motions {
       }),
     );
     const im = this.img('beam', to.x, to.y + 10 * S).setOrigin(0.5, 1);
-    im.setScale(S * 1.6, 0);
+    im.setScale(P * 1.6, 0);
     await this.tween({
       targets: im,
-      scaleY: (to.y + 10 * S) / 48,
+      scaleY: (to.y + 10 * S) / (48 * FINE),
       duration: 220,
       ease: 'Stepped',
       easeParams: [5],
@@ -370,7 +373,7 @@ export class Motions {
     await this.tween({
       targets: im,
       alpha: 0,
-      scaleX: S * 3.5,
+      scaleX: P * 3.5,
       duration: 300,
       ease: 'Stepped',
       easeParams: [4],
@@ -383,7 +386,7 @@ export class Motions {
       Array.from({ length: n }, (_, i) => {
         const a = (i / n) * Math.PI * 2 + 0.4;
         const im = this.img('orb', to.x + Math.cos(a) * 40 * S, to.y + Math.sin(a) * 26 * S).setScale(
-          S * 1.5,
+          P * 1.5,
         );
         return this.tween({
           targets: im,
@@ -398,8 +401,8 @@ export class Motions {
     // やみが ちぢんで（すいこむ わ）から はじける
     const hole = this.img('ring', to.x, to.y)
       .setTint(0x3a2672)
-      .setScale(S * 5);
-    await this.tween({ targets: hole, scale: S * 0.5, duration: 260, ease: 'Quad.easeIn' });
+      .setScale(P * 5);
+    await this.tween({ targets: hole, scale: P * 0.5, duration: 260, ease: 'Quad.easeIn' });
     hole.destroy();
     this.burst(to.x, to.y, ELEMENT_FX.yami, 'bt.fx.px', 30);
     this.scatter('wisp', to, 12, 30 * S, 8 * S);
@@ -421,7 +424,7 @@ export class Motions {
    */
   async motifStrike(from: Pt, to: Pt, m: MotifFx, tier: number): Promise<void> {
     const n = tier <= 1 ? 2 : tier === 2 ? 4 : 6;
-    const sc = S * m.iconScale * (tier <= 1 ? 1 : 1.5);
+    const sc = P * m.iconScale * (tier <= 1 ? 1 : 1.5);
     await Promise.all(
       Array.from({ length: n }, (_, i) =>
         this.flyTex(
@@ -437,7 +440,7 @@ export class Motions {
     );
     if (tier <= 1) return;
     const big = tier >= 3;
-    const scale = S * m.bigScale * (big ? 1.6 : 1);
+    const scale = P * m.bigScale * (big ? 1.6 : 1);
     const y0 = to.y - (big ? 46 : 36) * S;
     const im = this.scene.add.image(snap(to.x), snap(y0), m.big).setScale(0).setDepth(24);
     if (big) void this.bigRing({ x: to.x, y: y0 }, 0xffffff, 6);
@@ -459,7 +462,7 @@ export class Motions {
     for (const s of [-1, 1]) {
       const im = this.scene.add
         .image(snap(at.x), snap(at.y), m.icon)
-        .setScale(S * m.iconScale)
+        .setScale(P * m.iconScale)
         .setDepth(24);
       void this.tween({
         targets: im,
@@ -474,7 +477,7 @@ export class Motions {
 
   // ───────────────────────── 教科・単元・技の タイプ ─────────────────────────
 
-  /** 字（PixelMplus は 12 の ばいすうで かく） */
+  /** 字（バトルは 16 ドットの DotGothic16） */
   private glyph(
     text: string,
     x: number,
@@ -484,7 +487,7 @@ export class Motions {
   ): Phaser.GameObjects.Text {
     return this.scene.add
       .text(snap(x), snap(y), text, {
-        fontFamily: PIXEL_FONT,
+        fontFamily: FINE_FONT,
         fontSize: `${size}px`,
         color: look.color,
         stroke: look.edge,
@@ -952,10 +955,10 @@ export class Motions {
     }
     const ring = this.img('ring', at.x, at.y)
       .setTint(tint)
-      .setScale(S * 3);
+      .setScale(P * 3);
     await this.tween({
       targets: ring,
-      scale: S,
+      scale: P,
       alpha: 0.4,
       duration: 300,
       ease: 'Stepped',
@@ -983,7 +986,7 @@ export class Motions {
       await this.tween({
         targets: im,
         alpha: 0,
-        scaleY: S * 2,
+        scaleY: P * 2,
         duration: 140,
         ease: 'Stepped',
         easeParams: [3],
@@ -999,7 +1002,7 @@ export class Motions {
       await this.tween({
         targets: im,
         alpha: 0,
-        scale: S * 2,
+        scale: P * 2,
         duration: 160,
         ease: 'Stepped',
         easeParams: [3],
@@ -1019,7 +1022,7 @@ export class Motions {
   async guardRing(at: Pt, tint: number): Promise<void> {
     const im = this.img('ring', at.x, at.y)
       .setTint(tint)
-      .setScale(S * 2);
+      .setScale(P * 2);
     await this.tween({ targets: im, alpha: 0.2, duration: 120, yoyo: true, repeat: 1, ease: 'Stepped' });
     im.destroy();
   }
@@ -1029,7 +1032,7 @@ export class Motions {
     const im = this.img('spark', at.x, at.y).setTint(tint);
     void this.tween({
       targets: im,
-      scale: S * (big ? 2.6 : 2),
+      scale: P * (big ? 2.6 : 2),
       alpha: 0,
       duration: big ? 230 : 180,
       ease: 'Stepped',
@@ -1051,11 +1054,11 @@ export class Motions {
   ): Promise<void> {
     const im = this.img(kind, at.x, at.y)
       .setTint(tint)
-      .setScale(S * from)
+      .setScale(P * from)
       .setFlipX(flip);
     await this.tween({
       targets: im,
-      scale: S * to,
+      scale: P * to,
       alpha: 0,
       duration: ms,
       ease: 'Stepped',
@@ -1068,8 +1071,8 @@ export class Motions {
   private async bite(at: Pt, tint: number): Promise<void> {
     const im = this.img('bite', at.x, at.y)
       .setTint(tint)
-      .setScale(S, S * 2);
-    await this.tween({ targets: im, scaleY: S / 2, duration: 120, ease: 'Stepped', easeParams: [3] });
+      .setScale(P, P * 2);
+    await this.tween({ targets: im, scaleY: P / 2, duration: 120, ease: 'Stepped', easeParams: [3] });
     this.impact(at, tint, false);
     await this.tween({ targets: im, alpha: 0, duration: 120 });
     im.destroy();
@@ -1080,7 +1083,7 @@ export class Motions {
     const im = this.img('shock', at.x, at.y).setTint(tint);
     void this.tween({
       targets: im,
-      scaleX: S * 2,
+      scaleX: P * 2,
       alpha: 0,
       duration: 320,
       ease: 'Stepped',
@@ -1123,7 +1126,7 @@ export class Motions {
     const im = this.img('ring', at.x, at.y).setTint(tint);
     await this.tween({
       targets: im,
-      scale: S * 3,
+      scale: P * 3,
       alpha: 0,
       duration: 320,
       ease: 'Stepped',
@@ -1144,7 +1147,7 @@ export class Motions {
     opt: { scale?: number; trail?: FxKind } = {},
   ): Promise<Pt> {
     const im = this.img(kind, from.x, from.y)
-      .setScale(S * (opt.scale ?? 1))
+      .setScale(P * (opt.scale ?? 1))
       .setVisible(false);
     let last = -1;
     return this.wait(delay)
@@ -1206,8 +1209,8 @@ export class Motions {
 
   private img(kind: FxKind, x: number, y: number): Phaser.GameObjects.Image {
     const key = `bt.fx.${kind}`;
-    addImage(this.scene.textures, key, fxArt(kind));
-    return this.scene.add.image(snap(x), snap(y), key).setScale(S).setDepth(24);
+    addFineImage(this.scene.textures, key, () => fxArt(kind));
+    return this.scene.add.image(snap(x), snap(y), key).setScale(P).setDepth(24);
   }
 
   private counter(ms: number, onUpdate: (t: number) => void): Promise<void> {

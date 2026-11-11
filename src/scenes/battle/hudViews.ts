@@ -122,7 +122,7 @@ export function buildItemOptions(state: BattleState, content: ContentIndex): Ite
         name: item.name,
         count,
         blurb: item.blurb,
-        icon: itemIconUrl(item),
+        icon: itemIconUrl(item, true),
         ...battleItemAvailability(state, item, content),
       },
     ];
