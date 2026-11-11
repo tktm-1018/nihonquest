@@ -194,6 +194,8 @@
     "koEnemy": "{name}は 大切[たいせつ]なことを 思[おも]い出[だ]した！",
     "koAlly": "{name}は たおれてしまった…",
     "bossPhase": "{name}の ようすが かわった！",
+    "bossEnrage": "{name}は いかりの オーラを まとった！",
+    "bossEnrageAtk": "こうげきが すこし あがった！",
     "defeat": "みんな ちからつきて しまった…",
     "hp": "HP",
     "mp": "MP",
@@ -2136,7 +2138,7 @@
     "saveError": "セーブに しっぱいしました。\n\nあそんだ きろくを のこすため、もういちど おしてね。",
     "retry": "もういちど",
     "tagline": "にほんを たびして、たたかって、まなぶ RPG",
-    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth",
+    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）・DotGothic16（Fontworks）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth",
     "noSave": "セーブデータは まだ ないよ"
   },
   "cutscene": {

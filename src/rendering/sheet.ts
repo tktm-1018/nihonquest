@@ -1,4 +1,5 @@
 import type Phaser from 'phaser';
+import { FINE, fineCanvas } from './battle/fine';
 
 /**
  * Canvas を Phaser のスプライトシートとして登録する（コマ番号 0,1,2… を左上から右へ、行ごとに振る）。
@@ -27,4 +28,25 @@ export function addImage(
   canvas: HTMLCanvasElement,
 ): void {
   if (!textures.exists(key)) textures.addCanvas(key, canvas);
+}
+
+/** バトル用：2 倍の こまかさに して 1 枚絵を 登録する（表示は S / FINE 倍。src/rendering/battle/fine.ts） */
+export function addFineImage(
+  textures: Phaser.Textures.TextureManager,
+  key: string,
+  canvas: HTMLCanvasElement | (() => HTMLCanvasElement),
+): void {
+  if (!textures.exists(key))
+    textures.addCanvas(key, fineCanvas(typeof canvas === 'function' ? canvas() : canvas));
+}
+
+/** バトル用：コマごとに 2 倍の こまかさに して スプライトシートを 登録する（fw・fh は もとの コマの 大きさ） */
+export function addFineSheet(
+  textures: Phaser.Textures.TextureManager,
+  key: string,
+  canvas: HTMLCanvasElement,
+  fw: number,
+  fh: number,
+): void {
+  if (!textures.exists(key)) addSheet(textures, key, fineCanvas(canvas, fw, fh), fw * FINE, fh * FINE);
 }

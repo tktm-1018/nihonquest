@@ -35,9 +35,10 @@ import { t, tOpt } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
 import { playSfx, prepareBattleSfx } from '../ui/sfx';
 import { BATTLE_POSE, battleSheet, HERO_H, HERO_W, heroKey, heroLook } from '../rendering/characters';
-import { itemIconGrid, itemIconUrl } from '../rendering/itemIcons';
+import { fineItemIconUrl, itemIconGrid } from '../rendering/itemIcons';
 import { designedMonsterArt } from '../rendering/monsters';
-import { addImage, addSheet } from '../rendering/sheet';
+import { addFineImage, addFineSheet } from '../rendering/sheet';
+import { asFine, FINE } from '../rendering/battle/fine';
 import { Motions, type EnemyStyle, type MotifFx, type SwingKind } from './battle/motions';
 import { toCanvas } from '../rendering/grid';
 import { motifArtGrid } from '../rendering/motifArt';
@@ -73,7 +74,9 @@ import { runBattleQuestion } from './battle/questionFlow';
 import { skillLockBanner } from './battle/skillLockPresentation';
 import { BattleHudFlow } from './battle/hudFlow';
 import { hasStoryCompanion } from '../core/progression/storyCompanion';
-import { monsterDisplaySize, monsterMenuArtUrl } from '../rendering/menuArt';
+import { monsterMenuArtUrl } from '../rendering/menuArt';
+import { BossAura, enemyScaleFor, enemySizeFor } from './battle/bossPresence';
+import { attackStance, registerStanceSource } from './battle/stance';
 import { BATTLE_SCALE as S, battleLayout, type BattleLayout, OFF_RIGHT, READY_STEP } from './battle/layout';
 import { createBattleClouds, createBattleWinds, moveBattleClouds, moveBattleWinds } from './battle/clouds';
 import { attachBattleBgm, finishBattleBgm } from './battle/bgm';
@@ -85,6 +88,8 @@ import {
   type MenuAction,
   type Phase,
 } from './battle/sceneModel';
+/** 2 倍の こまかさの テクスチャ（rendering/battle/fine.ts）の 表示倍率 */
+const FS = S / FINE;
 type Sprite = Phaser.GameObjects.Image;
 export class BattleScene extends Phaser.Scene {
   private content!: ContentIndex;
@@ -105,6 +110,8 @@ export class BattleScene extends Phaser.Scene {
   private heroSprite!: Sprite;
   private palSprite: Sprite | null = null;
   private enemySize: number = MONSTER_SIZE.normal;
+  private enemyFront = 0;
+  private bossAura: BossAura | null = null;
   /** 敵の絵の倍率。ボス戦だけ一回り大きく（scaleOf） */
   private enemyScale: number = S;
   private enemyDef!: Monster;
@@ -192,7 +199,6 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     this.enemyDef = def;
-    this.layout = battleLayout(this.opts.presentation);
     const c = this.content;
     this.deps = {
       settings: c.settings,
@@ -206,6 +212,7 @@ export class BattleScene extends Phaser.Scene {
     void prepareBattleSfx(this.gs.settings.seVolume);
 
     const isBoss = this.opts.isBoss ?? def.isBoss;
+    this.layout = battleLayout(this.opts.presentation, isBoss);
     this.state = createBattle(
       {
         ally: partyFromGameState(this.gs, c),
@@ -240,6 +247,7 @@ export class BattleScene extends Phaser.Scene {
       sh.x = sp.x;
       sh.setVisible(sp.active && sp.alpha > 0.05);
     }
+    this.bossAura?.update(delta);
     moveBattleClouds(this.clouds, this.scale.width, delta);
     moveBattleWinds(this.winds, this.scale.width, delta);
   }
@@ -256,22 +264,26 @@ export class BattleScene extends Phaser.Scene {
           ? ground
           : 'field';
     const bgKey = `bt.bg.${kind}`;
-    addImage(this.textures, bgKey, backdropArt(kind));
-    this.add.image(0, 0, bgKey).setOrigin(0).setScale(S).setDepth(0);
+    addFineImage(this.textures, bgKey, () => backdropArt(kind));
+    this.add.image(0, 0, bgKey).setOrigin(0).setScale(FS).setDepth(0);
     this.clouds = createBattleClouds(this, kind);
     this.winds = createBattleWinds(this, kind);
-    for (const p of ['px', 'star', 'heart'] as const) addImage(this.textures, `bt.fx.${p}`, particleArt(p));
-    addSheet(this.textures, 'bt.fx.slash', slashSheet(), 32, 32);
+    for (const p of ['px', 'star', 'heart'] as const)
+      addFineImage(this.textures, `bt.fx.${p}`, () => particleArt(p));
+    addFineSheet(this.textures, 'bt.fx.slash', slashSheet(), 32, 32);
 
     const def = this.enemyDef;
-    this.enemySize = this.sizeOf(def, isBoss);
-    this.enemyScale = this.scaleOf(this.enemySize, isBoss);
+    this.enemySize = enemySizeFor(def, this.content, isBoss);
+    this.enemyScale = enemyScaleFor(this.layout, this.enemySize, isBoss);
+    // 主人公が 切りかかる ときに 立つ 場所（大きな ボスほど 手前で 止まる）
+    this.enemyFront = this.layout.enemy.x + Math.max(0, (this.enemySize * this.enemyScale) / 2 - 64);
     const eKey = this.monsterTexture(def, this.state.enemy.element, this.enemySize, isBoss);
     this.enemySprite = this.add
       .image(this.layout.enemy.x, this.layout.enemy.y, eKey)
       .setOrigin(0.5, 1)
-      .setScale(this.enemyScale)
+      .setScale(this.enemyScale / FINE)
       .setDepth(10);
+    this.bossAura = isBoss ? new BossAura(this, this.enemySprite) : null;
     this.addShadow(
       this.enemySprite,
       this.layout.enemy.y,
@@ -281,33 +293,14 @@ export class BattleScene extends Phaser.Scene {
     const ap = this.gs.player.appearance;
     const eq = this.gs.player.equipment;
     const hk = heroKey(ap, eq, true);
-    addSheet(this.textures, hk, battleSheet(heroLook(ap, eq)), HERO_W, HERO_H);
+    addFineSheet(this.textures, hk, battleSheet(heroLook(ap, eq)), HERO_W, HERO_H);
     this.heroSprite = this.add
       .image(this.layout.hero.x, this.layout.hero.y, hk, BATTLE_POSE.idle)
       .setOrigin(0.5, 1)
-      .setScale(this.layout.hero.scale)
+      .setScale(this.layout.hero.scale / FINE)
       .setDepth(12);
     this.addShadow(this.heroSprite, this.layout.hero.y, 12);
     this.palSprite = this.makePartnerSprite(this.layout.partner.x);
-  }
-
-  /**
-   * モンスターの絵の大きさ：地方ボス 56 / 中ボス 40 / 県ボス 48 / 通常 32。
-   * 地方ボスは world の島の bossId に なっている モンスター（北海道のように 県 id と 地方 id が
-   * 同じ ところが あるので、area では 見分けない）
-   */
-  private sizeOf(def: Monster, isBoss: boolean): number {
-    const size = monsterDisplaySize(def, this.content);
-    return size === MONSTER_SIZE.normal && isBoss ? MONSTER_SIZE.boss : size;
-  }
-
-  /**
-   * 敵の絵の倍率。ボス戦だけ一回り大きく（×4 → ×5。1 ドット = 5px の整数倍なのでにじまない）。
-   * 上の窓にかからないよう、レイアウトごとの上限をこえるボスは拡大しない。
-   */
-  private scaleOf(size: number, isBoss: boolean): number {
-    const base = Math.max(2, S + this.layout.enemy.scaleStep);
-    return isBoss && size * (base + 1) <= this.layout.bossMaxHeight ? base + 1 : base;
   }
 
   /**
@@ -316,10 +309,13 @@ export class BattleScene extends Phaser.Scene {
    */
   private monsterTexture(def: Monster, element: Element, size: number, boss: boolean, suffix = ''): string {
     const key = `${def.spriteKey}${suffix}`;
+    registerStanceSource(key, def.id, suffix);
     if (!this.textures.exists(key))
       this.textures.addCanvas(
         key,
-        designedMonsterArt(def.id, suffix) ?? monsterArt(`${def.id}${suffix}`, { element, size, boss }),
+        asFine(
+          designedMonsterArt(def.id, suffix) ?? monsterArt(`${def.id}${suffix}`, { element, size, boss }),
+        ),
       );
     return key;
   }
@@ -331,7 +327,9 @@ export class BattleScene extends Phaser.Scene {
     const sp = this.add
       .image(x, this.layout.partner.y, this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false))
       .setOrigin(0.5, 1)
-      .setScale(this.layout.partner.scale)
+      .setScale(this.layout.partner.scale / FINE)
+      // 絵は 右向きで 描いて いるので、右に 立つ 仲間は 左右を 反転して 敵の ほうを むかせる
+      .setFlipX(true)
       .setDepth(11)
       .setAlpha(m.hp > 0 ? 1 : 0.35);
     this.addShadow(sp, this.layout.partner.y, 22);
@@ -340,8 +338,8 @@ export class BattleScene extends Phaser.Scene {
 
   private addShadow(sp: Sprite, y: number, w: number): void {
     const key = `bt.shadow.${w}`;
-    addImage(this.textures, key, shadowArt(w));
-    this.shadows.set(sp, this.add.image(sp.x, y, key).setScale(S).setAlpha(0.3).setDepth(5));
+    addFineImage(this.textures, key, () => shadowArt(w));
+    this.shadows.set(sp, this.add.image(sp.x, y, key).setScale(FS).setAlpha(0.3).setDepth(5));
   }
 
   private destroySprite(sp: Sprite): void {
@@ -355,7 +353,7 @@ export class BattleScene extends Phaser.Scene {
   private startIdle(): void {
     this.tweens.add({
       targets: this.enemySprite,
-      scaleY: this.enemyScale * 0.95,
+      scaleY: (this.enemyScale * 0.95) / FINE,
       duration: 460,
       yoyo: true,
       repeat: -1,
@@ -982,6 +980,11 @@ export class BattleScene extends Phaser.Scene {
         const def = heroTurn ? undefined : this.monsterDefOf(e.actorId);
         this.lastMotif = def ? this.motifFx(def) : null;
         if (!sp) return;
+        // モンスターの こうげき・わざは、かまえの 絵（<id>.atk）で 少し ためてから
+        const unstance =
+          !heroTurn && (e.command === 'attack' || e.command === 'skill')
+            ? await attackStance(this, sp)
+            : null;
         if (e.command === 'defend') {
           playSfx('buff');
           void this.fx.guardRing(this.anchorOf(e.actorId), 0x80c6ff);
@@ -1007,6 +1010,7 @@ export class BattleScene extends Phaser.Scene {
           else if (sp === this.heroSprite) await this.heroAttack();
           else await this.partnerTackle(sp);
         }
+        unstance?.();
         return;
       }
       case 'damage': {
@@ -1171,6 +1175,7 @@ export class BattleScene extends Phaser.Scene {
         // うしろを向いて、右へ走ってにげる
         playSfx('run');
         this.heroSprite.setFlipX(true);
+        this.palSprite?.setFlipX(false);
         const out = [this.heroSprite, this.palSprite].filter((x): x is Sprite => !!x);
         await Promise.all(out.map((sp) => this.walk(sp, sp.x + 420, 450)));
         return;
@@ -1220,6 +1225,13 @@ export class BattleScene extends Phaser.Scene {
         await this.flash(this.enemySprite, 0xffffff, 2);
         return;
       }
+      case 'bossEnrage':
+        playSfx('crit');
+        this.cameras.main.flash(360, 255, 58, 26);
+        this.cameras.main.shake(520, 0.016);
+        this.bossAura?.enrage();
+        await this.flash(this.enemySprite, 0xff3a1a, 3);
+        return;
       case 'victory':
         this.victory = e;
         return;
@@ -1236,7 +1248,7 @@ export class BattleScene extends Phaser.Scene {
   /** 主人公の「たたかう」：敵の前まで走って斬り、元の位置へとびのく */
   private async heroSlash(): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, this.layout.enemy.x + 136, 260);
+    await this.walk(sp, this.enemyFront + 136, 260);
     sp.setFrame(BATTLE_POSE.attack);
     playSfx('slash');
     const fx = this.add
@@ -1246,7 +1258,7 @@ export class BattleScene extends Phaser.Scene {
         'bt.fx.slash',
         0,
       )
-      .setScale(S)
+      .setScale(FS)
       .setDepth(25)
       .setTint(ELEMENT_FX[this.lastElement]);
     for (let f = 0; f < 3; f++) {
@@ -1263,9 +1275,9 @@ export class BattleScene extends Phaser.Scene {
   /** 主人公の「たたかう」（2 回に 1 回）：敵の 前で 高く とびあがって、上から 切りおろす */
   private async heroJumpSlash(): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, this.layout.enemy.x + 190, 220);
+    await this.walk(sp, this.enemyFront + 190, 220);
     sp.setFrame(BATTLE_POSE.attack);
-    await this.fx.hopTo(sp, this.layout.enemy.x + 128, this.layout.hero.y, 22 * S, 260);
+    await this.fx.hopTo(sp, this.enemyFront + 128, this.layout.hero.y, 22 * S, 260);
     playSfx('slash');
     const fx = this.add
       .sprite(
@@ -1274,7 +1286,7 @@ export class BattleScene extends Phaser.Scene {
         'bt.fx.slash',
         0,
       )
-      .setScale(S)
+      .setScale(FS)
       .setDepth(25)
       .setFlipY(true)
       .setTint(ELEMENT_FX[this.lastElement]);
@@ -1299,9 +1311,9 @@ export class BattleScene extends Phaser.Scene {
   /** 主人公の 二連切り・つき・回転切り：敵の 前まで 走って（つきは ふみこんで）斬る。もどるのは ダメージの演出と同時 */
   private async heroSwing(kind: SwingKind): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, this.layout.enemy.x + (kind === 'thrust' ? 200 : 136), kind === 'thrust' ? 200 : 260);
+    await this.walk(sp, this.enemyFront + (kind === 'thrust' ? 200 : 136), kind === 'thrust' ? 200 : 260);
     sp.setFrame(BATTLE_POSE.attack);
-    if (kind === 'thrust') await this.fx.hopTo(sp, this.layout.enemy.x + 150, this.layout.hero.y, 2 * S, 100);
+    if (kind === 'thrust') await this.fx.hopTo(sp, this.enemyFront + 150, this.layout.hero.y, 2 * S, 100);
     playSfx('slash');
     if (kind === 'cross') this.time.delayedCall(150, () => playSfx('slash'));
     const at = {
@@ -1322,7 +1334,7 @@ export class BattleScene extends Phaser.Scene {
   /** 仲間の「たたかう」：ぴょんと はねて 敵へ たいあたり。もどるのは ダメージの演出と同時 */
   private async partnerTackle(sp: Sprite): Promise<void> {
     this.stopBob(sp, this.layout.partner.y);
-    await this.fx.hopTo(sp, this.layout.enemy.x + 200, this.layout.partner.y, 16 * S, 260);
+    await this.fx.hopTo(sp, this.enemyFront + 200, this.layout.partner.y, 16 * S, 260);
     void this.fx.hopTo(sp, this.layout.partner.x, this.layout.partner.y, 8 * S, 260).then(() => {
       if (sp.active) this.idleBob(sp, this.layout.partner.y);
     });
@@ -1373,9 +1385,9 @@ export class BattleScene extends Phaser.Scene {
     const item = this.content.items.get(tag);
     const iconKey = `bt.motif.icon.${tag}`;
     const bigKey = `bt.motif.big.${tag}`;
-    if (item) addImage(this.textures, iconKey, toCanvas(itemIconGrid(item)));
+    if (item) addFineImage(this.textures, iconKey, () => toCanvas(itemIconGrid(item)));
     const scene = motifArtGrid(def.area, motif);
-    if (scene) addImage(this.textures, bigKey, toCanvas(scene));
+    if (scene) addFineImage(this.textures, bigKey, () => toCanvas(scene));
     const icon = item ? iconKey : scene ? bigKey : null;
     const big = scene ? bigKey : icon;
     if (!icon || !big) return null;
@@ -1530,7 +1542,7 @@ export class BattleScene extends Phaser.Scene {
       .particles(x, y, texture, {
         speed: { min: 70, max: 240 },
         angle: { min: 0, max: 360 },
-        scale: { start: 3, end: 0.6 },
+        scale: { start: 3 / FINE, end: 0.6 / FINE },
         lifespan: 600,
         tint,
         gravityY,
@@ -1659,8 +1671,8 @@ export class BattleScene extends Phaser.Scene {
         s.enemy.name,
         this.syncGame(),
         this.content,
-        itemIconUrl,
-        monsterMenuArtUrl(this.enemyDef),
+        fineItemIconUrl,
+        monsterMenuArtUrl(this.enemyDef, true),
         this.opts.forceRecruitOffer,
       );
       this.hud.set({

@@ -3,6 +3,7 @@ import type { Monster } from '../core/content/schemas';
 import { designedMonsterArt } from './monsters';
 import { MONSTER_SIZE, monsterArt } from './battle/pixelArt';
 import { existingAssetUrl } from './assetCatalog';
+import { asFine } from './battle/fine';
 
 const monsterUrls = new Map<string, string>();
 
@@ -15,15 +16,16 @@ export function monsterDisplaySize(def: Monster, content: Pick<ContentIndex, 'ar
 }
 
 /** メニューで共有するモンスター画像。Boot と Overworld のどちらから呼んでも同じキャッシュを使う。 */
-export function monsterMenuArtUrl(def: Monster): string {
+export function monsterMenuArtUrl(def: Monster, fine = false): string {
   const asset = existingAssetUrl(`sprites/monsters/${def.id}.png`);
   if (asset) return asset;
-  const hit = monsterUrls.get(def.id);
+  const key = fine ? `${def.id}@fine` : def.id;
+  const hit = monsterUrls.get(key);
   if (hit) return hit;
   const canvas =
     designedMonsterArt(def.id) ??
     monsterArt(def.id, { element: def.element, size: MONSTER_SIZE.normal, boss: def.isBoss });
-  const url = canvas.toDataURL();
-  monsterUrls.set(def.id, url);
+  const url = (fine ? asFine(canvas) : canvas).toDataURL();
+  monsterUrls.set(key, url);
   return url;
 }

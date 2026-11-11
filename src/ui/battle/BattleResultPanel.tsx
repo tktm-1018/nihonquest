@@ -68,9 +68,9 @@ export function BattleResultPanel({ r, cursor, store }: { r: ResultView; cursor:
           aria-label={displayText(t('battle.recruitSceneTitle'))}
         >
           <h2 class="nq-recruit-title">
-            <PixelIcon name="star" scale={3} />
+            <PixelIcon fine name="star" scale={3} />
             {t('battle.recruitSceneTitle')}
-            <PixelIcon name="star" scale={3} />
+            <PixelIcon fine name="star" scale={3} />
           </h2>
           <div class="nq-recruit-stage" aria-hidden="true">
             <i class="nq-recruit-glow" />
@@ -121,9 +121,9 @@ export function BattleResultPanel({ r, cursor, store }: { r: ResultView; cursor:
           </div>
         ) : null}
         <h2 class="nq-result-title">
-          {r.kind === 'victory' && <PixelIcon name="star" scale={4} />}
+          {r.kind === 'victory' && <PixelIcon fine name="star" scale={4} />}
           {title}
-          {r.kind === 'victory' && <PixelIcon name="star" scale={4} />}
+          {r.kind === 'victory' && <PixelIcon fine name="star" scale={4} />}
         </h2>
         {r.kind === 'victory' && r.bonus > 1 && (
           <p class="nq-result-bonus">
@@ -133,7 +133,7 @@ export function BattleResultPanel({ r, cursor, store }: { r: ResultView; cursor:
         {r.kind === 'victory' && (
           <dl class="nq-result-list">
             <dt>
-              <PixelIcon name="star" scale={3} />
+              <PixelIcon fine name="star" scale={3} />
               {t('battle.gotXp')}
             </dt>
             <dd>+{r.xp}</dd>
@@ -142,12 +142,12 @@ export function BattleResultPanel({ r, cursor, store }: { r: ResultView; cursor:
             </dt>
             <dd class="nq-result-need">{t('battle.nextLevel', { n: r.needNext })}</dd>
             <dt>
-              <PixelIcon name="coin" scale={3} />
+              <PixelIcon fine name="coin" scale={3} />
               {t('battle.gotGold')}
             </dt>
             <dd>+{r.gold}G</dd>
             <dt>
-              <PixelIcon name="chest" scale={3} />
+              <PixelIcon fine name="chest" scale={3} />
               {t('battle.gotItems')}
             </dt>
             <dd>
