@@ -93,6 +93,23 @@ export function AreaTitle({ name, sub, onDone }: { name: string; sub: string; on
   );
 }
 
+/** 山・湖・海などに 近づいたとき、画面の 上に 小さく 地形の 種類と 名前を 出す（さわれない・自然に 消える） */
+export function GeoNameToast({ kind, name, onDone }: { kind: string; name: string; onDone: () => void }) {
+  const done = useOnce(onDone);
+  useEffect(() => {
+    const id = setTimeout(done, 2400);
+    return () => clearTimeout(id);
+  }, []);
+  return (
+    <div class="nq-geoname" role="status" aria-live="polite" aria-label={`${kind} ${displayText(name)}`}>
+      <div class="nq-win nq-geoname-box">
+        <span class="nq-geoname-kind">{kind}</span>
+        <RubyLabel text={name} class="nq-geoname-name" />
+      </div>
+    </div>
+  );
+}
+
 export interface LandmarkCutinProps {
   title: string;
   name: string;

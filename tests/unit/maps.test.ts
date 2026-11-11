@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { EVENT_SPOTS, LANDMARK_SPOTS, type LonLat } from '../../scripts/data/geo';
 import { TOWN_THEMES } from '../../scripts/data/towns';
+import { SP } from '../../src/shared/specialTiles';
 import { project, type Proj } from '../../scripts/terrain/raster';
 
 /**
@@ -510,8 +511,9 @@ describe('町とダンジョン', () => {
     for (const [key, m] of maps) {
       if (!key.endsWith('-dungeon')) continue;
       expect(
-        // かべの前の面の タイル（scripts/scaffold-maps.ts の THEMES の face。テーマを 足したら ここにも 足す）
-        [41, 45, 49, 53, 224, 228, 232, 236, 240, 244, 248, 252].some((t) =>
+        // かべの前の面の タイル（scripts/scaffold-maps.ts の THEMES と scripts/maps/dungeonLooks.ts の SPECIAL_THEMES の face。
+        // テーマを 足したら ここにも 足す）
+        [41, 45, 49, 53, 224, 228, 232, 236, 240, 244, 248, 252, SP.ashFace].some((t) =>
           layer(m, 'background').includes(t),
         ),
         `${key} のかべ`,

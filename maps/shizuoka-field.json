@@ -754,11 +754,11 @@
       "name": "overworld-tiles",
       "tilewidth": 16,
       "tileheight": 16,
-      "tilecount": 320,
+      "tilecount": 480,
       "columns": 8,
       "image": "overworld-tiles",
       "imagewidth": 128,
-      "imageheight": 640,
+      "imageheight": 960,
       "margin": 0,
       "spacing": 0
     }

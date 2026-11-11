@@ -5,6 +5,8 @@
  *   pnpm scaffold:maps --force --only=aomori  (その県の フィールドだけ 作りなおす。ほかの マップ・にほんちずは さわらない)
  *   pnpm scaffold:maps --force --worldmap-only  (にほんちずだけ作りなおす)
  *   pnpm scaffold:maps --towns-only  (全県の町マップだけ作りなおす)
+ *   pnpm scaffold:maps --force --only=aomori --kinds=town,dungeon,secret  (その県の 町・ダンジョン・裏ステージだけ)
+ *   pnpm scaffold:maps --decorate-only [--only=aomori]  (フィールドを 作りなおさず かざり・道しるべ・地名だけ 足しなおす)
  *
  * フィールド・離島・にほんちずの地形は scripts/data/terrain.json（pnpm gen:terrain が実在の地理から作る）を使う。
  * 町（県庁所在地）・ダンジョン・名所・港も、実際の場所に置く（位置は scripts/data/geo.ts）。
@@ -46,6 +48,10 @@ import {
   type TownTree,
 } from './data/towns.js';
 import { SECRET_SPOTS } from './data/secrets.js';
+import { DUNGEON_LOOKS, FIELD_LOOKS, TOWN_LOOKS } from './data/mapLooks.js';
+import { applyTownLook } from './maps/townLooks.js';
+import { SPECIAL_THEMES, addApproach, addLake, addPetals } from './maps/dungeonLooks.js';
+import { decorateField, type TiledJson } from './maps/fieldDecor.js';
 import { components, project } from './terrain/raster.js';
 import {
   deriveRegionSeedCoordinates,
@@ -68,6 +74,11 @@ const force = args.includes('--force');
 const townsOnly = args.includes('--towns-only');
 const only = args.find((a) => a.startsWith('--only='))?.slice('--only='.length);
 const worldMapOnly = args.includes('--worldmap-only');
+const decorateOnly = args.includes('--decorate-only');
+const kinds = args
+  .find((a) => a.startsWith('--kinds='))
+  ?.slice('--kinds='.length)
+  .split(',') ?? ['field'];
 
 if (!existsSync(MAPS_DIR)) mkdirSync(MAPS_DIR, { recursive: true });
 
@@ -91,11 +102,11 @@ const TILESET = {
   name: 'overworld-tiles',
   tilewidth: 16,
   tileheight: 16,
-  tilecount: 320,
+  tilecount: 480,
   columns: 8,
   image: 'overworld-tiles',
   imagewidth: 128,
-  imageheight: 640,
+  imageheight: 960,
   margin: 0,
   spacing: 0,
 };
@@ -994,7 +1005,10 @@ function fieldMap(pref: PrefectureMaster, eventNames: string[]): object {
         ),
       ]
     : undefined;
-  return tiledMap(land.w, land.h, bg, col, toObjects(defs), false, undefined, props);
+  const map = tiledMap(land.w, land.h, bg, col, toObjects(defs), false, undefined, props) as TiledJson;
+  const look = FIELD_LOOKS[prefId];
+  if (look) decorateField(map, look, (ll) => land.tile(ll));
+  return map;
 }
 
 /** 陸の 地面を ぜんぶ 草原に（海・湖・さかいの 山なみは そのまま） */
@@ -2407,6 +2421,7 @@ function townMap(prefId: string): object {
       properties: warp(`${prefId}-field`, 'from_town'),
     },
   );
+  if (TOWN_LOOKS[prefId]) applyTownLook(room, TOWN_LOOKS[prefId], rng);
   return room.toMap();
 }
 
@@ -2422,8 +2437,10 @@ function townMap(prefId: string): object {
 function dungeonMap(prefId: string, eventNames: string[], kind: 'dungeon' | 'secret' = 'dungeon'): object {
   const secret = kind === 'secret';
   const rng = createRng(`${kind}:${prefId}`);
-  const th =
-    THEMES[(secret ? SECRET_THEMES[prefId] : DUNGEON_THEMES[prefId]) ?? (secret ? 'shrine' : 'cave')];
+  const look = DUNGEON_LOOKS[`${prefId}-${kind}`];
+  const th: ThemeTiles = look?.theme
+    ? SPECIAL_THEMES[look.theme]
+    : THEMES[(secret ? SECRET_THEMES[prefId] : DUNGEON_THEMES[prefId]) ?? (secret ? 'shrine' : 'cave')];
   const room = new Room(th.wall, true);
   interface Box {
     x: number;
@@ -2512,6 +2529,7 @@ function dungeonMap(prefId: string, eventNames: string[], kind: 'dungeon' | 'sec
       room.bg[room.i(x, y)] = th.face;
       if (th.torches && (x + y) % 5 === 0 && rng.chance(0.7)) room.put(x, y, T.torch);
     }
+  if (look?.lake) addLake(room, boxes, entrance);
   // 入口からの 道のり。いちばん遠い へやが おくの へや
   const spawn: Pt = [25, 35];
   const dist = new Int32Array(ROOM_W * ROOM_H).fill(-1);
@@ -2594,6 +2612,8 @@ function dungeonMap(prefId: string, eventNames: string[], kind: 'dungeon' | 'sec
       if (free(x, y) && (!boss || d2([x, y], guard) < d2(boss, guard))) boss = [x, y];
   // 裏ステージは ラスボス（だれかは content の secret.boss）
   place(secret ? `lastboss_${prefId}` : `boss_${prefId}`, secret ? 'lastboss' : 'boss', boss);
+  if (look?.approach && boss) addApproach(room, look.approach, { spawn, boss, boxes, far });
+  if (look?.petals) addPetals(room, [th.floor], rng);
   room.objects.push(
     { name: 'spawn', type: 'spawn', at: spawn },
     { name: 'from_field', type: 'spawn', at: spawn },
@@ -2620,8 +2640,23 @@ for (const pref of PREFECTURES) {
     await saveMap(`${pref.id}-town.json`, townMap(pref.id), true);
     continue;
   }
+  if (decorateOnly) {
+    const look = FIELD_LOOKS[pref.id];
+    if (!look || (only && only !== pref.id)) continue;
+    const land = Land.of(`${pref.id}-field`, (c) => !BLOCKED.has(c));
+    const map = JSON.parse(readFileSync(`${MAPS_DIR}${pref.id}-field.json`, 'utf8')) as TiledJson;
+    decorateField(map, look, (ll) => land.tile(ll));
+    await saveMap(`${pref.id}-field.json`, map, true);
+    continue;
+  }
   if (only) {
-    if (pref.id === only) await saveMap(`${pref.id}-field.json`, fieldMap(pref, events));
+    if (pref.id !== only) continue;
+    if (kinds.includes('field')) await saveMap(`${pref.id}-field.json`, fieldMap(pref, events));
+    if (kinds.includes('town')) await saveMap(`${pref.id}-town.json`, townMap(pref.id));
+    const inDungeon = (triggers.get(`${pref.id}-dungeon`) ?? []).map((e) => e.name);
+    if (kinds.includes('dungeon')) await saveMap(`${pref.id}-dungeon.json`, dungeonMap(pref.id, inDungeon));
+    if (kinds.includes('secret') && SECRETS.has(pref.id))
+      await saveMap(`${pref.id}-secret.json`, dungeonMap(pref.id, [], 'secret'));
     continue;
   }
   await saveMap(`${pref.id}-field.json`, fieldMap(pref, events));
@@ -2630,14 +2665,16 @@ for (const pref of PREFECTURES) {
   await saveMap(`${pref.id}-dungeon.json`, dungeonMap(pref.id, inDungeon));
   if (SECRETS.has(pref.id)) await saveMap(`${pref.id}-secret.json`, dungeonMap(pref.id, [], 'secret'));
 }
-if (!only && !townsOnly) {
+if (!only && !townsOnly && !decorateOnly) {
   for (const enc of ENCLAVES) {
     const map = enclaveMap(enc);
     if (!worldMapOnly) await saveMap(`${enc.enclaveId}.json`, map);
   }
   await saveWorldMap(worldMap(triggers));
 }
-for (const [prefId, spots] of Object.entries(only || worldMapOnly || townsOnly ? {} : LANDMARK_SPOTS))
+for (const [prefId, spots] of Object.entries(
+  only || worldMapOnly || townsOnly || decorateOnly ? {} : LANDMARK_SPOTS,
+))
   for (const motifId of Object.keys(spots))
     if (!placedLandmarks.get(prefId)?.includes(motifId))
       console.warn(

@@ -2112,7 +2112,26 @@
     },
     "bagSlots": "{used}/{max}マス",
     "bagMoved": "ばしょを いどうした！",
-    "bagKeys": "↑↓ えらぶ　Z いれる・だす　X とじる"
+    "bagKeys": "↑↓ えらぶ　Z いれる・だす　X とじる",
+    "sign": {
+      "title": "みちしるべ だ。",
+      "region": "つぎの エリア",
+      "boss": "{name}の ぬし",
+      "bossAny": "エリアの ぬし",
+      "dungeon": "ダンジョン",
+      "secret": "くらい いりぐち",
+      "port": "みなと",
+      "landmark": "めいしょ ★"
+    },
+    "geoKind": {
+      "mountain": "やま",
+      "lake": "みずうみ",
+      "sea": "うみ",
+      "peninsula": "はんとう",
+      "cape": "みさき",
+      "river": "かわ"
+    },
+    "compassNorth": "きた"
   },
   "ui": {
     "start": "はじめる",
