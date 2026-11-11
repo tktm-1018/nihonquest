@@ -47,6 +47,11 @@ export class NoQuestionError extends Error {
   }
 }
 
+/** 問題の対象学年を超えて漢字表示を難しくしない。 */
+export function presentationGrade(playerGrade: Grade, questionGrade: Grade): Grade {
+  return Math.min(playerGrade, questionGrade) as Grade;
+}
+
 export async function ask(env: AskEnv, query: QuestionQuery, signal?: AbortSignal): Promise<AskResult> {
   const q = pickQuestion(
     env.bank,
@@ -81,7 +86,7 @@ async function runQuestion(env: AskEnv, q: QuestionBase, signal?: AbortSignal): 
   const ctx: RendererContext = {
     container,
     question: q,
-    grade: env.playerGrade,
+    grade: presentationGrade(env.playerGrade, q.grade),
     assets: env.assets,
     speak: env.speak,
     timeLimitMs: timeLimitSec * 1000,

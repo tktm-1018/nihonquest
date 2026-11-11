@@ -82,6 +82,10 @@ function cumulativeKanji(grade: number, byGrade: Record<string, string>): Set<st
   return result;
 }
 
+function isKanjiPractice(question: QuestionBase, prompt: string): boolean {
+  return question.unit.includes('kanji') || /(?:漢字|かん字|画数)/u.test(prompt);
+}
+
 export function reviewWarnings(question: QuestionBase, byGrade: Record<string, string>): string[] {
   const prompt = reviewPrompt(question);
   const choices = reviewChoices(question);
@@ -97,15 +101,19 @@ export function reviewWarnings(question: QuestionBase, byGrade: Record<string, s
   if (new Set(normalized).size !== normalized.length) warnings.push('同じ選択肢があります');
   if (!explanation) warnings.push('解説がありません');
 
-  const allowed = cumulativeKanji(question.grade, byGrade);
-  const textWithoutRuby = [prompt, choices, explanation]
-    .join('\n')
-    .replace(/[\p{Script=Han}々〆ヶ]+\[[^\]]+\]/gu, '');
-  const advancedKanji = [
-    ...new Set([...textWithoutRuby].filter((char) => /[\p{Script=Han}]/u.test(char) && !allowed.has(char))),
-  ];
-  if (advancedKanji.length) {
-    warnings.push(`配当学年より上の漢字（ルビなし）: ${advancedKanji.join('')}`);
+  // 漢字そのものを答える問題では、正解・誤答の漢字は表示する必要がある。
+  // それ以外の問題だけを、読みやすさ確認の対象にする。
+  if (!isKanjiPractice(question, prompt)) {
+    const allowed = cumulativeKanji(question.grade, byGrade);
+    const textWithoutRuby = [prompt, choices, explanation]
+      .join('\n')
+      .replace(/[\p{Script=Han}々〆ヶ]+\[[^\]]+\]/gu, '');
+    const advancedKanji = [
+      ...new Set([...textWithoutRuby].filter((char) => /[\p{Script=Han}]/u.test(char) && !allowed.has(char))),
+    ];
+    if (advancedKanji.length) {
+      warnings.push(`配当学年より上の漢字（ルビなし）: ${advancedKanji.join('')}`);
+    }
   }
   return warnings;
 }

@@ -47,6 +47,17 @@ describe('国語問題確認表', () => {
     expect((value.payload as { prompt: string }).prompt).toContain('海');
   });
 
+  it('漢字を答える問題の選択肢は学年外漢字警告から除く', () => {
+    const value = question();
+    value.unit = 'kokugo.g1.kanji';
+    (value.payload as { prompt: string; choices: { id: string; text: string }[] }).prompt = '「海」の読み方は？';
+    (value.payload as { choices: { id: string; text: string }[] }).choices = [
+      { id: 'a', text: 'うみ' },
+      { id: 'b', text: '川' },
+    ];
+    expect(reviewWarnings(value, grades).join('\n')).not.toContain('配当学年より上の漢字');
+  });
+
   it('「反映可」の修正案はIDと正解を変えず適用できる', () => {
     const value = question();
     const row = makeKokugoReviewRow(value, 'content/questions/kokugo/g1/test.json', 0, grades);
