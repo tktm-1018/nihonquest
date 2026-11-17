@@ -19,6 +19,7 @@ export const MISSING_CONTEXT_QUARANTINE_TAG = 'runtime:quarantined-missing-conte
 const LEGACY_KANA_MATCH = /^「.?」と同じ文字はどれ？$/u;
 const STANDALONE_KANJI_READING = /^「[一-鿿]」の読み方として正しいものは？$/u;
 const LOW_GRADE_GRAMMAR = /(?:主語|述語|修飾語|助詞|動作の対象|目的語)/u;
+const LEGACY_RUBY_READING = /「[^」]+」の「[^」]+」の読(?:\[[^\]]+\])?(?:み方|みかた)/u;
 
 /**
  * 旧データのうち、現在の学習設計で置き換え済みの問題は新規出題しない。
@@ -31,6 +32,7 @@ export function questionIsLearningQualityQuarantined(question: QuestionBase): bo
     : '';
   if (question.grade <= 2 && LEGACY_KANA_MATCH.test(prompt)) return true;
   if (question.grade <= 2 && STANDALONE_KANJI_READING.test(prompt)) return true;
+  if (question.grade === 3 && LEGACY_RUBY_READING.test(prompt)) return true;
   return question.grade <= 2 && LOW_GRADE_GRAMMAR.test(`${prompt}\n${question.explanation ?? ''}`);
 }
 

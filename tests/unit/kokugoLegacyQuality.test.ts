@@ -26,6 +26,12 @@ describe('低学年の旧国語問題', () => {
     expect(questionIsLearningQualityQuarantined(legacy(1, '主語を表す助詞は？'))).toBe(true);
   });
 
+  it('小3の旧ルビ読み問題は確認済みの漢字問題へ置き換える', () => {
+    expect(questionIsLearningQualityQuarantined(legacy(2, '「漢字[かんじ]」の「漢」の読[よ]み方[かた]は？'))).toBe(false);
+    const grade3 = { ...legacy(2, '「漢字[かんじ]」の「漢」の読[よ]み方[かた]は？'), grade: 3 as const };
+    expect(questionIsLearningQualityQuarantined(grade3)).toBe(true);
+  });
+
   it('文脈のある問題は残す', () => {
     expect(questionIsLearningQualityQuarantined(legacy(1, '「いぬ」の はじめの おとはどれ？'))).toBe(false);
   });
