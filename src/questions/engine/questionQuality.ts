@@ -20,6 +20,10 @@ const LEGACY_KANA_MATCH = /^「.?」と同じ文字はどれ？$/u;
 const STANDALONE_KANJI_READING = /^「[一-鿿]」の読み方として正しいものは？$/u;
 const LOW_GRADE_GRAMMAR = /(?:主語|述語|修飾語|助詞|動作の対象|目的語)/u;
 const LEGACY_RUBY_READING = /「[^」]+」の「[^」]+」の読(?:\[[^\]]+\])?(?:み方|みかた)/u;
+const LEGACY_REVIEW_ONLY_UNITS = new Set([
+  'kokugo.g4.legacy-jpn-4-31',
+  'kokugo.g4.legacy-jpn-4-32',
+]);
 
 /**
  * 旧データのうち、現在の学習設計で置き換え済みの問題は新規出題しない。
@@ -30,8 +34,11 @@ export function questionIsLearningQualityQuarantined(question: QuestionBase): bo
   const prompt = typeof (question.payload as { prompt?: unknown }).prompt === 'string'
     ? (question.payload as { prompt: string }).prompt
     : '';
+  if (LEGACY_REVIEW_ONLY_UNITS.has(question.unit)) return true;
   if (question.grade <= 2 && LEGACY_KANA_MATCH.test(prompt)) return true;
-  if (question.grade <= 2 && STANDALONE_KANJI_READING.test(prompt)) return true;
+  // 旧データには答え欄へ漢字そのものを入れた「一字読み」がある。
+  // 全学年で、文脈つきの canonical 漢字問題に置き換える。
+  if (STANDALONE_KANJI_READING.test(prompt)) return true;
   if (question.grade === 3 && LEGACY_RUBY_READING.test(prompt)) return true;
   return question.grade <= 2 && LOW_GRADE_GRAMMAR.test(`${prompt}\n${question.explanation ?? ''}`);
 }

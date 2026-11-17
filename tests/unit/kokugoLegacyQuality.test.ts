@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { QuestionBase } from '../../src/questions/contracts';
 import { questionIsLearningQualityQuarantined } from '../../src/questions/engine/questionQuality';
 
-const legacy = (grade: 1 | 2, prompt: string, explanation = ''): QuestionBase => ({
+const legacy = (grade: 1 | 2 | 3 | 4 | 5 | 6, prompt: string, explanation = ''): QuestionBase => ({
   id: `kokugo.g${grade}.legacy.test`,
   type: 'choice',
   subject: 'kokugo',
@@ -18,8 +18,9 @@ describe('低学年の旧国語問題', () => {
     expect(questionIsLearningQualityQuarantined(legacy(1, '「ウ」と同じ文字はどれ？'))).toBe(true);
   });
 
-  it('文脈のない一字読みは新規出題しない', () => {
+  it('文脈のない一字読みは全学年で新規出題しない', () => {
     expect(questionIsLearningQualityQuarantined(legacy(2, '「回」の読み方として正しいものは？'))).toBe(true);
+    expect(questionIsLearningQualityQuarantined(legacy(6, '「敬」の読み方として正しいものは？'))).toBe(true);
   });
 
   it('低学年に不要な文法用語を含む旧問題は新規出題しない', () => {
@@ -34,5 +35,13 @@ describe('低学年の旧国語問題', () => {
 
   it('文脈のある問題は残す', () => {
     expect(questionIsLearningQualityQuarantined(legacy(1, '「いぬ」の はじめの おとはどれ？'))).toBe(false);
+  });
+
+  it('出典確認が済むまで旧の読解素材は新規出題しない', () => {
+    const reviewOnly = {
+      ...legacy(4, '物語の舞台はどのような雰囲気ですか。'),
+      unit: 'kokugo.g4.legacy-jpn-4-31',
+    };
+    expect(questionIsLearningQualityQuarantined(reviewOnly)).toBe(true);
   });
 });
