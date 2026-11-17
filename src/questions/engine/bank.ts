@@ -5,7 +5,11 @@ import { calculationProblem } from '../renderers/random-calculation/schema';
  */
 import { questionBaseSchema, type QuestionBase } from '../contracts';
 import { getRenderer } from '../renderers/registry';
-import { questionHasAnswerContext, questionIsMissingContextQuarantined } from './questionQuality';
+import {
+  questionHasAnswerContext,
+  questionIsLearningQualityQuarantined,
+  questionIsMissingContextQuarantined,
+} from './questionQuality';
 
 export type QuestionFileReader = (relPath: string) => Promise<unknown>;
 
@@ -73,7 +77,9 @@ export class QuestionBank {
               });
             } else {
               const question = { ...base.data, payload: p.data } as QuestionBase;
-              if (!questionHasAnswerContext(question)) {
+              if (questionIsLearningQualityQuarantined(question)) {
+                report.quarantined++;
+              } else if (!questionHasAnswerContext(question)) {
                 if (questionIsMissingContextQuarantined(question)) report.quarantined++;
                 else report.omitted++;
               } else {

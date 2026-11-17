@@ -16,6 +16,24 @@ const MISSING_CHOICE_CONTEXT = new Set([
 ]);
 export const MISSING_CONTEXT_QUARANTINE_TAG = 'runtime:quarantined-missing-context';
 
+const LEGACY_KANA_MATCH = /^「.?」と同じ文字はどれ？$/u;
+const STANDALONE_KANJI_READING = /^「[一-鿿]」の読み方として正しいものは？$/u;
+const LOW_GRADE_GRAMMAR = /(?:主語|述語|修飾語|助詞|動作の対象|目的語)/u;
+
+/**
+ * 旧データのうち、現在の学習設計で置き換え済みの問題は新規出題しない。
+ * 元データはレビュー・修正用に残し、既存セーブの問題IDも壊さない。
+ */
+export function questionIsLearningQualityQuarantined(question: QuestionBase): boolean {
+  if (!question.tags?.includes('source:legacy-autonomy-game')) return false;
+  const prompt = typeof (question.payload as { prompt?: unknown }).prompt === 'string'
+    ? (question.payload as { prompt: string }).prompt
+    : '';
+  if (question.grade <= 2 && LEGACY_KANA_MATCH.test(prompt)) return true;
+  if (question.grade <= 2 && STANDALONE_KANJI_READING.test(prompt)) return true;
+  return question.grade <= 2 && LOW_GRADE_GRAMMAR.test(`${prompt}\n${question.explanation ?? ''}`);
+}
+
 /**
  * 旧教材には、移行元の式や図が欠けて指示文と答え欄だけになるものがある。
  * 回答に必要な表示材料がない問題は、ゲーム内の出題候補へ入れない。
