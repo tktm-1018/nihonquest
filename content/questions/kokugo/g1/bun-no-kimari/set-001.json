@@ -37,7 +37,7 @@
     "grade": 1,
     "unit": "kokugo.g1.bun-no-kimari",
     "payload": {
-      "prompt": "「きょうはてんきがいい」を、ことばのまとまりで分[わ]けたものはどれ？",
+      "prompt": "「きょうは てんきが いい」を、一[ひと]いきで 読[よ]める まとまりに 分[わ]けた ものは どれ？",
       "choices": [
         {
           "id": "a",
@@ -59,7 +59,7 @@
       "answer": "c",
       "shuffle": true
     },
-    "explanation": "「きょうは / てんきが / いい」のまとまりに分[わ]けます。"
+    "explanation": "「きょうは / てんきが / いい」のように、一[ひと]いきで 読[よ]める まとまりで 分[わ]けます。"
   },
   {
     "id": "kokugo.g1.bun-no-kimari.0003",

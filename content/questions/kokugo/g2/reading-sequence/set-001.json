@@ -10,21 +10,21 @@
       "choices": [
         {
           "id": "a",
-          "text": "たねを まいた"
+          "text": "たねを まきました"
         },
         {
           "id": "b",
-          "text": "みずを あげた"
+          "text": "みずを あげました"
         },
         {
           "id": "c",
-          "text": "はなを つんだ"
+          "text": "はなを つみました"
         }
       ],
       "answer": "a",
       "shuffle": true
     },
-    "explanation": "『はじめに』の あとの ことばを 読[よ]むと、さいしょの できごとが わかります。"
+    "explanation": "「はじめに」の あとの ことばを そのまま さがすと、「たねを まきました」です。"
   },
   {
     "id": "kokugo.g2.reading-sequence.0002",

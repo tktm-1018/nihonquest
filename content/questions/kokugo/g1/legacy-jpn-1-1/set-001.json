@@ -12,7 +12,7 @@
       "speech:disabled"
     ],
     "payload": {
-      "prompt": "「ウ」と同じ文字はどれ？",
+      "prompt": "「うみ」の はじめの おとを、カタカナで えらびましょう。",
       "choices": [
         {
           "id": "c1",
@@ -34,7 +34,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "カタカナの「ウ」です。"
+    "explanation": "「うみ」の はじめの おとは「う」。カタカナでは「ウ」です。"
   },
   {
     "id": "legacy.kokugo.g1.jpn-1-1.0c2b963bb39c",
@@ -121,11 +121,11 @@
       "reviewed:structural-v1"
     ],
     "payload": {
-      "prompt": "ひらがな「を」を使う正しい文はどれ？",
+      "prompt": "ひらがな「を」を つかう ただしい ぶんは どれ？",
       "choices": [
         {
           "id": "c1",
-          "text": "ごはんを食べる。"
+          "text": "ごはんを たべる。"
         },
         {
           "id": "c2",
@@ -133,7 +133,7 @@
         },
         {
           "id": "c3",
-          "text": "ごはんへ行く。"
+          "text": "ごはんへ いく。"
         },
         {
           "id": "c4",
@@ -143,7 +143,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "動作の対象を表すときは「を」を使います。"
+    "explanation": "「を」は、なにを するのかを いうときに つかいます。"
   },
   {
     "id": "legacy.kokugo.g1.jpn-1-1.14fe89e04d4e",

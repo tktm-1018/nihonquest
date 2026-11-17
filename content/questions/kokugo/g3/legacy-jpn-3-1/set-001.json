@@ -12,7 +12,7 @@
       "speech:disabled"
     ],
     "payload": {
-      "prompt": "「漢字[かんじ]」の「漢」の読[よ]み方[かた]は？",
+      "prompt": "「漢」の読[よ]み方[かた]は？",
       "choices": [
         {
           "id": "c1",
@@ -34,7 +34,7 @@
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "「漢字[かんじ]」の「漢」は「かん」と読[よ]みます。"
+    "explanation": "「漢」は「かん」と読[よ]みます。"
   },
   {
     "id": "legacy.kokugo.g3.jpn-3-1.0750fb73adcc",
@@ -49,29 +49,29 @@
       "speech:disabled"
     ],
     "payload": {
-      "prompt": "「屋上[おくじょう]」の「屋」の読[よ]み方[かた]は？",
+      "prompt": "「屋上」の読[よ]み方[かた]は？",
       "choices": [
         {
           "id": "c1",
-          "text": "おく"
+          "text": "おくじょう"
         },
         {
           "id": "c2",
-          "text": "や"
+          "text": "やじょう"
         },
         {
           "id": "c3",
-          "text": "おくう"
+          "text": "やうえ"
         },
         {
           "id": "c4",
-          "text": "おう"
+          "text": "おくう"
         }
       ],
       "answer": "c1",
       "shuffle": true
     },
-    "explanation": "「屋上[おくじょう]」の「屋」は「おく」と読[よ]みます。言葉[ことば]の中[なか]で読[よ]みを確[たし]かめましょう。"
+    "explanation": "「屋上」は「おくじょう」と読[よ]みます。言葉[ことば]ぜんたいで読[よ]みを確[たし]かめましょう。"
   },
   {
     "id": "legacy.kokugo.g3.jpn-3-1.08395fbc1e0b",
