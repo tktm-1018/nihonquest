@@ -309,10 +309,11 @@ describe('全国の地域進行マップ', () => {
       expect(regionAt(map, grid, tileIndex(map, boss)), `${id}: ${boss.name} の地域`).toBe(regionId);
     }
 
-    if (id !== 'aomori') {
-      const regionByMotif = new Map(
-        area.regions.flatMap((region) => region.motifs.map((motifId) => [motifId, region.id] as const)),
-      );
+    // 名所・名物・イベントは その motif の エリアの 中に ある（青森も ふくむ）
+    const regionByMotif = new Map(
+      area.regions.flatMap((region) => region.motifs.map((motifId) => [motifId, region.id] as const)),
+    );
+    {
       for (const object of objectsOf(map).filter(
         (candidate) => candidate.type === 'landmark' || candidate.type === 'specialty',
       )) {
@@ -333,7 +334,10 @@ describe('全国の地域進行マップ', () => {
           `${id}: ${event.trigger.objectName} の実配置地域`,
         ).toBe(declaredRegion);
       }
+    }
 
+    // 青森は エリアの ならびを ゲーム用に うごかして いるので、実座標との きょりは みない
+    if (id !== 'aomori') {
       const terrain = TERRAIN.maps[`${id}-field`]!;
       const collision = map.layers.find((layer) => layer.name === 'collision')?.data ?? [];
       for (const object of objectsOf(map).filter((candidate) =>

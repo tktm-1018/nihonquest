@@ -1594,8 +1594,8 @@
           "height": 16
         },
         { "id": 8, "name": "ev_ringoen", "type": "event", "x": 656, "y": 1392, "width": 16, "height": 16 },
-        { "id": 9, "name": "ev_sannai", "type": "event", "x": 928, "y": 1088, "width": 16, "height": 16 },
-        { "id": 10, "name": "ev_kaikyo", "type": "event", "x": 1152, "y": 80, "width": 16, "height": 16 },
+        { "id": 9, "name": "ev_sannai", "type": "event", "x": 720, "y": 1040, "width": 16, "height": 16 },
+        { "id": 10, "name": "ev_kaikyo", "type": "event", "x": 592, "y": 496, "width": 16, "height": 16 },
         { "id": 11, "name": "ev_towada", "type": "event", "x": 1152, "y": 1504, "width": 16, "height": 16 },
         {
           "id": 12,
