@@ -4,9 +4,12 @@
  *  右に 教科ゲージの 窓、下にメッセージ窓、コマンドは下の左に 3 列の窓（上の 段に コマンドゲージ。♥ カーソル。
  *  出ているあいだはメッセージ窓が右へよける）。
  * 窓の見た目（.nq-win）・札（.nq-chip）・問題の枠（.nq-bq）は app.css の共通部品。
- * 文字は 12 / 24 / 36 / 48px だけ（PixelMplus12 のマス目の倍数）。
+ * 文字は 16 ドットの ドット字（DotGothic16）。ほかの 画面（PixelMplus12・12 ドット）より こまかい。
+ * 窓の 枠も ほかの 画面の 半分の 太さ（1 ドット = 2px）。絵も 2 倍の こまかさ（src/rendering/battle/fine.ts）。
  */
 .nq-battle {
+  --nq-font: 'DotGothic16', 'PixelMplus12', 'Osaka-Mono', 'MS Gothic', monospace;
+  font-family: var(--nq-font);
   position: absolute;
   inset: 0;
   z-index: 30;
@@ -93,7 +96,7 @@
   font-size: 16px;
   line-height: 20px;
   background: #a8341f;
-  border: 2px solid var(--nq-yellow);
+  border: 1px solid var(--nq-yellow);
 }
 .nq-ally-lv {
   font-size: 16px;
@@ -154,10 +157,10 @@
   height: 160px;
   flex: none;
   background: var(--nq-panel);
-  border: 4px solid var(--nq-white);
+  border: 2px solid var(--nq-white);
   box-shadow:
-    0 0 0 4px #000,
-    6px 6px 0 4px rgba(0, 0, 0, 0.35);
+    0 0 0 2px #000,
+    4px 4px 0 2px rgba(0, 0, 0, 0.35);
 }
 .nq-bottom-command-spacer {
   width: 188px;
@@ -173,10 +176,10 @@
   flex-direction: column;
   justify-content: center;
   background: var(--nq-panel);
-  border: 4px solid var(--nq-white);
+  border: 2px solid var(--nq-white);
   box-shadow:
-    0 0 0 4px #000,
-    6px 6px 0 4px rgba(0, 0, 0, 0.35);
+    0 0 0 2px #000,
+    4px 4px 0 2px rgba(0, 0, 0, 0.35);
 }
 .nq-ally {
   min-width: 0;
@@ -258,8 +261,8 @@
   flex: 1;
   height: 12px;
   background: #2e2a45;
-  border: 2px solid #000;
-  box-shadow: 0 0 0 2px #fff;
+  border: 1px solid #000;
+  box-shadow: 0 0 0 1px #fff;
   overflow: hidden;
 }
 .nq-bar > i {
@@ -336,7 +339,7 @@
   box-sizing: border-box;
   padding: 4px 8px;
   background: rgba(10, 11, 26, 0.85);
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   z-index: 3;
 }
 .nq-turn-head,
@@ -355,7 +358,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 8px;
-  border-left: 4px solid var(--nq-white);
+  border-left: 2px solid var(--nq-white);
   pointer-events: none;
 }
 .nq-sgauge-title {
@@ -402,8 +405,8 @@
   flex: 1;
   height: 16px;
   background: #2e2a45;
-  border: 2px solid #000;
-  box-shadow: 0 0 0 2px #fff;
+  border: 1px solid #000;
+  box-shadow: 0 0 0 1px #fff;
 }
 .nq-sg-bar > i {
   display: block;
@@ -435,14 +438,14 @@
 }
 /* まんたん：光る */
 .nq-sg-full .nq-sg-bar {
-  box-shadow: 0 0 0 2px var(--nq-yellow);
+  box-shadow: 0 0 0 1px var(--nq-yellow);
 }
 .nq-sg-full .nq-sg-bar > i {
   animation: nq-sg-shine 0.6s steps(2) infinite;
 }
 /* オトモの 教科（たまりやすい） */
 .nq-sg-boost .nq-sg-bar {
-  box-shadow: 0 0 0 2px var(--nq-sky);
+  box-shadow: 0 0 0 1px var(--nq-sky);
 }
 .nq-sg-gain {
   position: absolute;
@@ -589,7 +592,7 @@
   align-items: center;
   gap: 8px;
   padding-bottom: 2px;
-  border-bottom: 2px dashed #4a5063;
+  border-bottom: 1px dashed #4a5063;
   flex: none;
 }
 .nq-menu-title {
@@ -700,8 +703,8 @@
   width: 40px;
   height: 10px;
   background: #2e2a45;
-  border: 2px solid #000;
-  box-shadow: 0 0 0 2px #fff;
+  border: 1px solid #000;
+  box-shadow: 0 0 0 1px #fff;
 }
 .nq-opt-costbar > i {
   display: block;
@@ -714,7 +717,7 @@
   padding: 0 6px;
   font-size: 16px;
   color: var(--nq-silver);
-  border: 2px solid #4a5063;
+  border: 1px solid #4a5063;
 }
 .nq-menu-foot {
   display: flex;
@@ -722,7 +725,7 @@
   gap: 12px;
   min-height: 32px;
   padding-top: 2px;
-  border-top: 2px dashed #4a5063;
+  border-top: 1px dashed #4a5063;
   color: var(--nq-cloud);
   line-height: 24px;
 }
@@ -738,7 +741,7 @@
   justify-content: center;
   gap: 8px;
   border-top: 0;
-  border-left: 2px dashed #4a5063;
+  border-left: 1px dashed #4a5063;
 }
 .nq-menu-foot-item {
   justify-content: flex-start;
@@ -993,7 +996,7 @@
 .nq-result-reward-xp {
   display: block;
   padding: 4px 8px 8px;
-  border-bottom: 2px solid var(--nq-slate);
+  border-bottom: 1px solid var(--nq-slate);
 }
 .nq-result-reward-head {
   display: flex;
@@ -1128,7 +1131,7 @@
   justify-content: center;
   min-width: 168px;
   height: 60px;
-  border: 4px solid var(--nq-orange);
+  border: 2px solid var(--nq-orange);
   color: var(--nq-orange);
 }
 .nq-result-btns .nq-cmd.nq-focus {
@@ -1317,4 +1320,23 @@
   to {
     opacity: 0;
   }
+}
+
+/* ───── 共通部品（app.css）の 枠も バトルでは 半分の 太さに ───── */
+.nq-battle .nq-win {
+  border-width: 2px;
+  box-shadow:
+    0 0 0 2px #000,
+    4px 4px 0 2px rgba(0, 0, 0, 0.35);
+}
+.nq-battle .nq-opt,
+.nq-battle .nq-back {
+  border-width: 2px;
+}
+.nq-battle .nq-chip {
+  border-width: 1px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+.nq-battle .nq-bq-head {
+  border-bottom-width: 2px;
 }

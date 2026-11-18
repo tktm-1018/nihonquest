@@ -94,7 +94,7 @@ function CommandWindow({ s, store }: { s: HudState; store: HudStore }) {
             }
           >
             <Cursor on={focused} />
-            <PixelIcon name={`cmd-${c.kind}`} scale={2} />
+            <PixelIcon fine name={`cmd-${c.kind}`} scale={2} />
             <RubyLabel text={t(`cmd.${c.kind}`)} class={`nq-cmd-name ${c.disabled ? 'nq-off' : ''}`} />
           </button>
         );
@@ -117,7 +117,7 @@ function MenuHead({
   return (
     <div class="nq-menu-head">
       <span class="nq-menu-title">
-        <PixelIcon name={icon} scale={3} />
+        <PixelIcon fine name={icon} scale={3} />
         <RubyLabel text={title} />
       </span>
       {extra}
@@ -173,14 +173,14 @@ function SkillList({ s, store }: { s: HudState; store: HudStore }) {
               }
             >
               {/* 教科は色・ピクトだけで示す。狭い技一覧で「さんすう」等の文字を重ねない。 */}
-              <PixelIcon name={`subj-${k.subject}`} scale={2} />
+              <PixelIcon fine name={`subj-${k.subject}`} scale={2} />
               <RubyLabel text={k.name} class="nq-opt-name" />
               <span class="nq-opt-side">
                 {k.reason ? (
                   <span class="nq-opt-reason">{k.reason}</span>
                 ) : (
                   <>
-                    <PixelIcon name={`el-${k.element}`} scale={2} />
+                    <PixelIcon fine name={`el-${k.element}`} scale={2} />
                     {k.cost > 0 ? (
                       <GaugeCost k={k} max={s.gauges.find((g) => g.subject === k.subject)?.max ?? k.cost} />
                     ) : (
@@ -293,10 +293,10 @@ function SwapList({ s, store }: { s: HudState; store: HudStore }) {
               }
             >
               <Cursor on={s.cursor === i} />
-              <PixelIcon name={`el-${w.element}`} scale={2} />
+              <PixelIcon fine name={`el-${w.element}`} scale={2} />
               <RubyLabel text={w.name} class="nq-opt-name" />
               <span class="nq-opt-side nq-opt-swap">
-                {w.passive && <PixelIcon name={`subj-${w.passive}`} scale={2} />}
+                {w.passive && <PixelIcon fine name={`subj-${w.passive}`} scale={2} />}
                 <span>
                   {t('battle.lv')}
                   {w.level}
@@ -348,9 +348,9 @@ function Banner({ b }: { b: BannerView }) {
       aria-atomic="true"
     >
       <div class="nq-band-text">
-        {b.kind === 'perfect' && <PixelIcon name="star" scale={4} />}
+        {b.kind === 'perfect' && <PixelIcon fine name="star" scale={4} />}
         <RubyLabel text={b.text} />
-        {b.kind === 'perfect' && <PixelIcon name="star" scale={4} />}
+        {b.kind === 'perfect' && <PixelIcon fine name="star" scale={4} />}
       </div>
       {b.sub && (
         <div class="nq-banner-sub">
@@ -399,7 +399,7 @@ function QuestionStrip({ s }: { s: HudState }) {
       {s.turn && <TurnBadge turn={s.turn} class="nq-turn-strip" />}
       {front && (
         <span class="nq-qs-unit">
-          <PixelIcon name={front.isHero ? 'hero' : `el-${front.element}`} scale={2} />
+          <PixelIcon fine name={front.isHero ? 'hero' : `el-${front.element}`} scale={2} />
           <Bar
             value={front.hp}
             max={front.maxHp}

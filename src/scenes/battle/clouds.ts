@@ -1,6 +1,7 @@
 import type Phaser from 'phaser';
 import { battleCloudArt, battleWindArt, type BackdropKind } from '../../rendering/battle/pixelArt';
-import { addImage } from '../../rendering/sheet';
+import { FINE } from '../../rendering/battle/fine';
+import { addFineImage } from '../../rendering/sheet';
 import { BATTLE_SCALE } from './layout';
 
 /** 雲は画面を横切るのに約80秒。端でだけ戻すので、画面内で急に現れない。 */
@@ -10,7 +11,7 @@ const WIND_SPEED = 0.028;
 export function createBattleClouds(scene: Phaser.Scene, kind: BackdropKind): Phaser.GameObjects.Image[] {
   if (kind === 'dungeon' || kind === 'boss') return [];
   const cloudKey = 'bt.cloud';
-  addImage(scene.textures, cloudKey, battleCloudArt());
+  addFineImage(scene.textures, cloudKey, battleCloudArt);
   return (
     [
       [26, 12, 0.8],
@@ -22,7 +23,7 @@ export function createBattleClouds(scene: Phaser.Scene, kind: BackdropKind): Pha
     scene.add
       .image(x * BATTLE_SCALE, y * BATTLE_SCALE, cloudKey)
       .setOrigin(0)
-      .setScale(BATTLE_SCALE * scale)
+      .setScale((BATTLE_SCALE * scale) / FINE)
       .setDepth(1),
   );
 }
@@ -42,7 +43,7 @@ export function moveBattleClouds(
 export function createBattleWinds(scene: Phaser.Scene, kind: BackdropKind): Phaser.GameObjects.Image[] {
   if (kind !== 'field' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return [];
   const windKey = 'bt.wind';
-  addImage(scene.textures, windKey, battleWindArt());
+  addFineImage(scene.textures, windKey, battleWindArt);
   return (
     [
       [-34, 57, 0.55],
@@ -53,7 +54,7 @@ export function createBattleWinds(scene: Phaser.Scene, kind: BackdropKind): Phas
     scene.add
       .image(x * BATTLE_SCALE, y * BATTLE_SCALE, windKey)
       .setOrigin(0)
-      .setScale(BATTLE_SCALE)
+      .setScale(BATTLE_SCALE / FINE)
       .setAlpha(alpha)
       .setDepth(0.5),
   );

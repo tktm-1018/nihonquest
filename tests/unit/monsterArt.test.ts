@@ -11,8 +11,8 @@ import { STORY_COMPANION_IDS } from '../../src/core/progression/storyCompanion';
 const CONTENT = fileURLToPath(new URL('../../content/', import.meta.url));
 const read: FileReader = async (rel) => JSON.parse(readFileSync(CONTENT + rel, 'utf8'));
 
-/** キー（<id> / <id>.p<番号> / <id>.field）→ モンスター id */
-const baseId = (key: string) => key.replace(/\.(p\d+|field)$/, '');
+/** キー（<id> / <id>.p<番号> / <id>.field / こうげき前の <id>.atk・<id>.p<番号>.atk）→ モンスター id */
+const baseId = (key: string) => key.replace(/(\.(p\d+|field))?(\.atk)?$/, '');
 const entries = Object.entries(MONSTER_DESIGNS);
 const grids = new Map(entries.map(([key, design]) => [key, designGrid(design)]));
 const palette = new Set<string>(NQ48);
@@ -52,11 +52,12 @@ describe('手描きモンスター（docs/06 の規格）', () => {
     }
   });
 
-  it('大きさが種類の規格どおり', () => {
+  it('大きさが種類の規格どおり（2 倍の こまかさで 描いた 絵は 規格の 2 倍）', () => {
     const violations: string[] = [];
     for (const [key, d] of entries) {
       const expected = expectedSize(key);
-      if (d.size !== expected) violations.push(`${key}: size ${d.size} != ${expected}`);
+      if (d.size !== expected && d.size !== expected * 2)
+        violations.push(`${key}: size ${d.size} != ${expected}（または ${expected * 2}）`);
       for (const layer of d.layers) {
         const w = layer.mirror ? d.size / 2 : d.size;
         for (const [rowIndex, row] of layer.rows.entries()) {
@@ -69,14 +70,14 @@ describe('手描きモンスター（docs/06 の規格）', () => {
     expect(violations).toEqual([]);
   });
 
-  it('色は NQ-48 だけ、色数は上限まで（通常・フィールド 12、ボス 15）', () => {
+  it('色は NQ-48 だけ、色数は上限まで（通常・フィールド 12、ボス 15。2 倍の こまかさは 通常 16、ボス 20）', () => {
     for (const [key, d] of entries) {
       const cs = colorsOf(grids.get(key)!);
       expect(
         [...cs].filter((color) => !palette.has(color)),
         key,
       ).toEqual([]);
-      const limit = d.size <= 32 ? 12 : 15;
+      const limit = d.size <= 32 ? 12 : d.size < 64 ? 15 : d.size === 64 ? 16 : 20;
       expect(cs.size, key).toBeLessThanOrEqual(limit);
     }
   });
@@ -95,11 +96,11 @@ describe('手描きモンスター（docs/06 の規格）', () => {
     }
   });
 
-  it('足もとは下端から 0〜2 ドット', () => {
+  it('足もとは下端から 0〜2 ドット（2 倍の こまかさは 0〜4）', () => {
     for (const [key, d] of entries) {
       const g = grids.get(key)!;
       const lowest = g.reduce((low, row, y) => (row.some(Boolean) ? y : low), -1);
-      expect(d.size - 1 - lowest, key).toBeLessThanOrEqual(2);
+      expect(d.size - 1 - lowest, key).toBeLessThanOrEqual(d.size >= 64 ? 4 : 2);
     }
   });
 

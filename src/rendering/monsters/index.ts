@@ -7,6 +7,9 @@ import { toCanvas } from '../grid';
 import { AICHI } from './aichi';
 import { AKITA } from './akita';
 import { AOMORI } from './aomori';
+import { AOMORI_POSES_1 } from './aomoriPoses1';
+import { AOMORI_POSES_2 } from './aomoriPoses2';
+import { AOMORI_POSES_3 } from './aomoriPoses3';
 import { CHIBA } from './chiba';
 import { CHUGOKU } from './chugoku';
 import { designGrid, type MonsterDesign } from './design';
@@ -135,7 +138,14 @@ export const MONSTER_DESIGNS: Readonly<Record<string, MonsterDesign>> = {
   ...OKINAWA,
   // 裏ステージの ラスボス（東北の 歴史上の人物。ほかの県は その県の ファイルに ある）
   ...LAST_BOSSES,
+  // 青森は ドット 2 倍・ポーズつき（ふだん <id> と こうげき前 <id>.atk）。いちばん 後ろで 上の 絵を 上書きする
+  ...AOMORI_POSES_1,
+  ...AOMORI_POSES_2,
+  ...AOMORI_POSES_3,
 };
+
+/** こうげき前の かまえ（<id>.atk）など、その キーの 手描きの 絵が あるか */
+export const hasMonsterDesign = (key: string): boolean => key in MONSTER_DESIGNS;
 
 /** 手描きの絵があれば Canvas にする。フェーズ差分（.p<番号>）が無いボスは、ふだんの絵のまま */
 export function designedMonsterArt(id: string, suffix = ''): HTMLCanvasElement | null {

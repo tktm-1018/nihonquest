@@ -306,6 +306,8 @@ export function regionMiniMapView(input: {
   area?: Area;
   game?: GameState;
   revealAll?: boolean;
+  /** 右上に 方角（きた）を 出す */
+  compass?: boolean;
 }): RegionMiniView | null {
   const region = input.data?.regions.find((candidate) =>
     candidate.areas.some((area) => area.id === input.areaId),
@@ -341,6 +343,7 @@ export function regionMiniMapView(input: {
         ? [capital[0] + 0.5, capital[1] + 0.5]
         : null;
   return {
+    ...(input.compass ? { compass: true } : {}),
     id: region.id,
     width: region.width,
     height: region.height,

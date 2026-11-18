@@ -7,6 +7,7 @@ import type { Item } from '../core/content/schemas';
 import { existingAssetUrl } from './assetCatalog';
 import { makeGrid, outline, put, toCanvas, type Grid } from './grid';
 import { NQ, shadeOf } from './palette';
+import { fineCanvas } from './battle/fine';
 
 export const ITEM_ICON_SIZE = 16;
 const S = ITEM_ICON_SIZE;
@@ -1285,12 +1286,17 @@ export function itemIconGrid(item: Pick<Item, 'id' | 'kind'>): Grid {
 const urls = new Map<string, string>();
 
 /** DOM で使う data URL（<img> を image-rendering: pixelated で拡大する）。本番の PNG ができたら そちらを優先する */
-export function itemIconUrl(item: Pick<Item, 'id' | 'kind'>): string {
+export function itemIconUrl(item: Pick<Item, 'id' | 'kind'>, fine = false): string {
   const asset = existingAssetUrl(`items/${item.id}.png`);
   if (asset) return asset;
-  const hit = urls.get(item.id);
+  const key = fine ? `${item.id}@fine` : item.id;
+  const hit = urls.get(key);
   if (hit) return hit;
-  const u = toCanvas(itemIconGrid(item)).toDataURL();
-  urls.set(item.id, u);
+  const c = toCanvas(itemIconGrid(item));
+  const u = (fine ? fineCanvas(c) : c).toDataURL();
+  urls.set(key, u);
   return u;
 }
+
+/** バトル用：2 倍の こまかさの アイコン（src/rendering/battle/fine.ts） */
+export const fineItemIconUrl = (item: Pick<Item, 'id' | 'kind'>): string => itemIconUrl(item, true);

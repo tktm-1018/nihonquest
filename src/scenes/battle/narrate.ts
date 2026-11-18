@@ -124,6 +124,8 @@ export function narrate(e: BattleEvent, ctx: NarrateCtx, prev?: BattleEvent): st
       if (e.line) lines.push(`「${e.line}」`);
       return lines;
     }
+    case 'bossEnrage':
+      return [t('battle.bossEnrage', { name: ctx.enemyName }), t('battle.bossEnrageAtk')];
     case 'defeat':
       return [t('battle.defeat')];
     case 'gaugeUse':

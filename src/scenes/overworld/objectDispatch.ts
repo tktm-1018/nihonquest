@@ -15,6 +15,8 @@ export interface MapObjectHandlers<T extends MapObject> {
   event(object: T, x: number, y: number): void;
   landmark(object: T, x: number, y: number): void;
   specialty(object: T, x: number, y: number): void;
+  /** 道しるべ（scripts/maps/fieldDecor.ts。無い マップも ある） */
+  signpost?(object: T, x: number, y: number): void;
 }
 
 const TILE = 16;
@@ -64,6 +66,9 @@ export function dispatchMapObjects<T extends MapObject>(
         break;
       case 'specialty':
         handlers.specialty(object, x, y);
+        break;
+      case 'signpost':
+        handlers.signpost?.(object, x, y);
         break;
     }
   }

@@ -47,6 +47,8 @@ export interface Combatant {
 export interface EnemyUnit extends Combatant {
   /** 「うごきを とめる」で 休む ターンの のこり（1 いじょうなら その ターンは 動かない） */
   skipTurns: number;
+  /** ボス戦で HP が 半分 いかに なって いかった（オーラ・こうげき アップ。bossRage.ts） */
+  enraged?: boolean;
 }
 
 export interface Party {
@@ -179,6 +181,8 @@ export type BattleEvent =
   | { t: 'fleeAttempt'; success: boolean; chance: number }
   | { t: 'ko'; side: Side; targetId: string }
   | { t: 'bossPhase'; phaseIndex: number; line?: string }
+  /** ボスが いかって オーラを まとった（こうげき アップ） */
+  | { t: 'bossEnrage' }
   /** xp・gold は コンボ ボーナス（bonus 倍）込み */
   | {
       t: 'victory';

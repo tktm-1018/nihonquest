@@ -21,3 +21,6 @@ background-evaluation.html
 *.log
 .vercel
 .env*
+
+# ブラウザで画面を確かめたときのスクリーンショット（Playwright MCP の出力）
+.playwright-mcp/

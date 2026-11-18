@@ -194,6 +194,8 @@
     "koEnemy": "{name}は 大切[たいせつ]なことを 思[おも]い出[だ]した！",
     "koAlly": "{name}は たおれてしまった…",
     "bossPhase": "{name}の ようすが かわった！",
+    "bossEnrage": "{name}は いかりの オーラを まとった！",
+    "bossEnrageAtk": "こうげきが すこし あがった！",
     "defeat": "みんな ちからつきて しまった…",
     "hp": "HP",
     "mp": "MP",
@@ -2110,7 +2112,26 @@
     },
     "bagSlots": "{used}/{max}マス",
     "bagMoved": "ばしょを いどうした！",
-    "bagKeys": "↑↓ えらぶ　Z いれる・だす　X とじる"
+    "bagKeys": "↑↓ えらぶ　Z いれる・だす　X とじる",
+    "sign": {
+      "title": "みちしるべ だ。",
+      "region": "つぎの エリア",
+      "boss": "{name}の ぬし",
+      "bossAny": "エリアの ぬし",
+      "dungeon": "ダンジョン",
+      "secret": "くらい いりぐち",
+      "port": "みなと",
+      "landmark": "めいしょ ★"
+    },
+    "geoKind": {
+      "mountain": "やま",
+      "lake": "みずうみ",
+      "sea": "うみ",
+      "peninsula": "はんとう",
+      "cape": "みさき",
+      "river": "かわ"
+    },
+    "compassNorth": "きた"
   },
   "ui": {
     "start": "はじめる",
@@ -2136,7 +2157,7 @@
     "saveError": "セーブに しっぱいしました。\n\nあそんだ きろくを のこすため、もういちど おしてね。",
     "retry": "もういちど",
     "tagline": "にほんを たびして、たたかって、まなぶ RPG",
-    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth",
+    "credits": "フォント：PixelMplus（M+ FONTS PROJECT）・DotGothic16（Fontworks）　ちず：国土地理院[こくどちりいん]（地球地図日本[ちきゅうちずにほん]・標高[ひょうこう]タイル）、Natural Earth",
     "noSave": "セーブデータは まだ ないよ"
   },
   "cutscene": {

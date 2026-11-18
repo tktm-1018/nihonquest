@@ -12,6 +12,7 @@ import { addProgressValue } from '../../shared/safeInteger';
 import { comboBonus, computeDamage, fleeChance, recruitChance, scoreBand, scoreMultiplier } from './damage';
 import { commandPriority, initiativeOrder } from './initiative';
 import { useMusubiDama } from './musubiDama';
+import { bossReactions } from './bossRage';
 import { clampBattleValue, cloneBattleValue, emptyGauges } from './utils';
 import type {
   BattleEvent,
@@ -184,21 +185,6 @@ function decayBuffs(c: Combatant): void {
   }
 }
 
-/** ボスのフェーズ移行（HP 割合で切り替わる）。ターン制では わざ・すがたが かわる（行動の 回数は かわらない） */
-function checkBossPhase(enemy: EnemyUnit, def: BattleDeps, ev: BattleEvent[]): void {
-  if (!enemy.isBoss) return;
-  const phases = def.monsters.get(enemy.refId)?.bossPhases ?? [];
-  const ratio = enemy.hp / enemy.stats.hp;
-  for (let i = enemy.phaseIndex + 1; i < phases.length; i++) {
-    const p = phases[i]!;
-    if (ratio > p.hpBelow) continue;
-    enemy.phaseIndex = i;
-    if (p.skills) enemy.skills = p.skills;
-    if (p.element) enemy.element = p.element;
-    ev.push({ t: 'bossPhase', phaseIndex: i, line: p.line });
-  }
-}
-
 /** 味方が たおれた。前に 立つ オトモなら、生きている 次の 仲間が 自動で 前に 出る */
 function allyDown(s: BattleState, c: Combatant, def: BattleDeps, ev: BattleEvent[]): void {
   ev.push({ t: 'ko', side: 'ally', targetId: c.id });
@@ -245,7 +231,7 @@ function hit(
     scoreBand: d.band,
     comboMult: d.comboMult,
   });
-  if (byAlly && o.defender.hp > 0) checkBossPhase(s.enemy, def, ev);
+  if (byAlly && o.defender.hp > 0) bossReactions(s, def.monsters, ev);
   else if (!byAlly && o.defender.hp <= 0) allyDown(s, o.defender, def, ev);
 }
 
