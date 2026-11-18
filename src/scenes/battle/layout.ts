@@ -1,7 +1,7 @@
 import { BACKDROP_SCALE } from '../../rendering/battle/pixelArt';
 
 export const BATTLE_SCALE = BACKDROP_SCALE;
-export type BattlePresentation = 'side' | 'depth';
+export type BattlePresentation = 'side' | 'depth' | 'front';
 
 export interface BattleLayout {
   enemy: { x: number; y: number; scaleStep: number };
@@ -11,11 +11,16 @@ export interface BattleLayout {
   boss: { x: number; y: number; maxHeight: number };
 }
 
+/**
+ * むかしの サイドビュー RPG：敵（左）と 味方（右）は 同じ 地面の 線（y）に 横ならびで 向きあう。
+ * 絵の 1 ドットは みんな 同じ 大きさ（BATTLE_SCALE）。遠近は つけない。下の 帯（148px）の 上に 立つ。
+ */
+const GROUND_Y = 360;
 const SIDE_LAYOUT: BattleLayout = {
-  enemy: { x: 250, y: 380, scaleStep: 0 },
-  hero: { x: 690, y: 388, scale: BATTLE_SCALE },
-  partner: { x: 820, y: 356, scale: BATTLE_SCALE },
-  boss: { x: 260, y: 392, maxHeight: 290 },
+  enemy: { x: 250, y: GROUND_Y, scaleStep: 0 },
+  hero: { x: 690, y: GROUND_Y, scale: BATTLE_SCALE },
+  partner: { x: 810, y: GROUND_Y, scale: BATTLE_SCALE },
+  boss: { x: 260, y: GROUND_Y, maxHeight: 300 },
 };
 
 /** 敵を奥、味方を手前に置く比較用の試作レイアウト。戦闘ロジックには影響しない。 */
@@ -26,9 +31,21 @@ const DEPTH_LAYOUT: BattleLayout = {
   boss: { x: 280, y: 392, maxHeight: 290 },
 };
 
+/**
+ * モンスター RPG ふう（front）：敵は 右おくの 台に 正面むき、主人公は 左てまえに 後ろすがたで 敵の ほうを むく。
+ * 仲間は 主人公の となり。ドットの 大きさは みんな 同じ（BATTLE_SCALE）。台は 遠近の かわりに 大きさで 分ける
+ */
+const FRONT_LAYOUT: BattleLayout = {
+  enemy: { x: 690, y: 268, scaleStep: 0 },
+  hero: { x: 200, y: 446, scale: BATTLE_SCALE },
+  partner: { x: 340, y: 440, scale: BATTLE_SCALE },
+  boss: { x: 690, y: 272, maxHeight: 230 },
+};
+
 /** isBoss の ときは 敵の 立つ 場所を boss の 場所に する */
-export function battleLayout(presentation: BattlePresentation = 'depth', isBoss = false): BattleLayout {
-  const layout = presentation === 'depth' ? DEPTH_LAYOUT : SIDE_LAYOUT;
+export function battleLayout(presentation: BattlePresentation = 'front', isBoss = false): BattleLayout {
+  const layout =
+    presentation === 'depth' ? DEPTH_LAYOUT : presentation === 'side' ? SIDE_LAYOUT : FRONT_LAYOUT;
   return isBoss ? { ...layout, enemy: { ...layout.enemy, x: layout.boss.x, y: layout.boss.y } } : layout;
 }
 export const READY_STEP = 24;

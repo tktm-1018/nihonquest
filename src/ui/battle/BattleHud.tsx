@@ -1,10 +1,10 @@
 /**
- * バトル画面の DOM オーバーレイ（リアルタイム・コマンドゲージバトル）。サイドビュー（敵が左・味方が右）の SFC 風 RPG：
- *  - 上：左に敵、右にメッセージ。下：左にコマンド、右に仲間の窓（名前・Lv・HP ゲージ）
- *  - 敵の 足もと：こうげきタイマー（たまると こうげきして くる。もうすぐなら 赤く 点めつ）
- *  - 下：コマンドの右、味方ステータスの左に教科ゲージ（こたえると たまり、必殺技で へる）
- *  - 下：メッセージ窓、コマンドは下の左に 2 列 × 2 段。わざ・どうぐ・いれかえは下から大きな窓
- *  - 問題の あいだは 問題の 枠の 見出しに 敵の こうげきタイマーと HP（問題中も 敵は うごく）
+ * バトル画面の DOM オーバーレイ。むかしの サイドビュー RPG（敵が左・味方が右、同じ 地面に 横ならび）：
+ *  - 窓は ぜんぶ 画面の 下の 帯に まとめる。左に てきの 窓（名前・Lv・HP）、右に なかまの 窓
+ *    （1 人 1 行：名前・Lv・HP。主人公の 下に 教科ゲージ）
+ *  - コマンドは てきの 窓の 右はしに かさねて 出す。メッセージは てきの 窓の 上に かさねて 出す
+ *  - わざ・どうぐ・いれかえは 下から 大きな 窓（なかまの 窓は かくさない）
+ *  - 問題の あいだは 問題の 枠の 見出しに 敵と 前に 立つ 味方の HP
  * 窓は黒＋白い太枠、文字は PixelMplus12（12 / 24 / 36 / 48px）。
  * ロジックは持たない。HudStore を読んで描き、操作は store.dispatch() で Battle シーンへ返す。
  */
@@ -463,11 +463,17 @@ export function BattleHud({ store }: { store: HudStore }) {
   };
 
   const bigMenu = s.menu === 'skills' || s.menu === 'items' || s.menu === 'swap';
+  const railShown = !s.intro && !s.result;
 
   return (
     <div ref={battleRef} class="nq-battle" onClick={onStageClick}>
-      {s.message && s.menu !== 'commands' && (
-        <div class="nq-win nq-box" onClick={() => !bigMenu && advance()}>
+      {/* わざ・どうぐ・いれかえの 窓を 出して いる あいだは「どうする？」を 出さない（窓が かさならない） */}
+      {/* コマンドを えらぶ あいだの「どうする？」は モンスター RPG ふう（front）だけ コマンドの 左に 出す（CSS） */}
+      {s.message && !bigMenu && (
+        <div
+          class={`nq-win nq-box ${railShown ? '' : 'nq-box-wide'} ${s.menu === 'commands' ? 'nq-box-cmd-open' : ''}`}
+          onClick={advance}
+        >
           <p class="nq-box-text">
             <span class="nq-box-star" aria-hidden="true">
               ＊
@@ -487,15 +493,17 @@ export function BattleHud({ store }: { store: HudStore }) {
       <Popups list={s.popups} />
       {s.banner && <Banner b={s.banner} />}
 
-      <div class="nq-panel">{s.enemy && <EnemyWindow e={s.enemy} />}</div>
-      {!s.intro && !s.result && (
+      {railShown && (
         <div class="nq-bottom-rail">
-          {s.menu === 'commands' && (
-            <div class="nq-bottom-command-slot">
-              <CommandWindow s={s} store={store} />
-            </div>
-          )}
-          {s.menu !== 'commands' && <div class="nq-bottom-command-spacer" aria-hidden="true" />}
+          {/* 左：てきの 名前と HP（コマンドは この 窓の 右はしに かさねて 出す） */}
+          <div class="nq-panel">
+            {s.enemy && <EnemyWindow e={s.enemy} />}
+            {s.menu === 'commands' && (
+              <div class="nq-bottom-command-slot">
+                <CommandWindow s={s} store={store} />
+              </div>
+            )}
+          </div>
           <div class="nq-party">
             {s.allies.map((a) => (
               <AllyRow

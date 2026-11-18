@@ -67,6 +67,7 @@ export class BossAura {
     const cy = b.y - b.displayHeight / 2;
     this.glow
       .setPosition(b.x, cy)
+      .setFlipX(b.flipX)
       .setScale(b.scaleX * grow, b.scaleY * grow)
       .setAlpha(this.look.alpha[0] + (this.look.alpha[1] - this.look.alpha[0]) * wave)
       .setVisible(b.active && b.visible && b.alpha > 0.5);

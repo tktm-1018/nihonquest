@@ -34,12 +34,23 @@ import {
 import { t, tOpt } from '../ui/i18n';
 import { createSpeaker } from '../ui/overlay';
 import { playSfx, prepareBattleSfx } from '../ui/sfx';
-import { BATTLE_POSE, battleSheet, HERO_H, HERO_W, heroKey, heroLook } from '../rendering/characters';
+import {
+  BATTLE_POSE,
+  battleBackSheet,
+  battleSheet,
+  HERO_H,
+  HERO_W,
+  heroKey,
+  heroLook,
+} from '../rendering/characters';
 import { fineItemIconUrl, itemIconGrid } from '../rendering/itemIcons';
 import { designedMonsterArt } from '../rendering/monsters';
 import { addFineImage, addFineSheet } from '../rendering/sheet';
 import { asFine, FINE } from '../rendering/battle/fine';
-import { Motions, type EnemyStyle, type MotifFx, type SwingKind } from './battle/motions';
+import { heroStrike } from './battle/heroStrike';
+import { Motions, type EnemyStyle, type MotifFx } from './battle/motions';
+import { backdropPads } from './battle/platforms';
+import { backTexture } from './battle/backTexture';
 import { toCanvas } from '../rendering/grid';
 import { motifArtGrid } from '../rendering/motifArt';
 import { skillLook } from '../rendering/battle/skillLook';
@@ -156,7 +167,10 @@ export class BattleScene extends Phaser.Scene {
   }
 
   init(data: BattleLaunchData): void {
-    this.opts = { ...data, presentation: data.presentation ?? 'depth' };
+    // ?battleView=side / depth で ほかの 見た目と くらべられる（ふつうの 戦闘でも きく）
+    const viewParam = new URLSearchParams(window.location.search).get('battleView');
+    const urlView = (['side', 'depth', 'front'] as const).find((v) => v === viewParam);
+    this.opts = { ...data, presentation: data.presentation ?? urlView ?? 'front' };
     this.hud = new HudStore();
     this.hudFlow = new BattleHudFlow(
       this.hud,
@@ -263,8 +277,13 @@ export class BattleScene extends Phaser.Scene {
         : ground && ground !== 'grass'
           ? ground
           : 'field';
-    const bgKey = `bt.bg.${kind}`;
-    addFineImage(this.textures, bgKey, () => backdropArt(kind));
+    const def = this.enemyDef;
+    this.enemySize = enemySizeFor(def, this.content, isBoss);
+    this.enemyScale = enemyScaleFor(this.layout, this.enemySize, isBoss);
+    // front は 立つ 場所を 背景に しく（敵が おく・味方が てまえ）
+    const pads = this.front ? backdropPads(this.layout, this.enemySize * this.enemyScale) : undefined;
+    const bgKey = `bt.bg.${kind}${pads ? `.front.${pads[0]!.w}` : ''}`;
+    addFineImage(this.textures, bgKey, () => backdropArt(kind, pads));
     this.add.image(0, 0, bgKey).setOrigin(0).setScale(FS).setDepth(0);
     this.clouds = createBattleClouds(this, kind);
     this.winds = createBattleWinds(this, kind);
@@ -272,9 +291,6 @@ export class BattleScene extends Phaser.Scene {
       addFineImage(this.textures, `bt.fx.${p}`, () => particleArt(p));
     addFineSheet(this.textures, 'bt.fx.slash', slashSheet(), 32, 32);
 
-    const def = this.enemyDef;
-    this.enemySize = enemySizeFor(def, this.content, isBoss);
-    this.enemyScale = enemyScaleFor(this.layout, this.enemySize, isBoss);
     // 主人公が 切りかかる ときに 立つ 場所（大きな ボスほど 手前で 止まる）
     this.enemyFront = this.layout.enemy.x + Math.max(0, (this.enemySize * this.enemyScale) / 2 - 64);
     const eKey = this.monsterTexture(def, this.state.enemy.element, this.enemySize, isBoss);
@@ -282,6 +298,8 @@ export class BattleScene extends Phaser.Scene {
       .image(this.layout.enemy.x, this.layout.enemy.y, eKey)
       .setOrigin(0.5, 1)
       .setScale(this.enemyScale / FINE)
+      // 絵は 右むき。front では 敵が 右おくに いるので 左（主人公の ほう）を むかせる
+      .setFlipX(this.front)
       .setDepth(10);
     this.bossAura = isBoss ? new BossAura(this, this.enemySprite) : null;
     this.addShadow(
@@ -292,8 +310,10 @@ export class BattleScene extends Phaser.Scene {
 
     const ap = this.gs.player.appearance;
     const eq = this.gs.player.equipment;
-    const hk = heroKey(ap, eq, true);
-    addFineSheet(this.textures, hk, battleSheet(heroLook(ap, eq)), HERO_W, HERO_H);
+    // モンスター RPG ふう（front）は 後ろすがた（敵の ほうを むく）、サイドビューは 左むき
+    const hk = `${heroKey(ap, eq, true)}${this.front ? '.back' : ''}`;
+    const look = heroLook(ap, eq);
+    addFineSheet(this.textures, hk, this.front ? battleBackSheet(look) : battleSheet(look), HERO_W, HERO_H);
     this.heroSprite = this.add
       .image(this.layout.hero.x, this.layout.hero.y, hk, BATTLE_POSE.idle)
       .setOrigin(0.5, 1)
@@ -324,16 +344,28 @@ export class BattleScene extends Phaser.Scene {
     const m = this.state.ally.monsters[this.state.ally.activeMonsterIndex];
     const def = m && this.content.monsters.get(m.refId);
     if (!m || !def) return null;
+    // front では 主人公と おなじく 敵の ほう（おく）を むいた うしろ姿
+    const key = this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false);
     const sp = this.add
-      .image(x, this.layout.partner.y, this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false))
+      .image(x, this.layout.partner.y, this.front ? backTexture(this.textures, key) : key)
       .setOrigin(0.5, 1)
       .setScale(this.layout.partner.scale / FINE)
       // 絵は 右向きで 描いて いるので、右に 立つ 仲間は 左右を 反転して 敵の ほうを むかせる
-      .setFlipX(true)
+      .setFlipX(!this.front)
       .setDepth(11)
       .setAlpha(m.hp > 0 ? 1 : 0.35);
     this.addShadow(sp, this.layout.partner.y, 22);
     return sp;
+  }
+
+  /** モンスター RPG ふう（front）か。敵が 右おく・味方が 左てまえ */
+  private get front(): boolean {
+    return this.opts.presentation === 'front';
+  }
+
+  /** 敵が 味方の ほうへ とびかかる 向き（サイドビューは 右へ、front は 左へ） */
+  private get foeDir(): 1 | -1 {
+    return this.front ? -1 : 1;
   }
 
   private addShadow(sp: Sprite, y: number, w: number): void {
@@ -606,7 +638,10 @@ export class BattleScene extends Phaser.Scene {
     this.cameras.main.fadeIn(350, 0, 0, 0);
     const allies: [Sprite, number][] = [[this.heroSprite, this.layout.hero.x]];
     if (this.palSprite) allies.push([this.palSprite, this.layout.partner.x]);
-    allies.forEach(([sp], i) => (sp.x = OFF_RIGHT + i * 120));
+    // サイドビューは 右から、front は 左から 歩いて 入って くる
+    allies.forEach(
+      ([sp], i) => (sp.x = this.front ? -120 - (allies.length - 1 - i) * 120 : OFF_RIGHT + i * 120),
+    );
     this.enemySprite.setAlpha(0);
     await this.wait(250);
     const shimmer = async () => {
@@ -1174,10 +1209,13 @@ export class BattleScene extends Phaser.Scene {
         }
         // うしろを向いて、右へ走ってにげる
         playSfx('run');
-        this.heroSprite.setFlipX(true);
-        this.palSprite?.setFlipX(false);
+        // front は 後ろすがたの まま 左（画面の 外）へ
+        if (!this.front) {
+          this.heroSprite.setFlipX(true);
+          this.palSprite?.setFlipX(false);
+        }
         const out = [this.heroSprite, this.palSprite].filter((x): x is Sprite => !!x);
-        await Promise.all(out.map((sp) => this.walk(sp, sp.x + 420, 450)));
+        await Promise.all(out.map((sp) => this.walk(sp, sp.x + (this.front ? -520 : 420), 450)));
         return;
       }
       case 'ko': {
@@ -1245,85 +1283,46 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
-  /** 主人公の「たたかう」：敵の前まで走って斬り、元の位置へとびのく */
-  private async heroSlash(): Promise<void> {
-    const sp = this.heroSprite;
-    await this.walk(sp, this.enemyFront + 136, 260);
-    sp.setFrame(BATTLE_POSE.attack);
-    playSfx('slash');
-    const fx = this.add
-      .sprite(
-        this.layout.enemy.x,
-        this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
-        'bt.fx.slash',
-        0,
-      )
-      .setScale(FS)
-      .setDepth(25)
-      .setTint(ELEMENT_FX[this.lastElement]);
-    for (let f = 0; f < 3; f++) {
-      fx.setFrame(f);
-      await this.wait(60);
-    }
-    fx.destroy();
-    // もどるのはダメージの演出と同時（待たない）
-    void this.walk(sp, this.layout.hero.x, 260).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
-    });
-  }
-
-  /** 主人公の「たたかう」（2 回に 1 回）：敵の 前で 高く とびあがって、上から 切りおろす */
-  private async heroJumpSlash(): Promise<void> {
-    const sp = this.heroSprite;
-    await this.walk(sp, this.enemyFront + 190, 220);
-    sp.setFrame(BATTLE_POSE.attack);
-    await this.fx.hopTo(sp, this.enemyFront + 128, this.layout.hero.y, 22 * S, 260);
-    playSfx('slash');
-    const fx = this.add
-      .sprite(
-        this.layout.enemy.x,
-        this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
-        'bt.fx.slash',
-        0,
-      )
-      .setScale(FS)
-      .setDepth(25)
-      .setFlipY(true)
-      .setTint(ELEMENT_FX[this.lastElement]);
-    for (let f = 0; f < 3; f++) {
-      fx.setFrame(f);
-      await this.wait(60);
-    }
-    fx.destroy();
-    void this.walk(sp, this.layout.hero.x, 300).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
-    });
-  }
-
-  /** 主人公の「たたかう」：5 しゅるいを じゅんばんに（横切り → ジャンプ切り → 二連切り → つき → 回転切り） */
+  /** 主人公の「たたかう」：5 しゅるいを じゅんばんに（横切り → ジャンプ切り → 二連切り → つき → 回転切り。heroStrike.ts） */
   private heroAttack(): Promise<void> {
-    const k = this.swings++ % 5;
-    if (k === 0) return this.heroSlash();
-    if (k === 1) return this.heroJumpSlash();
-    return this.heroSwing(k === 2 ? 'cross' : k === 3 ? 'thrust' : 'spin');
-  }
-
-  /** 主人公の 二連切り・つき・回転切り：敵の 前まで 走って（つきは ふみこんで）斬る。もどるのは ダメージの演出と同時 */
-  private async heroSwing(kind: SwingKind): Promise<void> {
     const sp = this.heroSprite;
-    await this.walk(sp, this.enemyFront + (kind === 'thrust' ? 200 : 136), kind === 'thrust' ? 200 : 260);
-    sp.setFrame(BATTLE_POSE.attack);
-    if (kind === 'thrust') await this.fx.hopTo(sp, this.enemyFront + 150, this.layout.hero.y, 2 * S, 100);
-    playSfx('slash');
-    if (kind === 'cross') this.time.delayedCall(150, () => playSfx('slash'));
-    const at = {
-      x: this.layout.enemy.x,
-      y: this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2,
-    };
-    await this.fx.swing(kind, at, ELEMENT_FX[this.lastElement]);
-    void this.walk(sp, this.layout.hero.x, 280).then(() => {
-      if (sp.active && this.state.ally.hero.hp > 0) this.idleBob(sp, this.layout.hero.y);
-    });
+    const home = this.layout.hero;
+    const at = { x: this.layout.enemy.x, y: this.layout.enemy.y - (this.enemySize * this.enemyScale) / 2 };
+    const tint = ELEMENT_FX[this.lastElement];
+    return heroStrike(
+      {
+        front: this.front,
+        sprite: sp,
+        home,
+        enemyFront: this.enemyFront,
+        walk: (x, ms) => this.walk(sp, x, ms),
+        hopTo: (x, h, ms) => this.fx.hopTo(sp, x, home.y, h * S, ms),
+        tween: (cfg) => this.tweenP(cfg),
+        stopBob: () => this.stopBob(sp, home.y),
+        slash: async (flipX, flipY) => {
+          const fx = this.add
+            .sprite(at.x, at.y, 'bt.fx.slash', 0)
+            .setScale(FS)
+            .setDepth(25)
+            .setFlipX(flipX)
+            .setFlipY(flipY)
+            .setTint(tint);
+          for (let f = 0; f < 3; f++) {
+            fx.setFrame(f);
+            await this.wait(60);
+          }
+          fx.destroy();
+        },
+        swing: (kind) => this.fx.swing(kind, at, tint),
+        sfx: () => playSfx('slash'),
+        later: (ms, fn) => void this.time.delayedCall(ms, fn),
+        settle: () => {
+          sp.setFrame(BATTLE_POSE.idle);
+          if (this.state.ally.hero.hp > 0) this.idleBob(sp, home.y);
+        },
+      },
+      this.swings++ % 5,
+    );
   }
 
   /** 味方の 属性（仲間モンスターなら その属性、主人公は むぞくせい）。エフェクトの 色と かけらに 使う */
@@ -1334,7 +1333,9 @@ export class BattleScene extends Phaser.Scene {
   /** 仲間の「たたかう」：ぴょんと はねて 敵へ たいあたり。もどるのは ダメージの演出と同時 */
   private async partnerTackle(sp: Sprite): Promise<void> {
     this.stopBob(sp, this.layout.partner.y);
-    await this.fx.hopTo(sp, this.enemyFront + 200, this.layout.partner.y, 16 * S, 260);
+    // front は 敵の ほうへ 少し とびだして もどる（右おくの 敵までは 行かない）
+    const reach = this.front ? this.layout.partner.x + 120 : this.enemyFront + 200;
+    await this.fx.hopTo(sp, reach, this.layout.partner.y, 16 * S, 260);
     void this.fx.hopTo(sp, this.layout.partner.x, this.layout.partner.y, 8 * S, 260).then(() => {
       if (sp.active) this.idleBob(sp, this.layout.partner.y);
     });
@@ -1349,13 +1350,13 @@ export class BattleScene extends Phaser.Scene {
     const k = this.enemyAttacks++;
     if (this.state.isBossBattle && k % 2 === 1) {
       this.lastEnemyStyle = 'quake';
-      await this.fx.stomp(sp, 40 * S, this.layout.enemy.y);
+      await this.fx.stomp(sp, 40 * S * this.foeDir, this.layout.enemy.y);
     } else if (k % 3 === 1) {
       this.lastEnemyStyle = 'bash';
-      await this.fx.dash(sp, 30 * S);
+      await this.fx.dash(sp, 30 * S * this.foeDir);
     } else {
       this.lastEnemyStyle = k % 3 === 2 ? 'bite' : 'claw';
-      await this.lunge(sp, 1);
+      await this.lunge(sp, this.foeDir);
     }
   }
 
@@ -1435,7 +1436,7 @@ export class BattleScene extends Phaser.Scene {
     ]);
     if (enemySide) {
       await Promise.all([this.flash(sp, tint, 2), charge]);
-      if (!self) await this.lunge(sp, 1);
+      if (!self) await this.lunge(sp, this.foeDir);
     } else {
       this.stopBob(sp, baseY);
       await Promise.all([this.flash(sp, tint, 2), this.fx.hop(sp, baseY), charge]);

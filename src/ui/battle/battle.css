@@ -1,8 +1,7 @@
 /*
- * バトル画面（960×540 の DOM オーバーレイ）。サイドビューの SFC 風 RPG（リアルタイム・コマンドゲージバトル）：
- *  上に「てき」「なかま」の窓（HP ゲージ。味方は その下に 時間の ゲージ）、敵の 足もとに こうげきタイマー、
- *  右に 教科ゲージの 窓、下にメッセージ窓、コマンドは下の左に 3 列の窓（上の 段に コマンドゲージ。♥ カーソル。
- *  出ているあいだはメッセージ窓が右へよける）。
+ * バトル画面（960×540 の DOM オーバーレイ）。むかしの サイドビュー RPG：
+ *  窓は ぜんぶ 下の 帯（高さ 148px）。左に てきの 窓、右に なかまの 窓。コマンドと メッセージは
+ *  てきの 窓に かさねて 出す（♥ カーソル）。舞台は 帯の 上で、敵と 味方は 同じ 地面に 横ならび。
  * 窓の見た目（.nq-win）・札（.nq-chip）・問題の枠（.nq-bq）は app.css の共通部品。
  * 文字は 16 ドットの ドット字（DotGothic16）。ほかの 画面（PixelMplus12・12 ドット）より こまかい。
  * 窓の 枠も ほかの 画面の 半分の 太さ（1 ドット = 2px）。絵も 2 倍の こまかさ（src/rendering/battle/fine.ts）。
@@ -22,17 +21,35 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ───── 右上：メッセージ窓（味方ステータスと位置を入れかえ） ───── */
+/* ───── 下の 帯：左に てき、右に なかま（高さ 148px。舞台は その 上） ───── */
+.nq-bottom-rail {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  box-sizing: border-box;
+  height: 148px;
+  display: flex;
+  gap: 12px;
+  z-index: 5;
+}
+
+/* メッセージ窓：てきの 窓の 上に かさねる（なかまの HP は 見えた まま） */
 .nq-box {
   position: absolute;
-  left: 368px;
-  right: 12px;
-  top: 12px;
+  left: 12px;
+  right: 404px;
+  bottom: 12px;
   box-sizing: border-box;
-  height: 120px;
-  padding: 8px 16px;
+  height: 148px;
+  padding: 12px 20px;
+  z-index: 7;
   cursor: pointer;
   animation: nq-fade-in 0.1s steps(2);
+}
+/* はじめと おわり（下の 帯が ない とき）は 横 いっぱい */
+.nq-box-wide {
+  right: 12px;
 }
 .nq-box-cmd .nq-box-text {
   line-height: 32px;
@@ -49,27 +66,27 @@
 .nq-box-next {
   position: absolute;
   right: 20px;
-  bottom: 4px;
+  bottom: 8px;
   font-size: 24px;
   animation: nq-blink 0.6s steps(2) infinite;
 }
 
-/* ───── 左上：敵（HP ゲージ） ───── */
+/* ───── 左：てきの 窓（名前・Lv・HP）。コマンドは 右はしに かさなる ───── */
 .nq-panel {
-  position: absolute;
-  left: 12px;
-  top: 12px;
-  width: 220px;
-  height: 84px;
+  position: relative;
+  flex: 1;
+  min-width: 0;
   display: flex;
 }
 .nq-foe {
   box-sizing: border-box;
   width: 100%;
-  padding: 2px 12px 6px;
+  height: 100%;
+  padding: 12px 232px 12px 20px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  justify-content: center;
+  gap: 8px;
 }
 .nq-foe-boss {
   border-color: var(--nq-yellow);
@@ -81,14 +98,14 @@
   min-height: 24px;
 }
 .nq-foe-heading {
-  position: relative;
   display: flex;
   align-items: baseline;
   gap: 12px;
   min-width: 0;
-  padding-right: 64px;
 }
 .nq-boss-tag {
+  align-self: flex-start;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -98,18 +115,11 @@
   background: #a8341f;
   border: 1px solid var(--nq-yellow);
 }
-.nq-ally-lv {
-  font-size: 16px;
-  color: var(--nq-yellow);
-}
 .nq-foe-level {
-  position: absolute;
-  right: 0;
-  top: 0;
+  flex: none;
   font-size: 20px;
   line-height: 36px;
   color: var(--nq-cream);
-  text-align: right;
 }
 .nq-foe .nq-bar {
   min-width: 96px;
@@ -117,11 +127,10 @@
 .nq-foe-hp {
   display: flex;
   align-items: center;
-  gap: 0;
   min-height: 24px;
 }
 .nq-foe-name {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,42 +148,33 @@
 .nq-def {
   background: #1f4fa3;
 }
-.nq-bottom-rail {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  box-sizing: border-box;
-  height: 160px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  z-index: 5;
-}
+/* コマンド窓：てきの 窓の 右はしに かさねる（むかしの RPG の コマンド窓） */
 .nq-bottom-command-slot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   box-sizing: border-box;
-  width: 188px;
-  height: 160px;
-  flex: none;
+  width: 208px;
   background: var(--nq-panel);
   border: 2px solid var(--nq-white);
   box-shadow:
     0 0 0 2px #000,
     4px 4px 0 2px rgba(0, 0, 0, 0.35);
 }
-.nq-bottom-command-spacer {
-  width: 188px;
-  flex: none;
-}
+
+/* ───── 右：なかまの 窓（1 人 1 行。主人公の 下に 教科ゲージ） ───── */
 .nq-party {
   position: relative;
-  width: 252px;
+  width: 380px;
+  flex: none;
   box-sizing: border-box;
-  height: 160px;
-  padding: 4px 8px;
+  height: 148px;
+  padding: 12px 14px 12px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 10px;
   background: var(--nq-panel);
   border: 2px solid var(--nq-white);
   box-shadow:
@@ -182,25 +182,35 @@
     4px 4px 0 2px rgba(0, 0, 0, 0.35);
 }
 .nq-ally {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 124px;
+  column-gap: 10px;
+  row-gap: 6px;
+  align-items: center;
   min-width: 0;
-  height: 52px;
   font-size: 20px;
 }
-.nq-ally-hero {
-  height: 82px;
+.nq-ally .nq-sgauge-hero {
+  grid-column: 1 / -1;
+  padding-left: 24px;
+  box-sizing: border-box;
 }
 .nq-ally-heading,
 .nq-ally-hp {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
-  height: 26px;
+  height: 28px;
 }
 .nq-ally-cur {
   width: 16px;
   color: var(--nq-yellow);
   flex: none;
+}
+.nq-ally-active .nq-ally-cur::before {
+  content: '▶';
+  font-size: 12px;
 }
 .nq-ally-active .nq-ally-cur {
   animation: nq-nudge 0.6s steps(2) infinite;
@@ -209,7 +219,7 @@
   color: var(--nq-yellow);
 }
 .nq-ally-name {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -218,6 +228,7 @@
 }
 .nq-ally-lv {
   flex: none;
+  margin-left: auto;
   font-size: 16px;
   color: var(--nq-cream);
 }
@@ -225,22 +236,8 @@
   font-size: 16px;
   color: var(--nq-yellow);
 }
-.nq-ally-hp {
-  padding-left: 56px;
-}
-.nq-ally-hero .nq-ally-heading {
-  height: 36px;
-}
-.nq-ally-hero .nq-ally-hp {
-  height: 26px;
-  padding-left: 0;
-}
-.nq-ally-hero .nq-ally-lv {
-  font-size: 20px;
-  line-height: 36px;
-}
 .nq-ally-hp .nq-bar {
-  min-width: 96px;
+  min-width: 0;
 }
 .nq-ally-passive {
   display: inline-flex;
@@ -496,7 +493,8 @@
 .nq-cmdwin {
   position: relative;
   width: 100%;
-  height: 152px;
+  height: 100%;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: repeat(4, minmax(0, 1fr));
@@ -576,7 +574,7 @@
   position: absolute;
   left: 12px;
   /* 右下の主人公ステータス枠を覆わず、選択中のHPを常に読めるようにする。 */
-  right: 280px;
+  right: 404px;
   bottom: 12px;
   /* 舞台（特に敵）を覆わない、下端に収まるコンパクトな選択窓。 */
   height: 208px;
@@ -617,6 +615,10 @@
   min-height: 0;
   flex: 1;
   gap: 10px;
+}
+.nq-menu-skill .nq-menu-layout {
+  /* なかまの 窓を かくさない ぶん 横が せまいので、説明の 列を ほそく して 技の 名前と ゲージを 読める ように */
+  grid-template-columns: minmax(0, 1fr) 176px;
 }
 .nq-menu-skill .nq-menu-grid {
   width: auto;
@@ -1339,4 +1341,94 @@
 }
 .nq-battle .nq-bq-head {
   border-bottom-width: 2px;
+}
+
+/* コマンドを えらぶ あいだの メッセージ窓は ふだんは 出さない（front だけ コマンドの 左に 出す） */
+.nq-box-cmd-open {
+  display: none;
+}
+
+/* ═════ モンスター RPG ふう（front）：敵は 右おく・主人公は 左てまえの 後ろすがた ═════
+ *  左上：てきの 窓（名前・Lv・HP）／ 右なか：なかまの 窓（メッセージ窓の すぐ 上）
+ *  下：横 いっぱいの メッセージ窓。コマンドは 下の 右に 2 × 2（左に「どうする？」） */
+.nq-battle-root-front .nq-bottom-rail,
+.nq-battle-root-front .nq-panel {
+  /* 帯は 画面 いっぱいの 入れものに して、中の 窓を それぞれの 場所へ（すきまは 下へ 通す） */
+  position: absolute;
+  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+.nq-battle-root-front .nq-foe,
+.nq-battle-root-front .nq-party,
+.nq-battle-root-front .nq-bottom-command-slot {
+  pointer-events: auto;
+}
+.nq-battle-root-front .nq-foe {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  width: 344px;
+  height: auto;
+  padding: 10px 18px 14px;
+  gap: 6px;
+  z-index: 5;
+}
+.nq-battle-root-front .nq-party {
+  position: absolute;
+  right: 24px;
+  bottom: 116px;
+  width: 380px;
+  height: auto;
+  padding: 10px 14px 12px 8px;
+  gap: 8px;
+  z-index: 5;
+}
+.nq-battle-root-front .nq-box {
+  left: 12px;
+  right: 12px;
+  /* 2 行ぶん。長い 文の ときだけ 上へ のびる */
+  height: auto;
+  min-height: 92px;
+  padding: 6px 24px;
+}
+.nq-battle-root-front .nq-box-text {
+  line-height: 40px;
+}
+.nq-battle-root-front .nq-box-next {
+  bottom: 2px;
+}
+.nq-battle-root-front .nq-box-cmd-open {
+  display: block;
+  right: 420px;
+}
+.nq-battle-root-front .nq-bottom-command-slot {
+  position: absolute;
+  top: auto;
+  right: 12px;
+  bottom: 12px;
+  width: 400px;
+  height: 92px;
+  z-index: 7;
+}
+.nq-battle-root-front .nq-cmdwin {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  padding: 4px 12px;
+  column-gap: 8px;
+}
+.nq-battle-root-front .nq-cmdwin .nq-cmd {
+  font-size: 24px;
+}
+/* わざ・どうぐ・いれかえの 窓は 下 いっぱい。その あいだ なかまの 窓は かくす */
+.nq-battle-root-front .nq-menu {
+  right: 12px;
+}
+.nq-battle-root-front .nq-battle:has(.nq-menu) .nq-party {
+  visibility: hidden;
 }

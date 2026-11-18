@@ -47,17 +47,17 @@ export function TurnBadge({ turn, class: cls }: { turn: number; class: string })
 export function EnemyWindow({ e }: { e: EnemyView }) {
   return (
     <div class={`nq-win nq-foe ${e.isBoss ? 'nq-foe-boss' : ''}`}>
+      {e.isBoss && (
+        <span class="nq-boss-tag">
+          <PixelIcon fine name="boss" scale={2} />
+          <RubyLabel text={t('battle.boss')} />
+        </span>
+      )}
       <div class="nq-foe-heading">
         <RubyLabel text={e.name} class="nq-foe-name" />
         <span class="nq-foe-level">
           {t('battle.lv')} {e.level}
         </span>
-        {e.isBoss && (
-          <span class="nq-boss-tag">
-            <PixelIcon fine name="boss" scale={2} />
-            <RubyLabel text={t('battle.boss')} />
-          </span>
-        )}
       </div>
       <div class="nq-foe-hp">
         <Bar
@@ -86,19 +86,20 @@ export function AllyRow({
     <div
       class={`nq-ally ${a.isHero ? 'nq-ally-hero' : ''} ${active ? 'nq-ally-active' : ''} ${down ? 'nq-ally-down' : ''}`}
     >
+      {/* 1 人 1 行：名前・Lv・（ぼうぎょ）・HP。主人公の 下にだけ 教科ゲージの 行 */}
       <div class="nq-ally-heading">
         <span class="nq-ally-cur" aria-hidden="true" />
         <PixelIcon fine name={a.isHero ? 'hero' : `el-${a.element}`} scale={2} />
         <RubyLabel text={a.name} class="nq-ally-name" />
-        <span class="nq-ally-lv">
-          {t('battle.lv')} {a.level}
-        </span>
         {a.passive && (
           <span class="nq-ally-passive">
             <PixelIcon fine name={`subj-${a.passive}`} scale={2} />
           </span>
         )}
         {a.defMult > 1 && <span class="nq-chip nq-def">{t('battle.defMark')}▲</span>}
+        <span class="nq-ally-lv">
+          {t('battle.lv')} {a.level}
+        </span>
       </div>
       <div class="nq-ally-hp">
         {down ? (

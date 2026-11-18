@@ -64,7 +64,7 @@ const debugBattle =
         zone: params.get('zone') === 'dungeon' ? ('dungeon' as const) : undefined,
         ground: GROUNDS.find((g) => g === params.get('ground')),
         forceRecruitOffer: params.get('recruit') === '1',
-        presentation: params.get('battleView') === 'side' ? ('side' as const) : undefined,
+        presentation: (['side', 'depth', 'front'] as const).find((v) => v === params.get('battleView')),
       }
     : null;
 

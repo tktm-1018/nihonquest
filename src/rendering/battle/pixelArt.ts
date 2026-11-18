@@ -281,16 +281,56 @@ function drawCrown(g: Grid, cx: number, baseY: number) {
   put(g, mid + 1, baseY - 1, NQ.red);
 }
 
-// ───────────────────────── 背景（240×135 → 4 倍、サイドビュー） ─────────────────────────
+// ───────────────────────── 背景（240×135 → 4 倍） ─────────────────────────
 /** field は くさはら。forest〜farm は フィールドの 地面（src/core/world/ground.ts）ごとの 背景 */
 export type BackdropKind = 'field' | 'dungeon' | 'boss' | 'forest' | 'mountain' | 'beach' | 'shore' | 'farm';
 export const BACKDROP_SCALE = 4;
 const W = 240;
 const H = 135;
-/** 地平線の高さと、みんなが立つ道の帯（ドット単位） */
-const HORIZON = 64;
+/** サイドビュー：地平線の高さと、みんなが立つ道の帯（ドット単位） */
+const SIDE_HORIZON = 64;
 const PATH_TOP = 82;
 const PATH_BOTTOM = 97;
+/** front：地平線を 上げて、敵（おく）と 味方（てまえ）の 足もとを どちらも 地面に する */
+const FRONT_HORIZON = 44;
+
+/** front の 立つ 場所（楕円の 地面）。x・y は 足もとの 中心、w は 横はば（ドット単位） */
+export interface BackdropPad {
+  x: number;
+  y: number;
+  w: number;
+}
+
+/** 地面の かたち：地平線と、かざりを 置かない 場所（道の 帯 または 立つ 場所） */
+interface Ground {
+  horizon: number;
+  pads: readonly BackdropPad[];
+  /** (x, y) に かざりを 置いても 立つ 場所に かからないか（m は よゆう） */
+  free(x: number, y: number, m: number): boolean;
+}
+
+function groundFor(pads: readonly BackdropPad[] | undefined): Ground {
+  if (!pads) {
+    return {
+      horizon: SIDE_HORIZON,
+      pads: [],
+      free: (_x, y, m) => y < PATH_TOP - m || y > PATH_BOTTOM + m,
+    };
+  }
+  return {
+    horizon: FRONT_HORIZON,
+    pads,
+    free: (x, y, m) =>
+      y > FRONT_HORIZON + 3 &&
+      pads.every((p) => {
+        const a = p.w / 2 + m;
+        const b = p.w * 0.13 + m;
+        const dx = (x - p.x) / a;
+        const dy = (y - p.y) / b;
+        return dx * dx + dy * dy > 1;
+      }),
+  };
+}
 
 /** 戦闘背景の上を流れる雲（背景本体と分けて Phaser でゆっくり動かす） */
 export function battleCloudArt(): HTMLCanvasElement {
@@ -417,9 +457,15 @@ const PEAKS = [
   [208, 40],
 ] as const;
 
-export function backdropArt(kind: BackdropKind): HTMLCanvasElement {
+/**
+ * 戦闘の 背景。pads を わたすと front（敵が おく・味方が てまえ）むけに、地平線を 上げ、
+ * 横いっぱいの 道の かわりに それぞれの 立つ 場所へ 楕円の 地面を しく
+ */
+export function backdropArt(kind: BackdropKind, pads?: readonly BackdropPad[]): HTMLCanvasElement {
   const p = BACKDROPS[kind];
   const rng = createRng(`backdrop:${kind}`);
+  const ground = groundFor(pads);
+  const HORIZON = ground.horizon;
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
@@ -474,7 +520,10 @@ export function backdropArt(kind: BackdropKind): HTMLCanvasElement {
     let h = 12;
     for (let x = 0; x < W; x++) {
       h = tall
-        ? Math.max(10, ...PEAKS.map(([px, ph]) => Math.round(ph - Math.abs(x - px) * 0.9)))
+        ? Math.max(
+            10,
+            ...PEAKS.map(([px, ph]) => Math.round((ph * HORIZON) / SIDE_HORIZON - Math.abs(x - px) * 0.9)),
+          )
         : Math.max(6, Math.min(20, h + rng.int(-1, 1)));
       r(x, HORIZON - h, 1, h + 2, p.far);
       r(x, HORIZON - h, 1, tall && h > 22 ? 3 : 1, p.farTop);
@@ -513,33 +562,69 @@ export function backdropArt(kind: BackdropKind): HTMLCanvasElement {
     y += hh;
     i++;
   }
-  // みんなが立つ道
-  r(0, PATH_TOP, W, PATH_BOTTOM - PATH_TOP, p.path[0]);
-  r(0, PATH_TOP, W, 1, p.path[1]);
-  r(0, PATH_BOTTOM, W, 1, p.path[1]);
-  for (let k = 0; k < 40; k++) r(rng.int(0, W), rng.int(PATH_TOP + 2, PATH_BOTTOM - 2), 2, 1, p.path[1]);
+  if (pads) {
+    // それぞれの 立つ 場所（楕円の 地面。ふちは 濃い 色）
+    for (const pad of pads) padArt(pad, p.path, r, rng);
+  } else {
+    // みんなが立つ道
+    r(0, PATH_TOP, W, PATH_BOTTOM - PATH_TOP, p.path[0]);
+    r(0, PATH_TOP, W, 1, p.path[1]);
+    r(0, PATH_BOTTOM, W, 1, p.path[1]);
+    for (let k = 0; k < 40; k++) r(rng.int(0, W), rng.int(PATH_TOP + 2, PATH_BOTTOM - 2), 2, 1, p.path[1]);
+  }
   if (kind === 'field') {
     // 草と花
     for (let k = 0; k < 50; k++) {
-      const gx = rng.int(0, W);
-      const gy = rng.chance(0.5) ? rng.int(HORIZON + 4, PATH_TOP - 2) : rng.int(PATH_BOTTOM + 2, H - 2);
+      const [gx, gy] = freeSpot(ground, rng, 2, 0);
       r(gx, gy, 1, 2, NQ.green);
       r(gx + 2, gy + 1, 1, 1, NQ.green);
       if (rng.chance(0.15)) r(gx + 1, gy - 1, 1, 1, rng.chance(0.5) ? NQ.blush : NQ.white);
     }
   }
-  groundDecor(kind, r, rng);
+  groundDecor(kind, ground, r, rng);
   return c;
 }
 
 type Rect = (x: number, y: number, w: number, h: number, col: string) => void;
 
-/** 地面ごとの かざり（道の 上と 下。道の 帯には かからない） */
-function groundDecor(kind: BackdropKind, r: Rect, rng: ReturnType<typeof createRng>): void {
-  const spot = (): [number, number] => [
-    rng.int(0, W - 6),
-    rng.chance(0.5) ? rng.int(HORIZON + 6, PATH_TOP - 4) : rng.int(PATH_BOTTOM + 4, H - 4),
-  ];
+/** 地平線より 下で、立つ 場所に かからない 場所（m は よゆう、up は 上へ のびる 高さ） */
+function freeSpot(g: Ground, rng: Rng, m: number, up: number): [number, number] {
+  let spot: [number, number] = [0, H - 2];
+  for (let i = 0; i < 24; i++) {
+    spot = [rng.int(0, W - 6), rng.int(g.horizon + 4 + up, H - 3)];
+    if (g.free(spot[0], spot[1], m) && g.free(spot[0], spot[1] - up, m)) return spot;
+  }
+  return spot;
+}
+
+/** front の 立つ 場所：ドットの 楕円。上の ふちは 明るく、下の ふちは 濃く */
+function padArt(
+  pad: BackdropPad,
+  col: readonly [string, string] | readonly string[],
+  r: Rect,
+  rng: Rng,
+): void {
+  const a = pad.w / 2;
+  const b = Math.max(3, Math.round(pad.w * 0.13));
+  for (let dy = -b; dy <= b; dy++) {
+    const hw = Math.round(a * Math.sqrt(1 - (dy * dy) / (b * b)));
+    if (hw <= 0) continue;
+    const y = pad.y + dy;
+    r(pad.x - hw, y, hw * 2, 1, col[0]!);
+    r(pad.x - hw, y, 1, 1, col[1]!);
+    r(pad.x + hw - 1, y, 1, 1, col[1]!);
+    if (dy === -b || dy === b) r(pad.x - hw, y, hw * 2, 1, col[1]!);
+  }
+  for (let k = 0; k < Math.round(pad.w / 5); k++) {
+    const dx = rng.int(-Math.round(a * 0.7), Math.round(a * 0.7));
+    const dy = rng.int(-b + 2, b - 2);
+    r(pad.x + dx, pad.y + dy, 2, 1, col[1]!);
+  }
+}
+
+/** 地面ごとの かざり（道の 帯・立つ 場所には かからない） */
+function groundDecor(kind: BackdropKind, g: Ground, r: Rect, rng: Rng): void {
+  const spot = (): [number, number] => freeSpot(g, rng, 4, 3);
   if (kind === 'forest') {
     for (let k = 0; k < 40; k++) {
       const [gx, gy] = spot();
@@ -592,21 +677,19 @@ function groundDecor(kind: BackdropKind, r: Rect, rng: ReturnType<typeof createR
   } else if (kind === 'shore') {
     // あし・ガマ（下の あしは 道に かからない 高さから 上へ のびる）
     for (let k = 0; k < 36; k++) {
-      const gx = rng.int(0, W - 2);
       const hh = rng.int(5, 9);
-      const gy = rng.chance(0.5) ? rng.int(HORIZON + 14, PATH_TOP - 2) : rng.int(PATH_BOTTOM + hh + 4, H - 1);
+      const [gx, gy] = freeSpot(g, rng, 2, hh + 3);
       r(gx, gy - hh, 1, hh, NQ.green);
       r(gx, gy - hh - 2, 1, 2, NQ.brown);
       r(gx + 1, gy - 3, 1, 1, NQ.green);
     }
   } else if (kind === 'farm') {
     // たんぼの なえの 列（奥ほど 細かい）
-    for (let y = HORIZON + 6; y < H - 1; y += y < PATH_TOP ? 3 : 4) {
-      if (y >= PATH_TOP - 2 && y <= PATH_BOTTOM + 2) continue;
-      for (let x = (y * 3) % 5; x < W; x += 5) r(x, y, 1, 2, NQ.green);
-    }
-    // かかし
-    const [sx, sy] = [200, PATH_TOP - 16];
+    for (let y = g.horizon + 6; y < H - 1; y += y < g.horizon + 18 ? 3 : 4)
+      for (let x = (y * 3) % 5; x < W; x += 5)
+        if (g.free(x, y, 2) && g.free(x, y + 1, 2)) r(x, y, 1, 2, NQ.green);
+    // かかし（front では 敵と 味方の あいだの おく）
+    const [sx, sy] = g.pads.length ? [118, g.horizon + 4] : [200, PATH_TOP - 16];
     r(sx - 3, sy, 7, 1, NQ.ochre);
     r(sx - 2, sy - 1, 5, 1, NQ.ochre);
     r(sx - 1, sy + 1, 3, 2, NQ.cream);
