@@ -11,8 +11,8 @@ import { STORY_COMPANION_IDS } from '../../src/core/progression/storyCompanion';
 const CONTENT = fileURLToPath(new URL('../../content/', import.meta.url));
 const read: FileReader = async (rel) => JSON.parse(readFileSync(CONTENT + rel, 'utf8'));
 
-/** キー（<id> / <id>.p<番号> / <id>.field / こうげき前の <id>.atk・<id>.p<番号>.atk）→ モンスター id */
-const baseId = (key: string) => key.replace(/(\.(p\d+|field))?(\.atk)?$/, '');
+/** キー（<id> / <id>.p<番号> / <id>.field / こうげき前の <id>.atk・<id>.p<番号>.atk / うしろ姿の <id>.back）→ モンスター id */
+const baseId = (key: string) => key.replace(/(\.(p\d+|field|back))?(\.atk)?$/, '');
 const entries = Object.entries(MONSTER_DESIGNS);
 const grids = new Map(entries.map(([key, design]) => [key, designGrid(design)]));
 const palette = new Set<string>(NQ48);
