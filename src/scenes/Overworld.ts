@@ -169,6 +169,8 @@ import {
 import { presentDialogue } from './overworld/dialogueFlow';
 import { currentMichiruGuideKey, type MichiruGuideKey } from './overworld/michiruGuide';
 import { createMichiruFollower, positionMichiruFollower } from './overworld/michiruFollower';
+import { PartnerFollower } from './overworld/partnerFollower';
+import { StepFeel } from './overworld/stepFeel';
 import { fieldPlaceName } from './overworld/placeName';
 import { haruDialogue } from './overworld/haruDialogue';
 import { advanceWanderingNpcs, type WanderingNpc as Npc } from './overworld/npcWander';
@@ -270,6 +272,10 @@ export class OverworldScene extends Phaser.Scene {
   private facing: Dir = 'down';
   private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
   private wasd?: Record<'W' | 'A' | 'S' | 'D', Phaser.Input.Keyboard.Key>;
+  /** おしている 間は 走る（Shift・X） */
+  private runKeys: Phaser.Input.Keyboard.Key[] = [];
+  private partner = new PartnerFollower(this, TILE);
+  private readonly stepFeel = new StepFeel();
   private touchDir: Dir | null = null;
   readonly rng: Rng = createRng(freshSeed());
   readonly speak = createSpeaker();
@@ -419,6 +425,9 @@ export class OverworldScene extends Phaser.Scene {
     const [sx, sy] = this.findSpawn(objects);
     this.createHero(sx, sy);
     this.createMichiru();
+    // 先頭の 仲間が うしろを ついて歩く（シーンを 作りなおす たびに 置きなおす）
+    this.partner = new PartnerFollower(this, TILE);
+    this.partner.place([sx, sy], this.facing, (x, y) => this.inside(x, y) && !this.isBlocked(x, y));
     this.setupObjects(objects);
     // はじめに いる 名所エリア（名前は 出さない。HUD の 場所の 窓に 出る）
     this.enterRegion(sx, sy);
@@ -586,6 +595,7 @@ export class OverworldScene extends Phaser.Scene {
     if (kb) {
       this.cursors = kb.createCursorKeys();
       this.wasd = kb.addKeys('W,A,S,D') as Record<'W' | 'A' | 'S' | 'D', Phaser.Input.Keyboard.Key>;
+      this.runKeys = [kb.addKey('SHIFT'), kb.addKey('X')];
       for (const ev of ['keydown-SPACE', 'keydown-ENTER', 'keydown-Z']) kb.on(ev, () => this.interact());
       kb.on('keydown-M', () => this.openAreaMap());
       kb.on('keydown-I', () => this.openMenu());
@@ -621,6 +631,7 @@ export class OverworldScene extends Phaser.Scene {
     this.player.setDepth(this.player.y);
     this.shadow.setPosition(this.player.x, this.player.y + 6);
     if (this.michiru?.active) positionMichiruFollower(this.michiru, this.player, this.facing, time);
+    this.partner.sync(this.gs(), this.content());
     if (this.inBattle || this.busy || this.moving) return;
     this.updateWanderingNpcs(time);
     const dir = this.readDir();
@@ -630,11 +641,14 @@ export class OverworldScene extends Phaser.Scene {
       this.waitRelease = false;
       this.game.canvas.dataset.inputReady = 'true';
     }
+    // ちょんと おすと 向きだけ かえる（おしつづけると 歩く）
+    const walk = this.stepFeel.shouldWalk(dir, this.facing, time);
     if (!dir) {
       this.standStill();
       return;
     }
     this.face(dir);
+    if (!walk) return;
     const decision = movementDecision({
       from: this.playerTile(),
       delta: DELTA[dir],
@@ -673,7 +687,8 @@ export class OverworldScene extends Phaser.Scene {
         void this.confrontLastBoss();
         return;
       case 'blocked':
-        this.standStill();
+        // ぶつかったら その場で 足ぶみ
+        this.player.anims.play(`${this.heroTex}:${this.facing}`, true);
         if (this.time.now - this.lastBump > 300) {
           this.lastBump = this.time.now;
           playSfx('bump');
@@ -686,12 +701,15 @@ export class OverworldScene extends Phaser.Scene {
 
   private walkTo(nx: number, ny: number): void {
     this.moving = true;
+    const ms = this.runKeys.some((k) => k.isDown) ? STEP_MS / 2 : STEP_MS;
     this.player.anims.play(`${this.heroTex}:${this.facing}`, true);
+    this.player.anims.timeScale = STEP_MS / ms;
+    this.partner.follow(this.playerTile(), ms);
     this.tweens.add({
       targets: this.player,
       x: nx * TILE + 8,
       y: ny * TILE + 8,
-      duration: STEP_MS,
+      duration: ms,
       onComplete: () => {
         this.moving = false;
         this.stepCount++;
