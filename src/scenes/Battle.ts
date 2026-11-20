@@ -50,7 +50,7 @@ import { asFine, FINE } from '../rendering/battle/fine';
 import { heroStrike } from './battle/heroStrike';
 import { Motions, type EnemyStyle, type MotifFx } from './battle/motions';
 import { backdropPads } from './battle/platforms';
-import { backTexture } from './battle/backTexture';
+import { backTexture, faceFront } from './battle/backTexture';
 import { toCanvas } from '../rendering/grid';
 import { motifArtGrid } from '../rendering/motifArt';
 import { skillLook } from '../rendering/battle/skillLook';
@@ -1593,13 +1593,13 @@ export class BattleScene extends Phaser.Scene {
     if (fade?.isRunning && !fade.direction) cam.resetFX();
   };
 
-  /** 勝ったとき：主人公はばんざいして 2 回ジャンプ、相棒もぴょんぴょん */
+  /** 勝ったとき：主人公はばんざいして 2 回ジャンプ、相棒も こちらを ふりむいて ぴょんぴょん */
   private async victoryPose(): Promise<void> {
     const hero = this.heroSprite;
     this.stopBob(hero, this.layout.hero.y);
     hero.setFrame(BATTLE_POSE.victory);
     const pal = this.palSprite?.active && this.palSprite.alpha > 0.5 ? this.palSprite : null;
-    if (pal) this.stopBob(pal, this.layout.partner.y);
+    if (pal) this.stopBob(faceFront(pal), this.layout.partner.y);
     for (let i = 0; i < 2; i++)
       await Promise.all([
         this.tweenP({
