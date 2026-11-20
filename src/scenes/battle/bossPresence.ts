@@ -28,11 +28,11 @@ export function enemySizeFor(
 
 /**
  * 敵の 絵の 倍率（もとの 1 ドットが 何 px か）。size は 絵の じっさいの 高さ（ドット）。
- * ボスは 上限の 高さまで 大きく して、ふつうの 敵より かならず ひとまわり 以上 大きく する
+ * ボスは 絵の 大きさに かかわらず boss.maxHeight の 高さに そろえる（ふつうの 敵より 小さくは しない）
  */
 export function enemyScaleFor(layout: BattleLayout, size: number, isBoss: boolean): number {
   const base = Math.max(2, S + layout.enemy.scaleStep);
-  return isBoss ? Math.max(base + 1, Math.floor(layout.boss.maxHeight / size)) : base;
+  return isBoss ? Math.max(base, layout.boss.maxHeight / size) : base;
 }
 
 const CALM = { tint: 0x5b1d8a, alpha: [0.45, 0.75], grow: [1.07, 1.12] } as const;
