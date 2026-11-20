@@ -146,6 +146,7 @@ export function monsterArt(id: string, o: MonsterArtOptions): HTMLCanvasElement 
   drawFeature(g, o.element, pal, cx, cy, rx, ry, rng);
 
   if (!o.back) drawFace(g, o.element, cx, cy, rx, ry, S, rng);
+  else drawTail(g, pal, cx, cy, ry);
   if (o.boss) drawCrown(g, cx, Math.round(cy - ry) - 1);
 
   outline(g, OUTLINE);
@@ -263,6 +264,23 @@ function drawFace(g: Grid, el: Element, cx: number, cy: number, rx: number, ry: 
     put(g, mid - 1, my + 1, NQ.white);
     put(g, mid + 2, my + 1, NQ.white);
   }
+}
+
+/** 後ろ姿の しるし：せなかの まんなかの すじと、こしの まるい しっぽ（下は かげ） */
+function drawTail(g: Grid, pal: Palette, cx: number, cy: number, ry: number) {
+  const mid = Math.floor(cx);
+  const y = Math.round(cy + ry * 0.45);
+  for (let sy = Math.round(cy - ry * 0.55); sy < y - 1; sy++) {
+    put(g, mid, sy, pal.dark);
+    put(g, mid + 1, sy, pal.dark);
+  }
+  const rows = ['.oooo.', 'o####o', 'o####o', 'o%%%%o', '.oooo.'];
+  rows.forEach((row, dy) =>
+    [...row].forEach((ch, i) => {
+      if (ch === '.') return;
+      put(g, mid - 2 + i, y + dy, ch === 'o' ? OUTLINE : ch === '%' ? pal.dark : pal.light);
+    }),
+  );
 }
 
 function drawCrown(g: Grid, cx: number, baseY: number) {

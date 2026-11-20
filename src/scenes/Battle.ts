@@ -347,7 +347,7 @@ export class BattleScene extends Phaser.Scene {
     // front では 主人公と おなじく 敵の ほう（おく）を むいた うしろ姿
     const key = this.monsterTexture(def, def.element, MONSTER_SIZE.normal, false);
     const sp = this.add
-      .image(x, this.layout.partner.y, this.front ? backTexture(this.textures, key, def.id) : key)
+      .image(x, this.layout.partner.y, this.front ? backTexture(this.textures, key, def) : key)
       .setOrigin(0.5, 1)
       .setScale(this.layout.partner.scale / FINE)
       // 絵は 右向きで 描いて いるので、右に 立つ 仲間は 左右を 反転して 敵の ほうを むかせる

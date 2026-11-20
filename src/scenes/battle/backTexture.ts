@@ -1,22 +1,27 @@
 import type Phaser from 'phaser';
+import type { Monster } from '../../core/content/schemas';
 import { asFine } from '../../rendering/battle/fine';
-import { designedMonsterArt } from '../../rendering/monsters';
+import { MONSTER_SIZE, monsterArt } from '../../rendering/battle/pixelArt';
+import { designedMonsterArt, hasMonsterDesign } from '../../rendering/monsters';
 import { monsterBackArt } from '../../rendering/monsters/backView';
 
 /**
  * モンスターの うしろ姿の テクスチャ（`<key>.back`）を 作って key を かえす。
  * front の 戦闘で 主人公の となりに 立つ 仲間が、主人公と おなじく 敵の ほう（おく）を むく。
- * 手で 描いた うしろ姿（`<id>.back`）が あれば それを、なければ 正面の 絵から 自動で 作る
+ *  - 手で 描いた うしろ姿（`<id>.back`）が あれば それ
+ *  - 手描きの 正面しか ない ときは、正面の 絵から 自動で 作る（backView.ts）
+ *  - 手描きの 絵が ない（自動生成の）モンスターは、生成の ときに 顔の かわりに しっぽを 描く
  */
-export function backTexture(textures: Phaser.Textures.TextureManager, key: string, id: string): string {
+export function backTexture(textures: Phaser.Textures.TextureManager, key: string, def: Monster): string {
   const back = `${key}.back`;
-  if (!textures.exists(back)) {
-    const drawn = designedMonsterArt(id, '.back');
-    textures.addCanvas(
-      back,
-      drawn ? asFine(drawn) : monsterBackArt(textures.get(key).getSourceImage() as HTMLCanvasElement),
-    );
-  }
+  if (textures.exists(back)) return back;
+  const drawn = designedMonsterArt(def.id, '.back');
+  const art = drawn
+    ? asFine(drawn)
+    : hasMonsterDesign(def.id)
+      ? monsterBackArt(textures.get(key).getSourceImage() as HTMLCanvasElement)
+      : asFine(monsterArt(def.id, { element: def.element, size: MONSTER_SIZE.normal, back: true }));
+  textures.addCanvas(back, art);
   return back;
 }
 
