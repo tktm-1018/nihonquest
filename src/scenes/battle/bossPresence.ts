@@ -26,10 +26,13 @@ export function enemySizeFor(
   return size === MONSTER_SIZE.normal && isBoss ? MONSTER_SIZE.boss : size;
 }
 
-/** 敵の 絵の 倍率（もとの 1 ドットが 何 px か）。ボスは 上限の 高さまで 大きく */
+/**
+ * 敵の 絵の 倍率（もとの 1 ドットが 何 px か）。size は 絵の じっさいの 高さ（ドット）。
+ * ボスは 上限の 高さまで 大きく して、ふつうの 敵より かならず ひとまわり 以上 大きく する
+ */
 export function enemyScaleFor(layout: BattleLayout, size: number, isBoss: boolean): number {
   const base = Math.max(2, S + layout.enemy.scaleStep);
-  return isBoss ? Math.max(base, Math.floor(layout.boss.maxHeight / size)) : base;
+  return isBoss ? Math.max(base + 1, Math.floor(layout.boss.maxHeight / size)) : base;
 }
 
 const CALM = { tint: 0x5b1d8a, alpha: [0.45, 0.75], grow: [1.07, 1.12] } as const;

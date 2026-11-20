@@ -39,7 +39,8 @@ const FRONT_LAYOUT: BattleLayout = {
   enemy: { x: 690, y: 268, scaleStep: 0 },
   hero: { x: 200, y: 446, scale: BATTLE_SCALE },
   partner: { x: 340, y: 440, scale: BATTLE_SCALE },
-  boss: { x: 690, y: 272, maxHeight: 230 },
+  // ボスは 少し 手前に 立って、空まで とどく 大きさ（ふつうの 敵の 2 倍 ほど）
+  boss: { x: 690, y: 300, maxHeight: 288 },
 };
 
 /** isBoss の ときは 敵の 立つ 場所を boss の 場所に する */

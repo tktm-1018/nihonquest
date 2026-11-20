@@ -278,9 +278,10 @@ export class BattleScene extends Phaser.Scene {
           ? ground
           : 'field';
     const def = this.enemyDef;
-    this.enemySize = enemySizeFor(def, this.content, isBoss);
+    const size = enemySizeFor(def, this.content, isBoss);
+    const eKey = this.monsterTexture(def, this.state.enemy.element, size, isBoss);
+    this.enemySize = this.textures.get(eKey).getSourceImage().height / FINE; // じっさいの 絵の ドット数
     this.enemyScale = enemyScaleFor(this.layout, this.enemySize, isBoss);
-    // front は 立つ 場所を 背景に しく（敵が おく・味方が てまえ）
     const pads = this.front ? backdropPads(this.layout, this.enemySize * this.enemyScale) : undefined;
     const bgKey = `bt.bg.${kind}${pads ? `.front.${pads[0]!.w}` : ''}`;
     addFineImage(this.textures, bgKey, () => backdropArt(kind, pads));
@@ -293,7 +294,6 @@ export class BattleScene extends Phaser.Scene {
 
     // 主人公が 切りかかる ときに 立つ 場所（大きな ボスほど 手前で 止まる）
     this.enemyFront = this.layout.enemy.x + Math.max(0, (this.enemySize * this.enemyScale) / 2 - 64);
-    const eKey = this.monsterTexture(def, this.state.enemy.element, this.enemySize, isBoss);
     this.enemySprite = this.add
       .image(this.layout.enemy.x, this.layout.enemy.y, eKey)
       .setOrigin(0.5, 1)
