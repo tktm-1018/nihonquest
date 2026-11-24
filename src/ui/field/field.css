@@ -17,35 +17,43 @@
   z-index: 10;
 }
 
-/* タッチ端末の横画面だけに出す、景色を隠しにくい低濃度の移動スティック。 */
+/* タッチ端末の横画面だけに出す移動スティック。屋外マップの明るい地面でも見失わないよう、
+ * 景色を透かしつつも十字キーの輪郭と方向を十分に強くする。 */
 .nq-virtual-stick {
   position: fixed;
   left: max(24px, env(safe-area-inset-left));
   bottom: max(24px, env(safe-area-inset-bottom));
   z-index: 12;
   display: none;
-  width: 144px;
-  height: 144px;
-  border: 4px solid rgba(255, 255, 255, 0.16);
+  width: 152px;
+  height: 152px;
+  border: 4px solid rgba(255, 255, 255, 0.82);
   border-radius: 50%;
-  background: rgba(10, 11, 26, 0.08);
-  opacity: 0.42;
+  background: rgba(7, 12, 30, 0.56);
+  box-shadow:
+    0 0 0 4px rgba(5, 7, 18, 0.68),
+    0 4px 12px rgba(0, 0, 0, 0.48);
+  opacity: 0.94;
   pointer-events: auto;
   touch-action: none;
 }
 .nq-virtual-stick.is-active {
-  opacity: 0.68;
+  background: rgba(11, 38, 78, 0.78);
+  border-color: var(--nq-yellow);
+  opacity: 1;
 }
 .nq-virtual-stick-cross,
 .nq-virtual-stick-cross::before {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 88px;
-  height: 4px;
+  width: 94px;
+  height: 8px;
   content: '';
   transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 0 2px rgba(5, 7, 18, 0.72);
 }
 .nq-virtual-stick-cross::before {
   transform: translate(-50%, -50%) rotate(90deg);
@@ -54,11 +62,40 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 56px;
-  height: 56px;
-  border: 4px solid rgba(255, 255, 255, 0.24);
+  width: 58px;
+  height: 58px;
+  border: 4px solid var(--nq-white);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(37, 126, 221, 0.9);
+  box-shadow: 0 0 0 3px rgba(5, 7, 18, 0.72);
+}
+.nq-virtual-stick-arrow {
+  position: absolute;
+  z-index: 1;
+  color: var(--nq-white);
+  font-size: 24px;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #050712;
+}
+.nq-virtual-stick-arrow-up {
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+}
+.nq-virtual-stick-arrow-right {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.nq-virtual-stick-arrow-down {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nq-virtual-stick-arrow-left {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 @media (hover: none) and (pointer: coarse) and (orientation: landscape) {
   .nq-virtual-stick {

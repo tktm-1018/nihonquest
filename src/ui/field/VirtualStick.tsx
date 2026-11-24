@@ -67,6 +67,10 @@ export function VirtualStick({
       onLostPointerCapture={release}
     >
       <span class="nq-virtual-stick-cross" aria-hidden="true" />
+      <span class="nq-virtual-stick-arrow nq-virtual-stick-arrow-up" aria-hidden="true">▲</span>
+      <span class="nq-virtual-stick-arrow nq-virtual-stick-arrow-right" aria-hidden="true">▶</span>
+      <span class="nq-virtual-stick-arrow nq-virtual-stick-arrow-down" aria-hidden="true">▼</span>
+      <span class="nq-virtual-stick-arrow nq-virtual-stick-arrow-left" aria-hidden="true">◀</span>
       <span
         class="nq-virtual-stick-knob"
         aria-hidden="true"
