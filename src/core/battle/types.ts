@@ -63,6 +63,8 @@ export type SubjectGauges = Record<Subject, number>;
 /** プレイヤー（主人公）の バトル中の 状態。hp・stats は ally.hero */
 export interface PlayerState {
   subjectGauges: SubjectGauges;
+  /** 使用後の待ちターン。key = "actorId:skillId" */
+  skillCooldowns: Record<string, number>;
   /** いまの 連続成功数（Streak） */
   comboCount: number;
   /** この バトルで いちばん 長かった 連続成功数（けいけんち・おかねの ボーナス） */

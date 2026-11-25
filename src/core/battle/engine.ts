@@ -90,7 +90,7 @@ export function createBattle(
     turn: 1,
     ally,
     enemy,
-    player: { subjectGauges: emptyGauges(), comboCount: 0, maxCombo: 0 },
+    player: { subjectGauges: emptyGauges(), skillCooldowns: {}, comboCount: 0, maxCombo: 0 },
     companion: makeCompanion(ally.monsters[ally.activeMonsterIndex], def),
     rngState: undefined,
     seed: opts.seed,
@@ -124,6 +124,14 @@ function decayBuffs(c: Combatant): void {
       b.turns -= 1;
       if (b.turns <= 0) delete c.buffs[key];
     }
+  }
+}
+
+/** 新しく使った技も、このターンの終了で待ちターンを1つ消費する。2ターン待ちなら次の2ターンは使えない。 */
+function advanceSkillCooldowns(s: BattleState): void {
+  for (const [key, turns] of Object.entries(s.player.skillCooldowns)) {
+    if (turns <= 1) delete s.player.skillCooldowns[key];
+    else s.player.skillCooldowns[key] = turns - 1;
   }
 }
 
@@ -181,6 +189,8 @@ function useSkill(
   const actor = actorId === s.ally.hero.id ? s.ally.hero : s.ally.monsters.find((m) => m.id === actorId)!;
   const p = s.player;
   const st = def.settings;
+
+  if (sk.cooldownTurns) s.player.skillCooldowns[`${actorId}:${sk.id}`] = sk.cooldownTurns + 1;
 
   const gaugeCost = evaluation.costs.find((cost) => cost.kind === 'gauge');
   if (gaugeCost?.kind === 'gauge') {
@@ -446,6 +456,7 @@ export function act(
   }
   if (s.outcome === 'ongoing') {
     for (const c of [s.ally.hero, ...s.ally.monsters, s.enemy]) decayBuffs(c);
+    advanceSkillCooldowns(s);
     s.turn += 1;
   }
   return done(s, rng, ev, evaluation);

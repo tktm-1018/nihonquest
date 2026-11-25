@@ -86,6 +86,8 @@ export interface SkillOption {
   cost: number;
   /** いまの その教科の ゲージ */
   have: number;
+  /** 使えるまでの残りターン */
+  cooldownTurns: number;
   effect: 'damage' | 'heal' | 'buff' | 'debuff' | 'scan' | 'status';
   flavor?: string;
   disabled: boolean;

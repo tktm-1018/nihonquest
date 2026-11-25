@@ -31,6 +31,7 @@ export type BattleCommandBlockReason =
   | 'actor-unavailable'
   | 'skill-unavailable'
   | 'question-unavailable'
+  | 'skill-cooling-down'
   | 'insufficient-gauge'
   | 'unknown-item'
   | 'item-not-owned'
@@ -97,6 +98,14 @@ export function skillTarget(skill: Pick<Skill, 'targetType' | 'effect'>): Target
 
 export function canAfford(state: BattleState, skill: Pick<Skill, 'subject' | 'costGauge'>): boolean {
   return state.player.subjectGauges[skill.subject] >= skill.costGauge;
+}
+
+export function skillCooldownKey(actorId: string, skillId: string): string {
+  return `${actorId}:${skillId}`;
+}
+
+export function skillCooldownRemaining(state: BattleState, actorId: string, skillId: string): number {
+  return state.player.skillCooldowns[skillCooldownKey(actorId, skillId)] ?? 0;
 }
 
 export function frontAlly(state: BattleState): Combatant {
@@ -234,6 +243,7 @@ export function evaluateBattleCommand(
         (candidate) => candidate.skill.id === ref.skillId && candidate.actorId === actorId,
       );
       if (!entry) return denied('skill-unavailable');
+      if (skillCooldownRemaining(state, actorId, skill.id) > 0) return denied('skill-cooling-down');
       if (context.questionSkillKeys && !context.questionSkillKeys.has(`${actorId}:${ref.skillId}`)) {
         return denied('question-unavailable');
       }

@@ -103,6 +103,23 @@
     "attackClass": "science"
   },
   {
+    "id": "sk-hiragana-yasuragi",
+    "name": "ことばのやすらぎ",
+    "subject": "kokugo",
+    "gradeRange": [1, 1],
+    "unitHint": ["kokugo.g1.hiragana"],
+    "power": 0,
+    "element": "hikari",
+    "mp": 3,
+    "gauge": 1,
+    "costGauge": 0,
+    "cooldownTurns": 2,
+    "targetType": "self",
+    "effect": "heal",
+    "flavor": "ひらがなを つないで、じぶんを いたわる。つかった あとは 2ターン まつ",
+    "attackClass": "humanities"
+  },
+  {
     "id": "sk-kana-barrier",
     "name": "かなバリア",
     "subject": "kokugo",

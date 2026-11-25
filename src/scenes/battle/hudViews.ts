@@ -1,6 +1,7 @@
 import { battleSkills, frontAlly, makeCompanion, SUBJECTS, type BattleDeps } from '../../core/battle/engine';
 import {
   evaluateBattleCommand,
+  skillCooldownRemaining,
   type BattleCommandEvaluationContext,
 } from '../../core/battle/commandEvaluation';
 import type { BattleState, Combatant } from '../../core/battle/types';
@@ -197,11 +198,17 @@ export function buildSkillOptions(input: {
       stars: skill.gauge,
       cost: skill.costGauge,
       have: state.player.subjectGauges[skill.subject],
+      cooldownTurns: skillCooldownRemaining(state, actorId, skill.id),
       effect: skill.effect,
       flavor: skill.flavor,
       disabled: !evaluation.allowed,
       ...(evaluation.reason ? { blockReason: evaluation.reason } : {}),
-      reason: evaluation.reason === 'question-unavailable' ? input.preparingLabel : undefined,
+      reason:
+        evaluation.reason === 'question-unavailable'
+          ? input.preparingLabel
+          : evaluation.reason === 'skill-cooling-down'
+            ? t('battle.cooldown', { n: skillCooldownRemaining(state, actorId, skill.id) })
+            : undefined,
     };
   });
 }

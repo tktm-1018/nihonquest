@@ -122,6 +122,7 @@ export const battleStateResumeSchema = z.object({
   enemy: enemySchema,
   player: z.object({
     subjectGauges: subjectGaugesSchema,
+    skillCooldowns: z.record(z.string(), safeNonnegativeIntegerSchema).default({}),
     comboCount: safeNonnegativeIntegerSchema,
     maxCombo: safeNonnegativeIntegerSchema,
   }),

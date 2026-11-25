@@ -274,6 +274,7 @@
     "buffHint": "こたえると ぼうぎょが あがる",
     "debuffHint": "こたえると あいての ぼうぎょが さがる",
     "preparing": "じゅんびちゅう",
+    "cooldown": "あと {n}ターン",
     "noItems": "どうぐが ないよ",
     "noPartner": "いれかえられる なかまが いないよ",
     "fainted": "ダウン",

@@ -616,6 +616,28 @@ describe('必殺技の 効果', () => {
     expect(healed && healed.t === 'heal' ? healed.amount : 0).toBe(1);
   });
 
+  it('ひらがなの回復技は使用後の2ターンは使えず、3ターン目のあとに再使用できる', async () => {
+    const { state } = await setup({ skills: ['sk-hiragana-yasuragi'] });
+    const hurt: BattleState = {
+      ...tough(state),
+      ally: { ...tough(state).ally, hero: { ...tough(state).ally.hero, hp: 4000 } },
+    };
+
+    const first = act(hurt, { kind: 'skill', skillId: 'sk-hiragana-yasuragi', result: R(1) }, D);
+    expect(first.events.some((event) => event.t === 'heal' && event.side === 'ally')).toBe(true);
+    expect(first.state.player.skillCooldowns['hero:sk-hiragana-yasuragi']).toBe(2);
+
+    const blocked = act(first.state, { kind: 'skill', skillId: 'sk-hiragana-yasuragi', result: R(1) }, D);
+    expect(blocked.evaluation).toMatchObject({ allowed: false, reason: 'skill-cooling-down' });
+    expect(blocked.state.turn).toBe(first.state.turn);
+
+    const ready = turns(first.state, 2);
+    expect(ready.player.skillCooldowns['hero:sk-hiragana-yasuragi']).toBeUndefined();
+    expect(act(ready, { kind: 'skill', skillId: 'sk-hiragana-yasuragi', result: R(1) }, D).evaluation.allowed).toBe(
+      true,
+    );
+  });
+
   it('まもり（party）：主人公と オトモの ぼうぎょが 上がり、settings.turns.buffTurns ターンで きれる', async () => {
     const { state } = await setup({ withMonster: true });
     const r = act(tough(state), { kind: 'skill', skillId: 'sk-kanji-barrier', result: R(1) }, D);
