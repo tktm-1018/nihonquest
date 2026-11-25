@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import { loadContent, bundledFetchReader, fetchReader, type ContentIndex } from '../core/content/loader';
-import { PIXEL_FONT_NAME } from '../ui/fonts';
+import { FINE_FONT_NAME, PIXEL_FONT_NAME } from '../ui/fonts';
 import type { GameState } from '../core/state/schema';
 import { setDictionary, type I18nDict } from '../ui/i18n';
 import { kanjiGradeTable, setKanjiLevel, type KanjiGradeTable } from '../ui/ruby';
 import { setAssetCatalog, type AssetCatalog } from '../rendering/assetCatalog';
 
-/** ドットフォント（PixelMplus12）を先に読んでおく。Canvas の文字が代替フォントで描かれないように */
+/** ドットフォント（PixelMplus12・バトルの DotGothic16）を先に読んでおく。Canvas の文字が代替フォントで描かれないように */
 async function waitForFont(): Promise<void> {
   const fonts = document.fonts;
   if (!fonts) return;
@@ -14,9 +14,10 @@ async function waitForFont(): Promise<void> {
   const timeout = new Promise<void>((resolve) => {
     timeoutId = setTimeout(resolve, 3000);
   });
-  const load = Promise.all(
-    ['12px', '24px'].map((size) => fonts.load(`${size} "${PIXEL_FONT_NAME}"`, 'ニホンクエスト あア漢')),
-  );
+  const load = Promise.all([
+    ...['12px', '24px'].map((size) => fonts.load(`${size} "${PIXEL_FONT_NAME}"`, 'ニホンクエスト あア漢')),
+    fonts.load(`24px "${FINE_FONT_NAME}"`, 'ニホンクエスト あア漢'),
+  ]);
   try {
     await Promise.race([load, timeout]);
   } catch {

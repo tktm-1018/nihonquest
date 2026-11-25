@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { t } from '../i18n';
 import { displayText } from '../ruby';
 import type { RegionGrid } from './worldMapModel';
 import { areaMapTerrainColor } from './areaMapTerrain';
@@ -16,6 +17,8 @@ export interface RegionMiniView extends RegionGrid {
     width: number;
     land: [number, number, number, number];
   } | null;
+  /** 右上に 方角（▲ きた）を 出す */
+  compass?: boolean;
 }
 
 const MINI = 2;
@@ -114,6 +117,12 @@ export function RegionMiniMap({
         )}
       </div>
       {region.hero && <span class="nq-mini-hero" style={{ left: viewWidth / 2, top: viewHeight / 2 }} />}
+      {region.compass && (
+        <span class="nq-mini-north" aria-hidden="true">
+          <span>▲</span>
+          {t('field.compassNorth')}
+        </span>
+      )}
       <span class="nq-mini-open" aria-hidden="true">
         {displayText(displayLabel)}
       </span>

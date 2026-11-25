@@ -5,8 +5,10 @@ import { expect, test, type Page } from '@playwright/test';
  * 1 ターンに 主人公 → オトモ → てき が 1 回ずつ 動く。
  * 問題の中身には なるべく依存しない。現行の「わざ」は問題に回答して発動する。
  */
-async function start(page: Page, lv: number, forceRecruit = false): Promise<void> {
-  await page.goto(`/?debug=battle&enemy=aomori-ringoron&lv=${lv}${forceRecruit ? '&recruit=1' : ''}`);
+async function start(page: Page, lv: number, forceRecruit = false, view?: 'side'): Promise<void> {
+  await page.goto(
+    `/?debug=battle&enemy=aomori-ringoron&lv=${lv}${forceRecruit ? '&recruit=1' : ''}${view ? `&battleView=${view}` : ''}`,
+  );
   // 登場メッセージ（タップ待ち）→ コマンド。1 文字ずつ出し終わって ▼ が出てからタップする
   await expect(page.locator('.nq-box-text')).toContainText('リンゴロン', { timeout: 60_000 });
   await expect(page.locator('.nq-bottom-command-slot')).toHaveCount(0);
@@ -213,9 +215,11 @@ test('バトル：ターン表示を出さず、こちらが動くと次のコ�
   await expect(command).toBeVisible();
 });
 
-test('バトル：コマンドと主人公情報はポケモン風の独立したコンパクトな枠に収まる', async ({ page }) => {
+test('バトル（サイドビュー）：窓は下の帯にまとまり、左にてき・右になかま、コマンドはてきの窓の右はしに重なる', async ({
+  page,
+}) => {
   test.setTimeout(60_000);
-  await start(page, 8);
+  await start(page, 8, false, 'side');
   const [rail, foe, commandSlot, gauge, party, heroHp, heroGauge] = await Promise.all([
     page.locator('.nq-bottom-rail').boundingBox(),
     page.locator('.nq-panel').boundingBox(),
@@ -234,20 +238,24 @@ test('バトル：コマンドと主人公情報はポケモン風の独立し�
   expect(heroHp).not.toBeNull();
   expect(heroGauge).not.toBeNull();
   await expect(page.locator('.nq-bottom-rail')).toBeVisible();
-  await expect(page.locator('.nq-bottom-rail .nq-win')).toHaveCount(0);
-  await expect(page.locator('.nq-box')).toHaveCount(0);
+  // 下の 帯の 窓は てきの 窓（.nq-win）だけ。コマンド・なかまは 帯の 専用の 枠
+  await expect(page.locator('.nq-bottom-rail .nq-win')).toHaveCount(1);
+  await expect(page.locator('.nq-box')).toBeHidden();
   await expect(page.locator('.nq-foe-row')).toHaveCount(0);
   await expect(page.locator('.nq-bar-hp .nq-bar-value')).toHaveCount(2);
-  expect(foe!.width).toBeLessThanOrEqual(225);
-  expect(commandSlot!.width).toBeLessThanOrEqual(190);
-  expect(party!.width).toBeLessThanOrEqual(260);
-  expect(commandSlot!.x).toBeCloseTo(rail!.x, 0);
+  expect(commandSlot!.width).toBeLessThanOrEqual(210);
+  expect(party!.width).toBeLessThanOrEqual(384);
+  // 左：てき（帯の 左はしから）、その 右はしに コマンド、右：なかま（帯の 右はしまで）
+  expect(foe!.x).toBeCloseTo(rail!.x, 0);
+  expect(commandSlot!.x).toBeGreaterThan(foe!.x);
+  expect(commandSlot!.x + commandSlot!.width).toBeCloseTo(foe!.x + foe!.width, 0);
   expect(party!.x + party!.width).toBeCloseTo(rail!.x + rail!.width, 0);
   expect(party!.x).toBeGreaterThan(commandSlot!.x + commandSlot!.width);
+  expect(party!.y).toBeCloseTo(foe!.y, 0);
   expect(gauge!.y).toBeGreaterThan(heroHp!.y);
-  expect(gauge!.x).toBeGreaterThanOrEqual(heroHp!.x);
-  expect(gauge!.width).toBeCloseTo(heroHp!.width, 0);
-  expect(heroGauge!.width).toBeLessThan(heroHp!.width);
+  // 教科ゲージは 主人公の 行の 下に 横いっぱい（2 本 ならび）
+  expect(gauge!.width).toBeGreaterThan(heroHp!.width);
+  expect(heroGauge!.width).toBeLessThan(gauge!.width);
   await expect(page.locator('.nq-ally-hero .nq-sg-value')).toHaveText(['0/100', '0/100']);
 
   // 技一覧を開いても、右下の主人公枠は動かず、舞台を覆い過ぎない高さに保つ。
@@ -281,6 +289,40 @@ test('バトル：コマンドと主人公情報はポケモン風の独立し�
   await page.locator('.nq-menu-dismiss').click({ position: { x: 940, y: 24 } });
   await expect(page.locator('.nq-menu-skill')).toHaveCount(0);
   await expect(page.locator('.nq-cmd[data-cmd="skill"]')).toBeVisible();
+});
+
+test('バトル（標準・モンスターRPGふう）：てきは左上、なかまは右なか、下にメッセージと2×2のコマンド', async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await start(page, 8);
+  await expect(page.locator('.nq-battle-root-front')).toHaveCount(1);
+  const [foe, party, commandSlot, box, commands] = await Promise.all([
+    page.locator('.nq-foe').boundingBox(),
+    page.locator('.nq-party').boundingBox(),
+    page.locator('.nq-bottom-command-slot').boundingBox(),
+    page.locator('.nq-box').boundingBox(),
+    page.locator('.nq-cmdwin .nq-cmd').evaluateAll((list) =>
+      list.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { x: Math.round(r.x), y: Math.round(r.y) };
+      }),
+    ),
+  ]);
+  // てきの 窓は 左上、なかまの 窓は 右で メッセージ窓の 上
+  expect(foe!.y).toBeLessThan(party!.y);
+  expect(foe!.x).toBeLessThan(party!.x);
+  expect(party!.y + party!.height).toBeLessThanOrEqual(box!.y);
+  // 「どうする？」の 右に コマンド（2 × 2）。下の 段に そろう
+  await expect(page.locator('.nq-box')).toBeVisible();
+  expect(commandSlot!.x).toBeGreaterThanOrEqual(box!.x + box!.width);
+  expect(Math.abs(commandSlot!.y + commandSlot!.height - (box!.y + box!.height))).toBeLessThanOrEqual(1);
+  expect(new Set(commands.map((c) => c.y)).size).toBe(2);
+  expect(new Set(commands.map((c) => c.x)).size).toBe(2);
+  // わざの 窓は 下 いっぱい、その あいだ なかまの 窓は かくれる
+  await page.locator('.nq-cmd[data-cmd="skill"]').click();
+  await expect(page.locator('.nq-menu-skill')).toBeVisible();
+  await expect(page.locator('.nq-party')).toBeHidden();
 });
 
 test('バトル：矢印で選んだコマンドへ実フォーカスが追従する', async ({ page }) => {

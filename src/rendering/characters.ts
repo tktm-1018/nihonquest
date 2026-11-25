@@ -493,6 +493,31 @@ export function battleFrames(l: Look): Grid[] {
   return frames;
 }
 
+/**
+ * 主人公の 後ろすがたの バトルシート（モンスター RPG ふうの 戦闘：てまえから 敵の ほうを むく）。
+ * コマの ならびは battleSheet と 同じ（BATTLE_POSE）。こうげき・やられは 後ろすがたの まま、かちは ふりむく
+ */
+export function battleBackSheet(l: Look): HTMLCanvasElement {
+  const frames = battleBackFrames(l);
+  return sheetCanvas(frames, frames.length);
+}
+
+export function battleBackFrames(l: Look): Grid[] {
+  const colors = colorsOf(l);
+  const back = tops(l).up;
+  const size = HERO_FRAME;
+  const f = (top: Rows, lg: Rows, view: CostumeView, pose: CostumePose) =>
+    frame(top, lg, l, colors, { size, view, pose });
+  return [
+    f(back, FRONT_LEGS.idle, 'back', 'walk'),
+    f(back, FRONT_LEGS.stepA, 'back', 'walk'),
+    f(back, FRONT_LEGS.stepB, 'back', 'walk'),
+    f(back, FRONT_LEGS.stepA, 'back', 'walk'),
+    f(back, FRONT_LEGS.idle, 'back', 'walk'),
+    f(capped(POSE_VICTORY, l, false), FRONT_LEGS.idle, 'front', 'victory'),
+  ];
+}
+
 /** 主人公の コマの 大きさ と、足もと（タイルの まん中に くる 高さ）の origin */
 export const HERO_W = HERO_FRAME.w;
 export const HERO_H = HERO_FRAME.h;
