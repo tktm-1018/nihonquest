@@ -1,0 +1,20 @@
+- generic [ref=f2e2]:
+  - generic:
+    - generic:
+      - generic:
+        - button "青森県の ちずを ひらく" [ref=f2e101] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f2e106]: 青森県
+        - generic:
+          - button "かいはつしゃ" [ref=f2e107] [cursor=pointer]
+          - button "メニュー" [ref=f2e109] [cursor=pointer]
+    - dialog "ものがたりの シーン" [active] [ref=f2e139]:
+      - generic [ref=f2e145]: ✦ ◇ ✧ □ ✦ △
+      - generic [ref=f2e152]:
+        - progressbar "1 / 6" [ref=f2e153]
+        - button "オート ON" [pressed] [ref=f2e160] [cursor=pointer]
+        - button "スキップ" [ref=f2e161] [cursor=pointer]
+      - button "つぎの せりふへ" [ref=f2e162] [cursor=pointer]
+      - generic:
+        - generic: たろう
+        - paragraph: じぶんの なまえは おぼえてい
+        - generic: オート

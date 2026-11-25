@@ -1,0 +1,14 @@
+- generic [ref=f2e2]:
+  - generic:
+    - generic:
+      - generic:
+        - button "青森県の ちずを ひらく" [ref=f2e101] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f2e106]: 青森県
+        - generic:
+          - button "かいはつしゃ" [ref=f2e107] [cursor=pointer]
+          - button "メニュー" [ref=f2e109] [cursor=pointer]
+    - dialog "かいわ" [active] [ref=f2e163] [cursor=pointer]:
+      - generic [ref=f2e164]:
+        - generic [ref=f2e165]: ミチル
+        - paragraph [ref=f2e167]: たびの とちゅうで てきに ち
+        - button "よみあげ" [ref=f2e168]

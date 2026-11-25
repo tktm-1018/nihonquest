@@ -1,0 +1,25 @@
+- generic [ref=f4e2]:
+  - generic:
+    - generic:
+      - generic:
+        - menu "メインメニュー" [ref=f4e5]:
+          - menuitem "はじめから" [active] [ref=f4e6] [cursor=pointer]
+          - menuitem "つづきから" [ref=f4e8] [cursor=pointer]
+        - paragraph:
+          - generic: タップで けってい
+        - paragraph:
+          - generic:
+            - text: フォント：PixelMplus（M+ FONTS PROJECT） ちず：
+            - generic:
+              - text: 国土地理院
+              - generic: こくどちりいん
+            - text: （
+            - generic:
+              - text: 地球地図日本
+              - generic: ちきゅうちずにほん
+            - text: ・
+            - generic:
+              - text: 標高
+              - generic: ひょうこう
+            - text: タイル）、Natural Earth
+    - generic [ref=f4e10]: もんだいを よみこんでいるよ…

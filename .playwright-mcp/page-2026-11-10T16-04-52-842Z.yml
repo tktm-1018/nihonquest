@@ -1,0 +1,13 @@
+- dialog "セーブスロット" [ref=f2e11]:
+  - heading "セーブする ばしょ" [level=2] [ref=f2e12]
+  - generic [ref=f2e13]:
+    - button "スロット 1 あたらしく はじめる" [active] [ref=f2e14] [cursor=pointer]:
+      - strong [ref=f2e15]: スロット 1
+      - generic [ref=f2e16]: あたらしく はじめる
+    - button "スロット 2 あたらしく はじめる" [ref=f2e17] [cursor=pointer]:
+      - strong [ref=f2e18]: スロット 2
+      - generic [ref=f2e19]: あたらしく はじめる
+    - button "スロット 3 あたらしく はじめる" [ref=f2e20] [cursor=pointer]:
+      - strong [ref=f2e21]: スロット 3
+      - generic [ref=f2e22]: あたらしく はじめる
+  - button "もどる" [ref=f2e23] [cursor=pointer]

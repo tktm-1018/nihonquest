@@ -1,0 +1,54 @@
+- generic [ref=f6e8]:
+  - paragraph [ref=f6e49] [cursor=pointer]: ＊ハルは どうする？
+  - generic [ref=f6e13]:
+    - generic [ref=f6e14]:
+      - generic [ref=f6e15]: リンゴロン
+      - generic [ref=f6e16]: Lv 1
+    - meter "リンゴロン HP" [ref=f6e18]:
+      - generic [aria-hidden] [ref=f6e20]: 16/16
+  - generic [ref=f6e39]:
+    - generic [ref=f6e40]:
+      - generic [ref=f6e42]: ハル
+      - generic [ref=f6e43]: Lv 1
+    - meter "ハル HP" [ref=f6e45]:
+      - generic [aria-hidden] [ref=f6e47]: 24/24
+    - generic:
+      - meter "こくご":
+        - generic:
+          - generic [aria-hidden]: 0/100
+      - meter "さんすう":
+        - generic:
+          - generic [aria-hidden]: 0/100
+  - button "もどる" [ref=f6e50]
+  - generic [ref=f6e52]:
+    - group "わざ" [ref=f6e53]:
+      - button "たしざんぎり チャージ" [active] [ref=f6e54] [cursor=pointer]:
+        - generic [ref=f6e56]: たしざんぎり
+        - generic [ref=f6e57]: チャージ
+      - button "ほのおのまい チャージ" [ref=f6e60] [cursor=pointer]:
+        - generic [ref=f6e62]: ほのおのまい
+        - generic [ref=f6e63]: チャージ
+      - button "かんじぎり チャージ" [ref=f6e66] [cursor=pointer]:
+        - generic [ref=f6e68]: かんじぎり
+        - generic [ref=f6e69]: チャージ
+      - button "ぶんのつばさ チャージ" [ref=f6e72] [cursor=pointer]:
+        - generic [ref=f6e74]: ぶんのつばさ
+        - generic [ref=f6e75]: チャージ
+      - button "ことばあそび チャージ" [ref=f6e78] [cursor=pointer]:
+        - generic [ref=f6e80]: ことばあそび
+        - generic [ref=f6e81]: チャージ
+      - button "カタカナしばり ひつようゲージ 100" [disabled] [ref=f6e84] [cursor=pointer]:
+        - generic [ref=f6e86]: カタカナしばり
+        - generic "ひつようゲージ 100" [ref=f6e89]:
+          - generic [aria-hidden] [ref=f6e92]: "100"
+      - button "こくごバースト ひつようゲージ 100" [disabled] [ref=f6e93] [cursor=pointer]:
+        - generic [ref=f6e95]: こくごバースト
+        - generic "ひつようゲージ 100" [ref=f6e98]:
+          - generic [aria-hidden] [ref=f6e101]: "100"
+      - button "さんすうバースト ひつようゲージ 100" [disabled] [ref=f6e102] [cursor=pointer]:
+        - generic [ref=f6e104]: さんすうバースト
+        - generic "ひつようゲージ 100" [ref=f6e107]:
+          - generic [aria-hidden] [ref=f6e110]: "100"
+    - generic [ref=f6e111]:
+      - generic [ref=f6e112]: たしざんを といて きりつける！
+      - generic [ref=f6e114]: ★しょう1

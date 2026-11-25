@@ -1,0 +1,17 @@
+- generic [ref=f2e2]:
+  - generic:
+    - generic:
+      - generic:
+        - button "青森県の ちずを ひらく" [ref=f2e101] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f2e106]: 青森県
+        - generic:
+          - button "かいはつしゃ" [ref=f2e107] [cursor=pointer]
+          - button "メニュー" [ref=f2e109] [cursor=pointer]
+    - dialog "ものがたり：なまえ" [ref=f2e132]:
+      - generic [ref=f2e133]:
+        - generic [ref=f2e134]: ミチル
+        - paragraph [ref=f2e135]: そういえば、あなたの なまえを まだ きいていなかったね。なんていうの？
+        - textbox "なまえ" [active] [ref=f2e136]:
+          - /placeholder: なまえを いれてね
+        - status [ref=f2e137]: なまえを いれると けっていできるよ
+        - button "これで けってい" [disabled] [ref=f2e138]

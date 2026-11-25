@@ -1,0 +1,27 @@
+- generic [ref=f6e8]:
+  - generic [ref=f6e13]:
+    - generic [ref=f6e14]:
+      - generic [ref=f6e15]: リンゴロン
+      - generic [ref=f6e16]: Lv 1
+    - meter "リンゴロン HP" [ref=f6e18]:
+      - generic [aria-hidden] [ref=f6e20]: 16/16
+  - generic [ref=f6e21]:
+    - menu "コマンド" [ref=f6e23]:
+      - menuitem "わざ" [active] [ref=f6e24] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f6e26]: ♥
+      - menuitem "どうぐ" [disabled] [ref=f6e29] [cursor=pointer]
+      - menuitem "いれかえ" [disabled] [ref=f6e32] [cursor=pointer]
+      - menuitem "にげる" [ref=f6e35] [cursor=pointer]
+    - generic [ref=f6e39]:
+      - generic [ref=f6e40]:
+        - generic [ref=f6e42]: ハル
+        - generic [ref=f6e43]: Lv 1
+      - meter "ハル HP" [ref=f6e45]:
+        - generic [aria-hidden] [ref=f6e47]: 24/24
+      - generic:
+        - meter "こくご":
+          - generic:
+            - generic [aria-hidden]: 0/100
+        - meter "さんすう":
+          - generic:
+            - generic [aria-hidden]: 0/100
