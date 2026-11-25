@@ -69,6 +69,7 @@ export default defineConfig({
         playground: resolve(root, 'playground.html'),
         battleQuestionAudit: resolve(root, 'battle-question-audit.html'),
         editor: resolve(root, 'editor.html'),
+        characters: resolve(root, 'characters.html'),
       },
       output: {
         // Phaser は大きく更新頻度が低い。ゲーム本体と分離して、更新時にブラウザキャッシュを再利用する。
