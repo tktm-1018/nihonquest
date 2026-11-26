@@ -57,7 +57,7 @@
   left: 12px;
   top: 12px;
   width: 220px;
-  height: 84px;
+  min-height: 84px;
   display: flex;
 }
 .nq-foe {
@@ -86,6 +86,7 @@
   padding-right: 64px;
 }
 .nq-boss-tag {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 4px;

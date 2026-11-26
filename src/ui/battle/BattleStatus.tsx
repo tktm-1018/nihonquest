@@ -55,12 +55,6 @@ export function EnemyWindow({ e }: { e: EnemyView }) {
         <span class="nq-foe-level">
           {t('battle.lv')} {e.level}
         </span>
-        {e.isBoss && (
-          <span class="nq-boss-tag">
-            <PixelIcon name="boss" scale={2} />
-            <RubyLabel text={t('battle.boss')} />
-          </span>
-        )}
       </div>
       <div class="nq-foe-hp">
         <Bar
@@ -71,6 +65,12 @@ export function EnemyWindow({ e }: { e: EnemyView }) {
           showValue
         />
       </div>
+      {e.isBoss && (
+        <span class="nq-boss-tag">
+          <PixelIcon name="boss" scale={2} />
+          <RubyLabel text={t('battle.boss')} />
+        </span>
+      )}
     </div>
   );
 }
