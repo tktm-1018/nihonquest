@@ -435,7 +435,7 @@ function useSkill(
     t: 'act',
     side: 'ally',
     actorId: actor.id,
-    command: sk.effect === 'scan' ? 'scan' : 'skill',
+    command: 'skill',
     skillId: sk.id,
   });
   switch (sk.effect) {
@@ -466,13 +466,7 @@ function useSkill(
       ev.push({ t: 'buff', side: 'enemy', targetId: s.enemy.id, stat: 'def', mult: m, turns });
       break;
     }
-    case 'scan':
-      // 理科の「しらべる」＝じゃくてん判明（GDD §4.4）
-      if (score >= 0.5 && s.enemy.weakness) {
-        s.enemy.weaknessRevealed = true;
-        ev.push({ t: 'weaknessRevealed', targetId: s.enemy.id, element: s.enemy.weakness });
-      } else ev.push({ t: 'scanFailed', targetId: s.enemy.id });
-      break;
+
     case 'status': {
       // あいての うごきを とめる（できばえが よいほど 長く 休む）
       const turns = Math.max(1, Math.round(st.turns.statusTurns * mult));

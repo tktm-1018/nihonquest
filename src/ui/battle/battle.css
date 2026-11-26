@@ -95,6 +95,13 @@
   background: #a8341f;
   border: 2px solid var(--nq-yellow);
 }
+.nq-foe-element {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  font-size: 14px;
+}
 .nq-ally-lv {
   font-size: 16px;
   color: var(--nq-yellow);

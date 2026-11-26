@@ -96,17 +96,17 @@
   },
   {
     "id": "sk-shiraberu",
-    "name": "しらべる",
+    "name": "みずのひかり",
     "subject": "rika",
     "gradeRange": [3, 6],
     "unitHint": ["rika.g3.legacy-cur-1503-05", "rika.g4.mizu-no-sugata"],
-    "power": 0,
-    "element": "none",
+    "power": 70,
+    "element": "mizu",
     "mp": 2,
     "gauge": 1,
     "costGauge": 0,
-    "effect": "scan",
-    "flavor": "じっけんで じゃくてんを 見[み]つける",
+    "effect": "damage",
+    "flavor": "水[みず]の ひかりで こうげき",
     "attackClass": "science"
   },
   {

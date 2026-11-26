@@ -257,7 +257,7 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
     expect(f.amount).toBeGreaterThan(n.amount);
   });
 
-  it('じゃくてんは判明後だけ効く', async () => {
+  it('旧セーブの弱点発見状態はダメージを増やさない', async () => {
     const { state } = await setup();
     const run = (defender: Combatant) =>
       computeDamage({
@@ -274,8 +274,8 @@ describe('ダメージ計算（BaseDamage × ScoreMultiplier × ComboBonus × El
     const before = run(state.enemy);
     const after = run({ ...state.enemy, weaknessRevealed: true });
     expect(before.weaknessHit).toBe(false);
-    expect(after.weaknessHit).toBe(true);
-    expect(after.amount).toBeGreaterThan(before.amount);
+    expect(after.weaknessHit).toBe(false);
+    expect(after.amount).toBe(before.amount);
   });
 });
 
@@ -634,14 +634,11 @@ describe('必殺技の 効果', () => {
     expect(after.events.some((x) => x.t === 'act' && x.side === 'enemy')).toBe(true);
   });
 
-  it('しらべる（理科）でじゃくてんが判明する / まちがえると わからない', async () => {
+  it('旧しらべるの ID は使える理科の攻撃技として引き継ぐ', async () => {
     const { state } = await setup();
-    const ok = act(tough(state), { kind: 'skill', skillId: 'sk-shiraberu', result: R(1) }, D);
-    expect(ok.events.some((e) => e.t === 'weaknessRevealed')).toBe(true);
-    expect(ok.state.enemy.weaknessRevealed).toBe(true);
-    const ng = act(tough(state), { kind: 'skill', skillId: 'sk-shiraberu', result: R(0) }, D);
-    expect(ng.events.some((e) => e.t === 'scanFailed')).toBe(true);
-    expect(ng.state.enemy.weaknessRevealed).toBe(false);
+    const result = act(tough(state), { kind: 'skill', skillId: 'sk-shiraberu', result: R(1) }, D);
+    expect(result.events.some((e) => e.t === 'damage' && e.side === 'enemy')).toBe(true);
+    expect(result.events.some((e) => e.t === 'weaknessRevealed')).toBe(false);
   });
 });
 

@@ -240,7 +240,7 @@ interface Item {
 interface Skill {
   id: string; name: RubyText; subject: Subject; gradeRange: [Grade, Grade];
   power: number; element: Element; mp: number; questionTags?: string[];
-  effect?: 'damage'|'heal'|'buff'|'debuff'|'scan';   // scan = じゃくてん判明（理科）
+  effect?: 'damage'|'heal'|'buff'|'debuff';
 }
 ```
 

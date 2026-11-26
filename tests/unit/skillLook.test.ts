@@ -26,7 +26,7 @@ describe('必殺技の 見た目（タイプ・教科・単元）', () => {
       expect(look.big.length, sk.id).toBeGreaterThan(0);
     }
     expect(skillLook(c.skills.get('sk-kanji-barrier')!, text).kind).toBe('barrier');
-    expect(skillLook(c.skills.get('sk-shiraberu')!, text).kind).toBe('scan');
+    expect(skillLook(c.skills.get('sk-shiraberu')!, text).kind).toBe('attack');
     expect(skillLook(c.skills.get('sk-tashizan-giri')!, text).kind).toBe('attack');
   });
 
