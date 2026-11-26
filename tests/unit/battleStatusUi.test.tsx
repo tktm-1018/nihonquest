@@ -45,9 +45,10 @@ describe('EnemyWindow', () => {
 
     expect(normalHost.textContent).toContain('ワスレモノ');
     expect(normalHost.textContent).toContain('Lv 5');
-    expect(normalHost.textContent).toContain('ミズ');
+    expect(normalHost.querySelector('[role=img]')?.getAttribute('aria-label')).toBe('ミズ');
+    expect(normalHost.textContent).not.toContain('ミズ');
     render(h(EnemyWindow, { e: { ...enemy(false), element: 'hino' } }), normalHost);
-    expect(normalHost.textContent).toContain('ヒノ');
+    expect(normalHost.querySelector('[role=img]')?.getAttribute('aria-label')).toBe('ヒノ');
     render(h(EnemyWindow, { e: enemy(false) }), normalHost);
     expect(normalHost.textContent).toContain('155/155');
     expect(bossHost.textContent).toContain('ワスレモノ');

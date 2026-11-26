@@ -48,9 +48,8 @@ export function EnemyWindow({ e }: { e: EnemyView }) {
   return (
     <div class={`nq-win nq-foe ${e.isBoss ? 'nq-foe-boss' : ''}`}>
       <div class="nq-foe-heading">
-        <span class="nq-foe-element" aria-label={t('elements.' + e.element)}>
+        <span class="nq-foe-element" role="img" aria-label={t('elements.' + e.element)}>
           <PixelIcon name={`el-${e.element}`} scale={2} />
-          {t('elements.' + e.element)}
         </span>
         <RubyLabel text={e.name} class="nq-foe-name" />
         <span class="nq-foe-level">

@@ -80,8 +80,8 @@
 .nq-foe-heading {
   position: relative;
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 8px;
   min-width: 0;
   padding-right: 64px;
 }
@@ -98,9 +98,8 @@
 .nq-foe-element {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
   flex: none;
-  font-size: 14px;
+  padding-top: 6px;
 }
 .nq-ally-lv {
   font-size: 16px;
@@ -127,11 +126,9 @@
 .nq-foe-name {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
   font-size: 24px;
   line-height: 36px;
-  white-space: nowrap;
 }
 .nq-weak {
   background: #1d2033;
